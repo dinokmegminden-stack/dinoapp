@@ -116,8 +116,8 @@ async function stopQuizBgMusic() {
   }
 }
 // Szint alapján visszaadja melyik háttérzenét kell lejátszani
-import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './Adsenseslot';
 
+import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './AdSenseSlot';
 // Asztali/böngészős nézeten az app egy telefon-szélességű, középre igazított
 // sávban fut, hogy a két oldalra később hely maradjon (pl. hirdetéseknek).
 function Shell({ children }) {
