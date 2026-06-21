@@ -976,7 +976,7 @@ const styles = StyleSheet.create({
   navButtonText: { color: COLORS.textPrimary, fontSize: 13, fontWeight: '700' },
   
   card: { flex: 1, width: '100%', backgroundColor: COLORS.cardSolid, borderRadius: 20, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 6 },
-  cardImageArea: { width: '100%', height: 200, justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.03)' },
+  cardImageArea: { width: '100%', height: 250, justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.03)' },
   dinoImage: { width: '100%', height: '100%' },
   fallbackEmoji: { fontSize: 64 },
   cornerBadge: {
