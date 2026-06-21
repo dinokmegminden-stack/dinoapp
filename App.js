@@ -200,7 +200,7 @@ const COLORS = {
 
 const IMAGE_MAP = {
   "Iguanodon bernissartensis": require('./assets/images/Iguanodon2.jpg'),
-  "Megalosaurus bucklandii": require('./assets/images/megalosaurus.jpeg'),
+  "Megalosaurus bucklandii": require('./assets/images/megalosaurus.jpg'),
   "Baryonyx walkeri": require('./assets/images/baryonyx.jpg'),
   "Hypsilophodon foxii": require('./assets/images/hypsilophodon.jpg'),
   "Europasaurus holgeri": require('./assets/images/europasaurus.jpg'),
