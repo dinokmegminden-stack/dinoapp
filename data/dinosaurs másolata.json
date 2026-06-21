@@ -1,0 +1,652 @@
+[
+  {
+    "id": 1,
+    "nev_tudomanyos": "Iguanodon bernissartensis",
+    "nev_koznapi": "Iguanodon",
+    "csoport": "Ornithischia (Ornithopoda)",
+    "korszak": "kora kréta",
+    "kor_millioev": "126–122 Ma",
+    "megtalalas_helye": {
+      "orszag": "Belgium",
+      "helyszin": "Bernissart bányaváros, Hainaut tartomány",
+      "formacio": "Wealden-csoport"
+    },
+    "felfedezes": {
+      "ev": 1878,
+      "felfedezo": "Gustave Arnould (bányamérnök) és Louis De Pauw (paleontológiai preparátor), leírta Louis Dollo",
+      "korulmeny": "Szénbányában, 322 méter mélyen 38 teljes csontvázat találtak egyszerre – ez az egyik legnagyobb dinoszaurusz-lelőhely volt Európában. A bányászok eleinte krokodilmaradványoknak hitték.",
+      "lelet_tipusa": "Teljes csontvázak (tömeges lelet)"
+    },
+    "meretek": {
+      "hossz_m": 10,
+      "magassag_m": 5,
+      "tomeg_kg": 3500
+    },
+    "erdekesseg": "Nevét az 'iguanafogú' jelentésből kapta (az iguana fogaira hasonlító rágófogai miatt). A Richard Owennel folytatott vitáknak is köszönhetően vált a paleontológia történetének egyik leghíresebb dínójává.",
+    "muzeum": "Belga Királyi Természettudományi Intézet, Brüsszel"
+  },
+  {
+    "id": 2,
+    "nev_tudomanyos": "Megalosaurus bucklandii",
+    "nev_koznapi": "Megalosaurus",
+    "csoport": "Theropoda (Megalosauridae)",
+    "korszak": "középső jura",
+    "kor_millioev": "166 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Stonesfield, Oxfordshire",
+      "formacio": "Stonesfield Slate-formáció"
+    },
+    "felfedezes": {
+      "ev": 1824,
+      "felfedezo": "William Buckland",
+      "korulmeny": "Ez az első tudományosan leírt dinoszaurusz a világon. A kőzetekből származó csontok már a 17. századtól ismertek voltak, de Buckland azonosította és írta le őket formálisan 1824-ben, óriási gyíkként.",
+      "lelet_tipusa": "Részleges állkapocs fogakkal, végtagcsontok"
+    },
+    "meretek": {
+      "hossz_m": 9,
+      "magassag_m": 3,
+      "tomeg_kg": 1400
+    },
+    "erdekesseg": "Az első tudományosan elnevezett dinoszaurusz a történelemben. A neve 'nagy gyíkot' jelent.",
+    "muzeum": "Oxford University Museum of Natural History"
+  },
+  {
+    "id": 3,
+    "nev_tudomanyos": "Baryonyx walkeri",
+    "nev_koznapi": "Baryonyx",
+    "csoport": "Theropoda (Spinosauridae)",
+    "korszak": "kora kréta",
+    "kor_millioev": "130–125 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Surrey, Smokejacks agyagbánya",
+      "formacio": "Weald Clay-formáció"
+    },
+    "felfedezes": {
+      "ev": 1983,
+      "felfedezo": "William J. Walker (amatőr fosszíliagyűjtő)",
+      "korulmeny": "Walker egy agyagbányában talált rá egy hatalmas, sarlószerű, 30 cm-es karomra. A paleontológusok ezután rendes ásatást végeztek, és egy 70%-ban teljes csontvázat tártak fel.",
+      "lelet_tipusa": "70%-ban teljes csontváz, a jellegzetes nagy hüvelykkarommal"
+    },
+    "meretek": {
+      "hossz_m": 9.5,
+      "magassag_m": 2.5,
+      "tomeg_kg": 1700
+    },
+    "erdekesseg": "A gyomortájékon megkövesedett halpikkelyeket és halcsontokat találtak, ami közvetlen bizonyítékot szolgáltat halevő étrendjére. Faji nevét felfedezője tiszteletére kapta.",
+    "muzeum": "Natural History Museum, London"
+  },
+  {
+    "id": 4,
+    "nev_tudomanyos": "Hypsilophodon foxii",
+    "nev_koznapi": "Hypsilophodon",
+    "csoport": "Ornithischia (Hypsilophodontidae)",
+    "korszak": "kora kréta",
+    "kor_millioev": "130–125 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Wight-sziget, Brighstone Bay",
+      "formacio": "Wessex-formáció"
+    },
+    "felfedezes": {
+      "ev": 1849,
+      "felfedezo": "William D. Fox (lelkész és amatőr geológus), leírta Thomas Henry Huxley 1870-ben",
+      "korulmeny": "Fox révén tucatnyi példány került elő a Wight-szigetről, de sokáig az Iguanodon fiatal egyedeinek hitték őket.",
+      "lelet_tipusa": "Több teljes és részleges csontváz"
+    },
+    "meretek": {
+      "hossz_m": 2.3,
+      "magassag_m": 0.6,
+      "tomeg_kg": 20
+    },
+    "erdekesseg": "Sokáig azt feltételezték róla, hogy a fák ágain élt és kapaszkodott (ez a hipotézis mára teljesen megdőlt). Valójában egy finom csőrrel rendelkező, rendkívül gyors futó növényevő volt.",
+    "muzeum": "Natural History Museum, London"
+  },
+  {
+    "id": 5,
+    "nev_tudomanyos": "Europasaurus holgeri",
+    "nev_koznapi": "Europasaurus",
+    "csoport": "Sauropodomorpha (Macronaria)",
+    "korszak": "késő jura",
+    "kor_millioev": "154 Ma",
+    "megtalalas_helye": {
+      "orszag": "Németország",
+      "helyszin": "Oker kőfejtő, Alsó-Szászország",
+      "formacio": "Langenberg-formáció"
+    },
+    "felfedezes": {
+      "ev": 1998,
+      "felfedezo": "Holger Lüdtke (amatőr gyűjtő), leírta Octávio Mateus és Michael P. Taylor 2006-ban",
+      "korulmeny": "Lüdtke egy működő mészkőfejtőben talált rá az első csontokra. A fajnév ('holgeri') a felfedező keresztneve előtt tiszteleg.",
+      "lelet_tipusa": "Több különálló egyed maradványa, köztük fiatal és felnőtt példányok"
+    },
+    "meretek": {
+      "hossz_m": 6.2,
+      "magassag_m": 2,
+      "tomeg_kg": 800
+    },
+    "erdekesseg": "Az egyik legjobb bizonyíték az ún. insuláris törpülésre (szigeti törpeség): miközben legközelebbi szárazföldi rokonai a 20 méteres testhosszt is meghaladták, a jura időszaki szigetvilág szűkös erőforrásai miatt ez a populáció apró termetűvé vált.",
+    "muzeum": "Dinosaurier-Park Münchehagen (az anyag főőrzési helye)"
+  },
+  {
+    "id": 6,
+    "nev_tudomanyos": "Plateosaurus engelhardti",
+    "nev_koznapi": "Plateosaurus",
+    "csoport": "Sauropodomorpha (Plateosauridae)",
+    "korszak": "késő triász",
+    "kor_millioev": "214–204 Ma",
+    "megtalalas_helye": {
+      "orszag": "Németország / Svájc",
+      "helyszin": "Trossingen (Baden-Württemberg); Frick (Aargau kanton)",
+      "formacio": "Löwenstein-formáció, Trossingen-formáció"
+    },
+    "felfedezes": {
+      "ev": 1837,
+      "felfedezo": "Johann Friedrich Engelhardt, leírta Hermann von Meyer",
+      "korulmeny": "Trossingenben és Frickben is hatalmas kiterjedésű, tömeges leletegyütteseket tártak fel, ahol tucatnyi egyed csontváza feküdt egymás mellett.",
+      "lelet_tipusa": "Tömeges lelet, számos teljes és összefüggő csontváz"
+    },
+    "meretek": {
+      "hossz_m": 8,
+      "magassag_m": 2.1,
+      "tomeg_kg": 600
+    },
+    "erdekesseg": "Európa egyik legjobban ismert és leggyakoribb triász időszaki dinoszaurusza. Alapvetően két lábon járt, de legelés közben négy lábra is ereszkedhetett. A tömeges lelőhelyek miatt feltételezik, hogy csordákban vándorolt.",
+    "muzeum": "Stuttgarti Állami Természettudományi Múzeum / Sauriermuseum Frick"
+  },
+  {
+    "id": 7,
+    "nev_tudomanyos": "Cetiosaurus oxoniensis",
+    "nev_koznapi": "Cetiosaurus",
+    "csoport": "Sauropoda (Cetiosauridae)",
+    "korszak": "középső jura",
+    "kor_millioev": "168–166 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Chipping Norton és egyéb oxfordshire-i lelőhelyek",
+      "formacio": "Chipping Norton Limestone-formáció"
+    },
+    "felfedezes": {
+      "ev": 1841,
+      "felfedezo": "Richard Owen",
+      "korulmeny": "Owen eleinte egy hatalmas tengeri hüllőnek, egyfajta bálna méretű krokodilfélének hitte a csontokat, ezért adta neki a 'bálnagyík' nevet. Valódi, óriási szárazföldi sauropoda természetét csak évtizedekkel később ismerték fel.",
+      "lelet_tipusa": "Részleges csontvázak, elszórt vázelemek"
+    },
+    "meretek": {
+      "hossz_m": 16,
+      "magassag_m": 4.5,
+      "tomeg_kg": 11000
+    },
+    "erdekesseg": "Az egyik legelsőként leírt brit sauropoda. A nevezéktanban a félreértések ellenére is megmaradt az eredeti Owen-féle név, ami 'bálnagyíkot' jelent.",
+    "muzeum": "Oxford University Museum of Natural History"
+  },
+  {
+    "id": 8,
+    "nev_tudomanyos": "Camptosaurus prestwichii",
+    "nev_koznapi": "Camptosaurus",
+    "csoport": "Ornithischia (Ankylopollexia)",
+    "korszak": "késő jura",
+    "kor_millioev": "157–152 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Cumnor Hill, Oxfordshire",
+      "formacio": "Kimmeridge Clay-formáció"
+    },
+    "felfedezes": {
+      "ev": 1879,
+      "felfedezo": "Joseph Prestwich (geológus), leírta John Whitaker Hulke 1880-ban",
+      "korulmeny": "Egy oxfordshire-i téglagyári ásatásból került elő a lelet. Ezt az európai fajt sokáig az észak-amerikai Camptosaurus nemzetséghez sorolták (bár egyes kutatók szerint az önálló Cumnoria nembe tartozik).",
+      "lelet_tipusa": "Viszonylag jó megtartású, részleges csontváz"
+    },
+    "meretek": {
+      "hossz_m": 5,
+      "magassag_m": 1.5,
+      "tomeg_kg": 500
+    },
+    "erdekesseg": "Az Iguanodonok korai, átmeneti rokona. Nevének jelentése: 'hajlékony gyík'. Anatómiailag képes volt két- és négylábú mozgásra is.",
+    "muzeum": "Oxford University Museum of Natural History"
+  },
+  {
+    "id": 9,
+    "nev_tudomanyos": "Valdosaurus canaliculatus",
+    "nev_koznapi": "Valdosaurus",
+    "csoport": "Ornithischia (Dryosauridae)",
+    "korszak": "kora kréta",
+    "kor_millioev": "140–132 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Wight-sziget és Sussex",
+      "formacio": "Wessex-formáció / Wadhurst Clay-formáció"
+    },
+    "felfedezes": {
+      "ev": 1977,
+      "felfedezo": "Leírta Peter Galton",
+      "korulmeny": "Galton korábban más nemzetségekhez (pl. Dryosaurus) sorolt fosszilis anyagok revíziója során különítette el önálló nemként. Neve a 'Weald-vidéki gyík' kifejezésre utal.",
+      "lelet_tipusa": "Izolált combcsontok, medencecsont-töredékek és fogak"
+    },
+    "meretek": {
+      "hossz_m": 2.5,
+      "magassag_m": 0.9,
+      "tomeg_kg": 30
+    },
+    "erdekesseg": "Kistermetű, rendkívül agilis, két lábon futó növényevő volt. A kora kréta korú európai Wealden-ökoszisztéma egyik jellegzetes futódinoszaurusza.",
+    "muzeum": "Natural History Museum, London"
+  },
+  {
+    "id": 10,
+    "nev_tudomanyos": "Mantellisaurus atherfieldensis",
+    "nev_koznapi": "Mantellisaurus",
+    "csoport": "Ornithischia (Iguanodontia)",
+    "korszak": "kora kréta",
+    "kor_millioev": "125 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Atherfield Point, Wight-sziget",
+      "formacio": "Wessex-formáció"
+    },
+    "felfedezes": {
+      "ev": 1914,
+      "felfedezo": "Reginald Walter Hooley (amatőr gyűjtő), leírta Gregory S. Paul 2006-ban önálló nemként",
+      "korulmeny": "A csontvázat eredetileg Hooley ásta ki, majd évtizedekig az Iguanodon egyik karcsúbb fajának (I. atherfieldensis) tartották, míg Gregory Paul morfológiai alapon új nembe sorolta.",
+      "lelet_tipusa": "Majdnem teljes, összefüggő csontváz"
+    },
+    "meretek": {
+      "hossz_m": 7,
+      "magassag_m": 2.5,
+      "tomeg_kg": 2000
+    },
+    "erdekesseg": "Az Iguanodon bernissartensisnél jóval karcsúbb felépítésű rokona. Nemzetségneve Gideon Mantell, az Iguanodon első felfedezője előtt tiszteleg.",
+    "muzeum": "Natural History Museum, London"
+  },
+  {
+    "id": 11,
+    "nev_tudomanyos": "Neovenator salerii",
+    "nev_koznapi": "Neovenator",
+    "csoport": "Theropoda (Neovenatoridae)",
+    "korszak": "kora kréta",
+    "kor_millioev": "130–125 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Brighstone Bay, Wight-sziget",
+      "formacio": "Wessex-formáció"
+    },
+    "felfedezes": {
+      "ev": 1978,
+      "felfedezo": "Keith Saler (amatőr gyűjtő), leírta Angela Milner és Steve Hutt 1996-ban",
+      "korulmeny": "A fosszíliák egy krétás sziklaomlás után kerültek elő. Az ásatások és a laboratóriumi tisztítások évekig tartottak; Saler nevét a faji jelző ('salerii') őrzi.",
+      "lelet_tipusa": "Körülbelül 70%-ban teljes csontváz"
+    },
+    "meretek": {
+      "hossz_m": 7.5,
+      "magassag_m": 2.5,
+      "tomeg_kg": 1000
+    },
+    "erdekesseg": "A brit kora kréta időszak egyik legnagyobb és legveszélyesebb csúcsragadozója volt. Neve stílszerűen azt jelenti: 'új vadász'.",
+    "muzeum": "Dinosaur Isle Museum, Sandown (Wight-sziget)"
+  },
+  {
+    "id": 12,
+    "nev_tudomanyos": "Scipionyx samniticus",
+    "nev_koznapi": "Scipionyx",
+    "csoport": "Theropoda (Compsognathidae)",
+    "korszak": "kora kréta",
+    "kor_millioev": "113 Ma",
+    "megtalalas_helye": {
+      "orszag": "Olaszország",
+      "helyszin": "Pietraroja, Benevento tartomány, Campania",
+      "formacio": "Pietraroja-formáció"
+    },
+    "felfedezes": {
+      "ev": 1981,
+      "felfedezo": "Giovanni Todesco (amatőr gyűjtő), leírta Cristiano Dal Sasso és Marco Signore 1998-ban",
+      "korulmeny": "Todesco otthonában, egy dobozban tartotta a leletet, nem tudván annak pontos tudományos értékéről. Amikor szakértőkhöz került, kiderült, hogy a dínó bébi lágy szövetei (izmok, bélrendszer, máj nyomai) egyedülálló módon fosszilizálódtak.",
+      "lelet_tipusa": "Egyetlen fiatal egyed rendkívül jó megtartású fosszíliája, világhírű lágyszövet-megmaradással"
+    },
+    "meretek": {
+      "hossz_m": 0.5,
+      "magassag_m": 0.15,
+      "tomeg_kg": 0.5
+    },
+    "erdekesseg": "A sajtóban és a szakmában csak 'Skippy' néven elhíresült lelet a theropoda dinoszauruszok belső anatómiájának és emésztőrendszerének legértékesebb közvetlen bizonyítéka.",
+    "muzeum": "Museo di Storia Naturale di Milano"
+  },
+  {
+    "id": 13,
+    "nev_tudomanyos": "Draconyx loureiroi",
+    "nev_koznapi": "Draconyx",
+    "csoport": "Ornithischia (Camptosauridae)",
+    "korszak": "késő jura",
+    "kor_millioev": "150 Ma",
+    "megtalalas_helye": {
+      "orszag": "Portugália",
+      "helyszin": "Lourinhã, Leiria kerület",
+      "formacio": "Lourinhã-formáció"
+    },
+    "felfedezes": {
+      "ev": 2001,
+      "felfedezo": "Leírta Octávio Mateus és Miguel Telles Antunes",
+      "korulmeny": "A portugál Lourinhã-formáció a késő jura kor egyik leggazdagabb európai lelőhelye, az észak-amerikai Morrison-formáció faunájának közeli párhuzama.",
+      "lelet_tipusa": "Részleges csontváz (fogak, kéz- és lábcsontok, farokcsigolyák)"
+    },
+    "meretek": {
+      "hossz_m": 4,
+      "magassag_m": 1.2,
+      "tomeg_kg": 150
+    },
+    "erdekesseg": "A neve 'sárkánykarmot' jelent. Kiváló példája annak, hogy Portugália a dinoszaurusz-kutatás egyik legfontosabb európai központjává vált.",
+    "muzeum": "Museu da Lourinhã"
+  },
+  {
+    "id": 14,
+    "nev_tudomanyos": "Torvosaurus gurneyi",
+    "nev_koznapi": "Torvosaurus",
+    "csoport": "Theropoda (Megalosauridae)",
+    "korszak": "késő jura",
+    "kor_millioev": "152–148 Ma",
+    "megtalalas_helye": {
+      "orszag": "Portugália",
+      "helyszin": "Lourinhã és Pombal környéke",
+      "formacio": "Lourinhã-formáció"
+    },
+    "felfedezes": {
+      "ev": 2000,
+      "felfedezo": "Auroindo de Paula Santos (amatőr gyűjtő), leírta Christophe Hendrickx és Octávio Mateus 2014-ben",
+      "korulmeny": "Sokáig az amerikai Torvosaurus tanneri fajjal tartották azonosnak, de a részletes morfológiai elemzések alapján 2014-ben önálló európai fajként írták le. A térségből gigantikus theropoda tojások is előkerültek.",
+      "lelet_tipusa": "Részleges felső állkapocs, fogak és csigolyák, valamint tojásmaradványok embriócsontokkal"
+    },
+    "meretek": {
+      "hossz_m": 10,
+      "magassag_m": 3.5,
+      "tomeg_kg": 4000
+    },
+    "erdekesseg": "Európa valaha élt egyik legnagyobb szárazföldi theropoda ragadozója. A fajnevet James Gurney, a Dinotopia könyvek híres illusztrátora és írója tiszteletére kapta.",
+    "muzeum": "Museu da Lourinhã"
+  },
+  {
+    "id": 15,
+    "nev_tudomanyos": "Lourinhanosaurus antunesi",
+    "nev_koznapi": "Lourinhanosaurus",
+    "csoport": "Theropoda (Allosauroidea)",
+    "korszak": "késő jura",
+    "kor_millioev": "150 Ma",
+    "megtalalas_helye": {
+      "orszag": "Portugália",
+      "helyszin": "Lourinhã, Porto Novo tengerpart",
+      "formacio": "Lourinhã-formáció"
+    },
+    "felfedezes": {
+      "ev": 1982,
+      "felfedezo": "Műkedvelők találták, leírta Octávio Mateus 1998-ban",
+      "korulmeny": "A tengerparti sziklák eróziója tárta fel a csontokat. A csontváz mellett szokatlan módon 32 darab gastrolithot (gyomorkövet) is találtak, ami ragadozó theropodáknál rendkívül ritka lelet.",
+      "lelet_tipusa": "Részleges csontváz, gyomorkövekkel (gastrolith)"
+    },
+    "meretek": {
+      "hossz_m": 4.5,
+      "magassag_m": 1.5,
+      "tomeg_kg": 200
+    },
+    "erdekesseg": "A gyomorkövek jelenléte egy theropodánál rendkívül ritka. Szerepük máig nem tisztázott, de segíthettek a táplálék feldolgozásában.",
+    "muzeum": "Museu da Lourinhã"
+  },
+  {
+    "id": 16,
+    "nev_tudomanyos": "Liliensternus liliensterni",
+    "nev_koznapi": "Liliensternus",
+    "csoport": "Theropoda (Coelophysoidea)",
+    "korszak": "késő triász",
+    "kor_millioev": "210 Ma",
+    "megtalalas_helye": {
+      "orszag": "Németország",
+      "helyszin": "Halberstadt, Szász-Anhalt",
+      "formacio": "Trossingen-formáció"
+    },
+    "felfedezes": {
+      "ev": 1934,
+      "felfedezo": "Hugo Rühle von Lilienstern gróf, leírta Friedrich von Huene",
+      "korulmeny": "Két részleges ragadozó csontvázat fedeztek fel Halberstadt agyagbányáiban; ez lett Közép-Európa egyik legépebb és legfontosabb triász időszaki theropoda anyaga.",
+      "lelet_tipusa": "Két részleges csontváz maradványai összevegyülve"
+    },
+    "meretek": {
+      "hossz_m": 5,
+      "magassag_m": 1.5,
+      "tomeg_kg": 130
+    },
+    "erdekesseg": "A késő triász kor egyik legkorábbi és legnagyobb testű európai futóragadozója. A híres észak-amerikai Coelophysis közeli, de jóval robusztusabb rokona.",
+    "muzeum": "Museum für Naturkunde (Humboldt Múzeum), Berlin"
+  },
+  {
+    "id": 17,
+    "nev_tudomanyos": "Rhabdodon priscus",
+    "nev_koznapi": "Rhabdodon",
+    "csoport": "Ornithischia (Rhabdodontidae)",
+    "korszak": "késő kréta",
+    "kor_millioev": "70–66 Ma",
+    "megtalalas_helye": {
+      "orszag": "Franciaország / Spanyolország",
+      "helyszin": "Provence és Katalónia",
+      "formacio": "Maastrichti kontinentális rétegek"
+    },
+    "felfedezes": {
+      "ev": 1869,
+      "felfedezo": "Philippe Matheron",
+      "korulmeny": "Matheron provence-i leletek alapján írta le. Bár izolált csontjai szinte egész Dél-Európában előfordulnak, sokáig nehéz volt elkülöníteni a rokon formáktól.",
+      "lelet_tipusa": "Fogak, állkapocstöredékek és részleges csontvázak"
+    },
+    "meretek": {
+      "hossz_m": 4,
+      "magassag_m": 1.3,
+      "tomeg_kg": 200
+    },
+    "erdekesseg": "Közeli rokonságban állt az egykori Hátszeg-szigeten (ma Románia területe) élt törpe formákkal, de a kontinentális európai blokkon némileg nagyobbra nőtt.",
+    "muzeum": "Muséum National d'Histoire Naturelle, Párizs"
+  },
+  {
+    "id": 18,
+    "nev_tudomanyos": "Magyarosaurus dacus",
+    "nev_koznapi": "Magyarosaurus",
+    "csoport": "Sauropoda (Titanosauria)",
+    "korszak": "késő kréta",
+    "kor_millioev": "70–66 Ma",
+    "megtalalas_helye": {
+      "orszag": "Románia",
+      "helyszin": "Sânpetru (Szentpéterfalva), Hunyad megye (Hátszeg-medence)",
+      "formacio": "Densuș–Ciula-formáció"
+    },
+    "felfedezes": {
+      "ev": 1895,
+      "felfedezo": "Nopcsa Ilona (báró Nopcsa Ferenc húga) fedezte fel az első csontokat, leírta Friedrich von Huene 1932-ben",
+      "korulmeny": "Báró Nopcsa Ferenc családi birtokuk közelében, az akkori Magyar Királyság (Erdély) területén gyűjtötte be az anyagot a 19. század végén. A nemzetségnév a 'magyar' nemzet előtt tiszteleg.",
+      "lelet_tipusa": "Több egyedtől származó, részleges csontvázak és végtagcsontok"
+    },
+    "meretek": {
+      "hossz_m": 6,
+      "magassag_m": 2,
+      "tomeg_kg": 1000
+    },
+    "erdekesseg": "A szigeti törpülés (insuláris törpülés) iskolapéldája: miközben dél-amerikai titanosaurus rokonai a 30 méteres hosszt és az 50 tonnát is elérték, a Magyarosaurus alig volt nagyobb egy lónál. Az egyik legismertebb dinoszaurusz-nemzetség, amelynek neve Magyarországra utal.",
+    "muzeum": "Natural History Museum, London (a történelmi Nopcsa-gyűjtemény részeként)"
+  },
+  {
+    "id": 19,
+    "nev_tudomanyos": "Zalmoxes robustus",
+    "nev_koznapi": "Zalmoxes",
+    "csoport": "Ornithischia (Rhabdodontidae)",
+    "korszak": "késő kréta",
+    "kor_millioev": "70–66 Ma",
+    "megtalalas_helye": {
+      "orszag": "Románia",
+      "helyszin": "Hátszeg-medence, Hunyad megye",
+      "formacio": "Densuș–Ciula-formáció"
+    },
+    "felfedezes": {
+      "ev": 1899,
+      "felfedezo": "Báró Nopcsa Ferenc gyűjtötte, leírta Dan Grigorescu és Gareth Dyke 2003-ban",
+      "korulmeny": "Nopcsa eredeti anyagát több mint egy évszázadon át a Rhabdodon nemzetséghez sorolták, és csak 2003-ban különítették el taxonómiailag. Neve a dákok és trákok mitikus istenségére (Zalmoxis) utal.",
+      "lelet_tipusa": "Kopanyatöredékek, állkapcsok fogakkal, izolált végtagcsontok"
+    },
+    "meretek": {
+      "hossz_m": 3,
+      "magassag_m": 1,
+      "tomeg_kg": 100
+    },
+    "erdekesseg": "Báró Nopcsa Ferenc a Hátszeg-medence apró dínómaradványai alapján ismerte fel elsőként a világon, hogy az izolált szigetvilágok kényszerűen törpe növésű faunák kialakulásához vezetnek. Ezzel ő fektette le a szigeti törpülés evolúciós elméletének alapkövét a paleontológiában.",
+    "muzeum": "Bukaresti Tudományegyetem gyűjteménye / Erdélyi Nemzeti Múzeum, Kolozsvár"
+  },
+  {
+    "id": 20,
+    "nev_tudomanyos": "Lusotitan atalaiensis",
+    "nev_koznapi": "Lusotitan",
+    "csoport": "Sauropoda (Brachiosauridae)",
+    "korszak": "késő jura",
+    "kor_millioev": "152–148 Ma",
+    "megtalalas_helye": {
+      "orszag": "Portugália",
+      "helyszin": "Lourinhã régió",
+      "formacio": "Lourinhã-formáció"
+    },
+    "felfedezes": {
+      "ev": 1947,
+      "felfedezo": "Manuel de Matos Moitinho de Almeida és Albert-Félix de Lapparent, önálló nemként leírta Miguel Telles Antunes és Octávio Mateus 2003-ban",
+      "korulmeny": "A maradványokat eredetileg Brachiosaurus atalaiensis néven írták le, később azonban önálló európai nemzetségként különítették el.",
+      "lelet_tipusa": "Részleges csontváz, köztük csigolyák és végtagcsontok"
+    },
+    "meretek": {
+      "hossz_m": 25,
+      "magassag_m": 8,
+      "tomeg_kg": 30000
+    },
+    "erdekesseg": "A Lusotitan Európa egyik legnagyobb ismert dinoszaurusza. A brachiosauridákra jellemzően mellső lábai hosszabbak voltak a hátsóknál, így testtartása zsiráfszerű megjelenést kölcsönzött számára.",
+    "muzeum": "Museu Geológico de Lisboa"
+  },
+  {
+    "id": 21,
+    "nev_tudomanyos": "Allosaurus europaeus",
+    "nev_koznapi": "Allosaurus (európai)",
+    "csoport": "Theropoda (Allosauridae)",
+    "korszak": "késő jura",
+    "kor_millioev": "150 Ma",
+    "megtalalas_helye": {
+      "orszag": "Portugália",
+      "helyszin": "Lourinhã (Porto Novo)",
+      "formacio": "Lourinhã-formáció"
+    },
+    "felfedezes": {
+      "ev": 1999,
+      "felfedezo": "Octávio Mateus csapata, leírta Mateus, Thomas Walen és Miguel Telles Antunes 2006-ban",
+      "korulmeny": "Az észak-amerikai Allosaurus fragilis közeli európai rokonfaja. A lelet anatómiai bizonyítékot szolgáltat arra, hogy a késő jura korban stabil szárazföldi kapcsolat (vagy legalábbis szigetekből álló gázlóhíd) állt fenn Észak-Amerika és Európa között.",
+      "lelet_tipusa": "Részleges koponya, állkapocs és izolált fogak"
+    },
+    "meretek": {
+      "hossz_m": 8,
+      "magassag_m": 2.5,
+      "tomeg_kg": 1500
+    },
+    "erdekesseg": "Egyes kutatók önálló fajnak tekintik, míg mások az Allosaurus fragilis európai képviselőjének tartják. A lelet arra utal, hogy a késő jura korban még létezhettek szárazföldi kapcsolatot biztosító szigetláncok Európa és Észak-Amerika között.",
+    "muzeum": "Museu da Lourinhã"
+  },
+  {
+    "id": 22,
+    "nev_tudomanyos": "Thecodontosaurus antiquus",
+    "nev_koznapi": "Thecodontosaurus",
+    "csoport": "Sauropodomorpha (Thecodontosauridae)",
+    "korszak": "késő triász",
+    "kor_millioev": "205 Ma",
+    "megtalalas_helye": {
+      "orszag": "Egyesült Királyság",
+      "helyszin": "Clifton, Bristol (Durdham Down hasadékkitöltések)",
+      "formacio": "Magnesian Conglomerate (Rhaeti karszthasadékok)"
+    },
+    "felfedezes": {
+      "ev": 1836,
+      "felfedezo": "Henry Riley (orvos) és Samuel Stutchbury (kurátor)",
+      "korulmeny": "Bristol melletti kőfejtők triász időszaki karszthasadékaiból, ún. hasadékkitöltésekből került elő a kevert, töredékes csontanyag, amelyet a kőbányászok robbantásai tártak fel.",
+      "lelet_tipusa": "Számos egyedtől származó, kevert csontanyag breccsában"
+    },
+    "meretek": {
+      "hossz_m": 2,
+      "magassag_m": 0.5,
+      "tomeg_kg": 15
+    },
+    "erdekesseg": "Az egyik legelsőként leírt brit dinoszaurusz a történelemben (1836). Nevének jelentése 'tokosfogú gyík', ami a fogak állkapocsmederben való rögzülésére utal. Anatómiailag valószínűleg mindenevő vagy korai növényevő volt.",
+    "muzeum": "Bristol Museum & Art Gallery (az eredeti típuspéldányok többsége a II. világháborús bombázásokban megsemmisült)"
+  },
+  {
+    "id": 23,
+    "nev_tudomanyos": "Concavenator corcovatus",
+    "nev_koznapi": "Concavenator",
+    "csoport": "Theropoda (Carcharodontosauridae)",
+    "korszak": "kora kréta",
+    "kor_millioev": "130 Ma",
+    "megtalalas_helye": {
+      "orszag": "Spanyolország",
+      "helyszin": "Las Hoyas lelőhely, Cuenca tartomány, Kasztília–La Mancha",
+      "formacio": "La Huérguina-formáció"
+    },
+    "felfedezes": {
+      "ev": 2003,
+      "felfedezo": "Francisco Ortega, Fernando Escaso és José Luis Sanz, leírva 2010-ben",
+      "korulmeny": "A Las Hoyas-i finomrétegzett mészkőben egy szinte tökéletesen artikulált, teljes csontvázat találtak. A dínó hátán lévő furcsa csigolyameghosszabbodások és az alkarján lévő struktúrák azonnal tudományos szenzációvá tették.",
+      "lelet_tipusa": "Közel 100%-os, teljesen összefüggő csontváz lenyomatokkal"
+    },
+    "meretek": {
+      "hossz_m": 5.8,
+      "magassag_m": 1.8,
+      "tomeg_kg": 800
+    },
+    "erdekesseg": "A medencéje előtti csigolyákon lévő éles 'púp' funkciója máig rejtély (hőszabályozási vagy párválasztási szerepe is lehetett). Az alkarcsontokon található dudorok egyes kutatók szerint primitív tollképletek rögzülési pontjai lehettek, de ezt nem minden szakember fogadja el.",
+    "muzeum": "Museo de Paleontología de Castilla-La Mancha, Cuenca"
+  },
+  {
+    "id": 24,
+    "nev_tudomanyos": "Pelecanimimus polyodon",
+    "nev_koznapi": "Pelecanimimus",
+    "csoport": "Theropoda (Ornithomimosauria)",
+    "korszak": "kora kréta",
+    "kor_millioev": "130 Ma",
+    "megtalalas_helye": {
+      "orszag": "Spanyolország",
+      "helyszin": "Las Hoyas, Cuenca tartomány",
+      "formacio": "La Huérguina-formáció"
+    },
+    "felfedezes": {
+      "ev": 1993,
+      "felfedezo": "Armando Díaz Romeral fedezte fel, leírta Bernardino P. Pérez-Moreno és José Luis Sanz 1994-ben",
+      "korulmeny": "A Las Hoyas lelőhely rendkívüli oxigénmentes betemetődési környezetének köszönhetően a csontváz lágyrész-lenyomatokat, köztük a nyak és a torok körvonalait is megőrizte.",
+      "lelet_tipusa": "Félig artikulált részleges csontváz, lágyszövet-lenyomatokkal"
+    },
+    "meretek": {
+      "hossz_m": 2,
+      "magassag_m": 0.7,
+      "tomeg_kg": 15
+    },
+    "erdekesseg": "Több mint 220 apró fog ült az állkapcsában, ami egyedülálló, hiszen a későbbi 'struccdinó' rokonai már teljesen fogatlanok voltak. Neve 'pelikánutánzó' jelentésű, mivel a torkánál talált lágyrész-lenyomat egy pelikánszerű torokzsák jelenlétére utal.",
+    "muzeum": "Museo de Ciencias Naturales, Madrid"
+  },
+  {
+    "id": 25,
+    "nev_tudomanyos": "Arcovenator escotae",
+    "nev_koznapi": "Arcovenator",
+    "csoport": "Theropoda (Abelisauridae)",
+    "korszak": "késő kréta",
+    "kor_millioev": "80–72 Ma",
+    "megtalalas_helye": {
+      "orszag": "Franciaország",
+      "helyszin": "Pourrières / Arc-sur-Argens, Var megye, Provence",
+      "formacio": "Argiles et Grès à Reptiles-formáció"
+    },
+    "felfedezes": {
+      "ev": 2007,
+      "felfedezo": "Autópálya-építési megelőző leletmentés során találták, leírta Thierry Tortosa és munkatársai 2014-ben",
+      "korulmeny": "Az A8-as autópálya munkálatai során bukkantak rá a fosszíliákra. Az abelisauridák jelenléte a kréta időszak legvégén zátonyra futtatta azt a korábbi elméletet, miszerint ezek a dínók kizárólag a déli féltekén (Gondwana) éltek.",
+      "lelet_tipusa": "Agykoponya, állkapocselemek, fogak és csigolyák"
+    },
+    "meretek": {
+      "hossz_m": 6,
+      "magassag_m": 2,
+      "tomeg_kg": 700
+    },
+    "erdekesseg": "Az abelisauridák (pl. *Carnotaurus*) tipikusan déli dínók voltak, nagyon csökevényes mellső végtagokkal és vaskos koponyával. Az Arcovenator európai felbukkanása bizonyítja, hogy a késő krétában időszakos faunavándorlások zajlottak Afrika és az európai szigetvilág között.",
+    "muzeum": "Muséum d'Histoire Naturelle d'Aix-en-Provence"
+  }
+]

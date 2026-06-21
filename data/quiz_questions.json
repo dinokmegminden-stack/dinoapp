@@ -1,0 +1,1940 @@
+[
+  {
+    "id": 1,
+    "difficulty": "medium",
+    "question": "Melyik alrendbe tartozik a hatalmas méretű Argentinosaurus huinculensis?",
+    "options": [
+      "Theropoda",
+      "Sauropodomorpha",
+      "Sauropoda",
+      "Ornithischia"
+    ],
+    "correctIndex": 1,
+    "hint": "A név közvetlenül a sauropodák őseire és rokonságára utaló magasabb kategória."
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "question": "Melyik nagy tudományos intézmény vagy enciklopédia neve fémjelzi a hüllőkről és dinoszauruszokról szóló forráskötetet?",
+    "options": [
+      "National Geographic",
+      "Encyclopædia Britannica",
+      "Smithsonian Institution",
+      "Oxford University Press"
+    ],
+    "correctIndex": 1,
+    "hint": "A világ egyik leghíresebb és legrégebbi angol nyelvű általános enciklopédiájáról van szó."
+  },
+  {
+    "id": 3,
+    "difficulty": "hard",
+    "question": "A könyv rendszertani áttekintése alapján melyik csoportba sorolható be szűkebb értelemben maga az Argentinosaurus nemzetség?",
+    "options": [
+      "Sauropoda",
+      "Theropoda",
+      "Ceratopsia",
+      "Hadrosauridae"
+    ],
+    "correctIndex": 0,
+    "hint": "Ez a csoport foglalja magában a hosszú nyakú, négy lábon járó óriási növényevő dinoszauruszokat."
+  },
+  {
+    "id": 4,
+    "difficulty": "easy",
+    "question": "Körülbelül hány millió évvel ezelőtt következett be az a globális esemény, amely a dinoszauruszok tömeges kihalásához vezetett?",
+    "options": [
+      "kb. 10 millió éve",
+      "kb. 66 millió éve",
+      "kb. 150 millió éve",
+      "kb. 250 millió éve"
+    ],
+    "correctIndex": 1,
+    "hint": "A kréta időszak végét és a paleogén időszak kezdetét elválasztó határvonal."
+  },
+  {
+    "id": 5,
+    "difficulty": "medium",
+    "question": "A forrás bevezetője szerint a dinoszauruszok virágkora idején a szárazföldi formák mellett milyen egyéb hüllőrokonok uralták a bolygót?",
+    "options": [
+      "Kizárólag primitív kétéltűek",
+      "Vízi és repülő hüllőcsoportok",
+      "Emlősszerű hüllők óriás fajai",
+      "Hatalmas méretű szárazföldi teknősök"
+    ],
+    "correctIndex": 1,
+    "hint": "Gondolj az óceánokban úszó és a levegőben szárnyaló őshüllőkre."
+  },
+  {
+    "id": 6,
+    "difficulty": "easy",
+    "question": "Milyen típusú maradványokat, leleteket vizsgálnak a paleontológusok, hogy rekonstruálják a dinoszauruszok kinézetét és életmódját?",
+    "options": [
+      "Mummifikálódott tetemeket",
+      "Fosszíliákat és kövületeket",
+      "Ép csontvázakat fagyott jégben",
+      "Barlangrajzokat és lenyomatokat"
+    ],
+    "correctIndex": 1,
+    "hint": "Az évmilliók során kővé vált szerves maradványok általános elnevezése."
+  },
+  {
+    "id": 7,
+    "difficulty": "medium",
+    "question": "A könyvben bemutatott legfontosabb dinoszauruszcsoportok közül melyikre jellemző a ragadozó életmód és a két lábon való járás?",
+    "options": [
+      "Sauropoda",
+      "Theropoda",
+      "Ankylosauria",
+      "Stegosauria"
+    ],
+    "correctIndex": 1,
+    "hint": "Ebbe a csoportba tartozik a híres Tyrannosaurus rex és a Velociraptor is."
+  },
+  {
+    "id": 8,
+    "difficulty": "easy",
+    "question": "Mi a neve annak a tudományágnak, amely a földtörténeti múltban élt élőlények maradványaival és fejlődésével foglalkozik?",
+    "options": [
+      "Geológia",
+      "Paleontológia",
+      "Archeológia",
+      "Antropológia"
+    ],
+    "correctIndex": 1,
+    "hint": "Magyarul gyakran őslénytannak is nevezik ezt a diszciplínát."
+  },
+  {
+    "id": 10,
+    "difficulty": "easy",
+    "question": "A dinoszauruszok osztályozása során melyik testrész felépítése alapján osztják őket két fő csoportra (Saurischia és Ornithischia)?",
+    "options": [
+      "A koponya formája",
+      "A medencecsont szerkezete",
+      "A mellső végtagok hossza",
+      "A fogazat típusa"
+    ],
+    "correctIndex": 1,
+    "hint": "Hüllőmedencéjűek és madármedencéjűek - a név a test középső vázrészére utal."
+  },
+  {
+    "id": 12,
+    "difficulty": "hard",
+    "question": "A fellelhető adatok alapján milyen táplálkozási stratégiát folytattak a Sauropoda alrendbe tartozó dinoszauruszok?",
+    "options": [
+      "Aktív ragadozók voltak",
+      "Növényevők (herbivorok) voltak",
+      "Mindenevők (omnivorok) voltak",
+      "Dögevők voltak"
+    ],
+    "correctIndex": 1,
+    "hint": "Hatalmas méretük ellenére fák leveleivel és aljnövényzettel táplálkoztak."
+  },
+  {
+    "id": 13,
+    "difficulty": "medium",
+    "question": "Melyik korszakot nevezik összefoglalóan a hüllők és dinoszauruszok korának a geológiai időskálán?",
+    "options": [
+      "Paleozoikum",
+      "Mezozoikum",
+      "Kainozoikum",
+      "Prekambrium"
+    ],
+    "correctIndex": 1,
+    "hint": "A földtörténeti középidő, amely magában foglalja a triász, jura és kréta időszakokat."
+  },
+  {
+    "id": 14,
+    "difficulty": "easy",
+    "question": "Milyen típusú környezetben maradhatnak fenn a leginkább a dinoszauruszok csontjai és fogai az évmilliók során?",
+    "options": [
+      "Nyílt vulkáni kráterekben",
+      "Üledékes kőzetekben",
+      "Trópusi esőerdők talajfelszínén",
+      "Metamorf kőzetek mélyén"
+    ],
+    "correctIndex": 1,
+    "hint": "Olyan rétegekben, ahol az iszap, homok vagy hordalék gyorsan betemeti a tetemet."
+  },
+  {
+    "id": 15,
+    "difficulty": "medium",
+    "question": "Melyik jellegzetesség különbözteti meg a Theropoda dinoszauruszokat a Sauropoda dinoszauruszoktól?",
+    "options": [
+      "A Theropodák mindig négy lábon jártak",
+      "A Theropodák alapvetően húsevők és két lábon járók voltak",
+      "A Sauropodák sokkal kisebb méretűek voltak",
+      "A Sauropodáknak rövid, zömök nyakuk volt"
+    ],
+    "correctIndex": 1,
+    "hint": "A Theropoda csoport tagjai a ragadozó életmódhoz alkalmazkodott mozgással és fogazattal rendelkeztek."
+  },
+  {
+    "id": 16,
+    "difficulty": "easy",
+    "question": "Mit jelent a 'dinoszaurusz' kifejezés szó szerinti fordításban?",
+    "options": [
+      "Félelmetes gyík",
+      "Gyors futó",
+      "Hatalmas madár",
+      "Tüskés hüllő"
+    ],
+    "correctIndex": 0,
+    "hint": "Sir Richard Owen által alkotott görög eredetű összetett szó, a félelmetes vagy szörnyű és a gyík szavakból."
+  },
+  {
+    "id": 17,
+    "difficulty": "medium",
+    "question": "A könyv rendszertani felosztása szerint a Sauropodomorpha csoport tagjai milyen jellegzetes testfelépítéssel rendelkeztek?",
+    "options": [
+      "Rövid nyak és hatalmas páncélzat",
+      "Megnyúlt nyak, kisméretű fej és hatalmas test",
+      "Csőrös száj és tollas szárnyak",
+      "Két lábon járó, karmos mellső végtagok"
+    ],
+    "correctIndex": 1,
+    "hint": "Ez a testfelépítés tette lehetővé számukra, hogy elérjék a legmagasabb fák lombkoronáját is."
+  },
+  {
+    "id": 18,
+    "difficulty": "hard",
+    "question": "Melyik geológiai időszakban jelentek meg az első igazi dinoszauruszok a Földön?",
+    "options": [
+      "Perm",
+      "Triász",
+      "Jura",
+      "Kréta"
+    ],
+    "correctIndex": 1,
+    "hint": "A mezozoikum legelső, legkorábbi időszaka."
+  },
+  {
+    "id": 19,
+    "difficulty": "medium",
+    "question": "A kövületek vizsgálata során mit neveznek 'nyomfosszíliának' a paleontológiában?",
+    "options": [
+      "A megkövesedett csontokat",
+      "A megkövesedett lábnyomokat, fészkeket vagy ürüléket",
+      "A barlangokban talált rajzokat",
+      "A tengeri kagylók héját"
+    ],
+    "correctIndex": 1,
+    "hint": "Olyan leletek, amelyek nem az állat testét, hanem annak életmódját, tevékenységét örökítik meg."
+  },
+  {
+    "id": 21,
+    "difficulty": "medium",
+    "question": "Melyik anatómiai tulajdonság segítette a nagyméretű növényevő dinoszauruszokat a hatalmas mennyiségű növényi táplálék megemésztésében?",
+    "options": [
+      "A rágófogak teljes hiánya miatti gasztrolitok (nyelt kövek) használata",
+      "A méregmirigyek jelenléte",
+      "A rendkívül rövid emésztőrendszer",
+      "A rágás képessége minden fajnál"
+    ],
+    "correctIndex": 0,
+    "hint": "Sok sauropoda apró köveket nyelt le, hogy azok a zúzógyomorban segítsenek felőrölni a növényeket."
+  },
+  {
+    "id": 22,
+    "difficulty": "hard",
+    "question": "A hüllők melyik alcsoportjába (alosztályába) tartoznak a dinoszauruszok a koponyaablakok száma alapján?",
+    "options": [
+      "Anapsida",
+      "Synapsida",
+      "Diapsida",
+      "Euryapsida"
+    ],
+    "correctIndex": 2,
+    "hint": "Két halántékablakkal rendelkező koponyaszerkezet jellemzi őket, mint a mai gyíkokat és krokodilokat."
+  },
+  {
+    "id": 23,
+    "difficulty": "easy",
+    "question": "Milyen halmazállapotú vagy típusú anyagból épül fel a legtöbb csontfosszília, amit a múzeumokban láthatunk?",
+    "options": [
+      "Eredeti porc és szövet",
+      "Ásványosodott kőzet",
+      "Megkövesedett faanyag",
+      "Tiszta fém"
+    ],
+    "correctIndex": 1,
+    "hint": "A csontok pórusait az évmilliók során a talajvízből kiváló ásványok töltötték ki."
+  },
+  {
+    "id": 24,
+    "difficulty": "medium",
+    "question": "Mi a neve annak a hatalmas szuperkontinensnek, amely a triász időszakban még egybefüggő szárazföldet alkotott, lehetővé téve a dinoszauruszok elterjedését?",
+    "options": [
+      "Laurázsia",
+      "Gondwana",
+      "Pangea",
+      "Tethys"
+    ],
+    "correctIndex": 2,
+    "hint": "Az összes mai kontinenst magában foglaló egykori óriáskontinens."
+  },
+  {
+    "id": 25,
+    "difficulty": "hard",
+    "question": "Melyik evolúciós újítás különbözteti meg a dinoszauruszokat a többi korabeli primitív hüllőtől a végtagok állását tekintve?",
+    "options": [
+      "A test mellett oldalt elhelyezkedő, terpesztett lábak",
+      "A test alatt függőlegesen elhelyezkedő, egyenes oszlopszerű végtagok",
+      "A végtagok teljes hiánya",
+      "A kizárólag ugrásra alkalmas hátsó lábak"
+    ],
+    "correctIndex": 1,
+    "hint": "Ez a hatékonyabb, a testet megemelő tartás tette lehetővé a gyorsabb mozgást és a hatalmas súly cipelését."
+  },
+  {
+    "id": 26,
+    "difficulty": "easy",
+    "question": "A kövületek alapján a modern madarak melyik dinoszauruszcsoportból fejlődtek ki közvetlenül az evolúció során?",
+    "options": [
+      "Sauropoda",
+      "Theropoda",
+      "Ornithischia",
+      "Pterosauria"
+    ],
+    "correctIndex": 1,
+    "hint": "A két lábon járó, alapvetően húsevő dinoszauruszok egy csoportja fejlesztett ki először tollakat."
+  },
+  {
+    "id": 27,
+    "difficulty": "medium",
+    "question": "Melyik állítás igaz a dinoszauruszok bőrére vonatkozott leletek alapján?",
+    "options": [
+      "Minden dinoszaurusz bőre teljesen sima volt, mint a kétéltűeké",
+      "Pikkelyek, csontos pajzsok, sőt egyes csoportoknál tollak vagy tollszerű képletek is borították",
+      "Kizárólag vastag szőrzet borította őket",
+      "Nem maradt fenn semmilyen bőrlenyomat a fosszilis rekordban"
+    ],
+    "correctIndex": 1,
+    "hint": "A fosszilis bőrlenyomatok rendkívüli változatosságot mutatnak a pikkelyektől a tollakig."
+  },
+  {
+    "id": 28,
+    "difficulty": "hard",
+    "question": "Mi a neve annak a geológiai határnak, amely a kréta időszak végét jelző becsapódási eseményhez és az irídiumréteghez kapcsolódik?",
+    "options": [
+      "Perm–triász kihalási esemény",
+      "K–Pg (kréta–paleogén) határ",
+      "Kambriumi robbanás",
+      "Pleisztocén jégkorszak"
+    ],
+    "correctIndex": 1,
+    "hint": "Ez a geológiai határ jelzi a dinoszauruszok uralkodásának hirtelen végét."
+  },
+  {
+    "id": 29,
+    "difficulty": "easy",
+    "question": "Melyik állatcsoport NEM tartozik a dinoszauruszok közé a klasszikus paleontológiai definíció szerint?",
+    "options": [
+      "Tyrannosaurus",
+      "Pteranodon (repülő hüllő)",
+      "Triceratops",
+      "Diplodocus"
+    ],
+    "correctIndex": 1,
+    "hint": "Bár egy időben éltek velük, a repülő hüllők külön evolúciós ágat (Pterosauria) képviselnek."
+  },
+  {
+    "id": 30,
+    "difficulty": "medium",
+    "question": "Milyen módszerrel állapítják meg a paleontológusok a dinoszauruszok fosszíliáit tartalmazó kőzetrétegek pontos korát?",
+    "options": [
+      "Kizárólag a csontok színéből",
+      "Radiometrikus kormeghatározással és indexfosszíliák segítségével",
+      "A kőzet keménységének mérésével",
+      "Történelmi feljegyzések alapján"
+    ],
+    "correctIndex": 1,
+    "hint": "Az izotópok bomlási idején alapuló fizikai módszer adja a legpontosabb évszámokat."
+  },
+  {
+    "id": 31,
+    "difficulty": "hard",
+    "question": "Melyik csoportot tekinti a modern kladisztika a dinoszauruszok legközelebbi élő rokonainak?",
+    "options": [
+      "Gyíkok",
+      "Krokodilok és madarak",
+      "Teknősök",
+      "Kétéltűek"
+    ],
+    "correctIndex": 1,
+    "hint": "Az Archosauria (uralkodó hüllők) csoporton belül velük alkotnak közös kládot."
+  },
+  {
+    "id": 32,
+    "difficulty": "easy",
+    "question": "Mi a szerepe a megkövesedett dinoszaurusztojásoknak az őslénytani kutatásokban?",
+    "options": [
+      "Megmutatják az állatok pontos színét",
+      "Információt nyújtanak a szaporodási biológiáról és az ivadékgondozásról",
+      "Csak geológiai díszként szolgálnak",
+      "Segítenek meghatározni a dinoszauruszok maximális sebességét"
+    ],
+    "correctIndex": 1,
+    "hint": "A fészkek és tojások elrendezése elárulja, hogyan gondoskodtak az utódaikról."
+  },
+  {
+    "id": 33,
+    "difficulty": "medium",
+    "question": "Melyik fizikai tulajdonság utal egy theropoda dinoszaurusz fosszíliájánál arra, hogy gyors futásra volt képes?",
+    "options": [
+      "A nehéz, csontos farokbunkó",
+      "A megnyúlt, vékony hátsó végtagok és a lábujjon járás (digitigrade)",
+      "A rövid, vaskos combcsont és a lapos talp",
+      "A hatalmas tülkök a fejen"
+    ],
+    "correctIndex": 1,
+    "hint": "A modern futómadarakhoz hasonló lábfej- és lábszár-arányok jelzik a sebességet."
+  },
+  {
+    "id": 34,
+    "difficulty": "hard",
+    "question": "Mit nevezünk koprolitnak a paleontológiában, amely sokat elárul a dinoszauruszok étrendjéről?",
+    "options": [
+      "Megkövesedett bőrlemezt",
+      "Megkövesedett ürüléket",
+      "A fülben található apró csontokat",
+      "A tojáshéj belső membránját"
+    ],
+    "correctIndex": 1,
+    "hint": "A megemésztett táplálék megkövesedett végterméke."
+  },
+  {
+    "id": 35,
+    "difficulty": "easy",
+    "question": "A jura időszakban élt híres Stegosaurus milyen jellegzetes védelmi fegyverrel rendelkezett a farka végén?",
+    "options": [
+      "Csontos bunkó",
+      "Hosszú, hegyes csonttüskék (thagomizer)",
+      "Méregtüske",
+      "Ollószerű rágó"
+    ],
+    "correctIndex": 1,
+    "hint": "Négy darab félelmetes, hátrafelé néző szúrófegyver volt a farkán."
+  },
+  {
+    "id": 36,
+    "difficulty": "medium",
+    "question": "Melyik tengeri hüllőcsoport élt a dinoszauruszokkal egy időben, de NEM tartozott a dinoszauruszok közé?",
+    "options": [
+      "Plesiosauria (pl. Plesiosaurus)",
+      "Hadrosauridae",
+      "Ceratopsia",
+      "Ankylosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "Hosszú nyakú vagy uszonyos vízi ragadozók, amelyek a mezozoikum tengereit uralták."
+  },
+  {
+    "id": 37,
+    "difficulty": "hard",
+    "question": "Melyik anatómiai struktúra hiányzott a madármedencéjű dinoszauruszok (Ornithischia) szájüregéből, ami a növényevést szolgálta?",
+    "options": [
+      "A rágófogak",
+      "Az elülső metszőfogak, amelyeket gyakran egy szarucsőr helyettesített",
+      "A nyelv",
+      "A nyálmirigyek"
+    ],
+    "correctIndex": 1,
+    "hint": "A növények lenyírására alkalmas kemény, madárszerű képlet volt a szájszervük elején."
+  },
+  {
+    "id": 38,
+    "difficulty": "easy",
+    "question": "A kréta időszak végén élt Triceratops feje körül milyen jellegzetes csontos képlet látható?",
+    "options": [
+      "Hatalmas csonttaréj",
+      "Nyakpajzs vagy gallér",
+      "Tollas sörény",
+      "Légzőcső"
+    ],
+    "correctIndex": 1,
+    "hint": "A nyakat védő és a párválasztási harcokban szerepet játszó széles csontlemez."
+  },
+  {
+    "id": 40,
+    "difficulty": "hard",
+    "question": "Milyen szerepet játszottak a dinoszauruszok csontjainak belsejében található légzsákok (pneumatizáció)?",
+    "options": [
+      "Csökkentették a csontváz súlyát és segítették a hatékony légzést",
+      "Vizet tároltak a száraz időszakokra",
+      "A testhőmérséklet drasztikus csökkentésére szolgáltak",
+      "Kizárólag a hangadást segítették"
+    ],
+    "correctIndex": 0,
+    "hint": "A modern madarakhoz hasonlóan ez tette lehetővé, hogy az óriási sauropodák csontjai ne legyenek túl nehezek."
+  },
+  {
+    "id": 41,
+    "difficulty": "easy",
+    "question": "A híres Tyrannosaurus rex milyen elsődleges táplálkozási formát folytatott a fogazata és testfelépítése alapján?",
+    "options": [
+      "Növényevő",
+      "Húsevő / csúcsragadozó",
+      "Halak kiszűrése a vízből",
+      "Rovarok fogyasztása"
+    ],
+    "correctIndex": 1,
+    "hint": "Hatalmas, zúzó fogaival és erős állkapcsával más dinoszauruszokra vadászott."
+  },
+  {
+    "id": 42,
+    "difficulty": "medium",
+    "question": "A leletek alapján a kacsacsőrű dinoszauruszok (Hadrosauridae) fején található üreges csonttaréjok valószínűleg mi célt szolgáltak?",
+    "options": [
+      "Fegyverként a ragadozók ellen",
+      "Hangadást (kommunikációt) és vizuális jelzést",
+      "A víz alatti légzést",
+      "A táplálék tárolását"
+    ],
+    "correctIndex": 1,
+    "hint": "Belső üregeik rezonancia-kamraként működhettek, felerősítve az állat hangját."
+  },
+  {
+    "id": 43,
+    "difficulty": "hard",
+    "question": "Mi a neve annak a fosszilis átmeneti formának (ősmaradványnak), amely híresen összeköti a dinoszauruszokat és a madarakat, bemutatva a tollak és a hüllőszerű csontváz kombinációját?",
+    "options": [
+      "Archaeopteryx",
+      "Pteranodon",
+      "Compsognathus",
+      "Ichthyosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "A solnhofeni mészkőbányákban talált híres „ősmadár”."
+  },
+  {
+    "id": 44,
+    "difficulty": "easy",
+    "question": "Melyik testrész segített a két lábon járó theropoda dinoszauruszoknak megőrizni az egyensúlyukat futás közben?",
+    "options": [
+      "A hatalmas mellső karok",
+      "A mereven hátrafeszített, nehéz csontos farok",
+      "A széles, lapos nyak",
+      "A lábujjakon lévő úszóhártya"
+    ],
+    "correctIndex": 1,
+    "hint": "Ellensúlyként működött a nehéz fejjel és törzzsel szemben mozgás közben."
+  },
+  {
+    "id": 45,
+    "difficulty": "medium",
+    "question": "Melyik csoportba tartoznak a páncélos, csontos lemezekkel és farokbunkóval védett növényevő dinoszauruszok?",
+    "options": [
+      "Ankylosauria",
+      "Ceratopsia",
+      "Ornithopoda",
+      "Theropoda"
+    ],
+    "correctIndex": 0,
+    "hint": "Úgy is ismertek, mint az őskor „élő tankjai”."
+  },
+  {
+    "id": 46,
+    "difficulty": "hard",
+    "question": "Mit jelent az, hogy a dinoszauruszok egy része valószínűleg endoterm (melegvérű) vagy mezoterm anyagcserével rendelkezett?",
+    "options": [
+      "Képesek voltak belső hőt termelni és szabályozni a testhőmérsékletüket",
+      "Teljesen a környezet hőmérsékletétől függtek, mint a mai kígyók",
+      "Csak éjszaka voltak aktívak",
+      "Kizárólag fagyos éghajlaton tudtak életben maradni"
+    ],
+    "correctIndex": 0,
+    "hint": "A gyors növekedési rátájuk és csontszerkezetük magasabb metabolikus rátára utal, mint a modern hüllőké."
+  },
+  {
+    "id": 47,
+    "difficulty": "easy",
+    "question": "Melyik időszakból származnak a legidősebb ismert dinoszaurusz-fosszíliák?",
+    "options": [
+      "Triász",
+      "Jura",
+      "Kréta",
+      "Kambrium"
+    ],
+    "correctIndex": 0,
+    "hint": "A mezozoikum legelső szakasza, mintegy 230-240 millió évvel ezelőtt."
+  },
+  {
+    "id": 48,
+    "difficulty": "medium",
+    "question": "A megkövesedett fészkekben talált leletek alapján hogyan gondozták egyes dinoszauruszok (például a Maiasaura) az utódaikat?",
+    "options": [
+      "A tojásokat lerakás után sorsukra hagyták",
+      "Közösségi fészektelepeken védték és táplálták a kikelt kicsinyeket",
+      "A vízbe rejtették a tojásokat",
+      "A hátukon hordozták a kikelt utódokat"
+    ],
+    "correctIndex": 1,
+    "hint": "A Maiasaura név jelentése nem véletlenül „jó anyagyík”."
+  },
+  {
+    "id": 49,
+    "difficulty": "hard",
+    "question": "A geológiai rétegtanban miért számítanak a dinoszauruszok fogai kiváló fosszilis leletnek a csontokhoz képest?",
+    "options": [
+      "Mert a fogak zománcrétege sokkal keményebb, így jobban ellenáll a pusztulásnak",
+      "Mert a fogakból meg lehet tudni az állat pontos életkorát években kifejezve",
+      "Mert a fogak mérete nem változott az állat növekedése során",
+      "Mert minden dinoszaurusznak pontosan ugyanolyan alakú fogai voltak"
+    ],
+    "correctIndex": 0,
+    "hint": "A legkeményebb szövet a szervezetben, amely a legkönnyebben vészeli át az évmilliókat."
+  },
+  {
+    "id": 50,
+    "difficulty": "easy",
+    "question": "Melyik kontinensen NEM találtak még dinoszaurusz-fosszíliát a kutatók?",
+    "options": [
+      "Ausztrália",
+      "Antarktisz",
+      "Minden kontinensen találtak már dinoszaurusz-maradványt",
+      "Afrika"
+    ],
+    "correctIndex": 2,
+    "hint": "Mivel a Pangea idején a földrészek összefüggtek, ezek az állatok eljutottak a mai fagyos déli területekre is."
+  },
+  {
+    "id": 51,
+    "difficulty": "medium",
+    "question": "A Spinosaurus hátán lévő hatalmas, csonttüskék által tartott vitorla a kutatók szerint elsősorban milyen funkciót tölthetett be?",
+    "options": [
+      "Kizárólag repülésre szolgált",
+      "Hőszabályozást, valamint párválasztási és fenyegető jelzéseket szolgált",
+      "Víz alatti kormányzásra használták",
+      "A táplálék zsírként való tárolására szolgált"
+    ],
+    "correctIndex": 1,
+    "hint": "Nagy felülete segített felvenni vagy leadni a hőt, és messziről láthatóvá tette az állatot."
+  },
+  {
+    "id": 53,
+    "difficulty": "easy",
+    "question": "A növényevő Diplodocus hosszú, vékony farka a paleontológusok szerint leginkább mire lehetett alkalmas?",
+    "options": [
+      "Tárgyak megfogására, mint a majmoknál",
+      "Védekezésre ostorszerű csapásokkal és egyensúlyozásra",
+      "A fák gyökerének kiásására",
+      "Úszásra mély vízben"
+    ],
+    "correctIndex": 1,
+    "hint": "A farok végén a csigolyák elvékonyodtak, mint egy ostor csapása."
+  },
+  {
+    "id": 54,
+    "difficulty": "medium",
+    "question": "Milyen típusú kőzetben zajlik a leggyakrabban a fosszilizáció folyamata?",
+    "options": [
+      "Magmás kőzetben (pl. bazalt)",
+      "Üledékes kőzetben (pl. homokkő, agyag, mészkő)",
+      "Metamorf kőzetben (pl. márvány)",
+      "Plutónikus kőzetben (pl. gránit)"
+    ],
+    "correctIndex": 1,
+    "hint": "Ahol a víz által lerakott rétegek finoman betemetik az elpusztult élőlényeket."
+  },
+  {
+    "id": 55,
+    "difficulty": "hard",
+    "question": "Mit nevezünk 'taphonómiának' az őslénytanban?",
+    "options": [
+      "A dinoszauruszok belső szerveinek leírását",
+      "A kövesedési folyamatok tudományát az élőlény elpusztulásától a fosszília megtalálásáig",
+      "A dinoszauruszlábnyomok osztályozási rendszerét",
+      "A kormeghatározás mikroszkopikus módszerét"
+    ],
+    "correctIndex": 1,
+    "hint": "Azt vizsgálja, mi történik a tetemmel a bomlástól a betemetődésen át a megkövesedésig."
+  },
+  {
+    "id": 56,
+    "difficulty": "easy",
+    "question": "Melyik korszak híres ragadozója volt az Allosaurus, amely megelőzte a T. rexet a földtörténeti időskálán?",
+    "options": [
+      "Kora triász",
+      "Késő jura",
+      "Kora kréta",
+      "Késő kréta"
+    ],
+    "correctIndex": 1,
+    "hint": "A mezozoikum középső nagy időszakának a végén volt Észak-Amerika csúcsragadozója."
+  },
+  {
+    "id": 57,
+    "difficulty": "medium",
+    "question": "Mi a különbség a dinoszauruszok és a Pterosauria (repülő hüllők) szárnyszerkezete között?",
+    "options": [
+      "A pterosauruszok szárnya bőrhártya volt, amit egy meghosszabbodott negyedik ujj tartott, nem tollas madárszárny",
+      "A pterosauruszoknak nem volt csontos szárnya, csak porcos",
+      "A dinoszauruszok tudtak repülni tollak nélkül is",
+      "A pterosauruszok szárnya a lábukból alakult ki"
+    ],
+    "correctIndex": 0,
+    "hint": "A denevérekhez hasonló bőrleffentyűs megoldás, amelyet a kézfej egyik ujja feszített ki."
+  },
+  {
+    "id": 58,
+    "difficulty": "hard",
+    "question": "A kréta időszaki növényvilág melyik forradalmi változása befolyásolta jelentősen a növényevő dinoszauruszok evolúcióját?",
+    "options": [
+      "A zárvatermők (virágos növények) megjelenése és elterjedése",
+      "A harasztok teljes kihalása",
+      "Az első fenyőfélék megjelenése",
+      "A moszatok szárazföldre lépése"
+    ],
+    "correctIndex": 0,
+    "hint": "Az új, gyorsan növekvő táplálékforrás megjelenése új típusú rágóapparátusok kifejlődéséhez vezetett a hadrosauridáknál."
+  },
+  {
+    "id": 59,
+    "difficulty": "easy",
+    "question": "Melyik fegyverzet tette félelmetessé a Velociraptor hátsó lábait vadászat közben?",
+    "options": [
+      "Hatalmas, sarló alakú visszahúzható karom minden lábon",
+      "Csontos paták",
+      "Méregtövisek a sarkon",
+      "A lábujjak teljes hiánya"
+    ],
+    "correctIndex": 0,
+    "hint": "Egyetlen hatalmas, ívelt karom a második lábujjon, amit futás közben felemelve tartott."
+  },
+  {
+    "id": 60,
+    "difficulty": "medium",
+    "question": "Mi jellemezte a Pachycephalosaurus koponyáját, amelyről a nevét is kapta?",
+    "options": [
+      "Hatalmas, üreges és törékeny volt",
+      "Rendkívül megvastagodott, tömör csontos dóm alakú volt",
+      "Két hosszú tülök ült az orrán",
+      "Nem voltak rajta szemgödrök"
+    ],
+    "correctIndex": 1,
+    "hint": "A név jelentése „vastagfejű gyík”, a koponyatető akár 20-25 cm vastag is lehetett."
+  },
+  {
+    "id": 62,
+    "difficulty": "easy",
+    "question": "A Triceratops és a Torosaurus melyik dinoszauruszcsoport reprezentatív tagjai?",
+    "options": [
+      "Ceratopsia (tülkös dinoszauruszok)",
+      "Theropoda",
+      "Sauropoda",
+      "Ankylosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "A galléros, tülkös, papagájszerű csőrrel rendelkező növényevők csoportja."
+  },
+  {
+    "id": 63,
+    "difficulty": "medium",
+    "question": "Melyik állítás igaz az Ichthyosauruszokra a leletek alapján?",
+    "options": [
+      "Két lábon járó szárazföldi ragadozók voltak",
+      "Halformájú, teljesen a vízi életmódhoz alkalmazkodott tengeri hüllők voltak",
+      "A levegőben vadásztak rovarokra",
+      "Hosszú nyakú növényevők voltak"
+    ],
+    "correctIndex": 1,
+    "hint": "A mai delfinekre hasonlító konvergens evolúciós formát mutató mezozoikumi hüllők."
+  },
+  {
+    "id": 64,
+    "difficulty": "hard",
+    "question": "Milyen típusú fogváltás jellemezte a dinoszauruszok többségét (pl. a hadrosauridákat vagy theropodákat)?",
+    "options": [
+      "Egész életük során folyamatosan újratermelődő és cserélődő fogak (polyphyodontia)",
+      "Csak két garnitúra foguk volt, mint az emlősöknek",
+      "A tejfogak elvesztése után nem nőttek új fogaik",
+      "Egyáltalán nem voltak fogaik semmilyen életkorban"
+    ],
+    "correctIndex": 0,
+    "hint": "Ha egy fog elkopott vagy kitört, alatta már ott várakozott a következő váltófog."
+  },
+  {
+    "id": 65,
+    "difficulty": "easy",
+    "question": "Melyik volt a leghosszabb nyakú dinoszauruszok egyike, amelynek neve szinte szinonimája lett az óriási méretnek?",
+    "options": [
+      "Brachiosaurus / Diplodocus",
+      "Velociraptor",
+      "Stegosaurus",
+      "Iguanodon"
+    ],
+    "correctIndex": 0,
+    "hint": "Hatalmas mellső lábakkal és felfelé törő hosszú nyakkal rendelkező sauropoda."
+  },
+  {
+    "id": 66,
+    "difficulty": "medium",
+    "question": "Mit bizonyít a híres 'harcoló dinoszauruszok' fosszíliája, ahol egy Velociraptor és egy Protoceratops együtt kövesedett meg?",
+    "options": [
+      "Hogy békében éltek egymás mellett",
+      "A közvetlen ragadozó-zsákmány interakciót és a hirtelen betemetődést (pl. homokvihar)",
+      "Hogy mindketten növényevők voltak",
+      "Hogy tengeri környezetben pusztultak el"
+    ],
+    "correctIndex": 1,
+    "hint": "A ragadozó éppen a zsákmányát támadta meg, amikor egy katasztrófa pillanatok alatt betemette őket."
+  },
+  {
+    "id": 67,
+    "difficulty": "hard",
+    "question": "Melyik ma is élő növénycsoport volt a domináns táplálékforrás a triász és jura időszaki növényevő dinoszauruszok számára?",
+    "options": [
+      "Nyitvatermők (pl. cycasok, páfrányfenyők és fenyőfélék)",
+      "Zárvatermő pázsitfüvek",
+      "Trópusi orchideák",
+      "Egynyári virágos növények"
+    ],
+    "correctIndex": 0,
+    "hint": "A virágos növények elterjedése előtt a tűlevelűek és a pálmaszerű ősi nyitvatermők uralták a tájat."
+  },
+  {
+    "id": 68,
+    "difficulty": "easy",
+    "question": "Mit jelent az Iguanodon név, amely az egyik legkorábban felfedezett dinoszaurusz volt?",
+    "options": [
+      "Leguánfogú",
+      "Madárlábú",
+      "Királyi gyík",
+      "Páncélos hátú"
+    ],
+    "correctIndex": 0,
+    "hint": "Gideon Mantell vette észre, hogy a talált megkövesedett fogak rendkívül hasonlítanak egy mai növényevő gyík fogaira."
+  },
+  {
+    "id": 69,
+    "difficulty": "medium",
+    "question": "A kövületek alapján milyen funkciót tölthetett be az Iguanodon mellső végtagján található hatalmas, hegyes hüvelykujj-tüske?",
+    "options": [
+      "A fák kérgének rágását",
+      "Védekezést a ragadozók ellen és a növények lehúzását",
+      "A repülést",
+      "A vízben való evezést"
+    ],
+    "correctIndex": 1,
+    "hint": "Egy tőrszerű csontos képlet volt a kézfején, amivel sebet ejthetett a támadókon."
+  },
+  {
+    "id": 70,
+    "difficulty": "hard",
+    "question": "A theropoda dinoszauruszok agyüregének CT-vizsgálatai alapján melyik érzékszervük volt rendkívül fejlett sok fajnál (pl. a T. rexnél)?",
+    "options": [
+      "A szaglás (hatalmas szaglóhagymák)",
+      "A hallás teljes hiánya jellemezte őket",
+      "Az elektromos terek érzékelése",
+      "A hőlátás a sötétben"
+    ],
+    "correctIndex": 0,
+    "hint": "A koponya elülső részén a szaglóidegek számára fenntartott hely hatalmas méretű volt, messziről megérezték a dögöket vagy zsákmányt."
+  },
+  {
+    "id": 71,
+    "difficulty": "easy",
+    "question": "Melyik időszakban élt a híres és népszerű Stegosaurus?",
+    "options": [
+      "Jura",
+      "Kréta",
+      "Triász",
+      "Perm"
+    ],
+    "correctIndex": 0,
+    "hint": "A mezozoikum középső időszakának végén élt, jóval a T. rex megjelenése előtt."
+  },
+  {
+    "id": 72,
+    "difficulty": "medium",
+    "question": "Melyik csoportba tartoznak a kacsacsőrű dinoszauruszok, mint az Edmontosaurus vagy a Parasaurolophus?",
+    "options": [
+      "Hadrosauridae",
+      "Ceratopsia",
+      "Theropoda",
+      "Sauropoda"
+    ],
+    "correctIndex": 0,
+    "hint": "A késő kréta időszak rendkívül sikeres növényevő törzse, lapos, széles szájszervvel."
+  },
+  {
+    "id": 73,
+    "difficulty": "hard",
+    "question": "Hogyan változott meg a dinoszauruszok megítélése a paleontológiában az 1960-as és 70-es évek „Dinoszaurusz Renaszánsz” mozgalma után?",
+    "options": [
+      "Lassú, hidegvérű, evolúciós zsákutcának tekintett lényekből aktív, gyors anyagcseréjű, komplex viselkedésű állatokká váltak",
+      "Kiderült, hogy nem is léteztek",
+      "Úgy találták, hogy mind kétéltűek voltak",
+      "Azt gondolták, hogy csak néhány ezer éve éltek"
+    ],
+    "correctIndex": 0,
+    "hint": "John Ostrom és Robert Bakker munkássága nyomán átértékelték a mozgásukat és fiziológiájukat."
+  },
+  {
+    "id": 74,
+    "difficulty": "easy",
+    "question": "Melyik volt az a repülő őshüllő-csoport, amely a dinoszauruszokkal egy időben uralta az eget?",
+    "options": [
+      "Pterosauria",
+      "Plesiosauria",
+      "Ichthyosauria",
+      "Theropoda"
+    ],
+    "correctIndex": 0,
+    "hint": "Bár nem dinoszauruszok a szó szoros értelmében, a mezozoikumi égbolt urai voltak."
+  },
+  {
+    "id": 75,
+    "difficulty": "medium",
+    "question": "Mit neveznek 'dinoszaurusz múmiának' a kutatók?",
+    "options": [
+      "Olyan ritka leleteket, ahol a lágy szövetek, bőr és izomzat lenyomatai vagy mineralizálódott maradványai is megőrződtek",
+      "A mesterségesen konzervált csontokat",
+      "Az egyiptomi piramisokban talált maradványokat",
+      "A jégbe fagyott mamutokat"
+    ],
+    "correctIndex": 0,
+    "hint": "A gyors kiszáradás és betemetődés miatt a bőr textúrája is megmaradt a kőzetben."
+  },
+  {
+    "id": 76,
+    "difficulty": "hard",
+    "question": "Melyik elhelyezkedésű medencecsont-módosulás jellemzi a Saurischia (hüllőmedencéjű) dinoszauruszokat?",
+    "options": [
+      "A szeméremcsont (pubis) előrefelé mutat",
+      "A szeméremcsont hátrafelé mutat, párhuzamosan az ülőcsonttal",
+      "A medencecsontok teljesen hiányoznak",
+      "A medence mereven összenőtt a bordákkal"
+    ],
+    "correctIndex": 0,
+    "hint": "A klasszikus hüllő-konfiguráció, bár ironikus módon ebből a csoportból fejlődtek ki a madarak."
+  },
+  {
+    "id": 78,
+    "difficulty": "medium",
+    "question": "Melyik kontinensről származik a legtöbb és legjobb állapotban megmaradt tollas dinoszaurusz fosszília (pl. a finom palaüledékekből)?",
+    "options": [
+      "Ázsia (különösen Kína, Liaoning tartomány)",
+      "Európa",
+      "Afrika",
+      "Ausztrália"
+    ],
+    "correctIndex": 0,
+    "hint": "A 90-es évektől kezdve innen kerültek elő a leghíresebb tollas theropoda leletek a finomszemcsés vulkáni hamuból és tavi üledékből."
+  },
+  {
+    "id": 79,
+    "difficulty": "hard",
+    "question": "Milyen szerepet játszottak a 'gázló és úszó' adaptációk a Spinosaurus életmódjában a legújabb leletek szerint?",
+    "options": [
+      "Félig vízi életmódot folytatott, folyókban vadászott nagy testű halakra",
+      "Kizárólag a sivatagban élt és sosem ment víz közelébe",
+      "Képes volt átrepülni az óceánokat",
+      "A fák tetején élt"
+    ],
+    "correctIndex": 0,
+    "hint": "Lapos farokszerkezete és megnyúlt krokodilszerű állkapcsa mind a halkereséshez alkalmazkodott."
+  },
+  {
+    "id": 80,
+    "difficulty": "easy",
+    "question": "Melyik dinoszauruszcsoportra jellemző a rendkívül hosszú nyak és farok, valamint a négy lábon való növényevő járás?",
+    "options": [
+      "Sauropoda",
+      "Theropoda",
+      "Ornithopoda",
+      "Pachycephalosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "Ebbe a csoportba tartozik a Brontosaurus és a Diplodocus is."
+  },
+  {
+    "id": 82,
+    "difficulty": "hard",
+    "question": "A növényevő dinoszauruszok rágóelemei közül mit nevezünk 'fogakból álló akkumulátornak' (dental battery)?",
+    "options": [
+      "Több száz, szorosan egymás mellett és alatt elhelyezkedő fogsor rendszere, amely folyamatosan kopott és pótlódott",
+      "Egyetlen hatalmas rágócsontot",
+      "A szájpadláson lévő tüskéket",
+      "A rágást segítő elektromos mirigyeket"
+    ],
+    "correctIndex": 0,
+    "hint": "A hadrosauridák és ceratopsidák fejlesztették ki, hogy a legkeményebb rostos növényeket is pépesre tudják őrölni."
+  },
+  {
+    "id": 83,
+    "difficulty": "easy",
+    "question": "Melyik földtörténeti időszakkal zárult a Mezozoikum era és egyben a dinoszauruszok uralkodása?",
+    "options": [
+      "Kréta",
+      "Jura",
+      "Triász",
+      "Szilur"
+    ],
+    "correctIndex": 0,
+    "hint": "A dinoszauruszok utolsó, kb. 80 millió évig tartó időszaka."
+  },
+  {
+    "id": 84,
+    "difficulty": "medium",
+    "question": "Milyen bizonyítékok utalnak arra, hogy egyes theropoda dinoszauruszok falkában vagy csoportosan vadásztak?",
+    "options": [
+      "Csoportos lábnyomok és több egyed együtt talált fosszíliái azonos lelőhelyen",
+      "Ősi barlangrajzok leírásai",
+      "A fogak alakjának egységessége",
+      "Az, hogy mindannyian növényevők voltak"
+    ],
+    "correctIndex": 0,
+    "hint": "Több azonos fajhoz tartozó ragadozó csontvázát találták meg egy helyen, ami közös pusztulásra utal egy vadászat során."
+  },
+  {
+    "id": 85,
+    "difficulty": "hard",
+    "question": "Melyik 19. századi híres amerikai paleontológiai konfliktust nevezik 'Csontváz-háborúnak' (Bone Wars)?",
+    "options": [
+      "Edward Drinker Cope és Othniel Charles Marsh rivalizálását",
+      "Richard Owen és Charles Darwin vitáját",
+      "Gideon Mantell és William Buckland harcát",
+      "A múzeumok közötti lopási pereket"
+    ],
+    "correctIndex": 0,
+    "hint": "Két gazdag tudós versenyfutása Észak-Amerikában, akik mindenáron több új fajt akartak leírni, mint a másik."
+  },
+  {
+    "id": 86,
+    "difficulty": "easy",
+    "question": "A kréta időszaki Ankylosaurus milyen jellegzetes fegyverrel rendelkezett a farka végén a ragadozók elleni védekezésül?",
+    "options": [
+      "Nehéz, csontos farokbunkó",
+      "Hosszú csonttüskék",
+      "Ollószerű fogó",
+      "Puha, hajlékony uszony"
+    ],
+    "correctIndex": 0,
+    "hint": "Egy hatalmas, tömör csontgolyó volt a farka végén, amivel lábakat tudott eltörni."
+  },
+  {
+    "id": 87,
+    "difficulty": "medium",
+    "question": "A madármedencéjű dinoszauruszok (Ornithischia) milyen táplálkozási csoporthoz tartoztak kivétel nélkül?",
+    "options": [
+      "Növényevők",
+      "Húsevők",
+      "Mindenevők",
+      "Paraziták"
+    ],
+    "correctIndex": 0,
+    "hint": "Bár a nevük madármedencéjű, mindannyian növényi táplálék feldolgozására specializálódtak."
+  },
+  {
+    "id": 88,
+    "difficulty": "hard",
+    "question": "Mit jelent a 'Lazarus-effektus' vagy az indexfosszíliák hiánya a paleontológiai rétegtanban?",
+    "options": [
+      "Amikor egy élőlénycsoport eltűnik a fosszilis rekordból egy időre, majd később újra megjelenik",
+      "Amikor egy dinoszaurusz életre kel a laboratóriumban",
+      "A csontok teljes elporladását",
+      "A tengeri fajok szárazföldivé válását"
+    ],
+    "correctIndex": 0,
+    "hint": "Mintha feltámadna a faj: a hiányzó rétegekben nem maradt fenn kövület, de az evolúciós vonal nem szakadt meg."
+  },
+  {
+    "id": 89,
+    "difficulty": "easy",
+    "question": "Melyik testrész mérete volt feltűnően parányi a hatalmas Sauropoda dinoszauruszok testméretéhez képest?",
+    "options": [
+      "A fejük (koponyájuk)",
+      "A farkuk",
+      "A combcsontjuk",
+      "A nyakuk"
+    ],
+    "correctIndex": 0,
+    "hint": "Hogy a hosszú nyak elbírja, a fejüknek viszonylag kicsinek és könnyűnek kellett maradnia."
+  },
+  {
+    "id": 90,
+    "difficulty": "medium",
+    "question": "Miért nem tekinthetők a tengeri Mosasaurusok dinoszauruszoknak a tudományos besorolás szerint?",
+    "options": [
+      "Mert valójában óriási pikkelyes hüllők (gyíkok / kígyók rokonai) voltak, nem a dinoszauruszok evolúciós ágának tagjai",
+      "Mert nem volt csontvázuk",
+      "Mert kétéltűek voltak",
+      "Mert halakká fejlődtek vissza"
+    ],
+    "correctIndex": 0,
+    "hint": "A Squamata (pikkelyes hüllők) rendjébe tartoztak, közelebbi rokonai a mai varánuszoknak."
+  },
+  {
+    "id": 92,
+    "difficulty": "easy",
+    "question": "Mit jelent a Tyrannosaurus rex név magyarra fordítva?",
+    "options": [
+      "Zsarnok gyíkkirály",
+      "Gyors rabló",
+      "Hatalmas fenevad",
+      "Tüskés gyík"
+    ],
+    "correctIndex": 0,
+    "hint": "A zsarnok és a király szavak latin-görög kombinációja."
+  },
+  {
+    "id": 96,
+    "difficulty": "medium",
+    "question": "A fosszilis lábnyomok (nyomfosszíliák) elemzésével mit tudnak megállapítani a paleontológusok a dinoszauruszokról?",
+    "options": [
+      "A mozgási sebességet, a testtartást és a szociális viselkedést (pl. csordában járás)",
+      "Az állat pontos színét és mintázatát",
+      "A dinoszaurusz utolsó vacsorájának ízét",
+      "A pontos elpusztulási évet"
+    ],
+    "correctIndex": 0,
+    "hint": "A lépéshossz és a nyomok mélysége elárulja a láb hosszát és az állat haladási tempóját."
+  },
+  {
+    "id": 97,
+    "difficulty": "hard",
+    "question": "A dinoszauruszok melyik nagy csoportjába (clade) tartoznak a Ceratopsia és az Ornithopoda alrendek együttesen?",
+    "options": [
+      "Ornithischia (Madármedencéjűek)",
+      "Saurischia (Hüllőmedencéjűek)",
+      "Theropoda",
+      "Sauropodomorpha"
+    ],
+    "correctIndex": 0,
+    "hint": "A növényevő formák azon nagy ága, amelynek medenceszerkezete felületesen a mai madarakéra hasonlított."
+  },
+  {
+    "id": 98,
+    "difficulty": "easy",
+    "question": "A híres Compsognathus egy kisméretű, pulykanagyságú dinoszaurusz volt. Melyik fő csoportba tartozott életmódja alapján?",
+    "options": [
+      "Theropoda (ragadozó)",
+      "Sauropoda (óriás növényevő)",
+      "Ankylosauria (páncélos)",
+      "Ceratopsia (tülkös)"
+    ],
+    "correctIndex": 0,
+    "hint": "Két lábon járó, fürge, apró gerincesekkel táplálkozó hüllő volt."
+  },
+  {
+    "id": 99,
+    "difficulty": "medium",
+    "question": "Milyen éghajlati viszonyok jellemezték általánosságban a mezozoikum korát, amikor a dinoszauruszok éltek?",
+    "options": [
+      "A mainál lényegesen melegebb, kiegyenlítettebb, jégsapkák nélküli globális klíma",
+      "Állandó jégkorszak és globális fagy",
+      "Pontosan ugyanolyan volt, mint a mai klíma",
+      "Oxigénmentes, forró sivatagi környezet mindenhol"
+    ],
+    "correctIndex": 0,
+    "hint": "A magas szén-dioxid-szint miatt üvegházhatás érvényesült, még a sarkvidékeken is dús növényzet élt."
+  },
+  {
+    "id": 100,
+    "difficulty": "hard",
+    "question": "Melyik mikroszkópos vizsgálati módszer (paleohisztológia) segít meghatározni egy dinoszaurusz egyed növekedési ütemét és korát a csontok alapján?",
+    "options": [
+      "A csontváz növekedési vonalainak (LAG - Lines of Arrested Growth) számlálása vékonycsiszolatokon",
+      "A csontok súlyának mérése",
+      "A csontok kémiai savas feloldása",
+      "A csontok színének spektroszkópiája"
+    ],
+    "correctIndex": 0,
+    "hint": "A fák évgyűrűihez hasonlóan a csontok keresztmetszetében is megőrződnek az éves növekedési ciklusok nyomai."
+  },
+  {
+    "id": 101,
+    "difficulty": "easy",
+    "question": "Mit jelent a Megalosaurus név?",
+    "options": [
+      "Nagy gyík",
+      "Tüskés pajzs",
+      "Sarlós karom",
+      "Futó gyík"
+    ],
+    "correctIndex": 0,
+    "hint": "A 'megalo' előtag a nagyságra utal."
+  },
+  {
+    "id": 102,
+    "difficulty": "easy",
+    "question": "Melyik országban találták a Scipionyx 'Skippy' nevű bébi dinoszaurusz leletet?",
+    "options": [
+      "Németország",
+      "Spanyolország",
+      "Olaszország",
+      "Belgium"
+    ],
+    "correctIndex": 2,
+    "hint": "A leletet a milánói természettudományi múzeumban őrzik."
+  },
+  {
+    "id": 103,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz leleténél bizonyították először közvetlenül a halevő életmódot?",
+    "options": [
+      "Iguanodon",
+      "Baryonyx",
+      "Plateosaurus",
+      "Allosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "Neve 'nehéz karmot' jelent, és a gyomrában halpikkelyeket találtak."
+  },
+  {
+    "id": 104,
+    "difficulty": "easy",
+    "question": "Hány méter mélyen találtak meg 38 Iguanodon csontvázat egy belgiumi szénbányában?",
+    "options": [
+      "50 méter",
+      "120 méter",
+      "322 méter",
+      "780 méter"
+    ],
+    "correctIndex": 2,
+    "hint": "Ez az egyik leghíresebb tömeges dinoszaurusz-lelet Európában, Bernissart-ban."
+  },
+  {
+    "id": 105,
+    "difficulty": "easy",
+    "question": "Melyik korszakból származik az Európában nagyon gyakori Plateosaurus?",
+    "options": [
+      "Kora kréta",
+      "Középső jura",
+      "Késő triász",
+      "Késő kréta"
+    ],
+    "correctIndex": 2,
+    "hint": "Ez a legidősebb korszak a három fő mezozoikumi időszak közül."
+  },
+  {
+    "id": 106,
+    "difficulty": "easy",
+    "question": "Mit jelent a Baryonyx neve?",
+    "options": [
+      "Nehéz karom",
+      "Éles fog",
+      "Gyors futó",
+      "Bálna gyík"
+    ],
+    "correctIndex": 0,
+    "hint": "Egy hatalmas sarlószerű, 30 cm-es karomról kapta a nevét."
+  },
+  {
+    "id": 107,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz neve utal közvetlenül Magyarországra?",
+    "options": [
+      "Magyarosaurus dacus",
+      "Rhabdodon priscus",
+      "Zalmoxes robustus",
+      "Liliensternus"
+    ],
+    "correctIndex": 0,
+    "hint": "Erdélyben, a Hátszeg-medencében fedezte fel báró Nopcsa Ferenc húga."
+  },
+  {
+    "id": 108,
+    "difficulty": "medium",
+    "question": "Ki fedezte fel az első Magyarosaurus dacus csontokat 1895-ben?",
+    "options": [
+      "Nopcsa Ilona",
+      "Báró Nopcsa Ferenc",
+      "Richard Owen",
+      "Louis Dollo"
+    ],
+    "correctIndex": 0,
+    "hint": "A híres paleontológus báró húga fedezte fel a családi birtok közelében."
+  },
+  {
+    "id": 109,
+    "difficulty": "medium",
+    "question": "Mi az Europasaurus kistermetűségének (szigeti törpülésének) fő evolúciós oka?",
+    "options": [
+      "A ragadozók támadása",
+      "A szűkös szigeti erőforrások",
+      "A nagyon hideg éghajlat",
+      "A mocsaras talaj"
+    ],
+    "correctIndex": 1,
+    "hint": "A szigetvilág elszigeteltsége és a kis terület korlátozta a táplálékot."
+  },
+  {
+    "id": 110,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz maradványai mellett találtak szokatlan módon 32 darab gyomorkövet?",
+    "options": [
+      "Lourinhanosaurus antunesi",
+      "Torvosaurus gurneyi",
+      "Neovenator salerii",
+      "Iguanodon"
+    ],
+    "correctIndex": 0,
+    "hint": "Egy portugáliai teropoda ragadozóról van szó."
+  },
+  {
+    "id": 111,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz hátán látható egy éles, ma is rejtélyes funkciójú 'púp'?",
+    "options": [
+      "Concavenator corcovatus",
+      "Pelecanimimus polyodon",
+      "Arcovenator escotae",
+      "Draconyx"
+    ],
+    "correctIndex": 0,
+    "hint": "A spanyolországi Las Hoyas lelőhelyen találták meg."
+  },
+  {
+    "id": 114,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz neve jelent 'pelikánutánzót' a nyakánál talált torokzsák-lenyomat miatt?",
+    "options": [
+      "Pelecanimimus",
+      "Zalmoxes",
+      "Concavenator",
+      "Neovenator"
+    ],
+    "correctIndex": 0,
+    "hint": "Ez egy kora kréta kori struccdinó-rokon több mint 220 apró foggal."
+  },
+  {
+    "id": 115,
+    "difficulty": "hard",
+    "question": "Mi a Thecodontosaurus név jelentése?",
+    "options": [
+      "Tokosfogú gyík",
+      "Tüskés hátú",
+      "Gyors lábú",
+      "Sárkánykarom"
+    ],
+    "correctIndex": 0,
+    "hint": "A fogak állkapocsmederben való rögzülésére utal."
+  },
+  {
+    "id": 116,
+    "difficulty": "hard",
+    "question": "Melyik autópálya építése közbeni leletmentés során fedezték fel az Arcovenator escotae maradványait?",
+    "options": [
+      "A8-as autópálya (Franciaország)",
+      "M5-ös autópálya (Magyarország)",
+      "A1-es autópálya (Portugália)",
+      "M4-es autópálya (UK)"
+    ],
+    "correctIndex": 0,
+    "hint": "Egy dél-franciaországi autópálya-építésnél bukkantak rá."
+  },
+  {
+    "id": 117,
+    "difficulty": "hard",
+    "question": "Mit jelent a Cetiosaurus név?",
+    "options": [
+      "Bálnagyík",
+      "Hüllőkirály",
+      "Óriásgyík",
+      "Krokodilgyík"
+    ],
+    "correctIndex": 0,
+    "hint": "Richard Owen eleinte egy hatalmas tengeri hüllőnek hitte."
+  },
+  {
+    "id": 118,
+    "difficulty": "hard",
+    "question": "Ki fektette le a szigeti törpülés evolúciós elméletének alapkövét a Hátszeg-medence dínóinak vizsgálatával?",
+    "options": [
+      "Báró Nopcsa Ferenc",
+      "William Buckland",
+      "Friedrich von Huene",
+      "Louis Dollo"
+    ],
+    "correctIndex": 0,
+    "hint": "Híres erdélyi magyar báró, kalandos életű geológus és paleontológus."
+  },
+  {
+    "id": 119,
+    "difficulty": "hard",
+    "question": "Melyik dínócsoportba tartozott a híres csúcsragadozó, a Torvosaurus gurneyi?",
+    "options": [
+      "Spinosauridae",
+      "Megalosauridae",
+      "Allosauridae",
+      "Abelisauridae"
+    ],
+    "correctIndex": 1,
+    "hint": "A középső jura kori Megalosaurus közeli, késő jura kori rokona."
+  },
+  {
+    "id": 120,
+    "difficulty": "hard",
+    "question": "Melyik dinoszaurusz kapta a nevét a dákok és trákok mitikus istenségéről?",
+    "options": [
+      "Zalmoxes robustus",
+      "Draconyx loureiroi",
+      "Liliensternus liliensterni",
+      "Rhabdodon priscus"
+    ],
+    "correctIndex": 0,
+    "hint": "Erdélyben találták meg a maradványait, a Rhabdodontidae család tagja."
+  },
+  {
+    "id": 121,
+    "difficulty": "easy",
+    "question": "A híres Tyrannosaurus rex milyen elsődleges életmódot folytatott a fogazata és testfelépítése alapján?",
+    "options": [
+      "Növényevő",
+      "Húsevő, aktív ragadozó és dögevő",
+      "Halbőségre specializálódott",
+      "Rovarászó"
+    ],
+    "correctIndex": 1,
+    "hint": "Hatalmas, zúzó fogaival és rendkívül erős állkapcsával a kor szárazföldi csúcsragadozója volt."
+  },
+  {
+    "id": 122,
+    "difficulty": "easy",
+    "question": "Melyik dinoszauruszcsoportra jellemző a hátukon viselt hatalmas csontlemezek és a farokvégi tüskék?",
+    "options": [
+      "Stegosauria",
+      "Ankylosauria",
+      "Ceratopsia",
+      "Hadrosauridae"
+    ],
+    "correctIndex": 0,
+    "hint": "A legismertebb képviselőjük a jura időszakban élt Stegosaurus."
+  },
+  {
+    "id": 124,
+    "difficulty": "easy",
+    "question": "A madarak melyik fő dinoszauruszcsoportból fejlődtek ki közvetlenül az evolúció során?",
+    "options": [
+      "Sauropoda",
+      "Ornithischia",
+      "Theropoda",
+      "Pterosauria"
+    ],
+    "correctIndex": 2,
+    "hint": "A két lábon járó, alapvetően húsevő dinoszauruszok csoportjából származnak."
+  },
+  {
+    "id": 125,
+    "difficulty": "easy",
+    "question": "Mi a neve a dinoszauruszok megkövesedett maradványainak, amelyeket a paleontológusok vizsgálnak?",
+    "options": [
+      "Múmia",
+      "Fosszília",
+      "Genezis",
+      "Sztalagmit"
+    ],
+    "correctIndex": 1,
+    "hint": "Az évmilliók során a kőzetben ásványosodott csontok, fogak vagy lenyomatok gyűjtőneve."
+  },
+  {
+    "id": 126,
+    "difficulty": "easy",
+    "question": "Melyik korszak NEM tartozik a mezozoikum (a dinoszauruszok kora) három fő időszaka közé?",
+    "options": [
+      "Triász",
+      "Jura",
+      "Kréta",
+      "Karbon"
+    ],
+    "correctIndex": 3,
+    "hint": "Ez az időszak jóval a dinoszauruszok megjelenése előtt, a paleozoikumban volt, és a kőszéntelepeiről híres."
+  },
+  {
+    "id": 129,
+    "difficulty": "easy",
+    "question": "A klasszikus paleontológiai meghatározás szerint a repülő hüllők (Pterosauria) a dinoszauruszok közé tartoztak?",
+    "options": [
+      "Igen, a repülő dinoszauruszok voltak",
+      "Nem, ők egy rokon, de különálló repülő őshüllőcsoportot alkottak",
+      "Igen, a theropodák egyik alosztálya voltak",
+      "Nem, ők valójában őskori madarak voltak"
+    ],
+    "correctIndex": 1,
+    "hint": "Bár egy időben éltek és közös őstől származnak, a repülő hüllők nem valódi dinoszauruszok."
+  },
+  {
+    "id": 130,
+    "difficulty": "easy",
+    "question": "Mi a szerepe a megkövesedett dinoszaurusz-lábnyomoknak az őslénykutatásban?",
+    "options": [
+      "Megmutatják az állat pontos színét",
+      "Információt adnak a mozgási sebességről, testtartásról és a csordaviselkedésről",
+      "Nincs tudományos értékük",
+      "Megmutatják a dínó intelligenciáját"
+    ],
+    "correctIndex": 1,
+    "hint": "Az ilyen leleteket nyomfosszíliáknak nevezzük, és az élő állat dinamikáját mutatják meg."
+  },
+  {
+    "id": 131,
+    "difficulty": "medium",
+    "question": "Mi a neve annak a szuperkontinenstnek, amely a triász időszak elején még egybefüggő szárazföldként tömörítette a Föld szárazföldjeit?",
+    "options": [
+      "Laurázsia",
+      "Gondwana",
+      "Pangea",
+      "Tethys"
+    ],
+    "correctIndex": 2,
+    "hint": "A név görög eredetű, és az 'egész Földet' jelenti."
+  },
+  {
+    "id": 132,
+    "difficulty": "medium",
+    "question": "Melyik anatómiai bélyeg alapján osztják a dinoszauruszokat két fő csoportra (Saurischia és Ornithischia)?",
+    "options": [
+      "A koponyaablakok száma",
+      "A medencecsontok szerkezete",
+      "A fogak alakja",
+      "A mellső végtagok ujjszáma"
+    ],
+    "correctIndex": 1,
+    "hint": "A két csoport magyar neve: hüllőmedencéjűek és madármedencéjűek."
+  },
+  {
+    "id": 133,
+    "difficulty": "medium",
+    "question": "Mire szolgáltak a sauropodák által lenyelt úgynevezett 'gasztrolitok' (gyomorkövek)?",
+    "options": [
+      "A ragadozók elleni védekezésre",
+      "A testsúly növelésére a víz alatt",
+      "A kemény növényi táplálék mechanikus őrlésére a zúzógyomorban",
+      "A felesleges ásványi anyagok kiválasztására"
+    ],
+    "correctIndex": 2,
+    "hint": "Mivel nem tudták megrágni a falatokat, a gyomorban lévő sima kövek végezték el a nehezét."
+  },
+  {
+    "id": 134,
+    "difficulty": "medium",
+    "question": "Melyik dínócsoportot nevezik a köznyelvben 'kacsacsőrű dinoszauruszoknak' a lapos szájszervük miatt?",
+    "options": [
+      "Hadrosauridae",
+      "Ceratopsia",
+      "Ankylosauria",
+      "Pachycephalosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "Késő kréta kori növényevők, sok fajuk komplex csonttaréjt viselt a fején."
+  },
+  {
+    "id": 135,
+    "difficulty": "medium",
+    "question": "A leletek szerint a híres, páncélos Ankylosaurus mivel tudott halálos csapást mérni a támadóira?",
+    "options": [
+      "Mérgező harapással",
+      "A farka végén található nehéz csontbunkóval",
+      "Hatalmas tülkeivel",
+      "Éles karmaival"
+    ],
+    "correctIndex": 1,
+    "hint": "A farokcsigolyák összenövése merev nyélként szolgált az óriási bunkónak."
+  },
+  {
+    "id": 136,
+    "difficulty": "medium",
+    "question": "Melyik fizikai tulajdonság bizonyítja, hogy egyes theropoda dinoszauruszok melegvérűek (endotermek) vagy magas metabolizmusúak lehettek?",
+    "options": [
+      "A pikkelyes bőr",
+      "A tollazat vagy protopelyhek jelenléte a hőszigetelésre",
+      "A rendkívül lassú növekedési vonalak",
+      "A kisméretű szív"
+    ],
+    "correctIndex": 1,
+    "hint": "A tollak kezdetben nem a repülést, hanem a testhő megtartását szolgálták."
+  },
+  {
+    "id": 137,
+    "difficulty": "medium",
+    "question": "Melyik ma is élő állatcsoportot tekintik a paleontológusok a dinoszauruszok legközelebbi, ma is élő hüllőrokonainak?",
+    "options": [
+      "Gyíkok",
+      "Kígyók",
+      "Krokodilok",
+      "Teknősök"
+    ],
+    "correctIndex": 2,
+    "hint": "Az Archosauria (uralkodó hüllők) csoport utolsó túlélői a madarak mellett."
+  },
+  {
+    "id": 138,
+    "difficulty": "medium",
+    "question": "Mit jelent a fura kinézetű Oviraptor neve, és miért kapta eredetileg?",
+    "options": [
+      "'Gyors futó', mert hosszú lábai voltak",
+      "'Tojás rabló', mert egy fészek felett találták meg a fosszíliáját",
+      "'Madárutánzó', mert szárnyszerű karjai voltak",
+      "'Tarajos gyík'"
+    ],
+    "correctIndex": 1,
+    "hint": "Később kiderült, hogy nem rabolta a tojásokat, hanem a saját fészkét óvta és költötte."
+  },
+  {
+    "id": 139,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusznak volt a testméretéhez képest a legvastagabb, masszív csontkupola a fején?",
+    "options": [
+      "Pachycephalosaurus",
+      "Triceratops",
+      "Diplodocus",
+      "Iguanodon"
+    ],
+    "correctIndex": 0,
+    "hint": "A neve szó szerint 'vastagfejű gyíkot' jelent, a koponyája akár 25 cm vastag is lehetett."
+  },
+  {
+    "id": 140,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz-leletnél találtak először közvetlen bizonyítékot arra, hogy a dínók fészkeket építettek és gondozták utódaikat?",
+    "options": [
+      "Maiasaura",
+      "Allosaurus",
+      "Stegosaurus",
+      "Argentinosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "A neve jelentése 'jó anya gyík', Montana államban fedezték fel a fészektelepeit."
+  },
+  {
+    "id": 141,
+    "difficulty": "hard",
+    "question": "Mi az az evolúciós és anatómiai újítás a végtagok állásában, ami a dinoszauruszokat kiemelte a többi primitív hüllő közül?",
+    "options": [
+      "A test mellett oldalt terpesztett lábak",
+      "A test alatt függőlegesen elhelyezkedő, oszlopszerű végtagok",
+      "A hátsó lábak teljes hiánya",
+      "A toló-kúszó mozgásra alkalmas uszonyok"
+    ],
+    "correctIndex": 1,
+    "hint": "Ez a tartás hatékonyabb súlycipelést és sokkal gyorsabb, kitartóbb mozgást biztosított."
+  },
+  {
+    "id": 143,
+    "difficulty": "hard",
+    "question": "Mit neveznek 'koprolitnak' a paleontológiában, ami alapvető információkat nyújt a dínók étrendjéről?",
+    "options": [
+      "Megkövesedett bőrlenyomatot",
+      "Megkövesedett ürüléket",
+      "Belső fülcsontot",
+      "Megkövesedett lágy szervet"
+    ],
+    "correctIndex": 1,
+    "hint": "Ez a lelettípus pontosan megőrzi az állat által elfogyasztott növények vagy csontok darabkáit."
+  },
+  {
+    "id": 144,
+    "difficulty": "hard",
+    "question": "Melyik dinoszaurusz büszkélkedhetett a leghosszabb nyakkal, amelynek hossza elérhette a 13-15 métert is?",
+    "options": [
+      "Mamenchisaurus",
+      "Brachiosaurus",
+      "Tyrannosaurus",
+      "Ankylosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "Kínában találták meg, a nyakát rendkívül nagyszámú, megnyúlt nyakcsigolya alkotta."
+  },
+  {
+    "id": 146,
+    "difficulty": "hard",
+    "question": "Ki volt az a híres angol anatómus és paleontológus, aki 1842-ben megalkotta a 'Dinosauria' (Dinoszauruszok) kifejezést?",
+    "options": [
+      "Gideon Mantell",
+      "William Buckland",
+      "Sir Richard Owen",
+      "Charles Darwin"
+    ],
+    "correctIndex": 2,
+    "hint": "A kifejezés jelentése 'félelmetes vagy szörnyű gyík'."
+  },
+  {
+    "id": 147,
+    "difficulty": "hard",
+    "question": "Melyik jura időszaki lelőhely híres a szinte tökéletes minőségben megmaradt tollas ősmadár (Archaeopteryx) és Compsognathus leleteiről?",
+    "options": [
+      "Solnhofen (Németország)",
+      "Hell Creek (USA)",
+      "Lourinhã (Portugália)",
+      "Hátszeg-medence (Románia)"
+    ],
+    "correctIndex": 0,
+    "hint": "Egy finomszemcsés mészkőbánya, ahol a lagúnák iszapja a legfinomabb részleteket is megőrizte."
+  },
+  {
+    "id": 148,
+    "difficulty": "hard",
+    "question": "A Hadrosauridae (kacsacsőrűek) családjába tartozó Parasaurolophus fején lévő hatalmas, hátrafelé nyúló csontcső a legújabb elméletek szerint mire szolgált?",
+    "options": [
+      "Búvárkodásra, mint egy légzőcső",
+      "Rezonanciakamraként hangok felerősítésére és vizuális jelzésre",
+      "Védekező szarvként",
+      "Fák kérgének lehántására"
+    ],
+    "correctIndex": 1,
+    "hint": "A cső belsejében kanyargó légutak egyedi, mély, kürtszerű hangok kiadását tették lehetővé."
+  },
+  {
+    "id": 149,
+    "difficulty": "hard",
+    "question": "Melyik csoportba tartozik a Spinosaurus, amely krokodilszerű koponyájáról, halevő életmódjáról és a hátán lévő hatalmas vitorláról ismert?",
+    "options": [
+      "Megalosauridae",
+      "Spinosauridae",
+      "Allosauridae",
+      "Carcharodontosauridae"
+    ],
+    "correctIndex": 1,
+    "hint": "A nevét adó család tagja, félig vízi életmódot folytató hatalmas theropoda."
+  },
+  {
+    "id": 150,
+    "difficulty": "hard",
+    "question": "A kréta időszaki észak-amerikai Albertosaurus és Tarbosaurus melyik magasabb rendszertani családba tartoznak a T. rex-szel együtt?",
+    "options": [
+      "Allosauridae",
+      "Tyrannosauridae",
+      "Abelisauridae",
+      "Dromaeosauridae"
+    ],
+    "correctIndex": 1,
+    "hint": "A család tagjaira jellemző a hatalmas koponya, a redukált, kétujjú mellső végtagok és a zúzó harapás."
+  },
+  {
+    "id": 151,
+    "difficulty": "easy",
+    "question": "Melyik volt az a hatalmas tengeri hüllőcsoport, amely hosszú nyakáról és négy nagy úszóuszonyáról ismert, de nem számít dinoszaurusznak?",
+    "options": [
+      "Plesiosauria",
+      "Pterosauria",
+      "Sauropoda",
+      "Hadrosauridae"
+    ],
+    "correctIndex": 0,
+    "hint": "A Loch Ness-i szörny legendáját is gyakran ezeknek az állatoknak a formájára alapozzák."
+  },
+  {
+    "id": 152,
+    "difficulty": "easy",
+    "question": "Mit jelent a Velociraptor név szó szerinti fordításban?",
+    "options": [
+      "Gyors rabló / tolvaj",
+      "Háromszarvú arc",
+      "Hatalmas gyík",
+      "Páncélos gyík"
+    ],
+    "correctIndex": 0,
+    "hint": "A 'velox' a sebességre, a 'raptor' pedig a rablásra/ragadozásra utal."
+  },
+  {
+    "id": 154,
+    "difficulty": "easy",
+    "question": "A kövületek tanúsága szerint milyen formában rakta le utódait a legtöbb dinoszaurusz?",
+    "options": [
+      "Elevenen hozták világra őket",
+      "Meszes héjú tojások útján fészkekben",
+      "Lárvaként a vízbe",
+      "Nem maradt fent bizonyíték"
+    ],
+    "correctIndex": 1,
+    "hint": "Mint a legtöbb hüllő és madár, ők is fészekaljakat hoztak létre."
+  },
+  {
+    "id": 155,
+    "difficulty": "easy",
+    "question": "Melyik dinoszauruszcsoport tagjai viseltek hatalmas, gallérszerű csontpajzsot a nyakuk védelmére és díszként?",
+    "options": [
+      "Ceratopsia",
+      "Sauropoda",
+      "Theropoda",
+      "Stegosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "Ebbe a tülkös, növényevő csoportba tartozik a Triceratops és a Centrosaurus is."
+  },
+  {
+    "id": 156,
+    "difficulty": "medium",
+    "question": "Hány halántékablak (koponyaablak) található a dinoszauruszok koponyájának hátsó részén, ami meghatározza a rendszertani alosztályukat?",
+    "options": [
+      "Nulla (Anapsida)",
+      "Egy (Synapsida)",
+      "Kettő (Diapsida)",
+      "Négy"
+    ],
+    "correctIndex": 2,
+    "hint": "A krokodilokkal, gyíkokkal és madarakkal együtt a diapsida hüllők közé tartoznak."
+  },
+  {
+    "id": 157,
+    "difficulty": "medium",
+    "question": "Melyik kisméretű, pulykanagyságú, fürge jura kori ragadozó dinoszauruszról hitték sokáig, hogy a legkisebb dínó volt?",
+    "options": [
+      "Compsognathus",
+      "Diplodocus",
+      "Brachiosaurus",
+      "Iguanodon"
+    ],
+    "correctIndex": 0,
+    "hint": "Európában (például Németországban és Franciaországban) találták meg finom felépítésű csontvázait."
+  },
+  {
+    "id": 158,
+    "difficulty": "medium",
+    "question": "Mit nevezünk 'indexfosszíliának' (korellenőrző kövületnek) a geológiában és a paleontológiában?",
+    "options": [
+      "A legnagyobb méretű csontokat",
+      "Olyan elterjedt fajok maradványait, amelyek pontosan meghatározzák az adott kőzetréteg korát",
+      "Kizárólag a dínók lábnyomait",
+      "A hamisított kövületeket"
+    ],
+    "correctIndex": 1,
+    "hint": "Rövid ideig éltek, de nagy területen terjedtek el, így kiválóan alkalmasak a rétegek kormeghatározására."
+  },
+  {
+    "id": 159,
+    "difficulty": "medium",
+    "question": "Melyik dínócsoport volt híres a hátsó lábán viselt hatalmas, sarló alakú, fel-le mozgatható gyilkos karomról?",
+    "options": [
+      "Dromaeosauridae",
+      "Hadrosauridae",
+      "Sauropodomorpha",
+      "Ankylosauria"
+    ],
+    "correctIndex": 0,
+    "hint": "Közismert nevükön a 'raptorok', mint a Deinonychus és a Velociraptor."
+  },
+  {
+    "id": 160,
+    "difficulty": "medium",
+    "question": "Melyik ország területén fedezte fel és írta le báró Nopcsa Ferenc a szigeti törpülés elméletét igazoló dinoszauruszokat?",
+    "options": [
+      "Magyarország (Bakony)",
+      "Románia (Hátszeg-medence, Erdély)",
+      "Németország",
+      "Anglia"
+    ],
+    "correctIndex": 1,
+    "hint": "Az egykori Hátszeg-sziget területe ma Romániához tartozik, itt találták a Magyarosaurust."
+  },
+  {
+    "id": 161,
+    "difficulty": "hard",
+    "question": "Melyik volt a Földön valaha élt egyik legnagyobb szárazföldi emlősszerű hüllő (Therapsida) a triász időszakban, amely együtt élt a korai dinoszauruszokkal?",
+    "options": [
+      "Lisowicia bojani",
+      "Dimetrodon",
+      "Coelophysis",
+      "Plateosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "Lengyelországban találták meg a maradványait, elefántméretű, dicynodontia csoportba tartozó állat volt."
+  },
+  {
+    "id": 162,
+    "difficulty": "hard",
+    "question": "Milyen különleges fizikai bizonyítékot találtak a Scipionyx 'Skippy' nevű olaszországi bébi dinoszaurusz leleténél?",
+    "options": [
+      "Megkövesedett lágy szöveteket, belső szerveket és izomrostokat",
+      "Tiszta arany lerakódást a csontokon",
+      "A dínó utolsó hangjának lenyomatát",
+      "Szárnyakat"
+    ],
+    "correctIndex": 0,
+    "hint": "Ez a világ egyik legjobb megtartású fosszíliája, még a bélrendszer kontúrjai is látszanak."
+  },
+  {
+    "id": 163,
+    "difficulty": "hard",
+    "question": "Melyik dinoszauruszcsoportra jellemző a száj elülső részén található, különálló 'predentáris csont', ami egy szarucsőrt támasztott alá?",
+    "options": [
+      "Ornithischia (Madármedencéjűek)",
+      "Saurischia (Hüllőmedencéjűek)",
+      "Theropoda",
+      "Sauropoda"
+    ],
+    "correctIndex": 0,
+    "hint": "Ez az anatómiai bélyeg az összes növényevő madármedencéjű dínóra jellemző, a theropodákra nem."
+  },
+  {
+    "id": 164,
+    "difficulty": "hard",
+    "question": "Melyik dínócsoportba tartozik a Carnotaurus sarsfieldi, amely a szemei feletti jellegzetes bika-szarvakról és extrém módon visszafejlődött mellső karjairól ismert?",
+    "options": [
+      "Abelisauridae",
+      "Allosauridae",
+      "Spinosauridae",
+      "Tyrannosauridae"
+    ],
+    "correctIndex": 0,
+    "hint": "Gondwana déli részén (Dél-Amerika) elterjedt, ceratosauria vonalba tartozó theropodák."
+  },
+  {
+    "id": 166,
+    "difficulty": "easy",
+    "question": "Hány lábon jártak a hatalmas, legelésző Diplodocus és Brachiosaurus dinoszauruszok?",
+    "options": [
+      "Két lábon",
+      "Négy lábon",
+      "Kizárólag hason csúsztak",
+      "Csak a hátsó lábaikon ugrottak"
+    ],
+    "correctIndex": 1,
+    "hint": "Hatalmas súlyuk miatt oszlopszerű, masszív négy végtagra volt szükségük az alátámasztáshoz."
+  },
+  {
+    "id": 167,
+    "difficulty": "medium",
+    "question": "Mit jelent a mezozoikum kifejezés, amely a dinoszauruszok uralkodásának korszakát fedi le?",
+    "options": [
+      "Óidő",
+      "Középidő",
+      "Újidő",
+      "Ősidő"
+    ],
+    "correctIndex": 1,
+    "hint": "A görög eredetű szó a földtörténeti középidőt jelöli a paleozoikum és kainozoikum között."
+  },
+  {
+    "id": 168,
+    "difficulty": "hard",
+    "question": "Melyik spanyolországi kora kréta lelőhelyen találták meg a híres Pelecanimimus (pelikánutánzó) és Concavenator maradványait?",
+    "options": [
+      "Las Hoyas",
+      "Solnhofen",
+      "Bernissart",
+      "Lourinhã"
+    ],
+    "correctIndex": 0,
+    "hint": "Egy finomszemcsés, elzárt tavi környezetből származó réteg, amely kiváló bőr- és lágyszövet-lenyomatokat őrzött meg."
+  },
+  {
+    "id": 169,
+    "difficulty": "medium",
+    "question": "Melyik ma is élő madárcsoport képviselőit tekintik a kladisztikus rendszertanban a dinoszauruszok közvetlen, élő leszármazottainak?",
+    "options": [
+      "Az összes létező mai madarat",
+      "Kizárólag a struccokat és emukat",
+      "Kizárólag a ragadozó madarakat",
+      "A pingvineket"
+    ],
+    "correctIndex": 0,
+    "hint": "A modern madarak anatómiailag a theropoda dinoszauruszok túlélő ágát (Avialae) képviselik."
+  },
+  {
+    "id": 170,
+    "difficulty": "hard",
+    "question": "Mi a neve annak a hatalmas mexikói becsapódási kráternek, amely bizonyítottan a kréta végi tömeges fajpusztulásért felelős aszteroida ütközési helye?",
+    "options": [
+      
+      "Barringer-kráter",
+      "Vredefort-kráter",
+      "Chicxulub-kráter",
+      "Nordlinger Ries"
+    ],
+    "correctIndex": 2,
+    "hint": "A Yucatán-félszigeten található, nagyrészt a tengerpart és üledék alá temetve."
+  }
+]
