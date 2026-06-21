@@ -796,6 +796,8 @@ export default function App() {
   const [selectedPeriod, setSelectedPeriod] = useState('Mind');
 
   const position = useRef(new Animated.ValueXY()).current;
+  const { width: appWidth } = useWindowDimensions();
+  const isMobile = Platform.OS !== 'web' || appWidth < 700;
 
   const activeDinosaurs = region === 'karpat' ? karpatDinoList : dinosaurs;
 
@@ -863,32 +865,36 @@ export default function App() {
             <Text style={styles.headerTitle}>← FŐMENÜ</Text>
           </TouchableOpacity>
         </View>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Keresés név, csoport vagy ország..."
-          placeholderTextColor={COLORS.textMuted}
-          value={searchQuery}
-          onChangeText={(text) => {
-            setSearchQuery(text);
-            setCurrentIndex(0);
-            position.setValue({ x: 0, y: 0 });
-          }}
-        />
-        <View style={styles.filterRow}>
-          {['Mind', 'Triász', 'Jura', 'Kréta'].map((period) => (
-            <TouchableOpacity
-              key={period}
-              style={[styles.filterTab, selectedPeriod === period && styles.filterTabActive]}
-              onPress={() => {
-                setSelectedPeriod(period);
+        {!isMobile && (
+          <>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Keresés név, csoport vagy ország..."
+              placeholderTextColor={COLORS.textMuted}
+              value={searchQuery}
+              onChangeText={(text) => {
+                setSearchQuery(text);
                 setCurrentIndex(0);
                 position.setValue({ x: 0, y: 0 });
               }}
-            >
-              <Text style={[styles.filterTabText, selectedPeriod === period && styles.filterTabTextActive]}>{period}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+            />
+            <View style={styles.filterRow}>
+              {['Mind', 'Triász', 'Jura', 'Kréta'].map((period) => (
+                <TouchableOpacity
+                  key={period}
+                  style={[styles.filterTab, selectedPeriod === period && styles.filterTabActive]}
+                  onPress={() => {
+                    setSelectedPeriod(period);
+                    setCurrentIndex(0);
+                    position.setValue({ x: 0, y: 0 });
+                  }}
+                >
+                  <Text style={[styles.filterTabText, selectedPeriod === period && styles.filterTabTextActive]}>{period}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        )}
       </SafeAreaView>
 
       <View style={styles.cardContainer}>
