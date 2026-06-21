@@ -340,11 +340,11 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800,
 // nem a háttérképbe sütött grafikára próbálunk illeszkedni.
 const LANDING_BUTTONS = [
   { key: 'europa', title: 'Európa', subtitle: 'elérhető', icon: require('./assets/icons/icon_europa.png'), color: '#7CFC9A', bg: 'rgba(28, 58, 20, 0.6)' },
-  { key: 'karpat', title: 'Kárpát-medence', subtitle: 'elérhető', icon: require('./assets/icons/icon_karpat.png'), color: '#e0807f', bg: '#3a1212' },
-  { key: 'amerika', title: 'Amerika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_amerika.png'), color: '#7CFC9A', bg: '#18130e' },
-  { key: 'azsia', title: 'Ázsia', subtitle: 'hamarosan', icon: require('./assets/icons/icon_azsia.png'), color: '#7CFC9A', bg: '#0b131c' },
-  { key: 'kviz', title: 'Dínó Kvíz', subtitle: '***', icon: require('./assets/icons/icon_kviz.png'), color: '#dca73a', bg: '#241a3a' },
-  { key: 'afrika', title: 'Afrika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_afrika.png'), color: '#7CFC9A', bg: '#1a1206' },
+  { key: 'karpat', title: 'Kárpát-medence', subtitle: 'elérhető', icon: require('./assets/icons/icon_karpat.png'), color: '#e0807f', bg: 'rgba(58, 18, 18, 0.6)' },
+  { key: 'amerika', title: 'Amerika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_amerika.png'), color: '#7CFC9A', bg: 'rgba(24, 19, 14, 0.6)' },
+  { key: 'azsia', title: 'Ázsia', subtitle: 'hamarosan', icon: require('./assets/icons/icon_azsia.png'), color: '#7CFC9A', bg: 'rgba(11, 19, 28, 0.6)' },
+  { key: 'kviz', title: 'Legyen Ön is Dínó Milliomos', subtitle: '', icon: require('./assets/icons/icon_kviz.png'), color: '#dca73a', bg: 'rgba(36, 26, 58, 0.6)' },
+  { key: 'afrika', title: 'Afrika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_afrika.png'), color: '#7CFC9A', bg: 'rgba(26, 18, 6, 0.6)' },
 ];
 
 function LandingPage({ onNavigate, onSelectRegion }) {
