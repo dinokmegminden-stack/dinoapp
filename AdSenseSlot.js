@@ -88,7 +88,7 @@ export default function AdSenseSlot({ slotId, label = 'HIRDETÉS\nHELY' }) {
       </div>
     );
   }
-
+//comment
   return (
     <ins
       className="adsbygoogle"
