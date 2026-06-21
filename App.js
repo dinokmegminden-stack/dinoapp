@@ -291,82 +291,54 @@ function LandingPage({ onNavigate, onSelectRegion }) {
 
       <MuteButton />
 
-      {/* A gombok konténere az alsó harmadba pozicionálva */}
+      {/* A gombok konténere az alsó harmadba pozicionálva - most átlátszó, mert a háttérkép már tartalmazza a vizuális elemeket */}
       <View style={styles.bottomThirdContainer}>
         <View style={styles.gridRow}>
           {/* Európa gomb */}
           <TouchableOpacity
-            style={[styles.gridBtn, { backgroundColor: '#223d10', borderColor: 'rgba(99,153,34,0.2)' }]}
-            activeOpacity={0.85}
+            style={styles.gridBtnTransparent}
+            activeOpacity={0.6}
             onPress={() => { playSound('click'); onSelectRegion('europa'); onNavigate('cards'); }}
-          >
-            <View style={styles.btnShine} />
-            <Text style={styles.btnEmoji}>🌍</Text>
-            <Text style={styles.btnName}>Európa Dínói</Text>
-            <Text style={styles.btnSubGreen}>25 faj · elérhető</Text>
-            <View style={styles.euStripe} />
-          </TouchableOpacity>
+          />
 
           {/* Kárpát-medence gomb */}
           <TouchableOpacity
-            style={[styles.gridBtn, { backgroundColor: '#3a1212', borderColor: 'rgba(205,42,62,0.25)' }]}
-            activeOpacity={0.85}
+            style={styles.gridBtnTransparent}
+            activeOpacity={0.6}
             onPress={() => { playSound('click'); onSelectRegion('karpat'); onNavigate('cards'); }}
-          >
-            <View style={styles.btnShine} />
-            <Text style={styles.btnEmoji}>🏔️</Text>
-            <Text style={styles.btnName}>Kárpát-medence</Text>
-            <Text style={styles.btnSubRed}>11 faj · elérhető</Text>
-            <View style={styles.karpatStripe} />
-          </TouchableOpacity>
+          />
         </View>
 
         <View style={styles.gridRow}>
           {/* Amerika gomb */}
           <TouchableOpacity
-            style={[styles.gridBtn, { backgroundColor: '#18130e' }]}
-            activeOpacity={0.85}
+            style={styles.gridBtnTransparent}
+            activeOpacity={0.6}
             onPress={() => { playSound('click'); }}
-          >
-            <Text style={styles.btnEmoji}>🌎</Text>
-            <Text style={styles.btnName}>Amerika</Text>
-            <Text style={styles.btnSubMuted}>hamarosan</Text>
-          </TouchableOpacity>
+          />
 
           {/* Ázsia gomb */}
           <TouchableOpacity
-            style={[styles.gridBtn, { backgroundColor: '#0b131c' }]}
-            activeOpacity={0.85}
+            style={styles.gridBtnTransparent}
+            activeOpacity={0.6}
             onPress={() => { playSound('click'); }}
-          >
-            <Text style={styles.btnEmoji}>🌏</Text>
-            <Text style={styles.btnName}>Ázsia</Text>
-            <Text style={styles.btnSubMuted}>hamarosan</Text>
-          </TouchableOpacity>
+          />
         </View>
 
         <View style={styles.gridRow}>
           {/* Kvíz gomb */}
           <TouchableOpacity
-            style={[styles.gridBtn, styles.quizSmallBtn]}
-            activeOpacity={0.85}
+            style={styles.gridBtnTransparent}
+            activeOpacity={0.6}
             onPress={() => { playSound('click'); onNavigate('quiz'); }}
-          >
-            <Text style={styles.btnEmoji}>💎</Text>
-            <Text style={[styles.btnName, { color: '#dca73a' }]}>Kvíz</Text>
-            <Text style={[styles.btnSubMuted, { color: 'rgba(220,167,58,0.5)' }]}>paleontológus</Text>
-          </TouchableOpacity>
+          />
 
           {/* Afrika gomb */}
           <TouchableOpacity
-            style={[styles.gridBtn, { backgroundColor: '#1a1206', borderColor: 'rgba(255,255,255,0.08)' }]}
-            activeOpacity={0.85}
+            style={styles.gridBtnTransparent}
+            activeOpacity={0.6}
             onPress={() => { playSound('click'); }}
-          >
-            <Text style={styles.btnEmoji}>🦁</Text>
-            <Text style={styles.btnName}>Afrika</Text>
-            <Text style={styles.btnSubMuted}>hamarosan</Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
     </View>
@@ -1108,6 +1080,7 @@ const styles = StyleSheet.create({
   smallBtnRow: { flexDirection: 'row', gap: 12 },
   gridRow: { flexDirection: 'row', gap: 12, marginBottom: 10 },
   gridBtn: { flex: 1, height: 75, borderRadius: 14, padding: 8, alignItems: 'center', justifyContent: 'center', gap: 2, overflow: 'hidden', position: 'relative', borderWidth: 1, borderColor: 'rgba(255,255,255,0.04)' },
+  gridBtnTransparent: { flex: 1, height: 75, borderRadius: 14 },
   smallRegionBtn: { flex: 1, borderRadius: 14, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 10, overflow: 'hidden', position: 'relative', borderWidth: 1, borderColor: 'rgba(255,255,255,0.04)' },
   quizSmallBtn: { backgroundColor: '#0f0b04', borderColor: '#D4AF37', borderWidth: 1 },
   extraDivider: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 6, paddingHorizontal: 4 },
