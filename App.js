@@ -444,10 +444,9 @@ function QuizGame({ onBack }) {
   const [adFiftyFiftyUsedThisQuestion, setAdFiftyFiftyUsedThisQuestion] = useState(false);
   const [watchingAd, setWatchingAd] = useState(false);
 
-  // Belépő hang + indító háttérzene a játék elején
+  // Belépő hang a játék elején (a háttérzenét a szint-alapú effekt indítja, ami felülírja a főtémát)
   useEffect(() => {
     playQuizSfx('letsPlay');
-    return () => { stopQuizBgMusic(); };
   }, []);
 
   // Háttérzene a kérdés nehézségi szintje alapján, amíg játszunk
@@ -848,6 +847,13 @@ export default function App() {
       dino.megtalalas_helye?.toLowerCase().includes(q);
     return matchesPeriod && matchesSearch;
   });
+
+  // Háttér főtéma: mindenhol szól hurkolva, KIVÉVE a kvíz közben (ott a QuizGame saját zenéje veszi át).
+  useEffect(() => {
+    if (view !== 'quiz') {
+      playQuizBgMusic('mainTheme', { loop: true, volume: 0.4 });
+    }
+  }, [view]);
 
   const swipeRef = useRef((dir) => {
     const toValue = dir === 'next' ? -SCREEN_WIDTH * 1.5 : SCREEN_WIDTH * 1.5;
