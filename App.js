@@ -339,11 +339,11 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800,
 // A 6 régió/akció gomb adatai - a tartalom most teljesen kódból épül fel valódi ikonképekkel,
 // nem a háttérképbe sütött grafikára próbálunk illeszkedni.
 const LANDING_BUTTONS = [
-  { key: 'europa', title: 'Európa', subtitle: '25 faj · elérhető', icon: require('./assets/icons/icon_europa.png'), color: '#7CFC9A', bg: '#1c3a14' },
-  { key: 'karpat', title: 'Kárpát-medence', subtitle: '11 faj · elérhető', emoji: '🏔️', color: '#e0807f', bg: '#3a1212' },
+  { key: 'europa', title: 'Európa', subtitle: 'elérhető', icon: require('./assets/icons/icon_europa.png'), color: '#7CFC9A', bg: '#1c3a14' },
+  { key: 'karpat', title: 'Kárpát-medence', subtitle: 'elérhető', emoji: '🏞️', color: '#e0807f', bg: '#3a1212' },
   { key: 'amerika', title: 'Amerika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_amerika.png'), color: '#7CFC9A', bg: '#18130e' },
   { key: 'azsia', title: 'Ázsia', subtitle: 'hamarosan', emoji: '🌏', color: '#7CFC9A', bg: '#0b131c' },
-  { key: 'kviz', title: 'Dínó Kvíz', subtitle: 'paleontológus', icon: require('./assets/icons/icon_kviz.png'), color: '#dca73a', bg: '#241a3a' },
+  { key: 'kviz', title: 'Dínó Kvíz', subtitle: '***', icon: require('./assets/icons/icon_kviz.png'), color: '#dca73a', bg: '#241a3a' },
   { key: 'afrika', title: 'Afrika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_afrika.png'), color: '#7CFC9A', bg: '#1a1206' },
 ];
 
