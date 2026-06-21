@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   Platform,
   useWindowDimensions,
+  Easing,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
@@ -273,6 +274,67 @@ function DinoTudosLogo() {
 }
 
 // --- LANDING PAGE ---
+// Átlátszó gomb, amelynek a kerete körül egy fénypont (lézer) fut körbe végtelenítve.
+function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800 }) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const progress = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.timing(progress, {
+        toValue: 1,
+        duration,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      })
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [duration]);
+
+  const { width, height } = size;
+  const perimeter = Math.max(1, 2 * (width + height));
+  const p1 = width / perimeter; // a felső él végpontja
+  const p2 = (width + height) / perimeter; // a jobb él végpontja
+  const p3 = (2 * width + height) / perimeter; // az alsó él végpontja
+
+  const dotX = progress.interpolate({
+    inputRange: [0, p1, p2, p3, 1],
+    outputRange: [0, width, width, 0, 0],
+  });
+  const dotY = progress.interpolate({
+    inputRange: [0, p1, p2, p3, 1],
+    outputRange: [0, 0, height, height, 0],
+  });
+
+  return (
+    <TouchableOpacity
+      style={style}
+      activeOpacity={0.6}
+      onPress={onPress}
+      onLayout={(e) => setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
+    >
+      <View pointerEvents="none" style={[styles.laserBorderTrack, { borderColor: `${color}33` }]} />
+      {width > 0 && height > 0 && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.laserDot,
+            {
+              backgroundColor: color,
+              shadowColor: color,
+              transform: [
+                { translateX: Animated.add(dotX, -7) },
+                { translateY: Animated.add(dotY, -7) },
+              ],
+            },
+          ]}
+        />
+      )}
+    </TouchableOpacity>
+  );
+}
+
 function LandingPage({ onNavigate, onSelectRegion }) {
   return (
     <Shell>
@@ -295,48 +357,48 @@ function LandingPage({ onNavigate, onSelectRegion }) {
       <View style={styles.bottomThirdContainer}>
         <View style={styles.gridRow}>
           {/* Európa gomb */}
-          <TouchableOpacity
+          <LaserBorderButton
             style={styles.gridBtnTransparent}
-            activeOpacity={0.6}
+            color="#7CFC9A"
             onPress={() => { playSound('click'); onSelectRegion('europa'); onNavigate('cards'); }}
           />
 
           {/* Kárpát-medence gomb */}
-          <TouchableOpacity
+          <LaserBorderButton
             style={styles.gridBtnTransparent}
-            activeOpacity={0.6}
+            color="#e0807f"
             onPress={() => { playSound('click'); onSelectRegion('karpat'); onNavigate('cards'); }}
           />
         </View>
 
         <View style={styles.gridRow}>
           {/* Amerika gomb */}
-          <TouchableOpacity
+          <LaserBorderButton
             style={styles.gridBtnTransparent}
-            activeOpacity={0.6}
+            color="#7CFC9A"
             onPress={() => { playSound('click'); }}
           />
 
           {/* Ázsia gomb */}
-          <TouchableOpacity
+          <LaserBorderButton
             style={styles.gridBtnTransparent}
-            activeOpacity={0.6}
+            color="#7CFC9A"
             onPress={() => { playSound('click'); }}
           />
         </View>
 
         <View style={styles.gridRow}>
           {/* Kvíz gomb */}
-          <TouchableOpacity
+          <LaserBorderButton
             style={styles.gridBtnTransparent}
-            activeOpacity={0.6}
+            color="#dca73a"
             onPress={() => { playSound('click'); onNavigate('quiz'); }}
           />
 
           {/* Afrika gomb */}
-          <TouchableOpacity
+          <LaserBorderButton
             style={styles.gridBtnTransparent}
-            activeOpacity={0.6}
+            color="#7CFC9A"
             onPress={() => { playSound('click'); }}
           />
         </View>
@@ -1058,7 +1120,7 @@ const styles = StyleSheet.create({
   /* --- Új, teljes képernyős Landing Page stílusok --- */
   landingContainer: { flex: 1, backgroundColor: '#0a0a06', position: 'relative' },
   absoluteBackground: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' },
-  heroTint: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(8,6,2,0.65)' },
+  heroTint: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(8,6,2,0.15)' },
   diagonalCut: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, backgroundColor: '#0a0a06', transform: [{ skewY: '-2.5deg' }], marginBottom: -15, opacity: 0.3 },
   
   bottomThirdContainer: { position: 'absolute', bottom: 0, left: 0, right: 0, height: '36%', paddingHorizontal: 16, paddingBottom: 24, justifyContent: 'flex-end' },
@@ -1080,7 +1142,28 @@ const styles = StyleSheet.create({
   smallBtnRow: { flexDirection: 'row', gap: 12 },
   gridRow: { flexDirection: 'row', gap: 12, marginBottom: 10 },
   gridBtn: { flex: 1, height: 75, borderRadius: 14, padding: 8, alignItems: 'center', justifyContent: 'center', gap: 2, overflow: 'hidden', position: 'relative', borderWidth: 1, borderColor: 'rgba(255,255,255,0.04)' },
-  gridBtnTransparent: { flex: 1, height: 75, borderRadius: 14 },
+  gridBtnTransparent: { flex: 1, height: 75, borderRadius: 14, position: 'relative', overflow: 'visible' },
+  laserBorderTrack: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  laserDot: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 6,
+  },
   smallRegionBtn: { flex: 1, borderRadius: 14, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 10, overflow: 'hidden', position: 'relative', borderWidth: 1, borderColor: 'rgba(255,255,255,0.04)' },
   quizSmallBtn: { backgroundColor: '#0f0b04', borderColor: '#D4AF37', borderWidth: 1 },
   extraDivider: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 6, paddingHorizontal: 4 },
