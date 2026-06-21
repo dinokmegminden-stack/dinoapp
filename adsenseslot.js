@@ -11,6 +11,25 @@ export const AD_SLOT_LEFT = null; // pl. '1234567890'
 export const AD_SLOT_RIGHT = null; // pl. '0987654321'
 
 let scriptInjected = false;
+let metaInjected = false;
+
+function ensureAdSenseMetaTag() {
+  if (Platform.OS !== 'web' || metaInjected) return;
+  if (typeof document === 'undefined') return;
+  if (document.querySelector('meta[name="google-adsense-account"]')) {
+    metaInjected = true;
+    return;
+  }
+  const meta = document.createElement('meta');
+  meta.name = 'google-adsense-account';
+  meta.content = ADSENSE_CLIENT;
+  document.head.appendChild(meta);
+  metaInjected = true;
+}
+
+// A meta tag-et azonnal beillesztjük, amint ez a modul betöltődik (nem várunk
+// a Shell renderelésére), hogy az AdSense ellenőrző script minél hamarabb lássa.
+ensureAdSenseMetaTag();
 
 function ensureAdSenseScript() {
   if (Platform.OS !== 'web' || scriptInjected) return;
