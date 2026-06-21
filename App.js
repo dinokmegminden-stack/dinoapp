@@ -761,12 +761,6 @@ function DinoCard({ dino, index, total }) {
       <View style={styles.timelineWrap}>
         <PeriodTimeline korMillioev={dino.kor_millioev} />
       </View>
-      <View style={styles.infoTextRow}>
-        <Text style={styles.infoTextItem}>🕒 {fmtVal(dino.korszak)}</Text>
-        <Text style={styles.infoTextItem}>📍 {fmtVal(dino.megtalalas_helye)}</Text>
-        <Text style={styles.infoTextItem}>🌿 {fmtVal(dino.taplalek)}</Text>
-        <Text style={styles.infoTextItem}>📏 {fmtVal(dino.hossz)}</Text>
-      </View>
       <View style={[styles.cardImageArea, isWideWeb && styles.cardImageAreaWide, { backgroundColor: color.bg }]}>
         {image ? (
           <Image source={image} style={styles.dinoImage} resizeMode="contain" />
@@ -779,6 +773,12 @@ function DinoCard({ dino, index, total }) {
       <ScrollView style={styles.cardBody} showsVerticalScrollIndicator={false}>
         <Text style={styles.scientificName}>{dino.nev_tudomanyos}</Text>
         <Text style={styles.commonName}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
+        <View style={styles.infoTextRow}>
+          <Text style={styles.infoTextItem}>🕒 {fmtVal(dino.korszak)}</Text>
+          <Text style={styles.infoTextItem}>📍 {fmtVal(dino.megtalalas_helye)}</Text>
+          <Text style={styles.infoTextItem}>🌿 {fmtVal(dino.taplalek)}</Text>
+          <Text style={styles.infoTextItem}>📏 {fmtVal(dino.hossz)}</Text>
+        </View>
         <View style={styles.divider} />
         <Text style={styles.sectionLabel}>Felfedező</Text>
         <Text style={styles.bodyText}>{fmtVal(dino.felfedezo)}</Text>
@@ -800,7 +800,6 @@ export default function App() {
 
   const position = useRef(new Animated.ValueXY()).current;
   const { width: appWidth } = useWindowDimensions();
-  const isMobile = Platform.OS !== 'web' || appWidth < 700;
 
   const activeDinosaurs = region === 'karpat' ? karpatDinoList : dinosaurs;
 
@@ -868,36 +867,6 @@ export default function App() {
             <Text style={styles.headerTitle}>← FŐMENÜ</Text>
           </TouchableOpacity>
         </View>
-        {!isMobile && (
-          <>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Keresés név, csoport vagy ország..."
-              placeholderTextColor={COLORS.textMuted}
-              value={searchQuery}
-              onChangeText={(text) => {
-                setSearchQuery(text);
-                setCurrentIndex(0);
-                position.setValue({ x: 0, y: 0 });
-              }}
-            />
-            <View style={styles.filterRow}>
-              {['Mind', 'Triász', 'Jura', 'Kréta'].map((period) => (
-                <TouchableOpacity
-                  key={period}
-                  style={[styles.filterTab, selectedPeriod === period && styles.filterTabActive]}
-                  onPress={() => {
-                    setSelectedPeriod(period);
-                    setCurrentIndex(0);
-                    position.setValue({ x: 0, y: 0 });
-                  }}
-                >
-                  <Text style={[styles.filterTabText, selectedPeriod === period && styles.filterTabTextActive]}>{period}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </>
-        )}
       </SafeAreaView>
 
       <View style={styles.cardContainer}>

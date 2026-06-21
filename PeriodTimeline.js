@@ -59,26 +59,6 @@ export default function PeriodTimeline({ korMillioev }) {
         )}
       </View>
 
-      {/* Tengely számok */}
-      <View style={styles.tickLabelRow}>
-        {TICKS.map((tick) => {
-          const leftPos = ((START_MA - tick) / TOTAL_DURATION) * 100;
-          let translate = -50;
-          if (tick === START_MA) translate = 0;
-          if (tick === END_MA) translate = -100;
-          return (
-            <Text
-              key={tick}
-              style={[
-                styles.tickLabel,
-                { left: `${leftPos}%`, transform: [{ translateX: `${translate}%` }] },
-              ]}
-            >
-              {tick}
-            </Text>
-          );
-        })}
-      </View>
     </View>
   );
 }
@@ -133,13 +113,5 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
-  },
-  tickLabelRow: { width: '100%', height: 14, marginTop: 2, position: 'relative' },
-  tickLabel: {
-    position: 'absolute',
-    top: 0,
-    fontSize: 10,
-    color: '#9ca3af',
-    fontFamily: 'monospace',
   },
 });
