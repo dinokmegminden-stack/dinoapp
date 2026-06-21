@@ -275,7 +275,7 @@ function DinoTudosLogo() {
 
 // --- LANDING PAGE ---
 // Átlátszó gomb, amelynek a kerete körül egy fénypont (lézer) fut körbe végtelenítve.
-function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800 }) {
+function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800, children }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -314,6 +314,7 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800 
       onPress={onPress}
       onLayout={(e) => setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
     >
+      {children}
       <View pointerEvents="none" style={[styles.laserBorderTrack, { borderColor: `${color}33` }]} />
       {width > 0 && height > 0 && (
         <Animated.View
@@ -335,73 +336,67 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800 
   );
 }
 
+// A 6 régió/akció gomb adatai - a tartalom most teljesen kódból épül fel valódi ikonképekkel,
+// nem a háttérképbe sütött grafikára próbálunk illeszkedni.
+const LANDING_BUTTONS = [
+  { key: 'europa', title: 'Európa', subtitle: '25 faj · elérhető', icon: require('./assets/icons/icon_europa.png'), color: '#7CFC9A', bg: '#1c3a14' },
+  { key: 'karpat', title: 'Kárpát-medence', subtitle: '11 faj · elérhető', emoji: '🏔️', color: '#e0807f', bg: '#3a1212' },
+  { key: 'amerika', title: 'Amerika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_amerika.png'), color: '#7CFC9A', bg: '#18130e' },
+  { key: 'azsia', title: 'Ázsia', subtitle: 'hamarosan', emoji: '🌏', color: '#7CFC9A', bg: '#0b131c' },
+  { key: 'kviz', title: 'Dínó Kvíz', subtitle: 'paleontológus', icon: require('./assets/icons/icon_kviz.png'), color: '#dca73a', bg: '#241a3a' },
+  { key: 'afrika', title: 'Afrika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_afrika.png'), color: '#7CFC9A', bg: '#1a1206' },
+];
+
 function LandingPage({ onNavigate, onSelectRegion }) {
+  const handlePress = (key) => {
+    playSound('click');
+    if (key === 'europa') { onSelectRegion('europa'); onNavigate('cards'); }
+    else if (key === 'karpat') { onSelectRegion('karpat'); onNavigate('cards'); }
+    else if (key === 'kviz') { onNavigate('quiz'); }
+    // amerika / azsia / afrika: hamarosan érkezik, jelenleg nincs célnézet
+  };
+
   return (
     <Shell>
     <View style={styles.landingContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#0a0a06" />
-      
-      {/* A háttérkép most az egész oldalt lefedi */}
+
+      {/* A háttérkép (kapu + dínó jelenet) a teljes felületet kitölti, a régi, bele sütött gombok fölé pedig egy saját panel kerül */}
       <Image
         source={require('./assets/images/lp_bg.png')}
         style={styles.absoluteBackground}
         resizeMode="cover"
       />
       <View style={styles.heroTint} />
-      {/* Ha a diagonalCut-ot meg akarod tartani dekorációnak, itt maradhat abszolút pozícióval */}
       <View style={styles.diagonalCut} />
 
       <MuteButton />
 
-      {/* A gombok konténere az alsó harmadba pozicionálva - most átlátszó, mert a háttérkép már tartalmazza a vizuális elemeket */}
       <View style={styles.bottomThirdContainer}>
-        <View style={styles.gridRow}>
-          {/* Európa gomb */}
-          <LaserBorderButton
-            style={styles.gridBtnTransparent}
-            color="#7CFC9A"
-            onPress={() => { playSound('click'); onSelectRegion('europa'); onNavigate('cards'); }}
-          />
-
-          {/* Kárpát-medence gomb */}
-          <LaserBorderButton
-            style={styles.gridBtnTransparent}
-            color="#e0807f"
-            onPress={() => { playSound('click'); onSelectRegion('karpat'); onNavigate('cards'); }}
-          />
-        </View>
-
-        <View style={styles.gridRow}>
-          {/* Amerika gomb */}
-          <LaserBorderButton
-            style={styles.gridBtnTransparent}
-            color="#7CFC9A"
-            onPress={() => { playSound('click'); }}
-          />
-
-          {/* Ázsia gomb */}
-          <LaserBorderButton
-            style={styles.gridBtnTransparent}
-            color="#7CFC9A"
-            onPress={() => { playSound('click'); }}
-          />
-        </View>
-
-        <View style={styles.gridRow}>
-          {/* Kvíz gomb */}
-          <LaserBorderButton
-            style={styles.gridBtnTransparent}
-            color="#dca73a"
-            onPress={() => { playSound('click'); onNavigate('quiz'); }}
-          />
-
-          {/* Afrika gomb */}
-          <LaserBorderButton
-            style={styles.gridBtnTransparent}
-            color="#7CFC9A"
-            onPress={() => { playSound('click'); }}
-          />
-        </View>
+        {[0, 1, 2].map((rowIdx) => (
+          <View style={styles.gridRow} key={rowIdx}>
+            {LANDING_BUTTONS.slice(rowIdx * 2, rowIdx * 2 + 2).map((btn) => (
+              <LaserBorderButton
+                key={btn.key}
+                style={[styles.gridBtn, { backgroundColor: btn.bg, borderColor: `${btn.color}33` }]}
+                color={btn.color}
+                onPress={() => handlePress(btn.key)}
+              >
+                <View style={styles.btnInner}>
+                  {btn.icon ? (
+                    <Image source={btn.icon} style={styles.btnIconImage} resizeMode="contain" />
+                  ) : (
+                    <Text style={styles.btnEmoji}>{btn.emoji}</Text>
+                  )}
+                  <View style={styles.btnTextCol}>
+                    <Text style={styles.btnName} numberOfLines={1}>{btn.title}</Text>
+                    <Text style={[styles.btnSubMuted, { color: `${btn.color}cc` }]}>{btn.subtitle}</Text>
+                  </View>
+                </View>
+              </LaserBorderButton>
+            ))}
+          </View>
+        ))}
       </View>
     </View>
     </Shell>
@@ -1124,7 +1119,8 @@ const styles = StyleSheet.create({
   logoBottomLine: { width: 50, height: 3, backgroundColor: '#639922', borderRadius: 2, marginTop: 10 },
 
   /* --- Új, teljes képernyős Landing Page stílusok --- */
-  landingContainer: { flex: 1, backgroundColor: '#0a0a06', position: 'relative' },
+  landingContainer: { flex: 1, backgroundColor: '#0a0a06', position: 'relative', justifyContent: 'center', alignItems: 'center' },
+  landingStage: { position: 'relative', overflow: 'hidden' },
   absoluteBackground: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' },
   heroTint: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(8,6,2,0.15)' },
   diagonalCut: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, backgroundColor: '#0a0a06', transform: [{ skewY: '-2.5deg' }], marginBottom: -15, opacity: 0.3 },
@@ -1135,11 +1131,14 @@ const styles = StyleSheet.create({
   bigBtnEu: { backgroundColor: '#223d10', borderRadius: 16, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', padding: 16, gap: 14, position: 'relative', borderWidth: 1, borderColor: 'rgba(99,153,34,0.2)' },
   bigBtnKarpat: { backgroundColor: '#3a1212', borderRadius: 16, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', padding: 16, gap: 14, position: 'relative', borderWidth: 1, borderColor: 'rgba(205,42,62,0.25)' },
   btnShine: { position: 'absolute', top: 0, left: 0, right: 0, height: '50%', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 16 },
-  btnEmoji: { fontSize: 24 },
-  btnName: { fontSize: 13, fontWeight: '800', color: '#fff', letterSpacing: 0.3, textAlign: 'center' },
-  btnSubGreen: { fontSize: 11, color: '#7ab832', marginTop: 1, fontWeight: '600', textAlign: 'center' },
-  btnSubRed: { fontSize: 11, color: '#e0807f', marginTop: 1, fontWeight: '600', textAlign: 'center' },
-  btnSubMuted: { fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 1, fontWeight: '500', textAlign: 'center' },
+  btnEmoji: { fontSize: 28, width: 40, textAlign: 'center' },
+  btnInner: { flexDirection: 'row', alignItems: 'center', gap: 10, width: '100%', paddingHorizontal: 4 },
+  btnIconImage: { width: 44, height: 44 },
+  btnTextCol: { flex: 1, alignItems: 'flex-start' },
+  btnName: { fontSize: 14, fontWeight: '800', color: '#fff', letterSpacing: 0.3, textAlign: 'left' },
+  btnSubGreen: { fontSize: 11, color: '#7ab832', marginTop: 1, fontWeight: '600', textAlign: 'left' },
+  btnSubRed: { fontSize: 11, color: '#e0807f', marginTop: 1, fontWeight: '600', textAlign: 'left' },
+  btnSubMuted: { fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 1, fontWeight: '500', textAlign: 'left' },
   btnBadge: { backgroundColor: '#639922', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   karpatBadge: { backgroundColor: '#cd2a3e', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   btnBadgeText: { fontSize: 8, color: '#fff', fontWeight: '800', letterSpacing: 0.5 },
