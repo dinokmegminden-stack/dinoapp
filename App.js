@@ -124,6 +124,7 @@ import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './AdSenseSlot';
 function Shell({ children }) {
   const { width } = useWindowDimensions();
   const showAdSlots = Platform.OS === 'web' && width >= 900;
+  const isWideWeb = Platform.OS === 'web' && width >= 700;
   return (
     <View style={styles.shellOuter}>
       {showAdSlots && (
@@ -131,7 +132,7 @@ function Shell({ children }) {
           <AdSenseSlot slotId={AD_SLOT_LEFT} />
         </View>
       )}
-      <View style={styles.shellInner}>{children}</View>
+      <View style={[styles.shellInner, isWideWeb && styles.shellInnerWide]}>{children}</View>
       {showAdSlots && (
         <View style={styles.adSlot}>
           <AdSenseSlot slotId={AD_SLOT_RIGHT} />
@@ -753,6 +754,8 @@ function DinoCard({ dino, index, total }) {
   if (!dino) return null;
   const color = getCardColor(dino);
   const image = IMAGE_MAP[dino.nev_tudomanyos] || null;
+  const { width: cardWidth } = useWindowDimensions();
+  const isWideWeb = Platform.OS === 'web' && cardWidth >= 700;
   return (
     <View style={styles.card}>
       <View style={styles.timelineWrap}>
@@ -764,7 +767,7 @@ function DinoCard({ dino, index, total }) {
         <Text style={styles.infoTextItem}>🌿 {fmtVal(dino.taplalek)}</Text>
         <Text style={styles.infoTextItem}>📏 {fmtVal(dino.hossz)}</Text>
       </View>
-      <View style={[styles.cardImageArea, { backgroundColor: color.bg }]}>
+      <View style={[styles.cardImageArea, isWideWeb && styles.cardImageAreaWide, { backgroundColor: color.bg }]}>
         {image ? (
           <Image source={image} style={styles.dinoImage} resizeMode="contain" />
         ) : (
@@ -943,6 +946,9 @@ const styles = StyleSheet.create({
     maxWidth: 480,
     minHeight: '100%',
   },
+  shellInnerWide: {
+    maxWidth: 720,
+  },
   adSlot: {
     flex: 1,
     minWidth: 120,
@@ -984,7 +990,8 @@ const styles = StyleSheet.create({
   navButtonText: { color: COLORS.textPrimary, fontSize: 13, fontWeight: '700' },
   
   card: { flex: 1, width: '100%', backgroundColor: COLORS.cardSolid, borderRadius: 20, borderWidth: 1, borderColor: COLORS.border, overflow: 'hidden', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 6 },
-  cardImageArea: { width: '100%', height: 250, justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.03)' },
+  cardImageArea: { width: '100%', aspectRatio: 16 / 9, justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.03)' },
+  cardImageAreaWide: {},
   dinoImage: { width: '100%', height: '100%' },
   fallbackEmoji: { fontSize: 64 },
   cornerBadge: {
