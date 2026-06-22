@@ -961,6 +961,46 @@ export default function App() {
 
 // --- GLOBAL STYLES ---
 const styles = StyleSheet.create({
+  // ... (a többi stílus változatlan marad)
+
+  scientificName: { 
+    fontSize: 14, 
+    fontWeight: 'bold', 
+    color: COLORS.textPrimary, 
+    fontStyle: 'italic',
+    fontFamily: 'Cinzel', // ← A dínó tudományos neve Cinzel betűtípust kap
+  },
+
+  // Minden más általános szöveges elemhez add hozzá a Roboto betűtípust:
+  bodyText: { 
+    fontSize: 12, 
+    color: COLORS.textPrimary, 
+    marginTop: 2, 
+    lineHeight: 16,
+    fontFamily: 'Roboto', // ← Általános leírások
+  },
+  commonName: { 
+    fontSize: 12, 
+    color: COLORS.textSecondary, 
+    marginTop: 2, 
+    fontWeight: '500',
+    fontFamily: 'Roboto', // ← Köznyelvi név
+  },
+  infoTextItem: { 
+    fontSize: 12, 
+    fontWeight: '600', 
+    color: COLORS.textSecondary,
+    fontFamily: 'Roboto', // ← Kártya infós sáv szövegei
+  },
+  sectionLabel: { 
+    fontSize: 10, 
+    fontWeight: '700', 
+    color: COLORS.textMuted, 
+    textTransform: 'uppercase', 
+    letterSpacing: 0.5, 
+    marginTop: 8,
+    fontFamily: 'Roboto', // ← Szekciócímkék
+  },
   shellOuter: {
     flex: 1,
     width: '100%',
