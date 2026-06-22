@@ -275,7 +275,7 @@ function DinoTudosLogo() {
 
 // --- LANDING PAGE ---
 // Átlátszó gomb, amelynek a kerete körül egy fénypont (lézer) fut körbe végtelenítve.
-function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800, children }) {
+function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800, children, borderRadius = 14 }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
   const progress = useRef(new Animated.Value(0)).current;
 
@@ -293,6 +293,7 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800,
   }, [duration]);
 
   const { width, height } = size;
+  const trackRadius = borderRadius;
   const perimeter = Math.max(1, 2 * (width + height));
   const p1 = width / perimeter; // a felső él végpontja
   const p2 = (width + height) / perimeter; // a jobb él végpontja
@@ -315,7 +316,7 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800,
       onLayout={(e) => setSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
     >
       {children}
-      <View pointerEvents="none" style={[styles.laserBorderTrack, { borderColor: `${color}33` }]} />
+      <View pointerEvents="none" style={[styles.laserBorderTrack, { borderColor: `${color}33`, borderRadius: trackRadius }]} />
       {width > 0 && height > 0 && (
         <Animated.View
           pointerEvents="none"
@@ -336,68 +337,93 @@ function LaserBorderButton({ style, onPress, color = '#7CFC9A', duration = 2800,
   );
 }
 
-// A 6 régió/akció gomb adatai - a tartalom most teljesen kódból épül fel valódi ikonképekkel,
-// nem a háttérképbe sütött grafikára próbálunk illeszkedni.
-const LANDING_BUTTONS = [
-  { key: 'europa', title: 'Európa', subtitle: 'elérhető', icon: require('./assets/icons/icon_europa.png'), color: '#7CFC9A', bg: 'rgba(28, 58, 20, 0.6)' },
-  { key: 'karpat', title: 'Kárpát-medence', subtitle: 'elérhető', icon: require('./assets/icons/icon_karpat.png'), color: '#e0807f', bg: 'rgba(58, 18, 18, 0.6)' },
-  { key: 'amerika', title: 'Amerika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_amerika.png'), color: '#7CFC9A', bg: 'rgba(24, 19, 14, 0.6)' },
-  { key: 'azsia', title: 'Ázsia', subtitle: 'hamarosan', icon: require('./assets/icons/icon_azsia.png'), color: '#7CFC9A', bg: 'rgba(11, 19, 28, 0.6)' },
-  { key: 'kviz', title: 'Legyen Ön is Dínó Milliomos', subtitle: '', icon: require('./assets/icons/icon_kviz.png'), color: '#dca73a', bg: 'rgba(36, 26, 58, 0.6)' },
-  { key: 'afrika', title: 'Afrika', subtitle: 'hamarosan', icon: require('./assets/icons/icon_afrika.png'), color: '#7CFC9A', bg: 'rgba(26, 18, 6, 0.6)' },
+// Az új landing háttér (landing_menu_bg.png) eredeti mérete - ehhez igazítjuk a "színpadot",
+// hogy a sávok és a gombok mindig pontosan ugyanott legyenek, eszköztől függetlenül.
+const LP_BG_RATIO = 768 / 1376; // szélesség / magasság
+
+// Az 5 régió-sáv függőlegesen egyenletesen van elosztva a képen (mindegyik 20%-nyi magas),
+// a nyílgomb mindegyik sáv jobb szélén, középen ül.
+const LANDING_NAV_BUTTONS = [
+  { key: 'karpat', label: 'Kárpátok', centerY: 10, color: '#c7d39a' },
+  { key: 'europa', label: 'Európa', centerY: 30, color: '#9fd17a' },
+  { key: 'afrika', label: 'Afrika', centerY: 50, color: '#3a3424' },
+  { key: 'azsia', label: 'Ázsia', centerY: 70, color: '#fff1d6' },
+  { key: 'amerika', label: 'Amerika', centerY: 90, color: '#ffe0b0' },
 ];
 
 function LandingPage({ onNavigate, onSelectRegion }) {
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  const { width: cw, height: ch } = containerSize;
+  let stageWidth = cw;
+  let stageHeight = cw / LP_BG_RATIO;
+  if (stageHeight > ch && ch > 0) {
+    stageHeight = ch;
+    stageWidth = ch * LP_BG_RATIO;
+  }
+
   const handlePress = (key) => {
     playSound('click');
     if (key === 'europa') { onSelectRegion('europa'); onNavigate('cards'); }
     else if (key === 'karpat') { onSelectRegion('karpat'); onNavigate('cards'); }
-    else if (key === 'kviz') { onNavigate('quiz'); }
     // amerika / azsia / afrika: hamarosan érkezik, jelenleg nincs célnézet
   };
 
   return (
     <Shell>
-    <View style={styles.landingContainer}>
+    <View
+      style={styles.landingContainer}
+      onLayout={(e) => setContainerSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
+    >
       <StatusBar barStyle="light-content" backgroundColor="#0a0a06" />
 
-      {/* A háttérkép (kapu + dínó jelenet) a teljes felületet kitölti, a régi, bele sütött gombok fölé pedig egy saját panel kerül */}
-      <Image
-        source={require('./assets/images/lp_bg.png')}
-        style={styles.absoluteBackground}
-        resizeMode="cover"
-      />
-      <View style={styles.heroTint} />
-      <View style={styles.diagonalCut} />
+      {cw > 0 && (
+        <View style={[styles.landingStage, { width: stageWidth, height: stageHeight }]}>
+          <Image
+            source={require('./assets/images/landing_menu_bg.png')}
+            style={styles.absoluteBackground}
+            resizeMode="stretch"
+          />
+
+          {/* 5 nyílgomb a sávok jobb szélén, függőlegesen középre a saját sávjukban */}
+          {LANDING_NAV_BUTTONS.map((btn) => (
+            <LaserBorderButton
+              key={btn.key}
+              style={{
+                position: 'absolute',
+                right: '4%',
+                top: `${btn.centerY}%`,
+                width: 56,
+                height: 56,
+                marginTop: -28,
+                borderRadius: 28,
+                backgroundColor: 'rgba(10,10,8,0.35)',
+              }}
+              color={btn.color}
+              borderRadius={28}
+              onPress={() => handlePress(btn.key)}
+            >
+              <View style={styles.navArrowWrap} pointerEvents="none">
+                <Text style={styles.navArrowText}>›</Text>
+              </View>
+            </LaserBorderButton>
+          ))}
+
+          {/* Kvíz gomb - kicsi, bal alsó sarok */}
+          <LaserBorderButton
+            style={styles.quizCornerBtn}
+            color="#dca73a"
+            borderRadius={32}
+            onPress={() => { playSound('click'); onNavigate('quiz'); }}
+          >
+            <View style={styles.quizCornerInner} pointerEvents="none">
+              <Image source={require('./assets/icons/icon_kviz.png')} style={styles.quizCornerIcon} resizeMode="contain" />
+            </View>
+          </LaserBorderButton>
+        </View>
+      )}
 
       <MuteButton />
-
-      <View style={styles.bottomThirdContainer}>
-        {[0, 1, 2].map((rowIdx) => (
-          <View style={styles.gridRow} key={rowIdx}>
-            {LANDING_BUTTONS.slice(rowIdx * 2, rowIdx * 2 + 2).map((btn) => (
-              <LaserBorderButton
-                key={btn.key}
-                style={[styles.gridBtn, { backgroundColor: btn.bg, borderColor: `${btn.color}33` }]}
-                color={btn.color}
-                onPress={() => handlePress(btn.key)}
-              >
-                <View style={styles.btnInner}>
-                  {btn.icon ? (
-                    <Image source={btn.icon} style={styles.btnIconImage} resizeMode="contain" />
-                  ) : (
-                    <Text style={styles.btnEmoji}>{btn.emoji}</Text>
-                  )}
-                  <View style={styles.btnTextCol}>
-                    <Text style={styles.btnName} numberOfLines={1}>{btn.title}</Text>
-                    <Text style={[styles.btnSubMuted, { color: `${btn.color}cc` }]}>{btn.subtitle}</Text>
-                  </View>
-                </View>
-              </LaserBorderButton>
-            ))}
-          </View>
-        ))}
-      </View>
     </View>
     </Shell>
   );
@@ -1123,6 +1149,19 @@ const styles = StyleSheet.create({
   landingStage: { position: 'relative', overflow: 'hidden' },
   absoluteBackground: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' },
   heroTint: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(8,6,2,0.15)' },
+  navArrowWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  navArrowText: { fontSize: 30, fontWeight: '700', color: '#fff', marginTop: -3 },
+  quizCornerBtn: {
+    position: 'absolute',
+    left: 16,
+    bottom: 16,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(10,10,8,0.45)',
+  },
+  quizCornerInner: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 6 },
+  quizCornerIcon: { width: '100%', height: '100%' },
   diagonalCut: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, backgroundColor: '#0a0a06', transform: [{ skewY: '-2.5deg' }], marginBottom: -15, opacity: 0.3 },
   
   bottomThirdContainer: { position: 'absolute', bottom: 0, left: 0, right: 0, height: '36%', paddingHorizontal: 16, paddingBottom: 24, justifyContent: 'flex-end' },
