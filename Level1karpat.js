@@ -41,6 +41,22 @@ function groupByPackage(list) {
 export const KARPAT_PACKAGES = groupByPackage(karpatDinoList);
 export const KARPAT_PACKAGE_COUNT = KARPAT_PACKAGES.length;
 
+// Dínó képek (ugyanazok a fájlok, mint a fő App.js IMAGE_MAP-jében a Kárpát-medencei fajoknál).
+const IMAGE_MAP = {
+  'Hungarosaurus tormai': require('./assets/images/hungarosaurus.jpg'),
+  'Ajkaceratops kozmai': require('./assets/images/ajkaceratops.jpg'),
+  'Pneumatoraptor fodori': require('./assets/images/pneumatoraptor_fodori.jpg'),
+  'Mochlodon vorosi': require('./assets/images/mochlodon_vorosi.jpg'),
+  'Telmatosaurus transsylvanicus': require('./assets/images/telmatosaurus.jpg'),
+  'Magyarosaurus dacus': require('./assets/images/magyarosaurusb.jpg'),
+  'Zalmoxes robustus': require('./assets/images/zalmoxes.jpg'),
+  'Struthiosaurus transylvanicus': require('./assets/images/struthiosaurus.jpg'),
+  'Petrustitan hungaricus': require('./assets/images/petrustitan.jpg'),
+  'Uriash kadici': require('./assets/images/uriash_kadici.jpg'),
+  'Komlosaurus carbonis': require('./assets/images/komlosaurus.jpg'),
+  'Balaur bondoc': require('./assets/images/balaur.jpg'),
+};
+
 // --- BECENÉV + HALADÁS MENTÉSE (AsyncStorage, nincs email) ---
 const NICKNAME_KEY = 'dinoapp_nickname';
 const PROGRESS_KEY_PREFIX = 'dinoapp_progress_';
@@ -309,6 +325,13 @@ export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
       </View>
 
       <ScrollView style={s.browseCard} showsVerticalScrollIndicator={false}>
+        <View style={s.dinoImageArea}>
+          {IMAGE_MAP[dino.nev_tudomanyos] ? (
+            <Image source={IMAGE_MAP[dino.nev_tudomanyos]} style={s.dinoImage} resizeMode="contain" />
+          ) : (
+            <Text style={s.dinoImageFallback}>🦖</Text>
+          )}
+        </View>
         <Text style={s.dinoSci}>{dino.nev_tudomanyos}</Text>
         <Text style={s.dinoCommon}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
         <View style={s.dinoInfoRow}>
@@ -489,6 +512,12 @@ const s = StyleSheet.create({
   browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   browseCounter: { color: C.textMuted, fontSize: 12, fontWeight: '700' },
   browseCard: { flex: 1, backgroundColor: C.card, borderRadius: 16, borderWidth: 1, borderColor: C.border, padding: 16 },
+  dinoImageArea: {
+    width: '100%', aspectRatio: 16 / 9, borderRadius: 12, marginBottom: 12,
+    backgroundColor: 'rgba(255,255,255,0.04)', justifyContent: 'center', alignItems: 'center', overflow: 'hidden',
+  },
+  dinoImage: { width: '100%', height: '100%' },
+  dinoImageFallback: { fontSize: 56 },
   dinoSci: { color: C.text, fontSize: 16, fontWeight: '900', fontStyle: 'italic' },
   dinoCommon: { color: C.textMuted, fontSize: 13, marginTop: 2, fontWeight: '600' },
   dinoInfoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10, marginBottom: 6 },

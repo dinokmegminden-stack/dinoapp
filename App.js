@@ -20,6 +20,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import dinosaurs from './data/dinosaurs.json';
 import karpatDinosaurs from './data/karpatmedence.json';
+import { useFonts } from 'expo-font';
+import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
+import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 import quizQuestions from './data/quiz_questions.json';
 import {
   NicknameScreen,
@@ -31,9 +34,9 @@ import {
   loadProgress,
   saveProgress,
   unlockNextPackage,
-} from './Level1karpat';
+} from './Level1Karpat';
 
-
+// --- AUDIO SYSTEM ---
 // Egyszerű UI kattanás hang (online forrás, marad ahogy volt)
 const SOUNDS = {
   click: 'https://actions.google.com/sounds/v1/ui/click_on_furniture.ogg',
@@ -857,6 +860,12 @@ function DinoCard({ dino, index, total }) {
 
 // --- FŐ ALKALMAZÁS ---
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Cinzel: Cinzel_700Bold,
+    Roboto: Roboto_400Regular,
+    Roboto_700Bold,
+  });
+
   const [view, setView] = useState('landing');
   const [region, setRegion] = useState('europa');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -923,6 +932,14 @@ export default function App() {
       });
     });
   });
+
+  if (!fontsLoaded) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+      </View>
+    );
+  }
 
   if (view === 'landing') {
     return (
@@ -1175,18 +1192,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#0d1127',
     gap: 6,
   },
-  infoTextItem: { fontSize: 12, fontWeight: '600', color: COLORS.textSecondary },
+  infoTextItem: { fontSize: 12, fontWeight: '600', color: COLORS.textSecondary, fontFamily: 'Roboto' },
   cardBody: { padding: 16 },
-  scientificName: { fontSize: 14, fontWeight: 'bold', color: COLORS.textPrimary, fontStyle: 'italic' },
-  commonName: { fontSize: 12, color: COLORS.textSecondary, marginTop: 2, fontWeight: '500' },
   divider: { height: 0.5, backgroundColor: COLORS.border, marginVertical: 12 },
   statsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   timelineWrap: { paddingHorizontal: 14, paddingTop: 10, paddingBottom: 4, backgroundColor: '#0d1127' },
   statBox: { width: '48%', backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: 8, borderWidth: 0.5, borderColor: COLORS.border },
   statLabel: { fontSize: 9, color: COLORS.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 },
   statValue: { fontSize: 12, fontWeight: '700', color: COLORS.textPrimary, marginTop: 2 },
-  sectionLabel: { fontSize: 10, fontWeight: '700', color: COLORS.textMuted, textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 8 },
-  bodyText: { fontSize: 12, color: COLORS.textPrimary, marginTop: 2, lineHeight: 16 },
   highlight: { color: COLORS.amber, fontWeight: '500' },
 
   searchInput: { backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 0.5, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6, fontSize: 12, color: COLORS.textPrimary, marginBottom: 8 },
