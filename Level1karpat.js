@@ -1,0 +1,519 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  StatusBar,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import karpatDinosaurs from './data/karpatmedence.json';
+
+// ============================================================
+// 1. SZINT — KÁRPÁT-MEDENCE — CSOMAGOS RENDSZER
+// ============================================================
+// 3 csomag (a karpatmedence.json "csomag" mezője alapján), 4-4-4 dínóval.
+// Egy csomag csak akkor nyílik ki, ha az előző csomag végén lévő
+// 5 kérdéses teszt HIBÁTLANRA sikerül (5/5).
+// A haladást egy becenévhez kötve, lokálisan (AsyncStorage) mentjük —
+// nincs email-regisztráció, nincs backend.
+
+const karpatDinoList = karpatDinosaurs;
+
+function groupByPackage(list) {
+  const map = {};
+  list.forEach((d) => {
+    const key = d.csomag || 1;
+    if (!map[key]) map[key] = [];
+    map[key].push(d);
+  });
+  return Object.keys(map)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((csomag) => ({ csomag, dinos: map[csomag] }));
+}
+
+export const KARPAT_PACKAGES = groupByPackage(karpatDinoList);
+export const KARPAT_PACKAGE_COUNT = KARPAT_PACKAGES.length;
+
+// --- BECENÉV + HALADÁS MENTÉSE (AsyncStorage, nincs email) ---
+const NICKNAME_KEY = 'dinoapp_nickname';
+const PROGRESS_KEY_PREFIX = 'dinoapp_progress_';
+
+function defaultProgress() {
+  return {
+    level1: {
+      // az 1. csomag mindig nyitva, a többi csak teszt után nyílik ki
+      unlocked: [1],
+      passed: [],
+    },
+  };
+}
+
+export async function loadNickname() {
+  try {
+    return await AsyncStorage.getItem(NICKNAME_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export async function saveNickname(name) {
+  try {
+    await AsyncStorage.setItem(NICKNAME_KEY, name.trim());
+  } catch {
+    // csendben elnyeljük
+  }
+}
+
+export async function loadProgress(nickname) {
+  try {
+    const raw = await AsyncStorage.getItem(PROGRESS_KEY_PREFIX + nickname);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.level1?.unlocked?.length) return parsed;
+    }
+  } catch {
+    // csendben elnyeljük
+  }
+  return defaultProgress();
+}
+
+export async function saveProgress(nickname, progress) {
+  try {
+    await AsyncStorage.setItem(PROGRESS_KEY_PREFIX + nickname, JSON.stringify(progress));
+  } catch {
+    // csendben elnyeljük
+  }
+}
+
+export function isPackageUnlocked(progress, csomag) {
+  return !!progress?.level1?.unlocked?.includes(csomag);
+}
+
+export function isPackagePassed(progress, csomag) {
+  return !!progress?.level1?.passed?.includes(csomag);
+}
+
+// A teszt sikeres letétele után kinyitja a következő csomagot.
+export function unlockNextPackage(progress, csomag) {
+  const next = {
+    level1: {
+      unlocked: [...new Set([...(progress?.level1?.unlocked || [1]), csomag])],
+      passed: [...new Set([...(progress?.level1?.passed || []), csomag])],
+    },
+  };
+  const nextCsomag = csomag + 1;
+  if (nextCsomag <= KARPAT_PACKAGE_COUNT) {
+    next.level1.unlocked = [...new Set([...next.level1.unlocked, nextCsomag])];
+  }
+  return next;
+}
+
+// --- KÉRDÉSGENERÁTOR — a csomag 4 dínójából 5 ténykérdést épít ---
+function shuffle(arr) {
+  return [...arr]
+    .map((v) => [Math.random(), v])
+    .sort((a, b) => a[0] - b[0])
+    .map(([, v]) => v);
+}
+
+const FALLBACK_DISTRACTORS = {
+  korszak: ['triász', 'kora kréta', 'jura', 'perm'],
+  megtalalas_helye: ['Németország', 'Franciaország', 'Spanyolország'],
+  hossz: ['1 m', '15 m', '0.5 m', '20 m'],
+  felfedezo: ['ismeretlen kutató', 'Charles Darwin', 'Richard Owen'],
+  nev_tudomanyos: ['Tyrannosaurus rex', 'Triceratops horridus', 'Velociraptor mongoliensis'],
+};
+
+function pickDistractors(correctValue, pool, field, count = 3) {
+  const values = [
+    ...new Set(
+      pool
+        .map((d) => d[field])
+        .filter((v) => v && v !== 'n/a' && v !== correctValue)
+    ),
+  ];
+  let distractors = shuffle(values).slice(0, count);
+  if (distractors.length < count && FALLBACK_DISTRACTORS[field]) {
+    const extra = FALLBACK_DISTRACTORS[field].filter(
+      (v) => v !== correctValue && !distractors.includes(v)
+    );
+    distractors = [...distractors, ...extra].slice(0, count);
+  }
+  return distractors;
+}
+
+const QUESTION_TEMPLATES = [
+  { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
+  { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
+  { field: 'megtalalas_helye', text: (d) => `Hol találták meg a ${d.nev_koznapi} maradványait?` },
+  { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
+  { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
+];
+
+function buildQuestion(dino, template, pool) {
+  const correct = dino[template.field];
+  const distractors = pickDistractors(correct, pool, template.field, 3);
+  const options = shuffle([correct, ...distractors]);
+  return {
+    question: template.text(dino),
+    options,
+    correctIndex: options.indexOf(correct),
+  };
+}
+
+export function generatePackageQuestions(packageDinos, fullPool = karpatDinoList, count = 5) {
+  let combos = [];
+  packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
+  combos = shuffle(combos).slice(0, count);
+  return combos.map(({ d, t }) => buildQuestion(d, t, fullPool));
+}
+
+// ============================================================
+// UI — SAJÁT, EGYSZERŰ STÍLUS (sötét navy + arany, az app témájához igazítva)
+// ============================================================
+const C = {
+  bg: '#020024',
+  card: 'rgba(255,255,255,0.05)',
+  border: 'rgba(255,255,255,0.14)',
+  text: '#FFFFFF',
+  textMuted: 'rgba(255,255,255,0.55)',
+  gold: '#D4AF37',
+  green: '#7ab832',
+  red: '#cd2a3e',
+  lockGrey: 'rgba(255,255,255,0.18)',
+};
+
+function L1Shell({ children }) {
+  const { width } = useWindowDimensions();
+  const isWideWeb = Platform.OS === 'web' && width >= 700;
+  return (
+    <View style={s.outer}>
+      <View style={[s.inner, isWideWeb && s.innerWide]}>{children}</View>
+    </View>
+  );
+}
+
+// --- BECENÉV-REGISZTRÁCIÓ ---
+export function NicknameScreen({ onSubmit }) {
+  const [name, setName] = useState('');
+  const handleSubmit = () => {
+    const trimmed = name.trim();
+    if (trimmed.length < 2) return;
+    onSubmit(trimmed);
+  };
+  return (
+    <L1Shell>
+      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+      <View style={s.nicknameWrap}>
+        <Text style={s.nicknameEmoji}>🦖</Text>
+        <Text style={s.nicknameTitle}>Mi a neved, kis paleontológus?</Text>
+        <Text style={s.nicknameDesc}>
+          A becenevedhez mentjük a haladásodat ezen az eszközön — nincs szükség e-mailre vagy jelszóra.
+        </Text>
+        <TextInput
+          style={s.nicknameInput}
+          placeholder="Pl. DínóMester"
+          placeholderTextColor="rgba(255,255,255,0.35)"
+          value={name}
+          onChangeText={setName}
+          maxLength={20}
+          autoFocus
+          onSubmitEditing={handleSubmit}
+        />
+        <TouchableOpacity
+          style={[s.primaryBtn, name.trim().length < 2 && s.primaryBtnDisabled]}
+          disabled={name.trim().length < 2}
+          onPress={handleSubmit}
+        >
+          <Text style={s.primaryBtnText}>Kezdjük! →</Text>
+        </TouchableOpacity>
+      </View>
+    </L1Shell>
+  );
+}
+
+// --- CSOMAGVÁLASZTÓ KÉPERNYŐ (1. SZINT) ---
+export function PackagesScreen({ progress, onOpenPackage, onBack }) {
+  return (
+    <L1Shell>
+      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+      <ScrollView contentContainerStyle={s.packagesScroll}>
+        <TouchableOpacity onPress={onBack} style={s.backLink}>
+          <Text style={s.backLinkText}>← FŐMENÜ</Text>
+        </TouchableOpacity>
+
+        <Text style={s.levelTitle}>1. SZINT</Text>
+        <Text style={s.levelSubtitle}>Kárpát-medence</Text>
+        <Text style={s.levelDesc}>
+          Fedezd fel a Kárpát-medence dinoszauruszait 3 csomagban! Minden csomag végén egy
+          5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
+        </Text>
+
+        {KARPAT_PACKAGES.map(({ csomag, dinos }) => {
+          const unlocked = isPackageUnlocked(progress, csomag);
+          const passed = isPackagePassed(progress, csomag);
+          return (
+            <TouchableOpacity
+              key={csomag}
+              disabled={!unlocked}
+              onPress={() => onOpenPackage(csomag)}
+              style={[s.packageCard, !unlocked && s.packageCardLocked]}
+            >
+              <View style={s.packageIconWrap}>
+                <Text style={s.packageIcon}>{unlocked ? (passed ? '✅' : '🦴') : '🔒'}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.packageName}>{csomag}. csomag</Text>
+                <Text style={s.packageMeta}>
+                  {dinos.length} dínó · {dinos.map((d) => d.nev_koznapi).join(', ')}
+                </Text>
+                {!unlocked && (
+                  <Text style={s.packageLockedHint}>
+                    Nyitáshoz teljesítsd hibátlanra a {csomag - 1}. csomag tesztjét
+                  </Text>
+                )}
+                {passed && <Text style={s.packagePassedHint}>Teszt teljesítve ✓</Text>}
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </L1Shell>
+  );
+}
+
+// --- DÍNÓ-BÖNGÉSZŐ EGY CSOMAGON BELÜL ---
+export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
+  const pack = KARPAT_PACKAGES.find((p) => p.csomag === csomag);
+  const dinos = pack ? pack.dinos : [];
+  const [index, setIndex] = useState(0);
+  const dino = dinos[index];
+
+  if (!dino) return null;
+
+  return (
+    <L1Shell>
+      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+      <View style={s.browseHeader}>
+        <TouchableOpacity onPress={onBack}>
+          <Text style={s.backLinkText}>← Csomagok</Text>
+        </TouchableOpacity>
+        <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
+      </View>
+
+      <ScrollView style={s.browseCard} showsVerticalScrollIndicator={false}>
+        <Text style={s.dinoSci}>{dino.nev_tudomanyos}</Text>
+        <Text style={s.dinoCommon}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
+        <View style={s.dinoInfoRow}>
+          <Text style={s.dinoInfoItem}>🕒 {dino.korszak}</Text>
+          <Text style={s.dinoInfoItem}>📍 {dino.megtalalas_helye}</Text>
+          <Text style={s.dinoInfoItem}>📏 {dino.hossz}</Text>
+        </View>
+        <Text style={s.sectionLabel}>Felfedező</Text>
+        <Text style={s.bodyText}>{dino.felfedezo}</Text>
+        <Text style={s.sectionLabel}>Leírás</Text>
+        <Text style={[s.bodyText, { color: C.gold }]}>{dino.leiras}</Text>
+        <View style={{ height: 16 }} />
+      </ScrollView>
+
+      <View style={s.browseNavRow}>
+        <TouchableOpacity
+          style={[s.navBtn, index === 0 && s.navBtnDisabled]}
+          disabled={index === 0}
+          onPress={() => setIndex((i) => Math.max(0, i - 1))}
+        >
+          <Text style={s.navBtnText}>← Előző</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[s.navBtn, index === dinos.length - 1 && s.navBtnDisabled]}
+          disabled={index === dinos.length - 1}
+          onPress={() => setIndex((i) => Math.min(dinos.length - 1, i + 1))}
+        >
+          <Text style={s.navBtnText}>Következő →</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={s.quizStartBtn} onPress={() => onStartQuiz(csomag)}>
+        <Text style={s.quizStartBtnText}>📝 Csomagteszt indítása (5 kérdés)</Text>
+      </TouchableOpacity>
+    </L1Shell>
+  );
+}
+
+// --- CSOMAGTESZT — 5 KÉRDÉS, HIBÁTLAN KELL A TOVÁBBJUTÁSHOZ ---
+export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
+  const pack = KARPAT_PACKAGES.find((p) => p.csomag === csomag);
+  const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [])).current;
+
+  const [qIndex, setQIndex] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [revealed, setRevealed] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [finished, setFinished] = useState(false);
+
+  const question = questions[qIndex];
+
+  const handleSelect = (idx) => {
+    if (revealed) return;
+    setSelected(idx);
+    setRevealed(true);
+    const isCorrect = idx === question.correctIndex;
+    if (isCorrect) setCorrectCount((c) => c + 1);
+    setTimeout(() => {
+      if (qIndex + 1 < questions.length) {
+        setQIndex((i) => i + 1);
+        setSelected(null);
+        setRevealed(false);
+      } else {
+        setFinished(true);
+      }
+    }, 1200);
+  };
+
+  if (finished) {
+    const passed = correctCount === questions.length;
+    return (
+      <L1Shell>
+        <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+        <View style={s.resultWrap}>
+          <Text style={s.resultEmoji}>{passed ? '🏆' : '😕'}</Text>
+          <Text style={s.resultTitle}>
+            {correctCount} / {questions.length} helyes válasz
+          </Text>
+          <Text style={s.resultDesc}>
+            {passed
+              ? 'Hibátlan eredmény! A következő csomag kinyílt.'
+              : 'A csomag kinyitásához hibátlan (5/5) eredmény szükséges. Próbáld újra!'}
+          </Text>
+          {passed ? (
+            <TouchableOpacity style={s.primaryBtn} onPress={() => onPassed(csomag)}>
+              <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={s.primaryBtn} onPress={() => onRetry(csomag)}>
+              <Text style={s.primaryBtnText}>Újrapróbálom</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity style={s.backLink} onPress={onBack}>
+            <Text style={s.backLinkText}>← Vissza a csomagokhoz</Text>
+          </TouchableOpacity>
+        </View>
+      </L1Shell>
+    );
+  }
+
+  return (
+    <L1Shell>
+      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+      <View style={s.browseHeader}>
+        <TouchableOpacity onPress={onBack}>
+          <Text style={s.backLinkText}>← Vissza</Text>
+        </TouchableOpacity>
+        <Text style={s.browseCounter}>Kérdés {qIndex + 1} / {questions.length}</Text>
+      </View>
+
+      <View style={s.quizQuestionBox}>
+        <Text style={s.quizQuestionText}>{question.question}</Text>
+      </View>
+
+      <View style={{ gap: 9, marginTop: 10 }}>
+        {question.options.map((opt, idx) => {
+          let optStyle = [s.optionBtn];
+          let textStyle = [s.optionBtnText];
+          if (revealed) {
+            if (idx === question.correctIndex) optStyle.push(s.optionBtnCorrect);
+            else if (idx === selected) optStyle.push(s.optionBtnIncorrect);
+          } else if (selected === idx) {
+            optStyle.push(s.optionBtnSelected);
+          }
+          return (
+            <TouchableOpacity
+              key={idx}
+              style={optStyle}
+              disabled={revealed}
+              onPress={() => handleSelect(idx)}
+            >
+              <Text style={textStyle}>{['A', 'B', 'C', 'D'][idx]}: {opt}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </L1Shell>
+  );
+}
+
+const s = StyleSheet.create({
+  outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: C.bg, alignItems: 'center' },
+  inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
+  innerWide: { maxWidth: 720 },
+
+  backLink: { paddingVertical: 8, marginBottom: 4 },
+  backLinkText: { color: C.green, fontSize: 13, fontWeight: '800' },
+
+  nicknameWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 60 },
+  nicknameEmoji: { fontSize: 56, marginBottom: 12 },
+  nicknameTitle: { color: C.text, fontSize: 20, fontWeight: '900', textAlign: 'center', marginBottom: 8 },
+  nicknameDesc: { color: C.textMuted, fontSize: 13, textAlign: 'center', marginBottom: 24, lineHeight: 18 },
+  nicknameInput: {
+    width: '100%', backgroundColor: 'rgba(255,255,255,0.07)', borderWidth: 1, borderColor: C.border,
+    borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, fontSize: 15, color: C.text, marginBottom: 18,
+  },
+  primaryBtn: { backgroundColor: C.green, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 28, alignItems: 'center', width: '100%' },
+  primaryBtnDisabled: { opacity: 0.4 },
+  primaryBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
+
+  packagesScroll: { paddingBottom: 60 },
+  levelTitle: { color: C.gold, fontSize: 12, fontWeight: '900', letterSpacing: 2, marginTop: 8 },
+  levelSubtitle: { color: C.text, fontSize: 24, fontWeight: '900', marginTop: 2 },
+  levelDesc: { color: C.textMuted, fontSize: 12, lineHeight: 17, marginTop: 8, marginBottom: 18 },
+
+  packageCard: {
+    flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: C.card, borderRadius: 16,
+    borderWidth: 1, borderColor: C.border, padding: 14, marginBottom: 12,
+  },
+  packageCardLocked: { opacity: 0.5 },
+  packageIconWrap: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.06)', justifyContent: 'center', alignItems: 'center' },
+  packageIcon: { fontSize: 22 },
+  packageName: { color: C.text, fontSize: 15, fontWeight: '800' },
+  packageMeta: { color: C.textMuted, fontSize: 11, marginTop: 2 },
+  packageLockedHint: { color: C.red, fontSize: 10, marginTop: 4, fontWeight: '600' },
+  packagePassedHint: { color: C.green, fontSize: 10, marginTop: 4, fontWeight: '700' },
+
+  browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  browseCounter: { color: C.textMuted, fontSize: 12, fontWeight: '700' },
+  browseCard: { flex: 1, backgroundColor: C.card, borderRadius: 16, borderWidth: 1, borderColor: C.border, padding: 16 },
+  dinoSci: { color: C.text, fontSize: 16, fontWeight: '900', fontStyle: 'italic' },
+  dinoCommon: { color: C.textMuted, fontSize: 13, marginTop: 2, fontWeight: '600' },
+  dinoInfoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10, marginBottom: 6 },
+  dinoInfoItem: { color: C.textMuted, fontSize: 12, fontWeight: '600' },
+  sectionLabel: { color: C.textMuted, fontSize: 10, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 10 },
+  bodyText: { color: C.text, fontSize: 13, marginTop: 4, lineHeight: 18 },
+
+  browseNavRow: { flexDirection: 'row', gap: 10, marginTop: 12 },
+  navBtn: { flex: 1, backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: C.border, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  navBtnDisabled: { opacity: 0.3 },
+  navBtnText: { color: C.text, fontSize: 13, fontWeight: '700' },
+
+  quizStartBtn: { backgroundColor: 'rgba(212,175,55,0.14)', borderWidth: 1, borderColor: C.gold, borderRadius: 14, paddingVertical: 14, alignItems: 'center', marginTop: 14, marginBottom: 24 },
+  quizStartBtnText: { color: C.gold, fontSize: 13, fontWeight: '800' },
+
+  quizQuestionBox: { backgroundColor: 'rgba(255,255,255,0.03)', borderLeftWidth: 3, borderLeftColor: C.gold, padding: 16, borderRadius: 8, marginTop: 4 },
+  quizQuestionText: { color: C.text, fontSize: 15, fontWeight: '700', lineHeight: 21 },
+  optionBtn: { backgroundColor: 'rgba(255,255,255,0.04)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12 },
+  optionBtnText: { color: C.text, fontSize: 13, fontWeight: '500' },
+  optionBtnSelected: { backgroundColor: 'rgba(214,175,55,0.15)', borderColor: C.gold },
+  optionBtnCorrect: { backgroundColor: '#1e4611', borderColor: '#4ea824' },
+  optionBtnIncorrect: { backgroundColor: '#5c1919', borderColor: '#bd2828' },
+
+  resultWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 60 },
+  resultEmoji: { fontSize: 56, marginBottom: 12 },
+  resultTitle: { color: C.text, fontSize: 20, fontWeight: '900', textAlign: 'center' },
+  resultDesc: { color: C.textMuted, fontSize: 13, textAlign: 'center', marginTop: 8, marginBottom: 24, lineHeight: 18, paddingHorizontal: 12 },
+});

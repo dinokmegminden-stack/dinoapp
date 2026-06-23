@@ -21,6 +21,17 @@ import { Audio } from 'expo-av';
 import dinosaurs from './data/dinosaurs.json';
 import karpatDinosaurs from './data/karpatmedence.json';
 import quizQuestions from './data/quiz_questions.json';
+import {
+  NicknameScreen,
+  PackagesScreen,
+  PackageBrowseScreen,
+  PackageQuizScreen,
+  loadNickname,
+  saveNickname,
+  loadProgress,
+  saveProgress,
+  unlockNextPackage,
+} from './Level1Karpat';
 
 // --- AUDIO SYSTEM ---
 // Egyszerű UI kattanás hang (online forrás, marad ahogy volt)
@@ -351,7 +362,7 @@ const LANDING_NAV_BUTTONS = [
   { key: 'amerika', label: 'Amerika', centerY: 90, color: '#ffe0b0' },
 ];
 
-function LandingPage({ onNavigate, onSelectRegion }) {
+function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat }) {
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const { width: cw, height: ch } = containerSize;
@@ -365,7 +376,7 @@ function LandingPage({ onNavigate, onSelectRegion }) {
   const handlePress = (key) => {
     playSound('click');
     if (key === 'europa') { onSelectRegion('europa'); onNavigate('cards'); }
-    else if (key === 'karpat') { onSelectRegion('karpat'); onNavigate('cards'); }
+    else if (key === 'karpat') { onEnterKarpat(); }
     // amerika / azsia / afrika: hamarosan érkezik, jelenleg nincs célnézet
   };
 
@@ -852,6 +863,26 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('Mind');
 
+  // --- 1. SZINT (Kárpát-medence) csomagrendszer + becenév-mentés ---
+  const [nickname, setNickname] = useState(null);
+  const [progress, setProgress] = useState(null);
+  const [activePackage, setActivePackage] = useState(null);
+  const [quizKey, setQuizKey] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const stored = await loadNickname();
+      if (stored) {
+        setNickname(stored);
+        setProgress(await loadProgress(stored));
+      }
+    })();
+  }, []);
+
+  const handleEnterKarpat = () => {
+    setView(nickname ? 'packages' : 'nickname');
+  };
+
   const position = useRef(new Animated.ValueXY()).current;
   const { width: appWidth } = useWindowDimensions();
 
@@ -893,7 +924,62 @@ export default function App() {
     });
   });
 
-  if (view === 'landing') return <LandingPage onNavigate={setView} onSelectRegion={setRegion} />;
+  if (view === 'landing') {
+    return (
+      <LandingPage onNavigate={setView} onSelectRegion={setRegion} onEnterKarpat={handleEnterKarpat} />
+    );
+  }
+
+  if (view === 'nickname') {
+    return (
+      <NicknameScreen
+        onSubmit={async (name) => {
+          await saveNickname(name);
+          setNickname(name);
+          setProgress(await loadProgress(name));
+          setView('packages');
+        }}
+      />
+    );
+  }
+
+  if (view === 'packages') {
+    return (
+      <PackagesScreen
+        progress={progress}
+        onOpenPackage={(csomag) => { setActivePackage(csomag); setView('packageBrowse'); }}
+        onBack={() => setView('landing')}
+      />
+    );
+  }
+
+  if (view === 'packageBrowse') {
+    return (
+      <PackageBrowseScreen
+        csomag={activePackage}
+        onStartQuiz={(csomag) => { setActivePackage(csomag); setQuizKey((k) => k + 1); setView('packageQuiz'); }}
+        onBack={() => setView('packages')}
+      />
+    );
+  }
+
+  if (view === 'packageQuiz') {
+    return (
+      <PackageQuizScreen
+        key={quizKey}
+        csomag={activePackage}
+        onPassed={async (csomag) => {
+          const next = unlockNextPackage(progress, csomag);
+          setProgress(next);
+          await saveProgress(nickname, next);
+          setView('packages');
+        }}
+        onRetry={() => setQuizKey((k) => k + 1)}
+        onBack={() => setView('packages')}
+      />
+    );
+  }
+
   if (view === 'quiz') return <QuizGame onBack={() => setView('landing')} />;
   if (view === 'leaderboard') {
     return (
