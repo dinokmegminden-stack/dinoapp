@@ -31,9 +31,9 @@ import {
   loadProgress,
   saveProgress,
   unlockNextPackage,
-} from './Level1Karpat';
+} from './Level1karpat';
 
-// --- AUDIO SYSTEM ---
+
 // Egyszerű UI kattanás hang (online forrás, marad ahogy volt)
 const SOUNDS = {
   click: 'https://actions.google.com/sounds/v1/ui/click_on_furniture.ogg',
