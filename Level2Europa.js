@@ -11,59 +11,52 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import dinosaurs from './data/dinosaurs.json';
+import dinosaurs from './data/europa_dinosaurs.json';
 
 // ============================================================
 // 2. SZINT — EURÓPA — CSOMAGOS RENDSZER
 // ============================================================
-// 23 dínó (a Magyarosaurus dacus és a Zalmoxes robustus kiszűrve,
-// mert azok már az 1. szint Kárpát-medencei csomagjaiban szerepelnek),
-// 5 csomagban (5-5-5-4-4 dínó). Ugyanaz a zárolási logika, mint az
+// 20 dínó, 5 csomagban (4-4-4-4-4), a europa_dinosaurs.json "csomag"
+// mezője alapján csoportosítva. Ugyanaz a zárolási logika, mint az
 // 1. szintnél: egy csomag csak az előző csomag hibátlan (5/5) tesztje
 // után nyílik ki.
 
-const DUPLICATE_WITH_LEVEL1 = new Set(['Magyarosaurus dacus', 'Zalmoxes robustus']);
-const europaDinoList = dinosaurs.filter((d) => !DUPLICATE_WITH_LEVEL1.has(d.nev_tudomanyos));
+const europaDinoList = dinosaurs;
 
-function chunkIntoPackages(list, sizes) {
-  const out = [];
-  let i = 0;
-  sizes.forEach((size, idx) => {
-    out.push({ csomag: idx + 1, dinos: list.slice(i, i + size) });
-    i += size;
+function groupByPackage(list) {
+  const map = {};
+  list.forEach((d) => {
+    const key = d.csomag || 1;
+    if (!map[key]) map[key] = [];
+    map[key].push(d);
   });
-  return out;
+  return Object.keys(map)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((csomag) => ({ csomag, dinos: map[csomag] }));
 }
 
-// 23 dínó -> 5 csomag (5-5-5-4-4)
-export const EUROPA_PACKAGES = chunkIntoPackages(europaDinoList, [5, 5, 5, 4, 4]);
+export const EUROPA_PACKAGES = groupByPackage(europaDinoList);
 export const EUROPA_PACKAGE_COUNT = EUROPA_PACKAGES.length;
 
-// Dínó képek (ugyanazok a fájlok, mint a fő App.js IMAGE_MAP-jében az európai fajoknál).
+// Dínó képek (a meglévő képfájlokból azok, amik az új listában is szerepelnek;
+// az újonnan felvett fajoknál — Compsognathus, Archaeopteryx, Hylaeosaurus,
+// Scelidosaurus, Miragaia, Eustreptospondylus, Polacanthus — még nincs kép,
+// ott emoji jelenik meg helyette, amíg nem kerül fel a megfelelő fájl).
 const IMAGE_MAP = {
-  'Iguanodon bernissartensis': require('./assets/images/Iguanodon2.jpg'),
   'Megalosaurus bucklandii': require('./assets/images/megalosaurus.jpg'),
+  'Iguanodon bernissartensis': require('./assets/images/Iguanodon2.jpg'),
   'Baryonyx walkeri': require('./assets/images/baryonyx.jpg'),
+  'Plateosaurus engelhardti': require('./assets/images/plateosaurus.jpg'),
   'Hypsilophodon foxii': require('./assets/images/hypsilophodon.jpg'),
   'Europasaurus holgeri': require('./assets/images/europasaurus.jpg'),
-  'Plateosaurus engelhardti': require('./assets/images/plateosaurus.jpg'),
-  'Cetiosaurus oxoniensis': require('./assets/images/cetiosaurus.jpg'),
-  'Camptosaurus prestwichii': require('./assets/images/camptosaurus.jpg'),
-  'Valdosaurus canaliculatus': require('./assets/images/valdosaurus.jpg'),
-  'Mantellisaurus atherfieldensis': require('./assets/images/mantellisaurus.jpg'),
   'Neovenator salerii': require('./assets/images/neovenator.jpg'),
-  'Scipionyx samniticus': require('./assets/images/scipionyx.jpg'),
-  'Draconyx loureiroi': require('./assets/images/draconyx.jpg'),
-  'Torvosaurus gurneyi': require('./assets/images/torvosaurus.jpg'),
-  'Lourinhanosaurus antunesi': require('./assets/images/lourinhanosaurus.jpg'),
-  'Liliensternus liliensterni': require('./assets/images/liliensternus.jpg'),
-  'Rhabdodon priscus': require('./assets/images/rhabdodon.jpg'),
-  'Lusotitan atalaiensis': require('./assets/images/lusotitan.jpg'),
-  'Allosaurus europaeus': require('./assets/images/allosaurus_eu.jpg'),
-  'Thecodontosaurus antiquus': require('./assets/images/thecodontosaurus.jpg'),
   'Concavenator corcovatus': require('./assets/images/concavenator.jpg'),
   'Pelecanimimus polyodon': require('./assets/images/pelecanimimus.jpg'),
-  'Arcovenator escotae': require('./assets/images/arcovenator.jpg'),
+  'Scipionyx samniticus': require('./assets/images/scipionyx.jpg'),
+  'Cetiosaurus oxoniensis': require('./assets/images/cetiosaurus.jpg'),
+  'Lourinhanosaurus antunesi': require('./assets/images/lourinhanosaurus.jpg'),
+  'Mantellisaurus atherfieldensis': require('./assets/images/mantellisaurus.jpg'),
 };
 
 // --- HALADÁS MENTÉSE (ugyanaz a becenév, mint az 1. szintnél, de saját kulcs alatt) ---
