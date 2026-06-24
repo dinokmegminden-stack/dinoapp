@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -12,87 +11,74 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import karpatDinosaurs from './data/karpatmedence.json';
+import dinosaurs from './data/dinosaurs.json';
 
 // ============================================================
-// 1. SZINT — KÁRPÁT-MEDENCE — CSOMAGOS RENDSZER
+// 2. SZINT — EURÓPA — CSOMAGOS RENDSZER
 // ============================================================
-// 3 csomag (a karpatmedence.json "csomag" mezője alapján), 4-4-4 dínóval.
-// Egy csomag csak akkor nyílik ki, ha az előző csomag végén lévő
-// 5 kérdéses teszt HIBÁTLANRA sikerül (5/5).
-// A haladást egy becenévhez kötve, lokálisan (AsyncStorage) mentjük —
-// nincs email-regisztráció, nincs backend.
+// 23 dínó (a Magyarosaurus dacus és a Zalmoxes robustus kiszűrve,
+// mert azok már az 1. szint Kárpát-medencei csomagjaiban szerepelnek),
+// 5 csomagban (5-5-5-4-4 dínó). Ugyanaz a zárolási logika, mint az
+// 1. szintnél: egy csomag csak az előző csomag hibátlan (5/5) tesztje
+// után nyílik ki.
 
-const karpatDinoList = karpatDinosaurs;
+const DUPLICATE_WITH_LEVEL1 = new Set(['Magyarosaurus dacus', 'Zalmoxes robustus']);
+const europaDinoList = dinosaurs.filter((d) => !DUPLICATE_WITH_LEVEL1.has(d.nev_tudomanyos));
 
-function groupByPackage(list) {
-  const map = {};
-  list.forEach((d) => {
-    const key = d.csomag || 1;
-    if (!map[key]) map[key] = [];
-    map[key].push(d);
+function chunkIntoPackages(list, sizes) {
+  const out = [];
+  let i = 0;
+  sizes.forEach((size, idx) => {
+    out.push({ csomag: idx + 1, dinos: list.slice(i, i + size) });
+    i += size;
   });
-  return Object.keys(map)
-    .map(Number)
-    .sort((a, b) => a - b)
-    .map((csomag) => ({ csomag, dinos: map[csomag] }));
+  return out;
 }
 
-export const KARPAT_PACKAGES = groupByPackage(karpatDinoList);
-export const KARPAT_PACKAGE_COUNT = KARPAT_PACKAGES.length;
+// 23 dínó -> 5 csomag (5-5-5-4-4)
+export const EUROPA_PACKAGES = chunkIntoPackages(europaDinoList, [5, 5, 5, 4, 4]);
+export const EUROPA_PACKAGE_COUNT = EUROPA_PACKAGES.length;
 
-// Dínó képek (ugyanazok a fájlok, mint a fő App.js IMAGE_MAP-jében a Kárpát-medencei fajoknál).
+// Dínó képek (ugyanazok a fájlok, mint a fő App.js IMAGE_MAP-jében az európai fajoknál).
 const IMAGE_MAP = {
-  'Hungarosaurus tormai': require('./assets/images/hungarosaurus.jpg'),
-  'Ajkaceratops kozmai': require('./assets/images/ajkaceratops.jpg'),
-  'Pneumatoraptor fodori': require('./assets/images/pneumatoraptor_fodori.jpg'),
-  'Mochlodon vorosi': require('./assets/images/mochlodon_vorosi.jpg'),
-  'Telmatosaurus transsylvanicus': require('./assets/images/telmatosaurus.jpg'),
-  'Magyarosaurus dacus': require('./assets/images/magyarosaurusb.jpg'),
-  'Zalmoxes robustus': require('./assets/images/zalmoxes.jpg'),
-  'Struthiosaurus transylvanicus': require('./assets/images/struthiosaurus.jpg'),
-  'Petrustitan hungaricus': require('./assets/images/petrustitan.jpg'),
-  'Uriash kadici': require('./assets/images/uriash_kadici.jpg'),
-  'Komlosaurus carbonis': require('./assets/images/komlosaurus.jpg'),
-  'Balaur bondoc': require('./assets/images/balaur.jpg'),
+  'Iguanodon bernissartensis': require('./assets/images/Iguanodon2.jpg'),
+  'Megalosaurus bucklandii': require('./assets/images/megalosaurus.jpg'),
+  'Baryonyx walkeri': require('./assets/images/baryonyx.jpg'),
+  'Hypsilophodon foxii': require('./assets/images/hypsilophodon.jpg'),
+  'Europasaurus holgeri': require('./assets/images/europasaurus.jpg'),
+  'Plateosaurus engelhardti': require('./assets/images/plateosaurus.jpg'),
+  'Cetiosaurus oxoniensis': require('./assets/images/cetiosaurus.jpg'),
+  'Camptosaurus prestwichii': require('./assets/images/camptosaurus.jpg'),
+  'Valdosaurus canaliculatus': require('./assets/images/valdosaurus.jpg'),
+  'Mantellisaurus atherfieldensis': require('./assets/images/mantellisaurus.jpg'),
+  'Neovenator salerii': require('./assets/images/neovenator.jpg'),
+  'Scipionyx samniticus': require('./assets/images/scipionyx.jpg'),
+  'Draconyx loureiroi': require('./assets/images/draconyx.jpg'),
+  'Torvosaurus gurneyi': require('./assets/images/torvosaurus.jpg'),
+  'Lourinhanosaurus antunesi': require('./assets/images/lourinhanosaurus.jpg'),
+  'Liliensternus liliensterni': require('./assets/images/liliensternus.jpg'),
+  'Rhabdodon priscus': require('./assets/images/rhabdodon.jpg'),
+  'Lusotitan atalaiensis': require('./assets/images/lusotitan.jpg'),
+  'Allosaurus europaeus': require('./assets/images/allosaurus_eu.jpg'),
+  'Thecodontosaurus antiquus': require('./assets/images/thecodontosaurus.jpg'),
+  'Concavenator corcovatus': require('./assets/images/concavenator.jpg'),
+  'Pelecanimimus polyodon': require('./assets/images/pelecanimimus.jpg'),
+  'Arcovenator escotae': require('./assets/images/arcovenator.jpg'),
 };
 
-// --- BECENÉV + HALADÁS MENTÉSE (AsyncStorage, nincs email) ---
-const NICKNAME_KEY = 'dinoapp_nickname';
-const PROGRESS_KEY_PREFIX = 'dinoapp_progress_';
+// --- HALADÁS MENTÉSE (ugyanaz a becenév, mint az 1. szintnél, de saját kulcs alatt) ---
+const PROGRESS_KEY_PREFIX = 'dinoapp_progress_level2_';
 
 function defaultProgress() {
-  return {
-    level1: {
-      // az 1. csomag mindig nyitva, a többi csak teszt után nyílik ki
-      unlocked: [1],
-      passed: [],
-    },
-  };
+  return { level2: { unlocked: [1], passed: [] } };
 }
 
-export async function loadNickname() {
-  try {
-    return await AsyncStorage.getItem(NICKNAME_KEY);
-  } catch {
-    return null;
-  }
-}
-
-export async function saveNickname(name) {
-  try {
-    await AsyncStorage.setItem(NICKNAME_KEY, name.trim());
-  } catch {
-    // csendben elnyeljük
-  }
-}
-
-export async function loadProgress(nickname) {
+export async function loadEuropaProgress(nickname) {
   try {
     const raw = await AsyncStorage.getItem(PROGRESS_KEY_PREFIX + nickname);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed?.level1?.unlocked?.length) return parsed;
+      if (parsed?.level2?.unlocked?.length) return parsed;
     }
   } catch {
     // csendben elnyeljük
@@ -100,7 +86,7 @@ export async function loadProgress(nickname) {
   return defaultProgress();
 }
 
-export async function saveProgress(nickname, progress) {
+export async function saveEuropaProgress(nickname, progress) {
   try {
     await AsyncStorage.setItem(PROGRESS_KEY_PREFIX + nickname, JSON.stringify(progress));
   } catch {
@@ -108,30 +94,29 @@ export async function saveProgress(nickname, progress) {
   }
 }
 
-export function isPackageUnlocked(progress, csomag) {
-  return !!progress?.level1?.unlocked?.includes(csomag);
+export function isEuropaPackageUnlocked(progress, csomag) {
+  return !!progress?.level2?.unlocked?.includes(csomag);
 }
 
-export function isPackagePassed(progress, csomag) {
-  return !!progress?.level1?.passed?.includes(csomag);
+export function isEuropaPackagePassed(progress, csomag) {
+  return !!progress?.level2?.passed?.includes(csomag);
 }
 
-// A teszt sikeres letétele után kinyitja a következő csomagot.
-export function unlockNextPackage(progress, csomag) {
+export function unlockNextEuropaPackage(progress, csomag) {
   const next = {
-    level1: {
-      unlocked: [...new Set([...(progress?.level1?.unlocked || [1]), csomag])],
-      passed: [...new Set([...(progress?.level1?.passed || []), csomag])],
+    level2: {
+      unlocked: [...new Set([...(progress?.level2?.unlocked || [1]), csomag])],
+      passed: [...new Set([...(progress?.level2?.passed || []), csomag])],
     },
   };
   const nextCsomag = csomag + 1;
-  if (nextCsomag <= KARPAT_PACKAGE_COUNT) {
-    next.level1.unlocked = [...new Set([...next.level1.unlocked, nextCsomag])];
+  if (nextCsomag <= EUROPA_PACKAGE_COUNT) {
+    next.level2.unlocked = [...new Set([...next.level2.unlocked, nextCsomag])];
   }
   return next;
 }
 
-// --- KÉRDÉSGENERÁTOR — a csomag 4 dínójából 5 ténykérdést épít ---
+// --- KÉRDÉSGENERÁTOR — ugyanaz a logika, mint az 1. szintnél ---
 function shuffle(arr) {
   return [...arr]
     .map((v) => [Math.random(), v])
@@ -140,10 +125,10 @@ function shuffle(arr) {
 }
 
 const FALLBACK_DISTRACTORS = {
-  korszak: ['triász', 'kora kréta', 'jura', 'perm'],
-  megtalalas_helye: ['Németország', 'Franciaország', 'Spanyolország'],
-  hossz: ['1 m', '15 m', '0.5 m', '20 m'],
-  felfedezo: ['ismeretlen kutató', 'Charles Darwin', 'Richard Owen'],
+  korszak: ['triász', 'kora kréta', 'késő kréta', 'perm'],
+  megtalalas_helye: ['Magyarország', 'Görögország', 'Lengyelország'],
+  hossz: ['1 m', '15 m', '0.5 m', '25 m'],
+  felfedezo: ['ismeretlen kutató', 'Mary Anning', 'Georges Cuvier'],
   nev_tudomanyos: ['Tyrannosaurus rex', 'Triceratops horridus', 'Velociraptor mongoliensis'],
 };
 
@@ -184,7 +169,7 @@ function buildQuestion(dino, template, pool) {
   };
 }
 
-export function generatePackageQuestions(packageDinos, fullPool = karpatDinoList, count = 5) {
+export function generateEuropaQuestions(packageDinos, fullPool = europaDinoList, count = 5) {
   let combos = [];
   packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
   combos = shuffle(combos).slice(0, count);
@@ -192,7 +177,7 @@ export function generatePackageQuestions(packageDinos, fullPool = karpatDinoList
 }
 
 // ============================================================
-// UI — SAJÁT, EGYSZERŰ STÍLUS (sötét navy + arany, az app témájához igazítva)
+// UI — ugyanaz a sötét navy + arany stílus, mint az 1. szintnél
 // ============================================================
 // Föld-paletta (dino-szafari): mély erdőzöld alap, olívazöld felületek,
 // borostyán kiemelés, fosszília-bézs szöveg, terrakotta akció/hiba szín.
@@ -208,7 +193,7 @@ const C = {
   action: '#BC6C25',     // dino-action (elsődleges gombok)
 };
 
-function L1Shell({ children }) {
+function L2Shell({ children }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
   return (
@@ -218,65 +203,26 @@ function L1Shell({ children }) {
   );
 }
 
-// --- BECENÉV-REGISZTRÁCIÓ ---
-export function NicknameScreen({ onSubmit }) {
-  const [name, setName] = useState('');
-  const handleSubmit = () => {
-    const trimmed = name.trim();
-    if (trimmed.length < 2) return;
-    onSubmit(trimmed);
-  };
+// --- CSOMAGVÁLASZTÓ KÉPERNYŐ (2. SZINT) ---
+export function EuropaPackagesScreen({ progress, onOpenPackage, onBack }) {
   return (
-    <L1Shell>
-      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
-      <View style={s.nicknameWrap}>
-        <Text style={s.nicknameEmoji}>🦖</Text>
-        <Text style={s.nicknameTitle}>Mi a neved, kis paleontológus?</Text>
-        <Text style={s.nicknameDesc}>
-          A becenevedhez mentjük a haladásodat ezen az eszközön — nincs szükség e-mailre vagy jelszóra.
-        </Text>
-        <TextInput
-          style={s.nicknameInput}
-          placeholder="Pl. DínóMester"
-          placeholderTextColor="rgba(255,255,255,0.35)"
-          value={name}
-          onChangeText={setName}
-          maxLength={20}
-          autoFocus
-          onSubmitEditing={handleSubmit}
-        />
-        <TouchableOpacity
-          style={[s.primaryBtn, name.trim().length < 2 && s.primaryBtnDisabled]}
-          disabled={name.trim().length < 2}
-          onPress={handleSubmit}
-        >
-          <Text style={s.primaryBtnText}>Kezdjük! →</Text>
-        </TouchableOpacity>
-      </View>
-    </L1Shell>
-  );
-}
-
-// --- CSOMAGVÁLASZTÓ KÉPERNYŐ (1. SZINT) ---
-export function PackagesScreen({ progress, onOpenPackage, onBack }) {
-  return (
-    <L1Shell>
+    <L2Shell>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
       <ScrollView contentContainerStyle={s.packagesScroll}>
         <TouchableOpacity onPress={onBack} style={s.backLink}>
           <Text style={s.backLinkText}>← FŐMENÜ</Text>
         </TouchableOpacity>
 
-        <Text style={s.levelTitle}>1. SZINT</Text>
-        <Text style={s.levelSubtitle}>Kárpát-medence</Text>
+        <Text style={s.levelTitle}>2. SZINT</Text>
+        <Text style={s.levelSubtitle}>Európa</Text>
         <Text style={s.levelDesc}>
-          Fedezd fel a Kárpát-medence dinoszauruszait 3 csomagban! Minden csomag végén egy
-          5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
+          Fedezd fel Európa dinoszauruszait 5 csomagban! Minden csomag végén egy 5 kérdéses
+          teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
         </Text>
 
-        {KARPAT_PACKAGES.map(({ csomag, dinos }) => {
-          const unlocked = isPackageUnlocked(progress, csomag);
-          const passed = isPackagePassed(progress, csomag);
+        {EUROPA_PACKAGES.map(({ csomag, dinos }) => {
+          const unlocked = isEuropaPackageUnlocked(progress, csomag);
+          const passed = isEuropaPackagePassed(progress, csomag);
           return (
             <TouchableOpacity
               key={csomag}
@@ -303,13 +249,13 @@ export function PackagesScreen({ progress, onOpenPackage, onBack }) {
           );
         })}
       </ScrollView>
-    </L1Shell>
+    </L2Shell>
   );
 }
 
 // --- DÍNÓ-BÖNGÉSZŐ EGY CSOMAGON BELÜL ---
-export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
-  const pack = KARPAT_PACKAGES.find((p) => p.csomag === csomag);
+export function EuropaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
+  const pack = EUROPA_PACKAGES.find((p) => p.csomag === csomag);
   const dinos = pack ? pack.dinos : [];
   const [index, setIndex] = useState(0);
   const dino = dinos[index];
@@ -317,7 +263,7 @@ export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
   if (!dino) return null;
 
   return (
-    <L1Shell>
+    <L2Shell>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
       <View style={s.browseHeader}>
         <TouchableOpacity onPress={onBack}>
@@ -368,14 +314,14 @@ export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
       <TouchableOpacity style={s.quizStartBtn} onPress={() => onStartQuiz(csomag)}>
         <Text style={s.quizStartBtnText}>📝 Csomagteszt indítása (5 kérdés)</Text>
       </TouchableOpacity>
-    </L1Shell>
+    </L2Shell>
   );
 }
 
 // --- CSOMAGTESZT — 5 KÉRDÉS, HIBÁTLAN KELL A TOVÁBBJUTÁSHOZ ---
-export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
-  const pack = KARPAT_PACKAGES.find((p) => p.csomag === csomag);
-  const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [])).current;
+export function EuropaPackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
+  const pack = EUROPA_PACKAGES.find((p) => p.csomag === csomag);
+  const questions = useRef(generateEuropaQuestions(pack ? pack.dinos : [])).current;
 
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -405,7 +351,7 @@ export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
   if (finished) {
     const passed = correctCount === questions.length;
     return (
-      <L1Shell>
+      <L2Shell>
         <StatusBar barStyle="light-content" backgroundColor={C.bg} />
         <View style={s.resultWrap}>
           <Text style={s.resultEmoji}>{passed ? '🏆' : '😕'}</Text>
@@ -430,12 +376,12 @@ export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
             <Text style={s.backLinkText}>← Vissza a csomagokhoz</Text>
           </TouchableOpacity>
         </View>
-      </L1Shell>
+      </L2Shell>
     );
   }
 
   return (
-    <L1Shell>
+    <L2Shell>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
       <View style={s.browseHeader}>
         <TouchableOpacity onPress={onBack}>
@@ -470,7 +416,7 @@ export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
           );
         })}
       </View>
-    </L1Shell>
+    </L2Shell>
   );
 }
 
@@ -482,16 +428,7 @@ const s = StyleSheet.create({
   backLink: { paddingVertical: 8, marginBottom: 4 },
   backLinkText: { color: C.gold, fontSize: 13, fontWeight: '800' },
 
-  nicknameWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 60 },
-  nicknameEmoji: { fontSize: 56, marginBottom: 12 },
-  nicknameTitle: { color: C.text, fontSize: 20, fontWeight: '900', textAlign: 'center', marginBottom: 8 },
-  nicknameDesc: { color: C.textMuted, fontSize: 13, textAlign: 'center', marginBottom: 24, lineHeight: 18 },
-  nicknameInput: {
-    width: '100%', backgroundColor: 'rgba(255,255,255,0.07)', borderWidth: 1, borderColor: C.border,
-    borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12, fontSize: 15, color: C.text, marginBottom: 18,
-  },
   primaryBtn: { backgroundColor: C.action, borderRadius: 24, paddingVertical: 14, paddingHorizontal: 28, alignItems: 'center', width: '100%' },
-  primaryBtnDisabled: { opacity: 0.4 },
   primaryBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
 
   packagesScroll: { paddingBottom: 60 },
