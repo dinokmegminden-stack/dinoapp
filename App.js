@@ -23,7 +23,6 @@ import karpatDinosaurs from './data/karpatmedence.json';
 import { useFonts } from 'expo-font';
 import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
-import quizQuestions from './data/quiz_questions.json';
 import {
   NicknameScreen,
   PackagesScreen,
@@ -423,379 +422,12 @@ function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat }) {
             </LaserBorderButton>
           ))}
 
-          {/* Kvíz gomb - kicsi, bal alsó sarok */}
-          <LaserBorderButton
-            style={styles.quizCornerBtn}
-            color="#dca73a"
-            borderRadius={32}
-            onPress={() => { playSound('click'); onNavigate('quiz'); }}
-          >
-            <View style={styles.quizCornerInner} pointerEvents="none">
-              <Image source={require('./assets/icons/icon_kviz.png')} style={styles.quizCornerIcon} resizeMode="contain" />
-            </View>
-          </LaserBorderButton>
+          {/* A "Legyen Ön is Milliomos" kvíz külön, önálló appként lesz publikálva,
+              ezért a sarokgomb innen kikerült. */}
         </View>
       )}
 
       <MuteButton />
-    </View>
-    </Shell>
-  );
-}
-
-// --- KVÍZ RENDSZER ---
-const MONEY_LADDER = [
-  0, 10000, 25000, 50000, 100000, 200000, 350000, 500000, 800000, 1500000,
-  3000000, 5000000, 10000000, 15000000, 25000000, 40000000
-];
-const formatMoney = (val) => `${val.toLocaleString('hu-HU')} Ft`;
-
-const getQuestionForLevel = (level, usedIds) => {
-  let diff = 'easy';
-  if (level > 5 && level <= 10) diff = 'medium';
-  if (level > 10) diff = 'hard';
-  let pool = quizQuestions.filter(q => q.difficulty === diff && !usedIds.includes(q.id));
-  if (pool.length === 0) pool = quizQuestions.filter(q => q.difficulty === diff);
-  return pool[Math.floor(Math.random() * pool.length)];
-};
-
-import { showRewardedAd } from './ads';
-
-function QuizGame({ onBack }) {
-  const [quizLevel, setQuizLevel] = useState(1);
-  const [quizStatus, setQuizStatus] = useState('playing');
-  const [currentQuestion, setCurrentQuestion] = useState(() => getQuestionForLevel(1, []));
-  const [usedQuestionIds, setUsedQuestionIds] = useState(() => {
-    const q = getQuestionForLevel(1, []);
-    return q ? [q.id] : [];
-  });
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [revealed, setRevealed] = useState(false);
-  const [eliminatedOptions, setEliminatedOptions] = useState([]);
-  const [lifelines, setLifelines] = useState({ fiftyFifty: true, audience: true, phone: true });
-  const [lifelineResult, setLifelineResult] = useState(null);
-  const [moneyWon, setMoneyWon] = useState(0);
-  // Hirdetésért kapható extra 50:50 — kérdésenként egyszer vehető igénybe.
-  const [adFiftyFiftyUsedThisQuestion, setAdFiftyFiftyUsedThisQuestion] = useState(false);
-  const [watchingAd, setWatchingAd] = useState(false);
-
-  // Belépő hang a játék elején (a háttérzenét a szint-alapú effekt indítja, ami felülírja a főtémát)
-  useEffect(() => {
-    playQuizSfx('letsPlay');
-  }, []);
-
-  // Háttérzene a kérdés nehézségi szintje alapján, amíg játszunk
-  useEffect(() => {
-    if (quizStatus === 'playing') {
-      playQuizBgMusic(getTierMusicKey(quizLevel), { loop: false });
-    }
-  }, [quizLevel, quizStatus]);
-
-  // Győzelmi témazene a végén
-  useEffect(() => {
-    if (quizStatus === 'won') {
-      playQuizBgMusic('winningTheme', { loop: false, volume: 0.6 });
-    }
-  }, [quizStatus]);
-
-  const handleSelectOption = (optionIndex) => {
-    if (revealed || selectedOption !== null) return;
-    setSelectedOption(optionIndex);
-    playQuizSfx('finalAnswer');
-    setTimeout(() => {
-      setRevealed(true);
-      const isCorrect = optionIndex === currentQuestion.correctIndex;
-      playQuizSfx(isCorrect ? 'correct' : 'wrong');
-      // Helyes válasznál 3 másodpercig hagyjuk szólni a correct_answer.mp3-at,
-      // mielőtt továbblépnénk és lejátsszuk a next.mp3-at.
-      const delay = isCorrect ? 3000 : 1500;
-      setTimeout(() => {
-        if (isCorrect) {
-          if (quizLevel === 15) {
-            setMoneyWon(40000000);
-            setQuizStatus('won');
-            stopQuizBgMusic();
-          } else {
-            const nextLevel = quizLevel + 1;
-            setQuizLevel(nextLevel);
-            setSelectedOption(null);
-            setRevealed(false);
-            setEliminatedOptions([]);
-            setLifelineResult(null);
-            setAdFiftyFiftyUsedThisQuestion(false);
-            const nextQ = getQuestionForLevel(nextLevel, [...usedQuestionIds, currentQuestion.id]);
-            setCurrentQuestion(nextQ);
-            setUsedQuestionIds(prev => [...prev, nextQ.id]);
-          }
-        } else {
-          let won = 0;
-          if (quizLevel > 5 && quizLevel <= 10) won = 200000;
-          else if (quizLevel > 10) won = 3000000;
-          setMoneyWon(won);
-          setQuizStatus('game_over');
-          stopQuizBgMusic();
-        }
-      }, delay);
-    }, 1200);
-  };
-
-  const eliminateTwoWrongOptions = () => {
-    if (!currentQuestion) return;
-    const correctIdx = currentQuestion.correctIndex;
-    const incorrectIndices = [0, 1, 2, 3].filter(idx => idx !== correctIdx);
-    const toEliminate = [];
-    while (toEliminate.length < 2) {
-      const idx = incorrectIndices[Math.floor(Math.random() * incorrectIndices.length)];
-      if (!toEliminate.includes(idx)) toEliminate.push(idx);
-    }
-    setEliminatedOptions(toEliminate);
-  };
-
-  const useFiftyFifty = () => {
-    if (!lifelines.fiftyFifty || revealed || selectedOption !== null || !currentQuestion) return;
-    playQuizSfx('lifeline');
-    setLifelines(prev => ({ ...prev, fiftyFifty: false }));
-    eliminateTwoWrongOptions();
-  };
-
-  // Hirdetés megnézéséért extra 50:50 — csak ha az eredeti 50:50-et már elhasználta,
-  // és ebben a kérdésben még nem vette igénybe a hirdetéses verziót.
-  const watchAdForFiftyFifty = () => {
-    if (revealed || selectedOption !== null || !currentQuestion) return;
-    if (lifelines.fiftyFifty || adFiftyFiftyUsedThisQuestion || watchingAd) return;
-    setWatchingAd(true);
-    showRewardedAd({
-      onReward: () => {
-        playQuizSfx('lifeline');
-        setAdFiftyFiftyUsedThisQuestion(true);
-        eliminateTwoWrongOptions();
-      },
-      onClose: () => setWatchingAd(false),
-      onError: () => setWatchingAd(false),
-    });
-  };
-
-  const useAudience = () => {
-    if (!lifelines.audience || revealed || selectedOption !== null || !currentQuestion) return;
-    playQuizSfx('lifeline');
-    setLifelines(prev => ({ ...prev, audience: false }));
-    const correctIdx = currentQuestion.correctIndex;
-    const remainingIndices = [0, 1, 2, 3].filter(idx => !eliminatedOptions.includes(idx));
-    let correctChance = 75;
-    if (quizLevel > 5 && quizLevel <= 10) correctChance = 55;
-    if (quizLevel > 10) correctChance = 42;
-    const percentages = [0, 0, 0, 0];
-    let sum = 0;
-    remainingIndices.forEach(idx => {
-      percentages[idx] = idx === correctIdx
-        ? Math.floor(correctChance + Math.random() * 10)
-        : Math.floor(Math.random() * 20 + 5);
-      sum += percentages[idx];
-    });
-    remainingIndices.forEach(idx => { percentages[idx] = Math.round((percentages[idx] / sum) * 100); });
-    const total = percentages.reduce((a, b) => a + b, 0);
-    if (total !== 100 && remainingIndices.length > 0) percentages[remainingIndices[0]] += (100 - total);
-    setLifelineResult({ type: 'audience', data: percentages });
-  };
-
-  const usePhone = () => {
-    if (!lifelines.phone || revealed || selectedOption !== null || !currentQuestion) return;
-    playQuizSfx('lifeline');
-    setLifelines(prev => ({ ...prev, phone: false }));
-    const correctIdx = currentQuestion.correctIndex;
-    const correctText = currentQuestion.options[correctIdx];
-    const remainingIndices = [0, 1, 2, 3].filter(idx => idx !== correctIdx && !eliminatedOptions.includes(idx));
-    const incorrectText = remainingIndices.length > 0 ? currentQuestion.options[remainingIndices[0]] : "másik lehetőség";
-    let text = "";
-    if (quizLevel <= 5) text = `Szerintem biztosan a(z) "${correctText}" a jó válasz!\nEbben 95%-ig biztos vagyok.`;
-    else if (quizLevel <= 10) text = `Nem vagyok teljesen biztos, de szerintem a(z) "${correctText}" lesz az.\nOlyan 70% esélyt adnék rá.`;
-    else {
-      const isCorrectAdvice = Math.random() < 0.65;
-      text = isCorrectAdvice
-        ? `Hú, ez nagyon nehéz... Talán a(z) "${correctText}", de nem vennék rá mérget.`
-        : `Nem vagyok biztos benne, de talán a(z) "${incorrectText}" a jó válasz.`;
-    }
-    setLifelineResult({ type: 'phone', data: text });
-  };
-
-  const handleWalkAway = () => {
-    if (revealed || selectedOption !== null) return;
-    playQuizSfx('resign');
-    stopQuizBgMusic();
-    setMoneyWon(MONEY_LADDER[quizLevel - 1]);
-    setQuizStatus('game_over');
-  };
-
-  const restartQuiz = () => {
-    stopQuizBgMusic();
-    playQuizSfx('letsPlay');
-    const firstQ = getQuestionForLevel(1, []);
-    setQuizLevel(1);
-    setQuizStatus('playing');
-    setCurrentQuestion(firstQ);
-    setUsedQuestionIds([firstQ.id]);
-    setSelectedOption(null);
-    setRevealed(false);
-    setEliminatedOptions([]);
-    setLifelines({ fiftyFifty: true, audience: true, phone: true });
-    setLifelineResult(null);
-    setMoneyWon(0);
-    setAdFiftyFiftyUsedThisQuestion(false);
-  };
-
-  if (quizStatus === 'game_over' || quizStatus === 'won') {
-    return (
-      <View style={styles.quizContainer}>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.quizBg} />
-        <MuteButton />
-        <Text style={styles.quizGameOverEmoji}>{quizStatus === 'won' ? '👑' : '💀'}</Text>
-        <Text style={styles.quizGameOverTitle}>{quizStatus === 'won' ? 'GRATULÁLUNK!' : 'JÁTÉK VÉGE'}</Text>
-        <Text style={styles.quizGameOverDesc}>
-          {quizStatus === 'won'
-            ? 'Megválaszoltad az összes kérdést és Dínó Milliomos lettél!'
-            : moneyWon > 0 ? `Gratulálunk! Elérted a(z) ${quizLevel - 1}. szintet.` : 'Sajnos ez most nem sikerült.'}
-        </Text>
-        <View style={styles.prizeBox}>
-          <Text style={styles.prizeLabel}>Nyereményed:</Text>
-          <Text style={[styles.prizeValue, quizStatus === 'won' && { color: COLORS.quizGold }]}>{formatMoney(quizStatus === 'won' ? 40000000 : moneyWon)}</Text>
-        </View>
-        <TouchableOpacity onPress={restartQuiz} style={[styles.quizActionBtn, { borderColor: COLORS.quizGold, backgroundColor: 'rgba(221,161,94,0.1)' }]}>
-          <Text style={[styles.quizActionBtnText, { color: COLORS.quizGold }]}>Új játék indítása</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onBack} style={styles.quizBackLink}>
-          <Text style={{ color: '#fff', opacity: 0.7 }}>← Főmenü</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
-  if (!currentQuestion) return null;
-
-  let guaranteedAmount = 0;
-  if (quizLevel > 5 && quizLevel <= 10) guaranteedAmount = 200000;
-  else if (quizLevel > 10) guaranteedAmount = 3000000;
-
-  return (
-    <Shell>
-    <View style={[styles.quizContainer, { justifyContent: 'space-between', paddingTop: 50, paddingBottom: 36 }]}>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.quizBg} />
-      <MuteButton />
-      <Image
-        source={require('./assets/images/milliomos_logo.jpg')}
-        style={styles.quizLogoBanner}
-        resizeMode="cover"
-      />
-      <View style={[styles.quizHeaderRow, { marginTop: 6 }]}>
-        <TouchableOpacity onPress={onBack} style={styles.quizBackBtn} hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}>
-          <Text style={{ color: '#fff', fontSize: 13, fontWeight: '600' }}>← Kilépés</Text>
-        </TouchableOpacity>
-        <View style={styles.quizQuestionBadge}>
-          <Text style={styles.quizBadgeText}>{quizLevel} / 15</Text>
-        </View>
-      </View>
-
-      <View style={styles.quizStatusRow}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.quizMoneyWonLabel}>Kérdés értéke:</Text>
-          <Text style={styles.quizMoneyWonValue}>{formatMoney(MONEY_LADDER[quizLevel])}</Text>
-        </View>
-        <View style={styles.lifelinesContainer}>
-          <TouchableOpacity style={[styles.lifelineCircle, !lifelines.fiftyFifty && styles.lifelineCircleDisabled]} disabled={!lifelines.fiftyFifty || revealed || selectedOption !== null} onPress={useFiftyFifty}>
-            <Text style={styles.lifelineText}>50:50</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.lifelineCircle, !lifelines.audience && styles.lifelineCircleDisabled]} disabled={!lifelines.audience || revealed || selectedOption !== null} onPress={useAudience}>
-            <Text style={styles.lifelineText}>👥</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.lifelineCircle, !lifelines.phone && styles.lifelineCircleDisabled]} disabled={!lifelines.phone || revealed || selectedOption !== null} onPress={usePhone}>
-            <Text style={styles.lifelineText}>📞</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {!lifelines.fiftyFifty && !adFiftyFiftyUsedThisQuestion && !revealed && selectedOption === null && (
-        <TouchableOpacity
-          style={[styles.adLifelineBtn, watchingAd && styles.adLifelineBtnDisabled]}
-          disabled={watchingAd}
-          onPress={watchAdForFiftyFifty}
-        >
-          <Text style={styles.adLifelineBtnText}>
-            {watchingAd ? '🎬 Hirdetés lejátszása...' : '🎬 Hirdetés nézése → extra 50:50'}
-          </Text>
-        </TouchableOpacity>
-      )}
-
-      {lifelineResult && (
-        <View style={styles.lifelineResultBox}>
-          {lifelineResult.type === 'phone' ? (
-            <Text style={styles.phoneHintText}>📞 {lifelineResult.data}</Text>
-          ) : (
-            <View>
-              <Text style={styles.audienceHintTitle}>👥 Közönség szavazása:</Text>
-              <View style={styles.audienceGraphRow}>
-                {['A', 'B', 'C', 'D'].map((label, idx) => {
-                  const pct = lifelineResult.data[idx] || 0;
-                  return (
-                    <View key={label} style={styles.audienceGraphBarCol}>
-                      <Text style={styles.audiencePctText}>{pct}%</Text>
-                      <View style={[styles.audienceBar, { height: Math.max(10, pct * 0.8) }]} />
-                      <Text style={styles.audienceLabelText}>{label}</Text>
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
-          )}
-        </View>
-      )}
-
-      <View style={styles.quizQuestionBox}>
-        <Text style={styles.quizQuestionText}>{currentQuestion.question}</Text>
-      </View>
-
-      <View style={styles.optionsList}>
-        {currentQuestion.options.map((opt, idx) => {
-          const letter = ['A', 'B', 'C', 'D'][idx];
-          const isEliminated = eliminatedOptions.includes(idx);
-          let optStyle = styles.optionBtn;
-          let textStyle = styles.optionBtnText;
-          if (isEliminated) { 
-            optStyle = [optStyle, styles.optionBtnEliminated]; 
-            textStyle = [textStyle, styles.optionBtnTextEliminated]; 
-          } else if (selectedOption === idx) {
-            if (revealed) {
-              const isCorrect = idx === currentQuestion.correctIndex;
-              optStyle = [optStyle, isCorrect ? styles.optionBtnCorrect : styles.optionBtnIncorrect];
-              textStyle = [textStyle, styles.optionBtnTextRevealed];
-            } else { 
-              optStyle = [optStyle, styles.optionBtnSelected];
-              textStyle = [textStyle, styles.optionBtnTextSelected]; 
-            }
-          } else if (revealed && idx === currentQuestion.correctIndex) {
-            optStyle = [optStyle, styles.optionBtnCorrect];
-            textStyle = [textStyle, styles.optionBtnTextRevealed];
-          }
-          return (
-            <TouchableOpacity key={idx} style={optStyle} disabled={isEliminated || selectedOption !== null} onPress={() => handleSelectOption(idx)}>
-              <Text style={textStyle}>{isEliminated ? "" : `${letter}:  ${opt}`}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-
-      <View style={styles.quizFooterRow}>
-        <View>
-          <Text style={styles.quizGuaranteedLabel}>Garantált összeg:</Text>
-          <Text style={styles.quizGuaranteedValue}>{formatMoney(guaranteedAmount)}</Text>
-        </View>
-        <TouchableOpacity
-          style={[styles.walkAwayBtn, (selectedOption !== null || revealed) && styles.walkAwayBtnDisabled]}
-          disabled={selectedOption !== null || revealed}
-          onPress={handleWalkAway}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <Text style={styles.walkAwayBtnText}>Megállás</Text>
-        </TouchableOpacity>
-      </View>
     </View>
     </Shell>
   );
@@ -909,12 +541,10 @@ export default function App() {
     return matchesPeriod && matchesSearch;
   });
 
-  // Háttér főtéma: mindenhol szól hurkolva, KIVÉVE a kvíz közben (ott a QuizGame saját zenéje veszi át).
+  // Háttér főtéma: mindenhol szól hurkolva (a kvíz immár önálló appban él, nem itt).
   useEffect(() => {
-    if (view !== 'quiz') {
-      playQuizBgMusic('mainTheme', { loop: true, volume: 0.4 });
-    }
-  }, [view]);
+    playQuizBgMusic('mainTheme', { loop: true, volume: 0.4 });
+  }, []);
 
   const swipeRef = useRef((dir) => {
     const toValue = dir === 'next' ? -SCREEN_WIDTH * 1.5 : SCREEN_WIDTH * 1.5;
@@ -997,7 +627,7 @@ export default function App() {
     );
   }
 
-  if (view === 'quiz') return <QuizGame onBack={() => setView('landing')} />;
+  // A "Legyen Ön is Milliomos" kvíz már önálló appként fut, ide nincs többé bekötve.
   if (view === 'leaderboard') {
     return (
       <Shell>
@@ -1225,7 +855,7 @@ const styles = StyleSheet.create({
   quizActionBtnText: { fontSize: 14, fontWeight: 'bold' },
   quizBackLink: { marginTop: 24, alignItems: 'center' },
   quizHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  quizLogoBanner: { width: '100%', height: 90, borderRadius: 10, marginBottom: 4 },
+  quizLogoBanner: { width: '100%', height: 150, borderRadius: 10, marginBottom: 4 },
   quizBackBtn: { paddingVertical: 6 },
   quizTitle: { fontSize: 14, fontWeight: '900', color: COLORS.quizGold, letterSpacing: 1 },
   quizQuestionBadge: { backgroundColor: 'rgba(214,175,55,0.15)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, borderWidth: 0.5, borderColor: COLORS.quizGold },
