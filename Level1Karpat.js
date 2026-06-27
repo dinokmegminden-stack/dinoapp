@@ -12,12 +12,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import karpatDinosaurs from './data/karpatmedence.json';
+import karpatDinosaurs from './data/karpatok.json';
+import { REGION_PACKS, isPackUnlocked } from './regionProgress';
 
 // ============================================================
 // 1. SZINT — KÁRPÁT-MEDENCE — CSOMAGOS RENDSZER
 // ============================================================
-// 3 csomag (a karpatmedence.json "csomag" mezője alapján), 4-4-4 dínóval.
+// 3 csomag (a karpatok.json "csomag" mezője alapján), 4-4-4 dínóval.
 // Egy csomag csak akkor nyílik ki, ha az előző csomag végén lévő
 // 5 kérdéses teszt HIBÁTLANRA sikerül (5/5).
 // A haladást egy becenévhez kötve, lokálisan (AsyncStorage) mentjük —
@@ -57,19 +58,10 @@ const IMAGE_MAP = {
   'Balaur bondoc': require('./assets/images/balaur.jpg'),
 };
 
-// --- BECENÉV + HALADÁS MENTÉSE (AsyncStorage, nincs email) ---
+// --- BECENÉV MENTÉSE (AsyncStorage, nincs email) ---
+// A haladás (progress) mentését/betöltését mostantól a régiófüggetlen
+// regionProgress.js végzi — itt csak a becenév-tárolás maradt.
 const NICKNAME_KEY = 'dinoapp_nickname';
-const PROGRESS_KEY_PREFIX = 'dinoapp_progress_';
-
-function defaultProgress() {
-  return {
-    level1: {
-      // az 1. csomag mindig nyitva, a többi csak teszt után nyílik ki
-      unlocked: [1],
-      passed: [],
-    },
-  };
-}
 
 export async function loadNickname() {
   try {
@@ -87,48 +79,20 @@ export async function saveNickname(name) {
   }
 }
 
-export async function loadProgress(nickname) {
-  try {
-    const raw = await AsyncStorage.getItem(PROGRESS_KEY_PREFIX + nickname);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed?.level1?.unlocked?.length) return parsed;
-    }
-  } catch {
-    // csendben elnyeljük
-  }
-  return defaultProgress();
-}
-
-export async function saveProgress(nickname, progress) {
-  try {
-    await AsyncStorage.setItem(PROGRESS_KEY_PREFIX + nickname, JSON.stringify(progress));
-  } catch {
-    // csendben elnyeljük
-  }
+// Kárpát-medence csomag (1,2,3...) -> regionProgress packId (km_pack1, km_pack2...)
+// A KARPAT_PACKAGES sorrendje és a REGION_PACKS.karpat_medence sorrendje egyezik.
+export function csomagToPackId(csomag) {
+  return REGION_PACKS.karpat_medence[csomag - 1];
 }
 
 export function isPackageUnlocked(progress, csomag) {
-  return !!progress?.level1?.unlocked?.includes(csomag);
+  const packId = csomagToPackId(csomag);
+  return isPackUnlocked('karpat_medence', packId, progress);
 }
 
 export function isPackagePassed(progress, csomag) {
-  return !!progress?.level1?.passed?.includes(csomag);
-}
-
-// A teszt sikeres letétele után kinyitja a következő csomagot.
-export function unlockNextPackage(progress, csomag) {
-  const next = {
-    level1: {
-      unlocked: [...new Set([...(progress?.level1?.unlocked || [1]), csomag])],
-      passed: [...new Set([...(progress?.level1?.passed || []), csomag])],
-    },
-  };
-  const nextCsomag = csomag + 1;
-  if (nextCsomag <= KARPAT_PACKAGE_COUNT) {
-    next.level1.unlocked = [...new Set([...next.level1.unlocked, nextCsomag])];
-  }
-  return next;
+  const packId = csomagToPackId(csomag);
+  return !!progress?.karpat_medence?.[packId]?.quizPassed;
 }
 
 // --- KÉRDÉSGENERÁTOR — a csomag 4 dínójából 5 ténykérdést épít ---
@@ -418,7 +382,10 @@ export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
               : 'A csomag kinyitásához hibátlan (5/5) eredmény szükséges. Próbáld újra!'}
           </Text>
           {passed ? (
-            <TouchableOpacity style={s.primaryBtn} onPress={() => onPassed(csomag)}>
+            <TouchableOpacity
+              style={s.primaryBtn}
+              onPress={() => onPassed(csomag, csomagToPackId(csomag), correctCount / questions.length)}
+            >
               <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
             </TouchableOpacity>
           ) : (

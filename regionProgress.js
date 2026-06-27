@@ -12,7 +12,7 @@ export const REGION_ORDER = ['karpat_medence', 'europa', 'afrika', 'asia', 'amer
 
 export const REGION_PACKS = {
   karpat_medence: ['km_pack1', 'km_pack2', 'km_pack3'],
-  europa: ['eu_pack1', 'eu_pack2', 'eu_pack3', 'eu_pack4'],
+  europa: ['eu_pack1', 'eu_pack2', 'eu_pack3', 'eu_pack4', 'eu_pack5'],
   afrika: ['af_pack1', 'af_pack2'],
   asia: ['as_pack1', 'as_pack2', 'as_pack3', 'as_pack4'],
   america: ['am_pack1', 'am_pack2', 'am_pack3', 'am_pack4', 'am_pack5'],

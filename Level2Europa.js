@@ -10,13 +10,13 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import dinosaurs from './data/europa_dinosaurs.json';
+import dinosaurs from './data/europa.json';
+import { REGION_PACKS, isPackUnlocked } from './regionProgress';
 
 // ============================================================
 // 2. SZINT — EURÓPA — CSOMAGOS RENDSZER
 // ============================================================
-// 20 dínó, 5 csomagban (4-4-4-4-4), a europa_dinosaurs.json "csomag"
+// 20 dínó, 5 csomagban (4-4-4-4-4), a europa.json "csomag"
 // mezője alapján csoportosítva. Ugyanaz a zárolási logika, mint az
 // 1. szintnél: egy csomag csak az előző csomag hibátlan (5/5) tesztje
 // után nyílik ki.
@@ -59,54 +59,24 @@ const IMAGE_MAP = {
   'Mantellisaurus atherfieldensis': require('./assets/images/mantellisaurus.jpg'),
 };
 
-// --- HALADÁS MENTÉSE (ugyanaz a becenév, mint az 1. szintnél, de saját kulcs alatt) ---
-const PROGRESS_KEY_PREFIX = 'dinoapp_progress_level2_';
+// --- HALADÁS ---
+// A haladás mentését/betöltését mostantól a régiófüggetlen regionProgress.js
+// végzi (region id: 'europa'). Itt csak a csomag<->packId megfeleltetés maradt.
 
-function defaultProgress() {
-  return { level2: { unlocked: [1], passed: [] } };
-}
-
-export async function loadEuropaProgress(nickname) {
-  try {
-    const raw = await AsyncStorage.getItem(PROGRESS_KEY_PREFIX + nickname);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed?.level2?.unlocked?.length) return parsed;
-    }
-  } catch {
-    // csendben elnyeljük
-  }
-  return defaultProgress();
-}
-
-export async function saveEuropaProgress(nickname, progress) {
-  try {
-    await AsyncStorage.setItem(PROGRESS_KEY_PREFIX + nickname, JSON.stringify(progress));
-  } catch {
-    // csendben elnyeljük
-  }
+// Csomag (1,2,3...) -> regionProgress packId (eu_pack1, eu_pack2...)
+// Az EUROPA_PACKAGES sorrendje és a REGION_PACKS.europa sorrendje egyezik.
+export function csomagToPackId(csomag) {
+  return REGION_PACKS.europa[csomag - 1];
 }
 
 export function isEuropaPackageUnlocked(progress, csomag) {
-  return !!progress?.level2?.unlocked?.includes(csomag);
+  const packId = csomagToPackId(csomag);
+  return isPackUnlocked('europa', packId, progress);
 }
 
 export function isEuropaPackagePassed(progress, csomag) {
-  return !!progress?.level2?.passed?.includes(csomag);
-}
-
-export function unlockNextEuropaPackage(progress, csomag) {
-  const next = {
-    level2: {
-      unlocked: [...new Set([...(progress?.level2?.unlocked || [1]), csomag])],
-      passed: [...new Set([...(progress?.level2?.passed || []), csomag])],
-    },
-  };
-  const nextCsomag = csomag + 1;
-  if (nextCsomag <= EUROPA_PACKAGE_COUNT) {
-    next.level2.unlocked = [...new Set([...next.level2.unlocked, nextCsomag])];
-  }
-  return next;
+  const packId = csomagToPackId(csomag);
+  return !!progress?.europa?.[packId]?.quizPassed;
 }
 
 // --- KÉRDÉSGENERÁTOR — ugyanaz a logika, mint az 1. szintnél ---
@@ -357,7 +327,10 @@ export function EuropaPackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
               : 'A csomag kinyitásához hibátlan (5/5) eredmény szükséges. Próbáld újra!'}
           </Text>
           {passed ? (
-            <TouchableOpacity style={s.primaryBtn} onPress={() => onPassed(csomag)}>
+            <TouchableOpacity
+              style={s.primaryBtn}
+              onPress={() => onPassed(csomag, csomagToPackId(csomag), correctCount / questions.length)}
+            >
               <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
             </TouchableOpacity>
           ) : (

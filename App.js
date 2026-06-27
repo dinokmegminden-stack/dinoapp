@@ -19,7 +19,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import dinosaurs from './data/dinosaurs.json';
-import karpatDinosaurs from './data/karpatmedence.json';
+import karpatDinosaurs from './data/karpatok.json';
 import { useFonts } from 'expo-font';
 import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
@@ -256,7 +256,7 @@ const IMAGE_MAP = {
   "Komlosaurus carbonis": require('./assets/images/komlosaurus.jpg'),
 };
 
-// Mivel a karpatmedence.json új struktúrája már eleve előre feldolgozott, 
+// Mivel a karpatok.json új struktúrája már eleve előre feldolgozott, 
 // lapos tömbként érkezik, közvetlenül hozzárendelhetjük a listához.
 const karpatDinoList = karpatDinosaurs;
 
@@ -525,6 +525,7 @@ export default function App() {
   }, []);
 
   const handleEnterKarpat = () => {
+    setRegion('karpat_medence');
     setView(nickname ? 'packages' : 'nickname');
   };
 
@@ -619,8 +620,8 @@ export default function App() {
       <PackageQuizScreen
         key={quizKey}
         csomag={activePackage}
-        onPassed={async (csomag, scoreRatio = 1) => {
-          const next = await recordPackQuizResult(nickname, region, csomag, scoreRatio);
+        onPassed={async (csomag, packId, scoreRatio = 1) => {
+          const next = await recordPackQuizResult(nickname, region, packId, scoreRatio);
           setProgress(next);
           setView('packages');
         }}
