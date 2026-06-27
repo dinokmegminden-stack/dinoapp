@@ -378,7 +378,7 @@ const LANDING_NAV_BUTTONS = [
   { key: 'amerika', label: 'Amerika', centerY: 90, color: '#ffe0b0' },
 ];
 
-function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat }) {
+function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion }) {
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const { width: cw, height: ch } = containerSize;
@@ -391,9 +391,10 @@ function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat }) {
 
   const handlePress = (key) => {
     playSound('click');
-    if (key === 'europa') { onSelectRegion('europa'); onNavigate('cards'); }
+    if (key === 'europa') { onEnterRegion('europa'); }
     else if (key === 'karpat') { onEnterKarpat(); }
-    // amerika / azsia / afrika: hamarosan érkezik, jelenleg nincs célnézet
+    else if (key === 'afrika') { onEnterRegion('afrika'); }
+    // amerika / azsia: hamarosan érkezik, jelenleg nincs célnézet
   };
 
   return (

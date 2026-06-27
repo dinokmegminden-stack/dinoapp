@@ -41,17 +41,24 @@ export const AFRIKA_PACKAGE_COUNT = AFRIKA_PACKAGES.length;
 
 // Dínó képek — a megállapodás szerint minden kép fájlneve a
 // nev_koznapi.jpg sémát követi (kisbetűs, szóköz nélküli fájlnév).
+//
+// FONTOS: a require() build időben (Metro bundler) próbálja feloldani a
+// fájlt — ha a kép még nincs feltöltve az assets/images mappába, a teljes
+// Vercel build elhasal, nem csak az adott dínónál jelenik meg hiba.
+// Ezért itt csak azokat a sorokat szabad kikommentezni / hozzáadni, amelyek
+// fájlja TÉNYLEG létezik már a repóban. A többi dínónál addig emoji
+// jelenik meg helyette (lásd dinoImageFallback a JSX-ben).
 const IMAGE_MAP = {
   Spinosaurus: require('./assets/images/spinosaurus.jpg'),
   Carcharodontosaurus: require('./assets/images/carcharodontosaurus.jpg'),
-  Ouranosaurus: require('./assets/images/ouranosaurus.jpg'),
-  Suchomimus: require('./assets/images/suchomimus.jpg'),
-  Nigersaurus: require('./assets/images/nigersaurus.jpg'),
-  Majungasaurus: require('./assets/images/majungasaurus.jpg'),
-  Giraffatitan: require('./assets/images/giraffatitan.jpg'),
-  Massospondylus: require('./assets/images/massospondylus.jpg'),
-  Masiakasaurus: require('./assets/images/masiakasaurus.jpg'),
-  Kentrosaurus: require('./assets/images/kentrosaurus.jpg'),
+  // Ouranosaurus: require('./assets/images/ouranosaurus.jpg'),
+  // Suchomimus: require('./assets/images/suchomimus.jpg'),
+  // Nigersaurus: require('./assets/images/nigersaurus.jpg'),
+  // Majungasaurus: require('./assets/images/majungasaurus.jpg'),
+  // Giraffatitan: require('./assets/images/giraffatitan.jpg'),
+  // Massospondylus: require('./assets/images/massospondylus.jpg'),
+  // Masiakasaurus: require('./assets/images/masiakasaurus.jpg'),
+  // Kentrosaurus: require('./assets/images/kentrosaurus.jpg'),
 };
 
 // --- HALADÁS ---
