@@ -10,6 +10,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const REGION_ORDER = ['karpat_medence', 'europa', 'afrika', 'asia', 'america'];
 
+// Azok a régiók, amelyekkel a játékot el lehet kezdeni — ezeknél az 1. csomag
+// mindig nyitott, nem kell hozzá másik régiót előbb teljesíteni.
+// Az Ázsia és Amerika viszont továbbra is láncban nyílik: Ázsia Afrikától,
+// Amerika Ázsiától függ.
+export const STARTER_REGIONS = ['karpat_medence', 'europa', 'afrika'];
+
 export const REGION_PACKS = {
   karpat_medence: ['km_pack1', 'km_pack2', 'km_pack3'],
   europa: ['eu_pack1', 'eu_pack2', 'eu_pack3', 'eu_pack4', 'eu_pack5'],
@@ -129,6 +135,8 @@ export function isPackUnlocked(regionId, packId, progress) {
 // (Az első régió, karpat_medence, mindig nyitott.)
 
 export function isRegionUnlocked(regionId, progress) {
+  if (STARTER_REGIONS.includes(regionId)) return true;
+
   const idx = REGION_ORDER.indexOf(regionId);
   if (idx === -1) return false;
   if (idx === 0) return true;

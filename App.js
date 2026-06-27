@@ -38,6 +38,16 @@ import {
   isPackUnlocked,
   isRegionUnlocked,
 } from './regionProgress';
+import {
+  EuropaPackagesScreen,
+  EuropaPackageBrowseScreen,
+  EuropaPackageQuizScreen,
+} from './Level2Europa';
+import {
+  AfrikaPackagesScreen,
+  AfrikaPackageBrowseScreen,
+  AfrikaPackageQuizScreen,
+} from './Level3Afrika';
 
 // --- AUDIO SYSTEM ---
 // Egyszerű UI kattanás hang (online forrás, marad ahogy volt)
@@ -524,10 +534,17 @@ export default function App() {
     })();
   }, []);
 
-  const handleEnterKarpat = () => {
-    setRegion('karpat_medence');
+  // Mindhárom induló régió (Kárpát-medence, Európa, Afrika) ugyanígy indítható:
+  // a régió kiválasztása után egyenesen a csomagválasztóra ugrunk (vagy a
+  // becenév-képernyőre, ha még nincs elmentve nickname). Az 1. csomag mindhárom
+  // induló régiónál mindig nyitva van — lásd regionProgress.js STARTER_REGIONS.
+  const handleEnterRegion = (regionId) => {
+    setRegion(regionId);
     setView(nickname ? 'packages' : 'nickname');
   };
+
+  // Visszafelé kompatibilis alias, ha a LandingPage még a régi nevet hívja.
+  const handleEnterKarpat = () => handleEnterRegion('karpat_medence');
 
   const position = useRef(new Animated.ValueXY()).current;
   const { width: appWidth } = useWindowDimensions();
@@ -578,7 +595,12 @@ export default function App() {
 
   if (view === 'landing') {
     return (
-      <LandingPage onNavigate={setView} onSelectRegion={setRegion} onEnterKarpat={handleEnterKarpat} />
+      <LandingPage
+        onNavigate={setView}
+        onSelectRegion={setRegion}
+        onEnterKarpat={handleEnterKarpat}
+        onEnterRegion={handleEnterRegion}
+      />
     );
   }
 
@@ -595,9 +617,32 @@ export default function App() {
     );
   }
 
+  // A 3 induló régió (Kárpát-medence, Európa, Afrika) saját Packages/Browse/Quiz
+  // komponensekkel rendelkezik (más-más JSON, más-más képmappa), de a 'view' state
+  // ugyanazt a 3 nevet használja mindháromnál — itt választjuk ki a megfelelőt.
+  const REGION_SCREENS = {
+    karpat_medence: {
+      Packages: PackagesScreen,
+      Browse: PackageBrowseScreen,
+      Quiz: PackageQuizScreen,
+    },
+    europa: {
+      Packages: EuropaPackagesScreen,
+      Browse: EuropaPackageBrowseScreen,
+      Quiz: EuropaPackageQuizScreen,
+    },
+    afrika: {
+      Packages: AfrikaPackagesScreen,
+      Browse: AfrikaPackageBrowseScreen,
+      Quiz: AfrikaPackageQuizScreen,
+    },
+  };
+  const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat_medence;
+
   if (view === 'packages') {
+    const Packages = screens.Packages;
     return (
-      <PackagesScreen
+      <Packages
         progress={progress}
         onOpenPackage={(csomag) => { setActivePackage(csomag); setView('packageBrowse'); }}
         onBack={() => setView('landing')}
@@ -606,8 +651,9 @@ export default function App() {
   }
 
   if (view === 'packageBrowse') {
+    const Browse = screens.Browse;
     return (
-      <PackageBrowseScreen
+      <Browse
         csomag={activePackage}
         onStartQuiz={(csomag) => { setActivePackage(csomag); setQuizKey((k) => k + 1); setView('packageQuiz'); }}
         onBack={() => setView('packages')}
@@ -616,8 +662,9 @@ export default function App() {
   }
 
   if (view === 'packageQuiz') {
+    const Quiz = screens.Quiz;
     return (
-      <PackageQuizScreen
+      <Quiz
         key={quizKey}
         csomag={activePackage}
         onPassed={async (csomag, packId, scoreRatio = 1) => {
