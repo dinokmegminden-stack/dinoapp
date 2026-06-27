@@ -30,10 +30,14 @@ import {
   PackageQuizScreen,
   loadNickname,
   saveNickname,
+} from './Level1Karpat';
+import {
   loadProgress,
   saveProgress,
-  unlockNextPackage,
-} from './Level1Karpat';
+  recordPackQuizResult,
+  isPackUnlocked,
+  isRegionUnlocked,
+} from './regionProgress';
 
 // --- AUDIO SYSTEM ---
 // Egyszerű UI kattanás hang (online forrás, marad ahogy volt)
@@ -615,10 +619,9 @@ export default function App() {
       <PackageQuizScreen
         key={quizKey}
         csomag={activePackage}
-        onPassed={async (csomag) => {
-          const next = unlockNextPackage(progress, csomag);
+        onPassed={async (csomag, scoreRatio = 1) => {
+          const next = await recordPackQuizResult(nickname, region, csomag, scoreRatio);
           setProgress(next);
-          await saveProgress(nickname, next);
           setView('packages');
         }}
         onRetry={() => setQuizKey((k) => k + 1)}

@@ -1,0 +1,61 @@
+https://share.gemini.google/L5fE4sVrwV8M
+
+MAP PROMPT FOR APP BG
+
+Create a premium vertical wallpaper in a 9:16 aspect ratio (1080×1920 px), divided into five equal horizontal sections stacked from top to bottom.
+
+Each section features:
+
+* A large, simplified map silhouette positioned on the right side, vertically centered within its section.
+* The corresponding region name placed on the left side, aligned horizontally with the map.
+
+Layout requirements:
+
+* Maintain a consistent visual hierarchy and equal spacing across all five sections.
+* Reserve approximately 35% of each section width for the text area on the left and 65% for the map on the right.
+* Use a clean, balanced composition with generous negative space.
+
+Sections and colors (top to bottom):
+
+1. KÁRPÁT-MEDENCE — background color: #283618
+subtitle: általános iskola 
+start from the attached map
+
+2. EURÓPA — background color: #606C38
+subtitle: középiskolai érettségi
+3. AFRIKA — background color: #DDA15E
+subtitle: egyetemi diploma
+4. ÁZSIA — background color: #FEFAE0
+subtitle: doktorandusz (map should be apac, asia + australia)
+5. AMERIKA — background color: #BC6C25
+subtitle: professzor (map should be the whole amercan continent, south-amer and north amer)
+
+Typography:
+
+* Use the "cinzel" typeface (all caps).
+* Font weight: SemiBold or Bold.
+* Increase letter spacing slightly for an elegant appearance.
+* Center the text vertically within each section.
+* Align text to the left with consistent margins.
+* Use a contrasting color that remains legible against the background:
+
+  * Light text on dark backgrounds.
+  * Dark text on light backgrounds.
+
+Map design:
+
+* Use minimalist, top-down map silhouettes without country borders or labels.
+* All map silhouettes should share the same visual style and scale.
+* Apply a subtle cut-paper effect with soft ambient shadows to create depth.
+* Use a slightly lighter or darker shade of the section background for the map silhouette to maintain a cohesive color palette.
+
+Transitions:
+
+* Separate sections with thin, elegant divider lines or soft gradient transitions.
+
+Overall style:
+
+Sophisticated, educational, modern infographic aesthetic with subtle paper grain texture, vector-sharp details, and a refined editorial look.
+
+Exclude: watermarks, logos, legends, flags, political boundaries, compass elements, extra icons, or any additional text beyond the five region names.
+Left aligned text
