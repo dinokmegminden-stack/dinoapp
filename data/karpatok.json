@@ -132,7 +132,7 @@
     "felfedezo": "Modern kutatócsoportok",
     "leiras": "Ezt az újonnan azonosított titanoszaurusz fajt a közelmúltban végzett morfológiai revíziók során különítették el a meglévő erdélyi leletanyagból. A hosszú nyakú, növényevő óriások közé tartozott, ám környezetéhez alkalmazkodva méretei elmaradtak a kontinenseken élt rokonokétól. Tudományos elnevezése hűen őrzi a felfedezés történelmi és földrajzi kötődését a Kárpát-medence régiójához.",
     "szint": "általános iskola",
-    "csomag": 3
+    "csomag": 2
   },
   {
     "nev_tudomanyos": "Uriash kadici",
@@ -162,7 +162,7 @@
     "felfedezo": "Kőbányászok és Wein György geológus",
     "leiras": "A Mecsek hegységben található pécsbányai és komlói kőszénbányák mélyéről kerültek elő az állat első maradványai az 1960-as években. Ez a kora jura időszaki, két lábon járó ragadozó dínó nem csontok, hanem szinte kizárólag a megkövesedett, madárszerű lábnyomai és csapásai révén vált ismertté. A nedves, mocsaras tengerparti környezetben hagyott nyomvonalak a mai napig a legértékesebb jura kori lábnyomos leletek közé tartoznak Magyarországon.",
     "szint": "általános iskola",
-    "csomag": 3
+    "csomag": 1
   },
   {
     "nev_tudomanyos": "Balaur bondoc",
@@ -176,6 +176,51 @@
     "suly": "n/a",
     "felfedezo": "Mátyás Zoltán, Csiki Zoltán és munkatársaik",
     "leiras": "A Hátszegi-medencéből származó, különleges és rendkívül robusztus felépítésű theropoda dinoszaurusz vagy ősmadár. Legmeghökkentőbb tulajdonsága, hogy a hátsó lábain nem egy, hanem két-két sarlókarom helyezkedett el, mellső végtagjai pedig erősen módosultak. A hajdani szigetvilág elszigeteltségének egyik legkülönösebb evolúciós szüleménye, amely remekül szemlélteti a helyi fauna egyediségét.",
+    "szint": "általános iskola",
+    "csomag": 3
+  },
+  {
+    "nev_tudomanyos": "Hatzegopteryx thambema",
+    "nev_koznapi": "Hatzegopteryx",
+    "csoport": "Pterosauria (Azhdarchidae)",
+    "korszak": "késő kréta (maastrichti)",
+    "kor_millioev": "kb. 70-66 Ma",
+    "megtalalas_helye": "Románia, Hátszegi-medence",
+    "hossz": "10–12 m (szárnyfesztáv)",
+    "magassag": "n/a",
+    "suly": "100–250 kg",
+    "felfedezo": "Eric Buffetaut, Dan Grigorescu és Csiki Zoltán, 2002",
+    "leiras": "Az egyik legnagyobb ismert pteroszaurusz, amelynek koponyája akár 2,5 méter hosszú is lehetett, és rendkívül széles, erős izomzatú volt — szokatlanul rövid, masszív nyakkal a más óriás azhdarchidákhoz képest. A Hátszegi-sziget egykori ökoszisztémájának csúcsragadozója volt egy olyan világban, ahol nagytestű ragadozó dinoszauruszok nem éltek, így a pteroszauruszok uralták a tetejét a táplálékláncnak. Becenevei között szerepel a \"Hátszeg-sárkánya\", mivel mérete és külseje miatt a Drakula-legendák szülőföldjén egy valódi, repülő szörnyetegre emlékeztet.",
+    "szint": "általános iskola",
+    "csomag": 3
+  },
+  {
+    "nev_tudomanyos": "Bauxitornis mindszentyae",
+    "nev_koznapi": "Bauxitornis",
+    "csoport": "Aves (Enantiornithes)",
+    "korszak": "késő kréta",
+    "kor_millioev": "kb. 85 Ma",
+    "megtalalas_helye": "Magyarország (Iharkút)",
+    "hossz": "n/a (ölyv méretű)",
+    "magassag": "n/a",
+    "suly": "n/a",
+    "felfedezo": "Iharkúti kutatócsoport",
+    "leiras": "Egy ölyv méretű ősmadár, amely az Enantiornithes csoportba tartozott — ez a madárcsoport a kréta időszak végén kihalt. Az iharkúti lelőhelyen eddig megtalált közel 10 000 csontmaradvány közül csupán egy tucat sorolható madarakhoz, ezért minden ilyen lelet különösen értékes. A fajt egy jellegzetes csüdcsont (lábközépcsont) alapján sikerült azonosítani, és nevét Mindszenty Andrea bauxitkutató professzor előtt tiszteleg.",
+    "szint": "általános iskola",
+    "csomag": 3
+  },
+  {
+    "nev_tudomanyos": "Bakonydraco galaczi",
+    "nev_koznapi": "Bakonydraco",
+    "csoport": "Pterosauria (Azhdarchidae)",
+    "korszak": "késő kréta",
+    "kor_millioev": "kb. 85 Ma",
+    "megtalalas_helye": "Magyarország (Iharkút)",
+    "hossz": "3,5–4 m (szárnyfesztáv)",
+    "magassag": "n/a",
+    "suly": "n/a",
+    "felfedezo": "Iharkúti kutatócsoport",
+    "leiras": "Egy azhdarchida családba tartozó repülő hüllő, amelynek állkapcsában nem voltak fogak, hanem madárszerű, szarukávával borított csőre volt — ezzel halakat, gyümölcsöket és tetemeket is megragadhatott. Az eddig előkerült közel 80 állkapocstöredék alapján a Bakonydraco egyedei igen gyakoriak lehettek az iharkúti folyóágak és tavak vidékén, akár a mai vízimadarakhoz hasonló tömegben. Neve a Bakony hegységre (\"a Bakony sárkánya\") és Galácz András professzorra utal.",
     "szint": "általános iskola",
     "csomag": 3
   }
