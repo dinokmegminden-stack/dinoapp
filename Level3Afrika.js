@@ -51,8 +51,8 @@ export const AFRIKA_PACKAGE_COUNT = AFRIKA_PACKAGES.length;
 const IMAGE_MAP = {
   Spinosaurus: require('./assets/images/spinosaurus.jpg'),
   Carcharodontosaurus: require('./assets/images/carcharodontosaurus.jpg'),
-  // Ouranosaurus: require('./assets/images/ouranosaurus.jpg'),
-  // Suchomimus: require('./assets/images/suchomimus.jpg'),
+  Ouranosaurus: require('./assets/images/ouranosaurus.jpg'),
+  Suchomimus: require('./assets/images/suchomimus.jpg'),
   // Nigersaurus: require('./assets/images/nigersaurus.jpg'),
   // Majungasaurus: require('./assets/images/majungasaurus.jpg'),
   // Giraffatitan: require('./assets/images/giraffatitan.jpg'),
