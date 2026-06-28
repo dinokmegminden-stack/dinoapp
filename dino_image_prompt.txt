@@ -1,0 +1,42 @@
+
+
+<name>:
+<length>:
+<hiphight>:
+<era>:
+
+A realistic, lifelike, full-body photograph of a male paleontologist standing directly next to a <name> dinosaur (approximately <length> meter in length and <hiphight>: meters tall at the hip) in an <era> forest environment. The focus of the image is the scale and proportion between the two figures. The surrounding vegetation is historically accurate to the <era>, featuring dense ferns, tree ferns, cycads, and early conifers (like Araucariaceae), completely devoid of modern grass or flowering plants. The ground is a damp forest floor covered in moss and ancient leaf litter. Authentic, natural lighting, sharp details, cinematic composition, 16:9 aspect ratio.
+
+
+
+
+
+
+
+
+
+
+
+
+
+adsense
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5819571927407866"
+     crossorigin="anonymous"></script>
+
+Ads.txt
+google.com, pub-5819571927407866, DIRECT, f08c47fec0942fa0
+
+metacimke
+
+<meta name="google-adsense-account" content="ca-pub-5819571927407866">
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FR0L9CV867"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FR0L9CV867');
+</script>

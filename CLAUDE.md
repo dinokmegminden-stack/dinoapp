@@ -1,19 +1,21 @@
 @AGENTS.md
 # Projekt Környezet & Architektúra Szabályok: DínóTudós App
 
+“RESPONSE DEFAULTS (apply to every reply unless I override):
+- Answer directly. No preamble, filler, affirmations, or trailing summary clauses.
+- Always use continuous prose (running text) for explanations and answers. Avoid bulleted or numbered lists completely. No decorative headers for short answers.
+- Do not use Extended Thinking or web search unless my prompt is explicitly complex or time-sensitive.
+- If a task is simple (formatting, grammar, short translation), note once that Haiku may suffice.
+- At 15+ messages, offer once to summarize key context for a fresh chat.
+- If I request a correction, note once that editing my last message saves tokens.”
+
 ## 1. Technológiai Stack & Korlátok
-- **Keretrendszer:** React Native (Expo v54.0.0, managed workflow).
-- **Hangszerkezet:** `expo-av` alapú Audio rendszer. Fontos szabály: A hangok némítása globálisan az `isSoundMuted` változón keresztül történik, ezt minden hangfájl lejátszása előtt kötelező ellenőrizni!
-- **Betűtípusok:** `Cinzel_700Bold` (kizárólag a dínók tudományos nevéhez) és `Roboto_400Regular`, `Roboto_700Bold` (minden más általános szöveghez). Új komponensek létrehozásakor vagy módosításakor figyelni kell a `fontFamily` explicit beállítására.
+- **Keretrendszer:** React Native (Expo v51.0.0, managed workflow).
+- **Adatbázis & Backend:** Supabase (PostgreSQL). A kliensoldali lokális JSON fájlok helyét az aszinkron Supabase API hívások veszik át, így minden lekérésnél kötelező a betöltési állapotok (loading) és a hálózati hibák kezelése.
+- **Hangszerkezet:** `expo-av` alapú Audio rendszer. Fontos szabály: A hangok némítása globálisan az `isSoundMuted` változón keresztül történik (React Context / Global State), ezt minden hangfájl lejátszása előtt kötelező ellenőrizni!
+- **Betűtípusok:** `Cinzel_700Bold` (kizárólag a dínók tudományos nevéhez) és `Roboto_400Regular`, `Roboto_700Bold` (minden más általános szöveghez). Új komponensek létrehozásakor vagy módosításakor figyelni kell a `fontFamily` explicit beállítására a szöveges elemeken (vagy egyedi közös Text wrapper komponens használatára).
 - **Kijelző & Elrendezés:** Az alkalmazás tartalmaz egy `Shell` komponenst a webes nézet támogatásához (asztali böngészőben fix telefon-szélesség, két oldalt AdSense hirdetési sávok). Új képernyőket mindig a `Shell` komponensbe kell ágyazni!
 
-## 2. Adatstruktúra & Navigáció
-- **Egységes Adatmodell:** Minden régió (Kárpát-medence, Európa, Afrika) JSON adatbázisa (`dinosaurs.json`, `karpatok.json`) teljesen azonos, lapos tömb struktúrával rendelkezik.
-- **Állapotkezelés:** A navigáció deklaratív, a fő `App.js` komponensben lévő `view` és `region` state-ek vezérlik (`landing`, `nickname`, `packages`, `packageBrowse`, `packageQuiz`).
-- **Progress:** A haladást a `regionProgress.js` kezeli, a mentés `AsyncStorage`-ba történik a felhasználó beceneve (`nickname`) alapján.
-
-## 3. Stratégiai Célok & Refaktorálási Irányelvek (Claude részére)
-- **Közös Kvízmotor:** Tervben van a kvízek egységesítése. Új kvízlogika írásakor vagy módosításakor törekedj az absztrakcióra, hogy a kód alkalmas legyen egy későbbi, közös kvízmotorba való beolvadásra.
-- **Kód Duplikáció Csökkentése:** A `Level1Karpat`, `Level2Europa` és `Level3Afrika` mappákban lévő képernyők (Packages, Browse, Quiz) jelenleg duplikált logikát tartalmaznak. Ha új funkciót fejlesztesz, vagy meglévőt módosítasz, mindig tegyél javaslatot a komponensek generikussá tételére és kiemelésére, hogy a régiók dinamikusan, paraméterezve kaphassák meg a saját tartalmaikat.
-- **Képek Kezelése:** A dínó kártyák képeit az `IMAGE_MAP` objektumból kell kiszedni a dínó tudományos neve (`nev_tudomanyos`) alapján. Ha nincs találat, explicit módon fallback emojit kell alkalmazni a csoport alapján (pl. sauropoda esetén 🦕, theropoda esetén 🦖).
-- **Audio Architektúra (AudioService):** A hangok kezelése központosított. Rövid effekteknél (click, correct, wrong) kötelező az előre betöltött Sound objektumok pozíciójának nullázása (`setPositionAsync(0)`) az újrajátszás előtt. Háttérzene váltásakor vagy leállításakor mindig explicit módon meg kell hívni az `unloadAsync()` metódust a memóriaszivárgás elkerülése érdekében. Minden audio-műveletnél kötelező figyelembe venni a globális némítási állapotot.
+## 2. Adatstruktúra & Relációk
+- **Fő Adatmodell:** A lények központi tárolója a Supabase `creatures` táblája. Minden rekord egyedi `id` (uuid), `name_hu` (text - magyar név), és `name_latin` (text - tudományos név) mezőkkel rendelkezik, a lekéréseknél a szűrést és a keresést közvetlenül az adatbázis szintjén kell elvégezni.
+- **Kapcsolódó Táblák:** A kvízkérdések (`quiz_questions`), játékos kártyák (`player_cards`), játékos haladás (`player_progress`), felhasználók (`players`) és a ranglista (`leaderboard_entries`) relációs kapcsolatban állnak a törzsadatokkal, az összetett lekérdezéseknél a Supabase foreign key hivatkozásait és joinjait kell alkalmazni.
