@@ -153,7 +153,7 @@ import {
   useWindowDimensions,
   Easing,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { Audio } from 'expo-av';
 import dinosaurs from './data/dinosaurs.json';
 import karpatDinosaurs from './data/karpatok.json';
