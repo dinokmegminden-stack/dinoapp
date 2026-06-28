@@ -516,7 +516,14 @@ const LANDING_NAV_BUTTONS = [
 ];
 
 function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion }) {
-   const stageWidth = containerWidth;
+  const [containerWidth, setContainerWidth] = useState(0);
+ 
+  // Csak a szélesség alapján méretezünk — a magasság a böngésző ablakánál
+  // nagyobb is lehet, ilyenkor a ScrollView gondoskodik a függőleges
+  // görgetésről. Így böngészőben (Shell.shellInnerWide -> max 720px) az
+  // 5 régió-sáv szépen kitölti a teljes elérhető szélességet, telefonon
+  // pedig a natív (szűkebb) konténer-szélességhez igazodik.
+  const stageWidth = containerWidth;
   const stageHeight = containerWidth / LP_BG_RATIO;
  
   const handlePress = (key) => {
