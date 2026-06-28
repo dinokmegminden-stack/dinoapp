@@ -540,9 +540,11 @@ function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion 
       <StatusBar barStyle="light-content" backgroundColor="#0a0a06" />
  
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
-        showsVerticalScrollIndicator={false}
-      >
+  style={{ flex: 1, width: '100%' }}
+  contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+  showsVerticalScrollIndicator={false}
+>
+
         <View
           style={{ width: '100%' }}
           onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
