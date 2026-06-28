@@ -516,16 +516,9 @@ const LANDING_NAV_BUTTONS = [
 ];
 
 function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion }) {
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
-  const { width: cw, height: ch } = containerSize;
-  let stageWidth = cw;
-  let stageHeight = cw / LP_BG_RATIO;
-  if (stageHeight > ch && ch > 0) {
-    stageHeight = ch;
-    stageWidth = ch * LP_BG_RATIO;
-  }
-
+   const stageWidth = containerWidth;
+  const stageHeight = containerWidth / LP_BG_RATIO;
+ 
   const handlePress = (key) => {
     playSound('click');
     if (key === 'europa') { onEnterRegion('europa'); }
@@ -533,52 +526,56 @@ function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion 
     else if (key === 'afrika') { onEnterRegion('afrika'); }
     // amerika / azsia: hamarosan érkezik, jelenleg nincs célnézet
   };
-
+ 
   return (
     <Shell>
-    <View
-      style={styles.landingContainer}
-      onLayout={(e) => setContainerSize({ width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height })}
-    >
+    <View style={styles.landingContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#0a0a06" />
-
-      {cw > 0 && (
-        <View style={[styles.landingStage, { width: stageWidth, height: stageHeight }]}>
-          <Image
-            source={require('./assets/images/landing_menu_bg.png')}
-            style={styles.absoluteBackground}
-            resizeMode="stretch"
-          />
-
-          {/* 5 nyílgomb a sávok jobb szélén, függőlegesen középre a saját sávjukban */}
-          {LANDING_NAV_BUTTONS.map((btn) => (
-            <LaserBorderButton
-              key={btn.key}
-              style={{
-                position: 'absolute',
-                right: '4%',
-                top: `${btn.centerY}%`,
-                width: 56,
-                height: 56,
-                marginTop: -28,
-                borderRadius: 28,
-                backgroundColor: 'rgba(10,10,8,0.35)',
-              }}
-              color={btn.color}
-              borderRadius={28}
-              onPress={() => handlePress(btn.key)}
-            >
-              <View style={styles.navArrowWrap} pointerEvents="none">
-                <Text style={styles.navArrowText}>›</Text>
-              </View>
-            </LaserBorderButton>
-          ))}
-
-          {/* A "Legyen Ön is Milliomos" kvíz külön, önálló appként lesz publikálva,
-              ezért a sarokgomb innen kikerült. */}
+ 
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View
+          style={{ width: '100%' }}
+          onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
+        >
+          {stageWidth > 0 && (
+            <View style={[styles.landingStage, { width: stageWidth, height: stageHeight, alignSelf: 'center' }]}>
+              <Image
+                source={require('./assets/images/landing_menu_bg.png')}
+                style={styles.absoluteBackground}
+                resizeMode="stretch"
+              />
+ 
+              {/* 5 nyílgomb a sávok jobb szélén, függőlegesen középre a saját sávjukban */}
+              {LANDING_NAV_BUTTONS.map((btn) => (
+                <LaserBorderButton
+                  key={btn.key}
+                  style={{
+                    position: 'absolute',
+                    right: '4%',
+                    top: `${btn.centerY}%`,
+                    width: 56,
+                    height: 56,
+                    marginTop: -28,
+                    borderRadius: 28,
+                    backgroundColor: 'rgba(10,10,8,0.35)',
+                  }}
+                  color={btn.color}
+                  borderRadius={28}
+                  onPress={() => handlePress(btn.key)}
+                >
+                  <View style={styles.navArrowWrap} pointerEvents="none">
+                    <Text style={styles.navArrowText}>›</Text>
+                  </View>
+                </LaserBorderButton>
+              ))}
+            </View>
+          )}
         </View>
-      )}
-
+      </ScrollView>
+ 
       <MuteButton />
     </View>
     </Shell>
