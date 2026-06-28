@@ -42,7 +42,7 @@
     "felfedezo": "William Walker amatőr fosszíliagyűjtő",
     "leiras": "Ezt a halászó életmódra specializálódott, krokodilszerűen megnyúlt koponyával rendelkező ragadozót egy amatőr fosszíliagyűjtő találta meg egy angliai agyagbányában. Hatalmas, sarló alakú karmai és kónikus fogai a halászatra utalnak, amit a csontváz gyomortartalmában talált halpikkelyek és maradványok is megerősítettek. Ez volt az első olyan dinoszaurusz, amelynél közvetlen bizonyíték került elő a halétrendre.",
     "szint": "általános iskola",
-    "csomag": 1
+    "csomag": 4
   },
   {
     "nev_tudomanyos": "Compsognathus longipes",
@@ -57,7 +57,7 @@
     "felfedezo": "Andreas Wagner",
     "leiras": "Ez az apró, fürge ragadozó a híres solnhofeni mészkőből került elő, ugyanabból a finom szemcséjű üledékből, amely az Archaeopteryx csontvázait is megőrizte. A szinte tökéletes állapotban fennmaradt csontvázak révén sokáig az egyik legkisebb ismert dinoszauruszként tartották számon. Gyors mozgású, apró gerinces zsákmányra (gyíkokra, rovarokra) specializálódott ragadozó volt.",
     "szint": "általános iskola",
-    "csomag": 1
+    "csomag": 3
   },
   {
     "nev_tudomanyos": "Plateosaurus engelhardti",
@@ -87,7 +87,7 @@
     "felfedezo": "solnhofeni kőfejtő munkások, leírta Hermann von Meyer",
     "leiras": "Bár leginkább a madarak ősének tartják, anatómiailag valójában egy tollas theropoda dinoszaurusz a jura időszak végéről. Tollas szárnyai mellett még hüllőszerű fogai, hosszú csontos farka és karmos ujjai is megmaradtak, így a tudománytörténet egyik leghíresebb 'átmeneti formájává' vált. Fosszíliái ugyanabból a finom solnhofeni mészkőből kerültek elő, mint a Compsognathus csontvázai.",
     "szint": "általános iskola",
-    "csomag": 2
+    "csomag": 3
   },
   {
     "nev_tudomanyos": "Hylaeosaurus armatus",
@@ -102,7 +102,7 @@
     "felfedezo": "Gideon Mantell",
     "leiras": "A történelemben harmadikként hivatalosan elnevezett dinoszaurusznem, a Megalosaurus és az Iguanodon mellett a tudomány egyik első három felismert dinoszaurusza. Ez a korai páncélos növényevő hosszú, hegyes tüskékkel védte testének oldalát és hátát a ragadozók ellen. A róla elnevezett Ankylosauria csoport később a legjobban védett, legpáncélosabb dinoszauruszokat foglalta magába.",
     "szint": "általános iskola",
-    "csomag": 2
+    "csomag": 1
   },
   {
     "nev_tudomanyos": "Hypsilophodon foxii",
@@ -117,7 +117,7 @@
     "felfedezo": "William Fox",
     "leiras": "Kistermetű, finom felépítésű, madármedencéjű növényevő, amely hosszú lábaival rendkívül gyors futásra volt képes. A kutatók sokáig hibásan azt feltételezték, hogy fán élő, ágakon ugráló állat volt, ám a mai elemzések szerint kizárólag a talajon mozgott. Az Isle of Wight szigetén talált, viszonylag gyakori maradványai segítettek megérteni a kora kréta időszaki angliai ökoszisztéma kisebb növényevőit.",
     "szint": "általános iskola",
-    "csomag": 2
+    "csomag": 3
   },
   {
     "nev_tudomanyos": "Scelidosaurus harrisonii",
@@ -132,7 +132,7 @@
     "felfedezo": "James Harrison, leírta Richard Owen",
     "leiras": "Az egyik legkorábbi és egyben legteljesebb állapotban megőrződött páncélos dinoszaurusz a kora jura időszakból. Apró, csontos bütykökkel és tüskékkel borított teste alapján a kutatók ma egy olyan 'átmeneti' formának tekintik, amely még a páncélos dinoszauruszok két nagy ága, az ankylosauriák és a stegosauriák szétválása előtt élt. Csontvázának szokatlanul jó megőrződése miatt sokat tudunk a koponyájának és fogazatának apró részleteiről is.",
     "szint": "általános iskola",
-    "csomag": 3
+    "csomag": 2
   },
   {
     "nev_tudomanyos": "Europasaurus holgeri",
@@ -147,7 +147,7 @@
     "felfedezo": "Holger Lüdtke nyomán elnevezve, Oliver Hartung csapata",
     "leiras": "Egy jura időszaki hosszú nyakú sauropoda, amely az egykori szigetvilág elszigeteltsége miatt jóval kisebb termetűre nőtt, mint kontinentális rokonai. Ez a jelenség, az úgynevezett szigeti törpülés, jól megfigyelhető a csontjainak növekedési vonalain is. Felfedezése bizonyította, hogy a sauropodák, a dinoszauruszok legnagyobb testű csoportja, is képesek voltak drasztikusan lecsökkenni méretben kedvezőtlen környezeti körülmények között.",
     "szint": "általános iskola",
-    "csomag": 3
+    "csomag": 2
   },
   {
     "nev_tudomanyos": "Neovenator salerii",
@@ -162,7 +162,7 @@
     "felfedezo": "Steve Hutt csapata",
     "leiras": "Az európai kora kréta időszak egyik legfélelmetesebb csúcsragadozója, egy nagytestű allosauroidea theropoda az Isle of Wight szigetéről. Csontvázának viszonylag teljes megőrződése révén az egyik legjobban ismert nagytestű ragadozó dinoszaurusz egész Európában. Karcsú, hosszú lábai gyors mozgásra utalnak, amellyel könnyen üldözhette a kora kréta időszak növényevőit.",
     "szint": "általános iskola",
-    "csomag": 3
+    "csomag": 4
   },
   {
     "nev_tudomanyos": "Concavenator corcovatus",
@@ -177,7 +177,7 @@
     "felfedezo": "Francisco Ortega csapata",
     "leiras": "Ezt a különleges ragadozót a háta közepén végighúzódó, magas csigolyákból kialakult jellegzetes púp különbözteti meg minden más theropodától. Az alkarján talált apró, dudorszerű kiemelkedések egyesek szerint tollszerű képződmények rögzítési pontjai lehettek, ami felvetette a tollasodás kérdését olyan dinoszauruszoknál is, amelyek nem álltak közel a madarakhoz. A híres Las Hoyas lelőhelyről, Spanyolország egyik leggazdagabb kréta kori fosszíliatárából került elő.",
     "szint": "általános iskola",
-    "csomag": 3
+    "csomag": 4
   },
   {
     "nev_tudomanyos": "Pelecanimimus polyodon",
@@ -192,7 +192,7 @@
     "felfedezo": "Bernardino Pérez-Moreno csapata",
     "leiras": "Egy korai, primitív 'struccdinó', amelynek állkapcsában a kutatók több mint 200 apró fogat számoltak meg, szemben a későbbi ornithomimosaurusok teljesen fogatlan csőrével. A csontváz mellett egy bőrlebeny lenyomatát is megtalálták a torka környékén, amely egy pelikánszerű, táguló bőrtasakra utalhatott, innen ered a neve is. A híres spanyolországi Las Hoyas lelőhely egyik legkülönlegesebb fosszíliája.",
     "szint": "általános iskola",
-    "csomag": 4
+    "csomag": 3
   },
   {
     "nev_tudomanyos": "Miragaia longicollum",
@@ -222,7 +222,7 @@
     "felfedezo": "James Phillips munkásai, leírta Alick Walker",
     "leiras": "Ennek a jura időszaki megalosaurida ragadozónak egy fiatal egyedének majdnem teljes csontvázát találták meg, amely tengeri eredetű üledékben őrződött meg. A kutatók szerint a tetem valószínűleg a folyókon keresztül juthatott ki a nyílt tengerbe, mielőtt elsüllyedt és lerakódott az iszapba. A leletnek köszönhetően az egyik legjobban ismert európai megalosaurida vált belőle, annak ellenére, hogy csak egy fiatalkori egyed maradványait sikerült feltárni.",
     "szint": "általános iskola",
-    "csomag": 4
+    "csomag": 2
   },
   {
     "nev_tudomanyos": "Scipionyx samniticus",
@@ -237,7 +237,7 @@
     "felfedezo": "amatőr fosszíliagyűjtő, leírta Cristiano Dal Sasso",
     "leiras": "Egy apró theropoda, amelynek egyetlen ismert, kikelés után rövid idővel elpusztult egyedének fosszíliájában a belső szervek, az izomzat és a bélrendszer lenyomatai is épségben megmaradtak. Ez a 'Ciro' becenevű lelet az egyik legritkább és legértékesebb dinoszaurusz-fosszília, amely betekintést enged a dinoszauruszok belső anatómiájába. Az olaszországi lelőhely finom üledéke tette lehetővé a puha szövetek ilyen kivételes megőrződését.",
     "szint": "általános iskola",
-    "csomag": 4
+    "csomag": 3
   },
   {
     "nev_tudomanyos": "Cetiosaurus oxoniensis",
@@ -252,7 +252,7 @@
     "felfedezo": "leírta Richard Owen",
     "leiras": "Ez volt a tudomány által elsőként felfedezett és leírt sauropoda, azaz hosszú nyakú óriás dinoszaurusz, bár felfedezésekor Richard Owen óriási tengeri hüllőnek, egy hatalmas krokodilszerű állatnak vélte a hatalmas csigolyák alapján. Csak később vált nyilvánvalóvá, hogy egy szárazföldi, négylábú növényevő csontjairól van szó. Neve, jelentése 'bálnagyík', máig őrzi ezt a korai téves azonosítást.",
     "szint": "általános iskola",
-    "csomag": 5
+    "csomag": 1
   },
   {
     "nev_tudomanyos": "Lourinhanosaurus antunesi",
@@ -267,7 +267,7 @@
     "felfedezo": "leírta Octávio Mateus",
     "leiras": "Egy nagytestű késő jura időszaki ragadozó Portugáliából, amelynek a kutatók egy megkövesedett fészkét és tojásait is sikerült feltárniuk. Ez a lelet az egyik legritkább közvetlen bizonyítékot adja a jura időszaki európai dinoszauruszok szaporodási szokásairól. A tojások belsejében embriók maradványait is megtalálták, amelyek segítettek megérteni a faj fejlődésének korai szakaszát.",
     "szint": "általános iskola",
-    "csomag": 5
+    "csomag": 2
   },
   {
     "nev_tudomanyos": "Polacanthus foxii",
@@ -282,7 +282,7 @@
     "felfedezo": "William Fox",
     "leiras": "Ezt a súlyos páncélzattal, hosszú tüskékkel és egy merev, csontos csípőpajzzsal rendelkező növényevőt az Isle of Wight szigetén fedezték fel. Hátán és farkán végighúzódó tüskesor hatékony védelmet adott a kora kréta időszak ragadozóival szemben, ám farkának végén, a későbbi ankylosauridáktól eltérően, nem fejlődött ki csontos bunkó. Az egyik legkorábbi és legjobban ismert páncélos dinoszaurusz Európában.",
     "szint": "általános iskola",
-    "csomag": 5
+    "csomag": 4
   },
   {
     "nev_tudomanyos": "Mantellisaurus atherfieldensis",
@@ -297,6 +297,6 @@
     "felfedezo": "leírta Reginald Hooley",
     "leiras": "Az Iguanodon közeli, ám annál jóval karcsúbb és könnyedebb felépítésű rokona, amely szintén a kora kréta időszakban élt Angliában. Eredetileg az Iguanodon egyik fajaként, 'Iguanodon atherfieldensis' néven írták le, és csak 2007-ben sorolták át egy önálló nembe a csontváz alaposabb vizsgálata után. Karcsúbb testfelépítése arra utal, hogy gyorsabban és könnyedebben mozoghatott, mint robusztusabb rokona.",
     "szint": "általános iskola",
-    "csomag": 5
+    "csomag": 1
   }
 ]
