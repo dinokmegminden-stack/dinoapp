@@ -46,7 +46,9 @@ export const EUROPA_PACKAGE_COUNT = EUROPA_PACKAGES.length;
 const IMAGE_MAP = {
   'Megalosaurus bucklandii': require('./assets/images/megalosaurus.jpg'),
   'Iguanodon bernissartensis': require('./assets/images/Iguanodon2.jpg'),
-  'Baryonyx walkeri': require('./assets/images/baryonyx.jpg'),
+  'Baryonyx walkeri': require('./assets/images/baryonyx.jpg'), //baryonyx
+  'Eotrachodon orientalis': require('./assets/images/eotrachodon.jpg'),
+
   'Compsognathus': require('./assets/images/compsognathus.jpg'),
   'Archaeopteryx': require('./assets/images/archaeopteryx.jpg'),
   'Hylaeosaurus': require('./assets/images/hylaeosaurus.jpg'),
