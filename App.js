@@ -671,6 +671,47 @@ export default function App() {
   const [activePackage, setActivePackage] = useState(null);
   const [quizKey, setQuizKey] = useState(0);
 
+  // A 3 induló régió (Kárpát-medence, Európa, Afrika) saját Packages/Browse/Quiz
+  // komponensekkel rendelkezik (más-más Supabase-régiókulcs, más-más képmappa),
+  // de a 'view' state ugyanazt a 3 nevet használja mindháromnál — itt választjuk
+  // ki a megfelelőt. A dínó-adatokat a *_useData hookok töltik be Supabase-ből
+  // (region-specifikusan, cache-elve), csak akkor, ha az adott régió aktív.
+  // FONTOS: ezeknek a hookoknak feltétel nélkül, minden render alkalmával,
+  // a komponens legelején kell futniuk (React hooks-szabály) — ezért vannak
+  // itt, minden korai `return` ELŐTT, nem pedig a routing-blokk közelében.
+  const isRegionViewActive = ['packages', 'packageBrowse', 'packageQuiz'].includes(view);
+  const karpatData = useKarpatData(isRegionViewActive && region === 'karpat_medence');
+  const europaData = useEuropaData(isRegionViewActive && region === 'europa');
+  const afrikaData = useAfrikaData(isRegionViewActive && region === 'afrika');
+
+  const REGION_SCREENS = {
+    karpat_medence: {
+      Packages: PackagesScreen,
+      Browse: PackageBrowseScreen,
+      Quiz: PackageQuizScreen,
+      data: karpatData,
+    },
+    europa: {
+      Packages: EuropaPackagesScreen,
+      Browse: EuropaPackageBrowseScreen,
+      Quiz: EuropaPackageQuizScreen,
+      data: europaData,
+    },
+    afrika: {
+      Packages: AfrikaPackagesScreen,
+      Browse: AfrikaPackageBrowseScreen,
+      Quiz: AfrikaPackageQuizScreen,
+      data: afrikaData,
+    },
+  };
+  const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat_medence;
+  const {
+    packages: regionPackages,
+    creatures: regionCreatures,
+    loading: regionLoading,
+    error: regionError,
+  } = screens.data;
+
   useEffect(() => {
     (async () => {
       const stored = await loadNickname();
@@ -763,44 +804,6 @@ export default function App() {
       />
     );
   }
-
-  // A 3 induló régió (Kárpát-medence, Európa, Afrika) saját Packages/Browse/Quiz
-  // komponensekkel rendelkezik (más-más Supabase-régiókulcs, más-más képmappa),
-  // de a 'view' state ugyanazt a 3 nevet használja mindháromnál — itt választjuk
-  // ki a megfelelőt. A dínó-adatokat a *_useData hookok töltik be Supabase-ből
-  // (region-specifikusan, cache-elve), csak akkor, ha az adott régió aktív.
-  const isRegionViewActive = ['packages', 'packageBrowse', 'packageQuiz'].includes(view);
-  const karpatData = useKarpatData(isRegionViewActive && region === 'karpat_medence');
-  const europaData = useEuropaData(isRegionViewActive && region === 'europa');
-  const afrikaData = useAfrikaData(isRegionViewActive && region === 'afrika');
-
-  const REGION_SCREENS = {
-    karpat_medence: {
-      Packages: PackagesScreen,
-      Browse: PackageBrowseScreen,
-      Quiz: PackageQuizScreen,
-      data: karpatData,
-    },
-    europa: {
-      Packages: EuropaPackagesScreen,
-      Browse: EuropaPackageBrowseScreen,
-      Quiz: EuropaPackageQuizScreen,
-      data: europaData,
-    },
-    afrika: {
-      Packages: AfrikaPackagesScreen,
-      Browse: AfrikaPackageBrowseScreen,
-      Quiz: AfrikaPackageQuizScreen,
-      data: afrikaData,
-    },
-  };
-  const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat_medence;
-  const {
-    packages: regionPackages,
-    creatures: regionCreatures,
-    loading: regionLoading,
-    error: regionError,
-  } = screens.data;
 
   // Egyszerű betöltő/hiba képernyő, amíg a Supabase-fetch lefut (cache-ből
   // a következő alkalommal már azonnali lesz).
