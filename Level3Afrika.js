@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
 import { getCreaturesByRegion, adaptCreature } from './services/creaturesService';
+import DinoCard from './DinoCard';
 
 // ============================================================
 // 3. SZINT — AFRIKA — CSOMAGOS RENDSZER (Supabase-forrás)
@@ -265,26 +266,7 @@ export function AfrikaPackageBrowseScreen({ csomag, packages, onStartQuiz, onBac
         <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
       </View>
 
-      <ScrollView style={s.browseCard} showsVerticalScrollIndicator={false}>
-        <View style={s.dinoImageArea}>
-          {resolveImage(dino) ? (
-            <Image source={resolveImage(dino)} style={s.dinoImage} resizeMode="contain" />
-          ) : (
-            <Text style={s.dinoImageFallback}>🦖</Text>
-          )}
-        </View>
-        <Text style={s.dinoSci}>{dino.nev_tudomanyos}</Text>
-        <Text style={s.dinoCommon}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
-        <View style={s.dinoInfoRow}>
-          <Text style={s.dinoInfoItem}>🕒 {dino.korszak}</Text>
-          <Text style={s.dinoInfoItem}>📏 {dino.hossz}</Text>
-        </View>
-        <Text style={s.sectionLabel}>Felfedező</Text>
-        <Text style={s.bodyText}>{dino.felfedezo}</Text>
-        <Text style={s.sectionLabel}>Leírás</Text>
-        <Text style={[s.bodyText, { color: C.gold }]}>{dino.leiras}</Text>
-        <View style={{ height: 16 }} />
-      </ScrollView>
+      <DinoCard dino={dino} imageSource={resolveImage(dino)} showTimeline={false} />
 
       <View style={s.browseNavRow}>
         <TouchableOpacity

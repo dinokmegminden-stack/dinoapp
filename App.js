@@ -188,6 +188,7 @@ import {
   AfrikaPackageQuizScreen,
   useAfrikaData,
 } from './Level3Afrika';
+import DinoCard from './DinoCard';
 
 // --- AUDIO SYSTEM ---
 // Egyszerű UI kattanás hang (online forrás, marad ahogy volt)
@@ -410,21 +411,6 @@ const IMAGE_MAP = {
 // lapos tömbként érkezik, közvetlenül hozzárendelhetjük a listához.
 const karpatDinoList = karpatDinosaurs;
 
-function getCardColor(dino) {
-  if (!dino) return { bg: COLORS.bg, accent: COLORS.border, text: COLORS.textPrimary };
-  const csoport = dino.csoport?.toLowerCase() || '';
-  const korszak = dino.korszak?.toLowerCase() || '';
-  if (korszak.includes('triász')) return { bg: COLORS.amberBg, accent: COLORS.amberLight, text: COLORS.amber };
-  if (csoport.includes('sauropoda') || csoport.includes('ornithopoda') || csoport.includes('plateosauria')) {
-    return { bg: COLORS.greenBg, accent: COLORS.greenLight, text: COLORS.green };
-  }
-  if (csoport.includes('spinosauridae') || csoport.includes('allosauridae') || csoport.includes('megalosauridae') ||
-      csoport.includes('abelisauridae') || csoport.includes('carcharodontosauridae') || csoport.includes('coelophysoidea')) {
-    return { bg: COLORS.coralBg, accent: COLORS.coralLight, text: COLORS.coral };
-  }
-  return { bg: COLORS.blueBg, accent: COLORS.blueLight, text: COLORS.blue };
-}
-
 // --- MODERN GENERÁLT DÍNÓTUDÓS LOGÓ ---
 function DinoTudosLogo() {
   return (
@@ -591,63 +577,6 @@ function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion 
       <MuteButton />
     </View>
     </Shell>
-  );
-}
-
-import PeriodTimeline from './PeriodTimeline';
-
-// --- ADATBÁZIS KÁRTYA ELEMEK ---
-function StatBox({ label, value }) {
-  return (
-    <View style={styles.statBox}>
-      <Text style={styles.statLabel}>{label}</Text>
-      <Text style={styles.statValue}>{value}</Text>
-    </View>
-  );
-}
-
-function fmtVal(val, suffix = '') {
-  if (val === null || val === undefined || val === '' || val === 'n/a') return 'ismeretlen';
-  return `${typeof val === 'number' ? val.toLocaleString() : val}${suffix}`;
-}
-
-function DinoCard({ dino, index, total }) {
-  if (!dino) return null;
-  const color = getCardColor(dino);
-  const image = IMAGE_MAP[dino.nev_tudomanyos] || null;
-  const { width: cardWidth } = useWindowDimensions();
-  const isWideWeb = Platform.OS === 'web' && cardWidth >= 700;
-  return (
-    <View style={styles.card}>
-      <View style={styles.timelineWrap}>
-        <PeriodTimeline korMillioev={dino.kor_millioev} />
-      </View>
-      <View style={[styles.cardImageArea, isWideWeb && styles.cardImageAreaWide, { backgroundColor: color.bg }]}>
-        {image ? (
-          <Image source={image} style={styles.dinoImage} resizeMode="contain" />
-        ) : (
-          <Text style={[styles.fallbackEmoji, { color: color.accent }]}>
-            {dino.csoport?.toLowerCase().includes('sauropoda') ? '🦕' : '🦖'}
-          </Text>
-        )}
-      </View>
-      <ScrollView style={styles.cardBody} showsVerticalScrollIndicator={false}>
-        <Text style={styles.scientificName}>{dino.nev_tudomanyos}</Text>
-        <Text style={styles.commonName}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
-        <View style={styles.infoTextRow}>
-          <Text style={styles.infoTextItem}>🕒 {fmtVal(dino.korszak)}</Text>
-          <Text style={styles.infoTextItem}>📍 {fmtVal(dino.megtalalas_helye)}</Text>
-          <Text style={styles.infoTextItem}>🌿 {fmtVal(dino.taplalek)}</Text>
-          <Text style={styles.infoTextItem}>📏 {fmtVal(dino.hossz)}</Text>
-        </View>
-        <View style={styles.divider} />
-        <Text style={styles.sectionLabel}>Felfedező</Text>
-        <Text style={styles.bodyText}>{fmtVal(dino.felfedezo)}</Text>
-        <Text style={styles.sectionLabel}>Leírás</Text>
-        <Text style={[styles.bodyText, styles.highlight]}>{fmtVal(dino.leiras)}</Text>
-        <View style={{ height: 24 }} />
-      </ScrollView>
-    </View>
   );
 }
 
@@ -914,7 +843,7 @@ export default function App() {
       <View style={styles.cardContainer}>
         {filteredDinosaurs.length > 0 ? (
           <Animated.View style={[position.getTranslateTransform(), { flex: 1, width: '100%' }]}>
-            <DinoCard dino={dino} index={currentIndex} total={filteredDinosaurs.length} />
+            <DinoCard dino={dino} imageSource={IMAGE_MAP[dino.nev_tudomanyos]} showTimeline={true} />
           </Animated.View>
         ) : (
           <View style={styles.emptyCard}>
