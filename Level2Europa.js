@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,18 +10,16 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import dinosaurs from './data/europa.json';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
+import { getCreaturesByRegion, adaptCreature } from './services/creaturesService';
 
 // ============================================================
-// 2. SZINT — EURÓPA — CSOMAGOS RENDSZER
+// 2. SZINT — EURÓPA — CSOMAGOS RENDSZER (Supabase-forrás)
 // ============================================================
-// 20 dínó, 5 csomagban (4-4-4-4-4), a europa.json "csomag"
+// 20 dínó, 5 csomagban (4-4-4-4-4), a creatures tábla "pack_number"
 // mezője alapján csoportosítva. Ugyanaz a zárolási logika, mint az
 // 1. szintnél: egy csomag csak az előző csomag hibátlan (5/5) tesztje
-// után nyílik ki.
-
-const europaDinoList = dinosaurs;
+// után nyílik ki. A dínó-adatok Supabase-ből jönnek (region: 'europa').
 
 function groupByPackage(list) {
   const map = {};
@@ -36,8 +34,36 @@ function groupByPackage(list) {
     .map((csomag) => ({ csomag, dinos: map[csomag] }));
 }
 
-export const EUROPA_PACKAGES = groupByPackage(europaDinoList);
-export const EUROPA_PACKAGE_COUNT = EUROPA_PACKAGES.length;
+export const EUROPA_PACKAGE_COUNT_FALLBACK = 5;
+
+export function useEuropaData(enabled = true) {
+  const [creatures, setCreatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let mounted = true;
+    (async () => {
+      setLoading(true);
+      const { data, error } = await getCreaturesByRegion('europa');
+      if (!mounted) return;
+      if (error) {
+        setError(error);
+      } else {
+        setCreatures((data || []).map(adaptCreature));
+      }
+      setLoading(false);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [enabled]);
+
+  const packages = useMemo(() => groupByPackage(creatures), [creatures]);
+
+  return { creatures, packages, loading, error };
+}
 
 // Dínó képek (a meglévő képfájlokból azok, amik az új listában is szerepelnek;
 // az újonnan felvett fajoknál — Compsognathus, Archaeopteryx, Hylaeosaurus,
@@ -68,12 +94,17 @@ const IMAGE_MAP = {
   'Mantellisaurus atherfieldensis': require('./assets/images/mantellisaurus.jpg'),
 };
 
+function resolveImage(dino) {
+  if (dino.image_url) return { uri: dino.image_url };
+  return IMAGE_MAP[dino.nev_tudomanyos] || null;
+}
+
 // --- HALADÁS ---
 // A haladás mentését/betöltését mostantól a régiófüggetlen regionProgress.js
 // végzi (region id: 'europa'). Itt csak a csomag<->packId megfeleltetés maradt.
 
 // Csomag (1,2,3...) -> regionProgress packId (eu_pack1, eu_pack2...)
-// Az EUROPA_PACKAGES sorrendje és a REGION_PACKS.europa sorrendje egyezik.
+// A Supabase pack_number sorrendje és a REGION_PACKS.europa sorrendje egyezik.
 export function csomagToPackId(csomag) {
   return REGION_PACKS.europa[csomag - 1];
 }
@@ -109,7 +140,7 @@ function pickDistractors(correctValue, pool, field, count = 3) {
     ...new Set(
       pool
         .map((d) => d[field])
-        .filter((v) => v && v !== 'n/a' && v !== correctValue)
+        .filter((v) => v && v !== 'ismeretlen' && v !== correctValue)
     ),
   ];
   let distractors = shuffle(values).slice(0, count);
@@ -125,7 +156,6 @@ function pickDistractors(correctValue, pool, field, count = 3) {
 const QUESTION_TEMPLATES = [
   { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
   { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
-  { field: 'megtalalas_helye', text: (d) => `Hol találták meg a ${d.nev_koznapi} maradványait?` },
   { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
   { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
 ];
@@ -141,7 +171,7 @@ function buildQuestion(dino, template, pool) {
   };
 }
 
-export function generateEuropaQuestions(packageDinos, fullPool = europaDinoList, count = 5) {
+export function generateEuropaQuestions(packageDinos, fullPool, count = 5) {
   let combos = [];
   packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
   combos = shuffle(combos).slice(0, count);
@@ -176,7 +206,7 @@ function L2Shell({ children }) {
 }
 
 // --- CSOMAGVÁLASZTÓ KÉPERNYŐ (2. SZINT) ---
-export function EuropaPackagesScreen({ progress, onOpenPackage, onBack }) {
+export function EuropaPackagesScreen({ progress, packages, onOpenPackage, onBack }) {
   return (
     <L2Shell>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
@@ -192,7 +222,7 @@ export function EuropaPackagesScreen({ progress, onOpenPackage, onBack }) {
           teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
         </Text>
 
-        {EUROPA_PACKAGES.map(({ csomag, dinos }) => {
+        {packages.map(({ csomag, dinos }) => {
           const unlocked = isEuropaPackageUnlocked(progress, csomag);
           const passed = isEuropaPackagePassed(progress, csomag);
           return (
@@ -226,8 +256,8 @@ export function EuropaPackagesScreen({ progress, onOpenPackage, onBack }) {
 }
 
 // --- DÍNÓ-BÖNGÉSZŐ EGY CSOMAGON BELÜL ---
-export function EuropaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
-  const pack = EUROPA_PACKAGES.find((p) => p.csomag === csomag);
+export function EuropaPackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
   const dinos = pack ? pack.dinos : [];
   const [index, setIndex] = useState(0);
   const dino = dinos[index];
@@ -246,8 +276,8 @@ export function EuropaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
 
       <ScrollView style={s.browseCard} showsVerticalScrollIndicator={false}>
         <View style={s.dinoImageArea}>
-          {IMAGE_MAP[dino.nev_tudomanyos] ? (
-            <Image source={IMAGE_MAP[dino.nev_tudomanyos]} style={s.dinoImage} resizeMode="contain" />
+          {resolveImage(dino) ? (
+            <Image source={resolveImage(dino)} style={s.dinoImage} resizeMode="contain" />
           ) : (
             <Text style={s.dinoImageFallback}>🦖</Text>
           )}
@@ -256,7 +286,6 @@ export function EuropaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
         <Text style={s.dinoCommon}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
         <View style={s.dinoInfoRow}>
           <Text style={s.dinoInfoItem}>🕒 {dino.korszak}</Text>
-          <Text style={s.dinoInfoItem}>📍 {dino.megtalalas_helye}</Text>
           <Text style={s.dinoInfoItem}>📏 {dino.hossz}</Text>
         </View>
         <Text style={s.sectionLabel}>Felfedező</Text>
@@ -291,9 +320,9 @@ export function EuropaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
 }
 
 // --- CSOMAGTESZT — 5 KÉRDÉS, HIBÁTLAN KELL A TOVÁBBJUTÁSHOZ ---
-export function EuropaPackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
-  const pack = EUROPA_PACKAGES.find((p) => p.csomag === csomag);
-  const questions = useRef(generateEuropaQuestions(pack ? pack.dinos : [])).current;
+export function EuropaPackageQuizScreen({ csomag, packages, creatures, onPassed, onRetry, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
+  const questions = useRef(generateEuropaQuestions(pack ? pack.dinos : [], creatures)).current;
 
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);

@@ -167,6 +167,7 @@ import {
   PackageQuizScreen,
   loadNickname,
   saveNickname,
+  useKarpatData,
 } from './Level1Karpat';
 import {
   loadProgress,
@@ -179,11 +180,13 @@ import {
   EuropaPackagesScreen,
   EuropaPackageBrowseScreen,
   EuropaPackageQuizScreen,
+  useEuropaData,
 } from './Level2Europa';
 import {
   AfrikaPackagesScreen,
   AfrikaPackageBrowseScreen,
   AfrikaPackageQuizScreen,
+  useAfrikaData,
 } from './Level3Afrika';
 
 // --- AUDIO SYSTEM ---
@@ -693,7 +696,7 @@ export default function App() {
   const position = useRef(new Animated.ValueXY()).current;
   const { width: appWidth } = useWindowDimensions();
 
-  const activeDinosaurs = region === 'karpat' ? karpatDinoList : dinosaurs;
+  const activeDinosaurs = region === 'karpat_medence' ? karpatDinoList : dinosaurs;
 
   const filteredDinosaurs = activeDinosaurs.filter((dino) => {
     const matchesPeriod = selectedPeriod === 'Mind' || dino.korszak?.toLowerCase().includes(selectedPeriod.toLowerCase());
@@ -762,32 +765,76 @@ export default function App() {
   }
 
   // A 3 induló régió (Kárpát-medence, Európa, Afrika) saját Packages/Browse/Quiz
-  // komponensekkel rendelkezik (más-más JSON, más-más képmappa), de a 'view' state
-  // ugyanazt a 3 nevet használja mindháromnál — itt választjuk ki a megfelelőt.
+  // komponensekkel rendelkezik (más-más Supabase-régiókulcs, más-más képmappa),
+  // de a 'view' state ugyanazt a 3 nevet használja mindháromnál — itt választjuk
+  // ki a megfelelőt. A dínó-adatokat a *_useData hookok töltik be Supabase-ből
+  // (region-specifikusan, cache-elve), csak akkor, ha az adott régió aktív.
+  const isRegionViewActive = ['packages', 'packageBrowse', 'packageQuiz'].includes(view);
+  const karpatData = useKarpatData(isRegionViewActive && region === 'karpat_medence');
+  const europaData = useEuropaData(isRegionViewActive && region === 'europa');
+  const afrikaData = useAfrikaData(isRegionViewActive && region === 'afrika');
+
   const REGION_SCREENS = {
     karpat_medence: {
       Packages: PackagesScreen,
       Browse: PackageBrowseScreen,
       Quiz: PackageQuizScreen,
+      data: karpatData,
     },
     europa: {
       Packages: EuropaPackagesScreen,
       Browse: EuropaPackageBrowseScreen,
       Quiz: EuropaPackageQuizScreen,
+      data: europaData,
     },
     afrika: {
       Packages: AfrikaPackagesScreen,
       Browse: AfrikaPackageBrowseScreen,
       Quiz: AfrikaPackageQuizScreen,
+      data: afrikaData,
     },
   };
   const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat_medence;
+  const {
+    packages: regionPackages,
+    creatures: regionCreatures,
+    loading: regionLoading,
+    error: regionError,
+  } = screens.data;
+
+  // Egyszerű betöltő/hiba képernyő, amíg a Supabase-fetch lefut (cache-ből
+  // a következő alkalommal már azonnali lesz).
+  if (isRegionViewActive && regionLoading) {
+    return (
+      <Shell>
+        <View style={[styles.quizContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+          <Text style={{ color: '#FEFAE0', fontSize: 16 }}>Dínók betöltése…</Text>
+        </View>
+      </Shell>
+    );
+  }
+
+  if (isRegionViewActive && regionError) {
+    return (
+      <Shell>
+        <View style={[styles.quizContainer, { justifyContent: 'center', alignItems: 'center', padding: 24 }]}>
+          <Text style={{ color: '#FEFAE0', fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
+            Nem sikerült betölteni az adatokat. Ellenőrizd az internetkapcsolatot.
+          </Text>
+          <TouchableOpacity onPress={() => setView('landing')} style={styles.quizBackLink}>
+            <Text style={{ color: COLORS.quizGold, fontSize: 14, fontWeight: '600' }}>← Vissza</Text>
+          </TouchableOpacity>
+        </View>
+      </Shell>
+    );
+  }
 
   if (view === 'packages') {
     const Packages = screens.Packages;
     return (
       <Packages
         progress={progress}
+        packages={regionPackages}
         onOpenPackage={(csomag) => { setActivePackage(csomag); setView('packageBrowse'); }}
         onBack={() => setView('landing')}
       />
@@ -799,6 +846,7 @@ export default function App() {
     return (
       <Browse
         csomag={activePackage}
+        packages={regionPackages}
         onStartQuiz={(csomag) => { setActivePackage(csomag); setQuizKey((k) => k + 1); setView('packageQuiz'); }}
         onBack={() => setView('packages')}
       />
@@ -811,6 +859,8 @@ export default function App() {
       <Quiz
         key={quizKey}
         csomag={activePackage}
+        packages={regionPackages}
+        creatures={regionCreatures}
         onPassed={async (csomag, packId, scoreRatio = 1) => {
           const next = await recordPackQuizResult(nickname, region, packId, scoreRatio);
           setProgress(next);

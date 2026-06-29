@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,18 +10,16 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import dinosaurs from './data/afrika.json';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
+import { getCreaturesByRegion, adaptCreature } from './services/creaturesService';
 
 // ============================================================
-// 3. SZINT — AFRIKA — CSOMAGOS RENDSZER
+// 3. SZINT — AFRIKA — CSOMAGOS RENDSZER (Supabase-forrás)
 // ============================================================
-// 10 dínó, 2 csomagban (5-5), az afrika.json "csomag"
+// 10 dínó, 2 csomagban (5-5), a creatures tábla "pack_number"
 // mezője alapján csoportosítva. Ugyanaz a zárolási logika, mint az
 // 1-2. szintnél: egy csomag csak az előző csomag hibátlan (5/5) tesztje
-// után nyílik ki.
-
-const afrikaDinoList = dinosaurs;
+// után nyílik ki. A dínó-adatok Supabase-ből jönnek (region: 'afrika').
 
 function groupByPackage(list) {
   const map = {};
@@ -36,8 +34,36 @@ function groupByPackage(list) {
     .map((csomag) => ({ csomag, dinos: map[csomag] }));
 }
 
-export const AFRIKA_PACKAGES = groupByPackage(afrikaDinoList);
-export const AFRIKA_PACKAGE_COUNT = AFRIKA_PACKAGES.length;
+export const AFRIKA_PACKAGE_COUNT_FALLBACK = 2;
+
+export function useAfrikaData(enabled = true) {
+  const [creatures, setCreatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let mounted = true;
+    (async () => {
+      setLoading(true);
+      const { data, error } = await getCreaturesByRegion('afrika');
+      if (!mounted) return;
+      if (error) {
+        setError(error);
+      } else {
+        setCreatures((data || []).map(adaptCreature));
+      }
+      setLoading(false);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [enabled]);
+
+  const packages = useMemo(() => groupByPackage(creatures), [creatures]);
+
+  return { creatures, packages, loading, error };
+}
 
 // Dínó képek — a megállapodás szerint minden kép fájlneve a
 // nev_koznapi.jpg sémát követi (kisbetűs, szóköz nélküli fájlnév).
@@ -53,20 +79,25 @@ const IMAGE_MAP = {
   Carcharodontosaurus: require('./assets/images/carcharodontosaurus.jpg'),
   Ouranosaurus: require('./assets/images/ouranosaurus.jpg'),
   Suchomimus: require('./assets/images/suchomimus.jpg'),
-  // Nigersaurus: require('./assets/images/nigersaurus.jpg'),
-  // Majungasaurus: require('./assets/images/majungasaurus.jpg'),
+  Nigersaurus: require('./assets/images/nigersaurus.jpg'),
+  Majungasaurus: require('./assets/images/majungasaurus.jpg'),
   // Giraffatitan: require('./assets/images/giraffatitan.jpg'),
   // Massospondylus: require('./assets/images/massospondylus.jpg'),
   // Masiakasaurus: require('./assets/images/masiakasaurus.jpg'),
   // Kentrosaurus: require('./assets/images/kentrosaurus.jpg'),
 };
 
+function resolveImage(dino) {
+  if (dino.image_url) return { uri: dino.image_url };
+  return IMAGE_MAP[dino.nev_koznapi] || null;
+}
+
 // --- HALADÁS ---
 // A haladás mentését/betöltését a régiófüggetlen regionProgress.js végzi
 // (region id: 'afrika'). Itt csak a csomag<->packId megfeleltetés maradt.
 
 // Csomag (1,2...) -> regionProgress packId (af_pack1, af_pack2...)
-// Az AFRIKA_PACKAGES sorrendje és a REGION_PACKS.afrika sorrendje egyezik.
+// A Supabase pack_number sorrendje és a REGION_PACKS.afrika sorrendje egyezik.
 export function csomagToPackId(csomag) {
   return REGION_PACKS.afrika[csomag - 1];
 }
@@ -102,7 +133,7 @@ function pickDistractors(correctValue, pool, field, count = 3) {
     ...new Set(
       pool
         .map((d) => d[field])
-        .filter((v) => v && v !== 'n/a' && v !== correctValue)
+        .filter((v) => v && v !== 'ismeretlen' && v !== correctValue)
     ),
   ];
   let distractors = shuffle(values).slice(0, count);
@@ -118,7 +149,6 @@ function pickDistractors(correctValue, pool, field, count = 3) {
 const QUESTION_TEMPLATES = [
   { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
   { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
-  { field: 'megtalalas_helye', text: (d) => `Hol találták meg a ${d.nev_koznapi} maradványait?` },
   { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
   { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
 ];
@@ -134,7 +164,7 @@ function buildQuestion(dino, template, pool) {
   };
 }
 
-export function generateAfrikaQuestions(packageDinos, fullPool = afrikaDinoList, count = 5) {
+export function generateAfrikaQuestions(packageDinos, fullPool, count = 5) {
   let combos = [];
   packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
   combos = shuffle(combos).slice(0, count);
@@ -167,7 +197,7 @@ function L3Shell({ children }) {
 }
 
 // --- CSOMAGVÁLASZTÓ KÉPERNYŐ (3. SZINT) ---
-export function AfrikaPackagesScreen({ progress, onOpenPackage, onBack }) {
+export function AfrikaPackagesScreen({ progress, packages, onOpenPackage, onBack }) {
   return (
     <L3Shell>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
@@ -183,7 +213,7 @@ export function AfrikaPackagesScreen({ progress, onOpenPackage, onBack }) {
           teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
         </Text>
 
-        {AFRIKA_PACKAGES.map(({ csomag, dinos }) => {
+        {packages.map(({ csomag, dinos }) => {
           const unlocked = isAfrikaPackageUnlocked(progress, csomag);
           const passed = isAfrikaPackagePassed(progress, csomag);
           return (
@@ -217,8 +247,8 @@ export function AfrikaPackagesScreen({ progress, onOpenPackage, onBack }) {
 }
 
 // --- DÍNÓ-BÖNGÉSZŐ EGY CSOMAGON BELÜL ---
-export function AfrikaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
-  const pack = AFRIKA_PACKAGES.find((p) => p.csomag === csomag);
+export function AfrikaPackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
   const dinos = pack ? pack.dinos : [];
   const [index, setIndex] = useState(0);
   const dino = dinos[index];
@@ -237,8 +267,8 @@ export function AfrikaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
 
       <ScrollView style={s.browseCard} showsVerticalScrollIndicator={false}>
         <View style={s.dinoImageArea}>
-          {IMAGE_MAP[dino.nev_koznapi] ? (
-            <Image source={IMAGE_MAP[dino.nev_koznapi]} style={s.dinoImage} resizeMode="contain" />
+          {resolveImage(dino) ? (
+            <Image source={resolveImage(dino)} style={s.dinoImage} resizeMode="contain" />
           ) : (
             <Text style={s.dinoImageFallback}>🦖</Text>
           )}
@@ -247,7 +277,6 @@ export function AfrikaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
         <Text style={s.dinoCommon}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
         <View style={s.dinoInfoRow}>
           <Text style={s.dinoInfoItem}>🕒 {dino.korszak}</Text>
-          <Text style={s.dinoInfoItem}>📍 {dino.megtalalas_helye}</Text>
           <Text style={s.dinoInfoItem}>📏 {dino.hossz}</Text>
         </View>
         <Text style={s.sectionLabel}>Felfedező</Text>
@@ -282,9 +311,9 @@ export function AfrikaPackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
 }
 
 // --- CSOMAGTESZT — 5 KÉRDÉS, HIBÁTLAN KELL A TOVÁBBJUTÁSHOZ ---
-export function AfrikaPackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
-  const pack = AFRIKA_PACKAGES.find((p) => p.csomag === csomag);
-  const questions = useRef(generateAfrikaQuestions(pack ? pack.dinos : [])).current;
+export function AfrikaPackageQuizScreen({ csomag, packages, creatures, onPassed, onRetry, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
+  const questions = useRef(generateAfrikaQuestions(pack ? pack.dinos : [], creatures)).current;
 
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);

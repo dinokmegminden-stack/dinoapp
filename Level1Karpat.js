@@ -12,19 +12,19 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import karpatDinosaurs from './data/karpatok.json';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
+import { getCreaturesByRegion, adaptCreature } from './services/creaturesService';
 
 // ============================================================
-// 1. SZINT — KÁRPÁT-MEDENCE — CSOMAGOS RENDSZER
+// 1. SZINT — KÁRPÁT-MEDENCE — CSOMAGOS RENDSZER (Supabase-forrás)
 // ============================================================
-// 3 csomag (a karpatok.json "csomag" mezője alapján), 4-4-4 dínóval.
+// 3 csomag (a creatures tábla "pack_number" mezője alapján), 4-4-4 dínóval.
 // Egy csomag csak akkor nyílik ki, ha az előző csomag végén lévő
 // 5 kérdéses teszt HIBÁTLANRA sikerül (5/5).
 // A haladást egy becenévhez kötve, lokálisan (AsyncStorage) mentjük —
-// nincs email-regisztráció, nincs backend.
-
-const karpatDinoList = karpatDinosaurs;
+// nincs email-regisztráció, nincs backend-autentikáció.
+// A dínó-adatok mostantól Supabase-ből jönnek (region: 'karpat'),
+// AsyncStorage-cache-eléssel a creaturesService.js-ben.
 
 function groupByPackage(list) {
   const map = {};
@@ -39,8 +39,38 @@ function groupByPackage(list) {
     .map((csomag) => ({ csomag, dinos: map[csomag] }));
 }
 
-export const KARPAT_PACKAGES = groupByPackage(karpatDinoList);
-export const KARPAT_PACKAGE_COUNT = KARPAT_PACKAGES.length;
+// Fallback csomagszám, amíg a Supabase-adat betölt (pl. menü-jelvényhez).
+export const KARPAT_PACKAGE_COUNT_FALLBACK = 3;
+
+// Hook: betölti a Kárpát-medencei dínókat Supabase-ből (cache-elve).
+export function useKarpatData(enabled = true) {
+  const [creatures, setCreatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let mounted = true;
+    (async () => {
+      setLoading(true);
+      const { data, error } = await getCreaturesByRegion('karpat');
+      if (!mounted) return;
+      if (error) {
+        setError(error);
+      } else {
+        setCreatures((data || []).map(adaptCreature));
+      }
+      setLoading(false);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [enabled]);
+
+  const packages = useMemo(() => groupByPackage(creatures), [creatures]);
+
+  return { creatures, packages, loading, error };
+}
 
 // Dínó képek (ugyanazok a fájlok, mint a fő App.js IMAGE_MAP-jében a Kárpát-medencei fajoknál).
 const IMAGE_MAP = {
@@ -57,6 +87,11 @@ const IMAGE_MAP = {
   'Komlosaurus carbonis': require('./assets/images/komlosaurus.jpg'),
   'Balaur bondoc': require('./assets/images/balaur.jpg'),
 };
+
+function resolveImage(dino) {
+  if (dino.image_url) return { uri: dino.image_url };
+  return IMAGE_MAP[dino.nev_tudomanyos] || null;
+}
 
 // --- BECENÉV MENTÉSE (AsyncStorage, nincs email) ---
 // A haladás (progress) mentését/betöltését mostantól a régiófüggetlen
@@ -80,7 +115,7 @@ export async function saveNickname(name) {
 }
 
 // Kárpát-medence csomag (1,2,3...) -> regionProgress packId (km_pack1, km_pack2...)
-// A KARPAT_PACKAGES sorrendje és a REGION_PACKS.karpat_medence sorrendje egyezik.
+// A Supabase pack_number sorrendje és a REGION_PACKS.karpat_medence sorrendje egyezik.
 export function csomagToPackId(csomag) {
   return REGION_PACKS.karpat_medence[csomag - 1];
 }
@@ -116,7 +151,7 @@ function pickDistractors(correctValue, pool, field, count = 3) {
     ...new Set(
       pool
         .map((d) => d[field])
-        .filter((v) => v && v !== 'n/a' && v !== correctValue)
+        .filter((v) => v && v !== 'ismeretlen' && v !== correctValue)
     ),
   ];
   let distractors = shuffle(values).slice(0, count);
@@ -129,10 +164,12 @@ function pickDistractors(correctValue, pool, field, count = 3) {
   return distractors;
 }
 
+// Megjegyzés: a "Hol találták meg..." kérdéssablon kikerült, mert a Supabase
+// creatures táblában nincs külön megtalálási-hely oszlop. Ha később pótoljuk
+// (pl. discovery_location oszlop hozzáadásával), itt visszatehető.
 const QUESTION_TEMPLATES = [
   { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
   { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
-  { field: 'megtalalas_helye', text: (d) => `Hol találták meg a ${d.nev_koznapi} maradványait?` },
   { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
   { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
 ];
@@ -148,7 +185,7 @@ function buildQuestion(dino, template, pool) {
   };
 }
 
-export function generatePackageQuestions(packageDinos, fullPool = karpatDinoList, count = 5) {
+export function generatePackageQuestions(packageDinos, fullPool, count = 5) {
   let combos = [];
   packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
   combos = shuffle(combos).slice(0, count);
@@ -222,7 +259,7 @@ export function NicknameScreen({ onSubmit }) {
 }
 
 // --- CSOMAGVÁLASZTÓ KÉPERNYŐ (1. SZINT) ---
-export function PackagesScreen({ progress, onOpenPackage, onBack }) {
+export function PackagesScreen({ progress, packages, onOpenPackage, onBack }) {
   return (
     <L1Shell>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
@@ -238,7 +275,7 @@ export function PackagesScreen({ progress, onOpenPackage, onBack }) {
           5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
         </Text>
 
-        {KARPAT_PACKAGES.map(({ csomag, dinos }) => {
+        {packages.map(({ csomag, dinos }) => {
           const unlocked = isPackageUnlocked(progress, csomag);
           const passed = isPackagePassed(progress, csomag);
           return (
@@ -272,8 +309,8 @@ export function PackagesScreen({ progress, onOpenPackage, onBack }) {
 }
 
 // --- DÍNÓ-BÖNGÉSZŐ EGY CSOMAGON BELÜL ---
-export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
-  const pack = KARPAT_PACKAGES.find((p) => p.csomag === csomag);
+export function PackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
   const dinos = pack ? pack.dinos : [];
   const [index, setIndex] = useState(0);
   const dino = dinos[index];
@@ -292,8 +329,8 @@ export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
 
       <ScrollView style={s.browseCard} showsVerticalScrollIndicator={false}>
         <View style={s.dinoImageArea}>
-          {IMAGE_MAP[dino.nev_tudomanyos] ? (
-            <Image source={IMAGE_MAP[dino.nev_tudomanyos]} style={s.dinoImage} resizeMode="contain" />
+          {resolveImage(dino) ? (
+            <Image source={resolveImage(dino)} style={s.dinoImage} resizeMode="contain" />
           ) : (
             <Text style={s.dinoImageFallback}>🦖</Text>
           )}
@@ -302,7 +339,6 @@ export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
         <Text style={s.dinoCommon}>{dino.nev_koznapi} · {dino.kor_millioev}</Text>
         <View style={s.dinoInfoRow}>
           <Text style={s.dinoInfoItem}>🕒 {dino.korszak}</Text>
-          <Text style={s.dinoInfoItem}>📍 {dino.megtalalas_helye}</Text>
           <Text style={s.dinoInfoItem}>📏 {dino.hossz}</Text>
         </View>
         <Text style={s.sectionLabel}>Felfedező</Text>
@@ -337,9 +373,9 @@ export function PackageBrowseScreen({ csomag, onStartQuiz, onBack }) {
 }
 
 // --- CSOMAGTESZT — 5 KÉRDÉS, HIBÁTLAN KELL A TOVÁBBJUTÁSHOZ ---
-export function PackageQuizScreen({ csomag, onPassed, onRetry, onBack }) {
-  const pack = KARPAT_PACKAGES.find((p) => p.csomag === csomag);
-  const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [])).current;
+export function PackageQuizScreen({ csomag, packages, creatures, onPassed, onRetry, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
+  const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [], creatures)).current;
 
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);
