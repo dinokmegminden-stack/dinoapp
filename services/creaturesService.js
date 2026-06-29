@@ -1,5 +1,5 @@
 // services/creaturesService.js
-import { supabase } from '../supabaseClient';
+import { supabase } from './supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CACHE_PREFIX = 'creatures_cache_';
