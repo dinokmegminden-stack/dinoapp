@@ -188,6 +188,12 @@ import {
   AfrikaPackageQuizScreen,
   useAfrikaData,
 } from './Level3Afrika';
+import {
+  AsiaPackagesScreen,
+  AsiaPackageBrowseScreen,
+  AsiaPackageQuizScreen,
+  useAsiaData,
+} from './Level4Asia';
 import DinoCard from './DinoCard';
 
 // --- AUDIO SYSTEM ---
@@ -520,7 +526,8 @@ function LandingPage({ onNavigate, onSelectRegion, onEnterKarpat, onEnterRegion 
     if (key === 'europa') { onEnterRegion('europa'); }
     else if (key === 'karpat') { onEnterKarpat(); }
     else if (key === 'afrika') { onEnterRegion('afrika'); }
-    // amerika / azsia: hamarosan érkezik, jelenleg nincs célnézet
+    else if (key === 'azsia') { onEnterRegion('asia'); }
+    // amerika: hamarosan érkezik, jelenleg nincs célnézet
   };
  
   return (
@@ -612,6 +619,7 @@ export default function App() {
   const karpatData = useKarpatData(isRegionViewActive && region === 'karpat');
   const europaData = useEuropaData(isRegionViewActive && region === 'europa');
   const afrikaData = useAfrikaData(isRegionViewActive && region === 'afrika');
+  const asiaData = useAsiaData(isRegionViewActive && region === 'asia');
 
   const REGION_SCREENS = {
     karpat: {
@@ -631,6 +639,12 @@ export default function App() {
       Browse: AfrikaPackageBrowseScreen,
       Quiz: AfrikaPackageQuizScreen,
       data: afrikaData,
+    },
+    asia: {
+      Packages: AsiaPackagesScreen,
+      Browse: AsiaPackageBrowseScreen,
+      Quiz: AsiaPackageQuizScreen,
+      data: asiaData,
     },
   };
   const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat;
