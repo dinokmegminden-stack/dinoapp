@@ -609,12 +609,12 @@ export default function App() {
   // a komponens legelején kell futniuk (React hooks-szabály) — ezért vannak
   // itt, minden korai `return` ELŐTT, nem pedig a routing-blokk közelében.
   const isRegionViewActive = ['packages', 'packageBrowse', 'packageQuiz'].includes(view);
-  const karpatData = useKarpatData(isRegionViewActive && region === 'karpat_medence');
+  const karpatData = useKarpatData(isRegionViewActive && region === 'karpat');
   const europaData = useEuropaData(isRegionViewActive && region === 'europa');
   const afrikaData = useAfrikaData(isRegionViewActive && region === 'afrika');
 
   const REGION_SCREENS = {
-    karpat_medence: {
+    karpat: {
       Packages: PackagesScreen,
       Browse: PackageBrowseScreen,
       Quiz: PackageQuizScreen,
@@ -633,7 +633,7 @@ export default function App() {
       data: afrikaData,
     },
   };
-  const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat_medence;
+  const screens = REGION_SCREENS[region] || REGION_SCREENS.karpat;
   const {
     packages: regionPackages,
     creatures: regionCreatures,
@@ -661,12 +661,12 @@ export default function App() {
   };
 
   // Visszafelé kompatibilis alias, ha a LandingPage még a régi nevet hívja.
-  const handleEnterKarpat = () => handleEnterRegion('karpat_medence');
+  const handleEnterKarpat = () => handleEnterRegion('karpat');
 
   const position = useRef(new Animated.ValueXY()).current;
   const { width: appWidth } = useWindowDimensions();
 
-  const activeDinosaurs = region === 'karpat_medence' ? karpatDinoList : dinosaurs;
+  const activeDinosaurs = region === 'karpat' ? karpatDinoList : dinosaurs;
 
   const filteredDinosaurs = activeDinosaurs.filter((dino) => {
     const matchesPeriod = selectedPeriod === 'Mind' || dino.korszak?.toLowerCase().includes(selectedPeriod.toLowerCase());
