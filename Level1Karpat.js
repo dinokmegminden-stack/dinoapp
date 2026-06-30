@@ -116,19 +116,19 @@ export async function saveNickname(name) {
 }
 
 // Kárpát-medence csomag (1,2,3...) -> regionProgress packId (km_pack1, km_pack2...)
-// A Supabase pack_number sorrendje és a REGION_PACKS.karpat_medence sorrendje egyezik.
+// A Supabase pack_number sorrendje és a REGION_PACKS.karpat sorrendje egyezik.
 export function csomagToPackId(csomag) {
-  return REGION_PACKS.karpat_medence[csomag - 1];
+  return REGION_PACKS.karpat[csomag - 1];
 }
 
 export function isPackageUnlocked(progress, csomag) {
   const packId = csomagToPackId(csomag);
-  return isPackUnlocked('karpat_medence', packId, progress);
+  return isPackUnlocked('karpat', packId, progress);
 }
 
 export function isPackagePassed(progress, csomag) {
   const packId = csomagToPackId(csomag);
-  return !!progress?.karpat_medence?.[packId]?.quizPassed;
+  return !!progress?.karpat?.[packId]?.quizPassed;
 }
 
 // --- KÉRDÉSGENERÁTOR — a csomag 4 dínójából 5 ténykérdést épít ---
