@@ -9,7 +9,7 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import supabase  from '../servicesupabaseClient'; // Direkt Supabase elérés az edu szűréshez
+import supabase  from '../services/supabaseClient'; // Direkt Supabase elérés az edu szűréshez
 
 // --- KÖZPONTI MODULOK IMPORTÁLÁSA ---
 import { COLORS } from '../constants/colors';
