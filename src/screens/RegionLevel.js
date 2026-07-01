@@ -16,9 +16,10 @@ import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
 import { adaptCreature } from '../../services/creaturesService';
+import DinoCard from '../components/DinoCard';
 
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
-import DinoCard from './DinoCard';
+
 
 // Segédfüggvény a dínók csomagokba rendezéséhez az adatbázis 'csomag' oszlopa alapján
 function groupByPackage(list) {
