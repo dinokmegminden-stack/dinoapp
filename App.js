@@ -1,30 +1,59 @@
-import { useState, useRef, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-  Dimensions,
-  StatusBar,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  useWindowDimensions,
-} from 'react-native';
-
-import { Audio } from 'expo-av';
+import { useState } from 'react';
+import { View, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
+
+// --- KÉPERNYŐK ---
+import LandingPage from './src/screens/LandingPage';
+import RegionLevel from './src/screens/RegionLevel';
+
+// --- FONTOK ---
 import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 
-// --- ÚJ UNIVERZÁLIS SCREEN IMPORTÁLÁSA ---
-import RegionLevel from './src/screens/RegionLevel'; 
+export default function App() {
+  // --- FONTOK BETÖLTÉSE ---
+  const [fontsLoaded] = useFonts({
+    Cinzel_700Bold,
+    Roboto_400Regular,
+    Roboto_700Bold,
+  });
 
-// --- A MEGFELELŐ MAPPÁKBÓL ÉRKEZŐ COMPONENSEK ÉS ADATOK ---
-import LandingPage from './src/screens/LandingPage';
-import DinoCard from './DinoCard';
-import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './AdSenseSlot';
+  // --- APP STATE ---
+  const [view, setView] = useState('landing');   // 'landing' | 'region'
+  const [eduLevel, setEduLevel] = useState(null); // 1–5
 
-// Mivel a getCachedPlayer, NicknameScreen, loadNickname, saveNickname, loadProgress 
-// és recordPackQuizResult függvények közvetlenül az App.js-ed belső kódjában vannak 
-// megírva (a fájl alsóbb részein), ezekhez NEM kell import, mert helyben elérhetőek!
+  if (!fontsLoaded) {
+    return <View style={{ flex: 1, backgroundColor: '#0a0a06' }} />;
+  }
+
+  // --- LANDING → REGION váltás ---
+  const handleEnterRegion = (level) => {
+    setEduLevel(level);   // mindig szám
+    setView('region');
+  };
+
+  // --- VISSZA A FŐMENÜBE ---
+  const handleBackToMenu = () => {
+    setView('landing');
+    setEduLevel(null);
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <StatusBar barStyle="light-content" />
+
+      {view === 'landing' && (
+        <LandingPage onEnterRegion={handleEnterRegion} />
+      )}
+
+      {view === 'region' && eduLevel != null && (
+        <RegionLevel
+          eduLevel={eduLevel}
+          onBack={handleBackToMenu}
+          progress={{}}   // később ide jön a valódi progress
+          onPassed={() => {}}
+        />
+      )}
+    </View>
+  );
+}
