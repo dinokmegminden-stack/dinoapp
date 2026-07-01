@@ -5,28 +5,32 @@ import MuteButton from '../components/MuteButton';
 import LaserBorderButton from '../components/LaserBorderButton';
 import { playSound } from '../audio/audioSystem';
 
-const LP_BG_RATIO = 768 / 1376;
+const LP_BG_RATIO = 768 / 1376; // height / width
 
 const LANDING_NAV_BUTTONS = [
-  { key: 'karpat',  label: 'Kárpátok', centerY: 10, color: '#c7d39a' },
-  { key: 'europa',  label: 'Európa',   centerY: 30, color: '#9fd17a' },
-  { key: 'afrika',  label: 'Afrika',   centerY: 50, color: '#3a3424' },
-  { key: 'azsia',   label: 'Ázsia',    centerY: 70, color: '#fff1d6' },
-  { key: 'amerika', label: 'Amerika',  centerY: 90, color: '#ffe0b0' },
+  { key: '1',  label: 'Kárpátok', centerY: 10, color: '#c7d39a' },
+  { key: '2',  label: 'Európa',   centerY: 30, color: '#9fd17a' },
+  { key: '3',  label: 'Afrika',   centerY: 50, color: '#3a3424' },
+  { key: '4',  label: 'Ázsia',    centerY: 70, color: '#fff1d6' },
+  { key: '5',  label: 'Amerika',  centerY: 90, color: '#ffe0b0' },
 ];
 
-export default function LandingPage({ onEnterKarpat, onEnterRegion }) {
+export default function LandingPage({ onEnterRegion }) {
   const [containerWidth, setContainerWidth] = useState(0);
   const stageWidth = containerWidth;
   const stageHeight = containerWidth / LP_BG_RATIO;
 
-  const handlePress = (key) => {
+  const handlePress = (eduLevelInt) => {
     playSound('click');
-    if (key === 'karpat') { onEnterKarpat(); }
-    else if (key === 'europa') { onEnterRegion('europa'); }
-    else if (key === 'afrika') { onEnterRegion('afrika'); }
-    else if (key === 'azsia') { onEnterRegion('asia'); }
-    // amerika: hamarosan érkezik
+    
+    // Opcionális: Ha az Amerika (például 5-ös szint) még nincs kész az adatbázisban
+    if (eduLevelInt === 5) {
+      // Itt kezelheted, ha egy szint még fejlesztés alatt áll (pl. kiírsz egy üzenetet)
+      return;
+    }
+
+    // Meghívjuk a központi régióbelepő függvényt, közvetlenül a számmal
+    onEnterRegion(eduLevelInt);
   };
 
   return (
@@ -65,7 +69,7 @@ export default function LandingPage({ onEnterKarpat, onEnterRegion }) {
                     }}
                     color={btn.color}
                     borderRadius={28}
-                    onPress={() => handlePress(btn.key)}
+                    onPress={() => handlePress(parseInt(btn.key, 10))}
                   >
                     <View style={styles.navArrowWrap} pointerEvents="none">
                       <Text style={styles.navArrowText}>›</Text>
