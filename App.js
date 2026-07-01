@@ -23,7 +23,7 @@ import RegionLevel from './src/screens/RegionLevel';
 // --- A MEGFELELŐ MAPPÁKBÓL ÉRKEZŐ COMPONENSEK ÉS ADATOK ---
 import LandingPage from './src/screens/LandingPage';
 import DinoCard from './DinoCard';
-import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './src/components/AdSenseSlot';
+import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './AdSenseSlot';
 
 // Mivel a getCachedPlayer, NicknameScreen, loadNickname, saveNickname, loadProgress 
 // és recordPackQuizResult függvények közvetlenül az App.js-ed belső kódjában vannak 
