@@ -10,7 +10,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import supabase from '../services/supabaseClient';
+import { supabase } from '../services/supabaseClient';
+
 // --- KÖZPONTI MODULOK IMPORTÁLÁSA ---
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
