@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -10,17 +9,17 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '../services/supabaseClient'; // Direkt Supabase elérés az edu szűréshez
 
-// --- KÖZPONTI MODULOK IMPORTÁLÁSA (A korábbi darabolás eredménye) ---
+// --- KÖZPONTI MODULOK IMPORTÁLÁSA ---
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
-import { getCreaturesByRegion, adaptCreature } from '../services/creaturesService';
-import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
+import { adaptCreature } from '../services/creaturesService';
+import { REGION_PACKS, isPackUnlocked } from './regionProgress';
 import DinoCard from './DinoCard';
 
-// Segédfüggvény a dínók csomagokba rendezéséhez
+// Segédfüggvény a dínók csomagokba rendezéséhez az adatbázis 'csomag' oszlopa alapján
 function groupByPackage(list) {
   const map = {};
   list.forEach((d) => {
@@ -34,9 +33,15 @@ function groupByPackage(list) {
     .map((csomag) => ({ csomag, dinos: map[csomag] }));
 }
 
-// Csomagszám -> regionProgress packId konverzió (pl. 'karpat', 1 -> 'km_pack1')
-function csomagToPackId(regionKey, csomag) {
-  return REGION_PACKS[regionKey]?.[csomag - 1];
+// Az eduLevel int (1-5) alapján lekérjük a megfelelő progress kulcsot a regionProgress-ből
+function getRegionKeyFromEdu(eduLevel) {
+  const mapping = { 1: 'karpat', 2: 'europa', 3: 'afrika', 4: 'azsia', 5: 'amerika' };
+  return mapping[eduLevel] || 'karpat';
+}
+
+function csomagToPackId(eduLevel, csomag) {
+  const rKey = getRegionKeyFromEdu(eduLevel);
+  return REGION_PACKS[rKey]?.[csomag - 1];
 }
 
 function resolveImage(dino) {
@@ -44,30 +49,39 @@ function resolveImage(dino) {
   return IMAGE_MAP[dino.nev_tudomanyos] || null;
 }
 
-// --- DINAMIKUS ADATBEVIELI HOOK ---
-export function useRegionData(regionKey, enabled = true) {
+// --- DINAMIKUS ADATBEVÉTEL AZ 'EDU' INT OSZLOP ALAPJÁN ---
+export function useRegionData(eduLevel, enabled = true) {
   const [creatures, setCreatures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!enabled || !regionKey) return;
+    if (!enabled || !eduLevel) return;
     let mounted = true;
+    
     (async () => {
       setLoading(true);
-      const { data, error } = await getCreaturesByRegion(regionKey);
+      
+      // Közvetlen szűrés a Supabase 'edu' (int) oszlopára!
+      const { data, error: sbError } = await supabase
+        .from('creatures')
+        .select('*')
+        .eq('edu', eduLevel);
+
       if (!mounted) return;
-      if (error) {
-        setError(error);
+      
+      if (sbError) {
+        setError(sbError);
       } else {
         setCreatures((data || []).map(adaptCreature));
       }
       setLoading(false);
     })();
+    
     return () => {
       mounted = false;
     };
-  }, [enabled, regionKey]);
+  }, [enabled, eduLevel]);
 
   const packages = useMemo(() => groupByPackage(creatures), [creatures]);
 
@@ -127,7 +141,7 @@ function generatePackageQuestions(packageDinos, fullPool, count = 5) {
   return combos.map(({ d, t }) => buildQuestion(d, t, fullPool));
 }
 
-// --- UI SHELL ---
+// --- UI CONTAINER ---
 function LevelShell({ children }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
@@ -142,13 +156,13 @@ function LevelShell({ children }) {
 export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   const { packages, creatures, loading, error } = useRegionData(eduLevel);
   
-  const [currentScreen, setCurrentScreen] = useState('packages'); // 'packages' | 'browse' | 'quiz'
+  const [currentScreen, setCurrentScreen] = useState('packages'); 
   const [selectedCsomag, setSelectedCsomag] = useState(null);
 
   if (loading) {
     return (
       <LevelShell>
-        <Text style={s.loadingText}>Dínók betöltése a(z) {eduLevel} régióból...</Text>
+        <Text style={s.loadingText}>Őslények betöltése a(z) {eduLevel}. szintről...</Text>
       </LevelShell>
     );
   }
@@ -156,12 +170,11 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   if (error) {
     return (
       <LevelShell>
-        <Text style={s.errorText}>Hiba történt az adatok betöltésekor.</Text>
+        <Text style={s.errorText}>Hiba történt az adatok lekérésekor.</Text>
       </LevelShell>
     );
   }
 
-  // Útvonalválasztás a belső képernyők között
   if (currentScreen === 'packages') {
     return (
       <PackagesScreen
@@ -208,29 +221,29 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   return null;
 }
 
-// --- ALKÉPERNYŐ: CSOMAGVÁLASZTÓ ---
+// --- ALKÉPERNYŐ: CSOMAGLISTA ---
 function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack }) {
-  // Régiónevek szépítése a felületen
-  const regionNames = { karpat: 'Kárpát-medence', europa: 'Európa', america: 'Észak-Amerika' };
+  const regionNames = { 1: 'Kárpát-medence', 2: 'Európa', 3: 'Afrika', 4: 'Ázsia', 5: 'Amerika' };
+  const rKey = getRegionKeyFromEdu(eduLevel);
 
   return (
     <LevelShell>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
       <ScrollView contentContainerStyle={s.packagesScroll}>
         <TouchableOpacity onPress={onBack} style={s.backLink}>
           <Text style={s.backLinkText}>← FŐMENÜ</Text>
         </TouchableOpacity>
 
-        <Text style={s.levelTitle}>FELFEDEZÉS</Text>
-        <Text style={s.levelSubtitle}>{regionNames[eduLevel] || eduLevel}</Text>
+        <Text style={s.levelTitle}>{eduLevel}. SZINT</Text>
+        <Text style={s.levelSubtitle}>{regionNames[eduLevel] || 'Ismeretlen régió'}</Text>
         <Text style={s.levelDesc}>
           Minden csomag végén egy 5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
         </Text>
 
         {packages.map(({ csomag, dinos }) => {
           const packId = csomagToPackId(eduLevel, csomag);
-          const unlocked = isPackUnlocked(eduLevel, packId, progress);
-          const passed = !!progress?.[eduLevel]?.[packId]?.quizPassed;
+          const unlocked = isPackUnlocked(rKey, packId, progress);
+          const passed = !!progress?.[rKey]?.[packId]?.quizPassed;
 
           return (
             <TouchableOpacity
@@ -262,7 +275,7 @@ function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack })
   );
 }
 
-// --- ALKÉPERNYŐ: BÖNGÉSZŐ ---
+// --- ALKÉPERNYŐ: KÁRTYABÖNGÉSZŐ ---
 function PackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
   const pack = packages.find((p) => p.csomag === csomag);
   const dinos = pack ? pack.dinos : [];
@@ -273,7 +286,7 @@ function PackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
 
   return (
     <LevelShell>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
       <View style={s.browseHeader}>
         <TouchableOpacity onPress={onBack}>
           <Text style={s.backLinkText}>← Csomagok</Text>
@@ -307,7 +320,7 @@ function PackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
   );
 }
 
-// --- ALKÉPERNYŐ: TESZT ---
+// --- ALKÉPERNYŐ: QUIZ TESZT ---
 function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack }) {
   const pack = packages.find((p) => p.csomag === csomag);
   const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [], creatures)).current;
@@ -328,9 +341,9 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
     const isCorrect = idx === question.correctIndex;
     if (isCorrect) {
       setCorrectCount((c) => c + 1);
-      playQuizSfx('correct'); // Központi audio-sfx hívás
+      playQuizSfx('correct');
     } else {
-      playQuizSfx('wrong'); // Központi audio-sfx hívás
+      playQuizSfx('wrong');
     }
 
     setTimeout(() => {
@@ -348,7 +361,7 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
     const passed = correctCount === questions.length;
     return (
       <LevelShell>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
         <View style={s.resultWrap}>
           <Text style={s.resultEmoji}>{passed ? '🏆' : '😕'}</Text>
           <Text style={s.resultTitle}>{correctCount} / {questions.length} helyes válasz</Text>
@@ -379,7 +392,7 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
 
   return (
     <LevelShell>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
       <View style={s.browseHeader}>
         <TouchableOpacity onPress={onBack}>
           <Text style={s.backLinkText}>← Vissza</Text>
@@ -411,16 +424,16 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
   );
 }
 
-// --- STÍLUSOK (A központi COLORS-ra építve) ---
+// --- STÍLUSOK ---
 const s = StyleSheet.create({
-  outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center' },
+  outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg || '#283618', alignItems: 'center' },
   inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
   innerWide: { maxWidth: 720 },
   loadingText: { color: '#FEFAE0', fontSize: 16, textAlign: 'center', marginTop: 40 },
   errorText: { color: '#BC6C25', fontSize: 16, textAlign: 'center', marginTop: 40 },
 
   backLink: { paddingVertical: 8, marginBottom: 4 },
-  backLinkText: { color: COLORS.gold || '#DDA15E', ...Platform.select({ web: { cursor: 'pointer' } }), fontSize: 13, fontWeight: '800' },
+  backLinkText: { color: COLORS.gold || '#DDA15E', fontSize: 13, fontWeight: '800' },
 
   primaryBtn: { backgroundColor: COLORS.action || '#BC6C25', borderRadius: 24, paddingVertical: 14, paddingHorizontal: 28, alignItems: 'center', width: '100%' },
   primaryBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
