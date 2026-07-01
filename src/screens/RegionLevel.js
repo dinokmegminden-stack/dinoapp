@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, ScrollView, StatusBar, StyleSheet } from 
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
-
+import { supabase } from '../services/supabaseClient';
 import { adaptCreature } from '../services/creaturesService';
 //import { groupByPackage, csomagToPackId, getRegionKeyFromEdu } from '../../services/packageUtils';
 //import { generateQuestions } from '../../services/questionGenerator';
