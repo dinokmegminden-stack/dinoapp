@@ -175,6 +175,8 @@ import {
   recordPackQuizResult,
   isPackUnlocked,
   isRegionUnlocked,
+  REGION_TO_EDU,
+  EDU_LABELS,
 } from './regionProgress';
 import {
   EuropaPackagesScreen,
@@ -807,11 +809,11 @@ export default function App() {
         csomag={activePackage}
         packages={regionPackages}
         creatures={regionCreatures}
-        onPassed={async (csomag, packId, scoreRatio = 1) => {
-          const next = await recordPackQuizResult(nickname, region, packId, scoreRatio);
-          setProgress(next);
-          setView('packages');
-        }}
+       onPassed={async (csomag, packNumber, scoreRatio = 1) => {
+     const next = await recordPackQuizResult(nickname, REGION_TO_EDU[region], packNumber, scoreRatio);
+      setProgress(next);
+     setView('packages');
+    }}
         onRetry={() => setQuizKey((k) => k + 1)}
         onBack={() => setView('packages')}
       />

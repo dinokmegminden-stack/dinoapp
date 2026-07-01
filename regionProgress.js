@@ -1,31 +1,49 @@
 // regionProgress.js
 // Régió- és pakk-szintű progress / unlock logika a Dínó Milliomos kártyajátékhoz.
-// AsyncStorage-alapú, nickname szerint particionált, backend nélkül.
+// AsyncStorage-alapú, nickname szerint particionált.
+//
+// REFACTOR (edu-alapú): a régiók azonosítója mostantól az `edu` szám (int),
+// nem a string régiókulcs. Tárolt kulcs: dino_progress_v2_<nickname>
+// (v2 prefix megakadályozza az ütközést a régi string-alapú mentéssel).
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// --- Konfiguráció: régiók és a bennük lévő pakkok sorrendje -----------------
-// Minden régióhoz tetszőleges számú pakk tartozhat (10-30 dínó -> pl. 3-6 pakk).
-// A packIds csak azonosítók; a tényleges dínólistát a *_dinosaurs.json fájlok tárolják.
-
-export const REGION_ORDER = ['karpat', 'europa', 'afrika', 'asia', 'america'];
-
-// Azok a régiók, amelyekkel a játékot el lehet kezdeni — ezeknél az 1. csomag
-// mindig nyitott, nem kell hozzá másik régiót előbb teljesíteni.
-// Az Ázsia és Amerika viszont továbbra is láncban nyílik: Ázsia Afrikától,
-// Amerika Ázsiától függ.
-export const STARTER_REGIONS = ['karpat', 'europa', 'afrika'];
-
-export const REGION_PACKS = {
-  karpat: ['km_pack1', 'km_pack2', 'km_pack3'],
-  europa: ['eu_pack1', 'eu_pack2', 'eu_pack3', 'eu_pack4', 'eu_pack5'],
-  afrika: ['af_pack1', 'af_pack2'],
-  asia: ['as_pack1', 'as_pack2', 'as_pack3', 'as_pack4'],
-  america: ['am_pack1', 'am_pack2', 'am_pack3', 'am_pack4', 'am_pack5'],
+// --- EDU → Megjelenített régiónév map (UI-hoz) ------------------------------
+export const EDU_LABELS = {
+  1: 'Kárpát-medence',
+  2: 'Európa',
+  3: 'Afrika',
+  4: 'Ázsia',
+  5: 'Amerika',
 };
 
-const STORAGE_PREFIX = 'dino_progress_';
-const PASS_THRESHOLD = 0.8; // 80%-os teszteredmény szükséges a pakk lezárásához
+// --- Konfiguráció: edu-kulcsok és a bennük lévő pakkok (pack_number-ek) -----
+// Kulcs: edu (int), érték: pack_number tömb (int[])
+export const REGION_ORDER = [1, 2, 3, 4, 5];
+
+// Induló régiók: az 1. csomag mindig nyitott, nem kell hozzá előző régió.
+// Ázsia (4) és Amerika (5) láncos feloldással nyílik.
+export const STARTER_REGIONS = [1, 2, 3];
+
+export const REGION_PACKS = {
+  1: [1, 2, 3],          // Kárpát-medence
+  2: [1, 2, 3, 4, 5],   // Európa
+  3: [1, 2],             // Afrika
+  4: [1, 2, 3, 4],       // Ázsia
+  5: [1, 2, 3, 4, 5],   // Amerika (placeholder)
+};
+
+// Régió string → edu szám (App.js routing kompatibilitás)
+export const REGION_TO_EDU = {
+  karpat: 1,
+  europa: 2,
+  afrika: 3,
+  asia:   4,
+  america: 5,
+};
+
+const STORAGE_PREFIX = 'dino_progress_v2_';
+const PASS_THRESHOLD = 0.8;
 
 // --- Storage kulcs nickname szerint -----------------------------------------
 
@@ -36,19 +54,17 @@ function storageKey(nickname) {
 // --- Alap progress objektum --------------------------------------------------
 // Struktúra:
 // {
-//   karpat: {
-//     km_pack1: { quizPassed: true, bestScore: 1.0, attempts: 2 },
-//     km_pack2: { quizPassed: false, bestScore: 0.6, attempts: 1 }
-//   },
-//   europa: { ... }
+//   1: { 1: { quizPassed: false, bestScore: 0, attempts: 0 }, 2: {...}, ... },
+//   2: { 1: {...}, ... },
+//   ...
 // }
 
 function createEmptyProgress() {
   const progress = {};
-  REGION_ORDER.forEach((region) => {
-    progress[region] = {};
-    REGION_PACKS[region].forEach((packId) => {
-      progress[region][packId] = { quizPassed: false, bestScore: 0, attempts: 0 };
+  REGION_ORDER.forEach((edu) => {
+    progress[edu] = {};
+    REGION_PACKS[edu].forEach((packNum) => {
+      progress[edu][packNum] = { quizPassed: false, bestScore: 0, attempts: 0 };
     });
   });
   return progress;
@@ -62,13 +78,12 @@ export async function loadProgress(nickname) {
     if (!raw) return createEmptyProgress();
 
     const parsed = JSON.parse(raw);
-    // Védelem: ha új régió/pakk került be a configba egy frissítéssel,
-    // hiányzó kulcsokat pótoljuk, hogy ne dobjon hibát a régi mentett state.
+    // Védelem: új edu/pakk config esetén hiányzó kulcsokat pótoljuk
     const merged = createEmptyProgress();
-    REGION_ORDER.forEach((region) => {
-      REGION_PACKS[region].forEach((packId) => {
-        if (parsed[region]?.[packId]) {
-          merged[region][packId] = parsed[region][packId];
+    REGION_ORDER.forEach((edu) => {
+      REGION_PACKS[edu].forEach((packNum) => {
+        if (parsed[edu]?.[packNum]) {
+          merged[edu][packNum] = parsed[edu][packNum];
         }
       });
     });
@@ -91,11 +106,11 @@ export async function saveProgress(nickname, progress) {
 
 // --- Pakk eredmény rögzítése ---------------------------------------------------
 
-export async function recordPackQuizResult(nickname, regionId, packId, scoreRatio) {
+export async function recordPackQuizResult(nickname, eduLevel, packNumber, scoreRatio) {
   const progress = await loadProgress(nickname);
-  const entry = progress[regionId]?.[packId];
+  const entry = progress[eduLevel]?.[packNumber];
   if (!entry) {
-    console.warn(`Ismeretlen régió/pakk: ${regionId}/${packId}`);
+    console.warn(`Ismeretlen edu/pakk: ${eduLevel}/${packNumber}`);
     return progress;
   }
 
@@ -110,76 +125,71 @@ export async function recordPackQuizResult(nickname, regionId, packId, scoreRati
 }
 
 // --- Pakk feloldási logika ------------------------------------------------------
-// Egy pakk akkor nyitható, ha:
-//  - ő az első pakk a régióban ÉS a régió maga is feloldott, VAGY
-//  - az előző pakk a régióban már quizPassed === true
+// Az 1. csomag nyitott, ha a régió maga fel van oldva.
+// Többi csomagnál: az előző pack quizPassed === true kell.
 
-export function isPackUnlocked(regionId, packId, progress) {
-  const packs = REGION_PACKS[regionId];
+export function isPackUnlocked(eduLevel, packNumber, progress) {
+  const packs = REGION_PACKS[eduLevel];
   if (!packs) return false;
 
-  const packIdx = packs.indexOf(packId);
+  const packIdx = packs.indexOf(packNumber);
   if (packIdx === -1) return false;
 
-  // Az első pakk feloldása a régió saját feloldásától függ
   if (packIdx === 0) {
-    return isRegionUnlocked(regionId, progress);
+    return isRegionUnlocked(eduLevel, progress);
   }
 
-  const prevPackId = packs[packIdx - 1];
-  return progress[regionId]?.[prevPackId]?.quizPassed === true;
+  const prevPackNum = packs[packIdx - 1];
+  return progress[eduLevel]?.[prevPackNum]?.quizPassed === true;
 }
 
 // --- Régió feloldási logika -------------------------------------------------------
-// Egy régió akkor nyitható, ha az előző régió ÖSSZES pakkja quizPassed === true.
-// (Az első régió, karpat, mindig nyitott.)
+// Induló régiók (1, 2, 3) mindig nyitottak.
+// Ázsia (4): Afrika (3) összes pakkja kell.
+// Amerika (5): Ázsia (4) összes pakkja kell.
 
-export function isRegionUnlocked(regionId, progress) {
-  if (STARTER_REGIONS.includes(regionId)) return true;
+export function isRegionUnlocked(eduLevel, progress) {
+  if (STARTER_REGIONS.includes(eduLevel)) return true;
 
-  const idx = REGION_ORDER.indexOf(regionId);
+  const idx = REGION_ORDER.indexOf(eduLevel);
   if (idx === -1) return false;
   if (idx === 0) return true;
 
-  const prevRegion = REGION_ORDER[idx - 1];
-  const prevPacks = REGION_PACKS[prevRegion];
+  const prevEdu = REGION_ORDER[idx - 1];
+  const prevPacks = REGION_PACKS[prevEdu];
 
-  return prevPacks.every((packId) => progress[prevRegion]?.[packId]?.quizPassed === true);
+  return prevPacks.every((packNum) => progress[prevEdu]?.[packNum]?.quizPassed === true);
 }
 
 // --- Segédfüggvények UI-hoz --------------------------------------------------------
 
-// Hány pakk van kész egy régióban (progress bar-hoz)
-export function regionCompletionRatio(regionId, progress) {
-  const packs = REGION_PACKS[regionId];
+export function regionCompletionRatio(eduLevel, progress) {
+  const packs = REGION_PACKS[eduLevel];
   if (!packs || packs.length === 0) return 0;
-  const passedCount = packs.filter((packId) => progress[regionId]?.[packId]?.quizPassed).length;
+  const passedCount = packs.filter((packNum) => progress[eduLevel]?.[packNum]?.quizPassed).length;
   return passedCount / packs.length;
 }
 
-// Teljes játék végigjátszási arány (összes pakk az 5 régióban)
 export function overallCompletionRatio(progress) {
   let total = 0;
   let passed = 0;
-  REGION_ORDER.forEach((region) => {
-    REGION_PACKS[region].forEach((packId) => {
+  REGION_ORDER.forEach((edu) => {
+    REGION_PACKS[edu].forEach((packNum) => {
       total += 1;
-      if (progress[region]?.[packId]?.quizPassed) passed += 1;
+      if (progress[edu]?.[packNum]?.quizPassed) passed += 1;
     });
   });
   return total === 0 ? 0 : passed / total;
 }
 
-// A következő még feloldható, de még nem teljesített pakk megkeresése
-// (hasznos egy "Folytatás" gombhoz a főmenün)
 export function findNextPack(progress) {
-  for (const region of REGION_ORDER) {
-    if (!isRegionUnlocked(region, progress)) continue;
-    for (const packId of REGION_PACKS[region]) {
-      if (!progress[region][packId].quizPassed && isPackUnlocked(region, packId, progress)) {
-        return { region, packId };
+  for (const edu of REGION_ORDER) {
+    if (!isRegionUnlocked(edu, progress)) continue;
+    for (const packNum of REGION_PACKS[edu]) {
+      if (!progress[edu][packNum].quizPassed && isPackUnlocked(edu, packNum, progress)) {
+        return { eduLevel: edu, packNumber: packNum };
       }
     }
   }
-  return null; // mindent teljesített
+  return null;
 }

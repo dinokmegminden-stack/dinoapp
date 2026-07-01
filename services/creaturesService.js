@@ -2,13 +2,17 @@
 import { supabase } from './supabaseClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CACHE_PREFIX = 'creatures_cache_';
+const CACHE_PREFIX = 'creatures_cache_edu_';
 const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 óra
 
-export async function getCreaturesByRegion(region) {
-  const cacheKey = `${CACHE_PREFIX}${region}`;
+// --- Fő lekérdező függvény (edu-alapú) ---------------------------------------
+// eduLevel: 1=Kárpát-medence, 2=Európa, 3=Afrika, 4=Ázsia, 5=Amerika
+// Kizárja a NHM bulk importot (pack_number >= 5 vagy edu IS NULL).
 
-  // 1. Próbáljuk a cache-t, ha friss
+export async function getCreaturesByEdu(eduLevel) {
+  const cacheKey = `${CACHE_PREFIX}${eduLevel}`;
+
+  // 1. Cache ellenőrzés
   try {
     const cachedRaw = await AsyncStorage.getItem(cacheKey);
     if (cachedRaw) {
@@ -25,41 +29,45 @@ export async function getCreaturesByRegion(region) {
   const { data, error } = await supabase
     .from('creatures')
     .select('*')
-    .eq('region', region)
+    .eq('edu', eduLevel)
+    .lt('pack_number', 5)        // kizárja a 100-as NHM bulk szemetet
+    .not('edu', 'is', null)      // csak kitöltött edu sorokat
     .order('pack_number', { ascending: true });
 
   if (error) {
     console.error('Supabase creatures hiba:', error);
-    // Fallback: ha van bármilyen (akár lejárt) cache, azt adjuk vissza inkább mint semmit
+    // Fallback: lejárt cache inkább mint semmi
     try {
       const cachedRaw = await AsyncStorage.getItem(cacheKey);
       if (cachedRaw) {
         const cached = JSON.parse(cachedRaw);
         return { data: cached.data, fromCache: true, stale: true };
       }
-    } catch (_) {
-      // nincs cache sem, visszaadjuk a hibát
-    }
+    } catch (_) {}
     return { data: null, error };
   }
 
+  const adapted = data.map(adaptCreature);
+
   // 3. Cache frissítése
   try {
-    await AsyncStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
+    await AsyncStorage.setItem(cacheKey, JSON.stringify({ data: adapted, timestamp: Date.now() }));
   } catch (e) {
     console.warn('Cache írási hiba:', e);
   }
 
-  return { data, fromCache: false };
+  return { data: adapted, fromCache: false };
 }
 
-export async function clearCreaturesCache(region) {
-  if (region) {
-    await AsyncStorage.removeItem(`${CACHE_PREFIX}${region}`);
+// --- Cache törlés -------------------------------------------------------------
+
+export async function clearCreaturesCache(eduLevel) {
+  if (eduLevel != null) {
+    await AsyncStorage.removeItem(`${CACHE_PREFIX}${eduLevel}`);
   } else {
     const keys = await AsyncStorage.getAllKeys();
-    const regionKeys = keys.filter((k) => k.startsWith(CACHE_PREFIX));
-    await AsyncStorage.multiRemove(regionKeys);
+    const eduKeys = keys.filter((k) => k.startsWith(CACHE_PREFIX));
+    await AsyncStorage.multiRemove(eduKeys);
   }
 }
 
