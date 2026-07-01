@@ -22,7 +22,7 @@ import RegionLevel from './src/screens/RegionLevel';
 
 // --- A MEGFELELŐ MAPPÁKBÓL ÉRKEZŐ COMPONENSEK ÉS ADATOK ---
 import LandingPage from './src/screens/LandingPage';
-import DinoCard from './src/components/DinoCard';
+import DinoCard from './DinoCard';
 import AdSenseSlot, { AD_SLOT_LEFT, AD_SLOT_RIGHT } from './src/components/AdSenseSlot';
 
 // Mivel a getCachedPlayer, NicknameScreen, loadNickname, saveNickname, loadProgress 
