@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   stageWrapper: {
     width: '100%',
+    flex: 1,
   },
   stage: {
     position: 'relative',
