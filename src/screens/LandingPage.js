@@ -24,9 +24,10 @@ export default function LandingPage({ onEnterRegion }) {
         <StatusBar barStyle="light-content" backgroundColor="#0a0a06" />
 
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+  style={{ flex: 1 }}
+  contentContainerStyle={styles.scrollContent}
+  showsVerticalScrollIndicator={false}
+>
           <View
             style={styles.stageWrapper}
             onLayout={(e) => setStageWidth(e.nativeEvent.layout.width)}
