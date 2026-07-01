@@ -6,11 +6,13 @@ import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
 
 import { adaptCreature } from '../../services/creaturesService';
-import { groupByPackage, csomagToPackId, getRegionKeyFromEdu } from '../../services/packageUtils';
+//import { groupByPackage, csomagToPackId, getRegionKeyFromEdu } from '../../services/packageUtils';
 import { generateQuestions } from '../../services/questionGenerator';
 
 import DinoCard from '../components/DinoCard';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
+import { groupByPackage, csomagToPackId, getRegionKeyFromEdu } from '../services/packageUtils';
+
 
 export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   const [creatures, setCreatures] = useState([]);
