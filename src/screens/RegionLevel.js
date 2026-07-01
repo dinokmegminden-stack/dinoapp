@@ -2,15 +2,15 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  TouchableOpacity,3
   StyleSheet,
   ScrollView,
   StatusBar,
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import supabase  from '../services/supabaseClient'; // Direkt Supabase elérés az edu szűréshez
 
+import supabase from '../services/supabaseClient';
 // --- KÖZPONTI MODULOK IMPORTÁLÁSA ---
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
