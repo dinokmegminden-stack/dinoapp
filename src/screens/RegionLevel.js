@@ -10,13 +10,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import { supabase } from '../services/supabaseClient';
-
+import { supabase } from '../../services/supabaseClient';
 // --- KÖZPONTI MODULOK IMPORTÁLÁSA ---
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
-import { adaptCreature } from '../services/creaturesService';
+import { adaptCreature } from '../../services/creaturesService';
+
 import { REGION_PACKS, isPackUnlocked } from './regionProgress';
 import DinoCard from './DinoCard';
 

@@ -5,6 +5,7 @@ import MuteButton from '../components/MuteButton';
 import LaserBorderButton from '../components/LaserBorderButton';
 import { playSound } from '../audio/audioSystem';
 
+
 const LP_BG_RATIO = 768 / 1376; // height / width
 
 const LANDING_NAV_BUTTONS = [
