@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    //alignItems: 'center',
   },
   stageWrapper: {
     width: '100%',
