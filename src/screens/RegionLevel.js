@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,3
+  TouchableOpacity,
   StyleSheet,
   ScrollView,
   StatusBar,
