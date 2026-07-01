@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { View, Text, Image, ScrollView, StatusBar, StyleSheet } from 'react-native';
 
 import Shell from '../components/Shell';
@@ -18,27 +18,12 @@ const REGION_BUTTONS = [
 
 export default function LandingPage({ onEnterRegion }) {
   const [stageWidth, setStageWidth] = useState(0);
-  const [ratio, setRatio] = useState(1.79); // fallback, amíg Image.getSize lefut
-
-  useEffect(() => {
-    const resolved = Image.resolveAssetSource(BG_IMAGE);
-    if (resolved?.uri) {
-      Image.getSize(
-        resolved.uri,
-        (w, h) => setRatio(h / w),
-        () => {}
-      );
-    } else if (resolved?.width && resolved?.height) {
-      setRatio(resolved.height / resolved.width);
-    }
-  }, []);
-
   const handlePress = (eduLevel) => {
     playSound('click');
     onEnterRegion(eduLevel); // mindig szám (1-5)
   };
 
-  const stageHeight = stageWidth * ratio;
+  const stageHeight = stageWidth * 1.777;
 
   return (
     <Shell>
