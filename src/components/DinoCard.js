@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { COLORS } from '../constants/colors';
-import { safeText } from '../../services/safeText';
-import { resolveImage } from '../../services/imageResolver';
+
+import { resolveImage } from '../services/imageResolver';
+import { safeText } from '../services/safeText';
 
 export default function DinoCard({ dino, imageSource, showTimeline = true }) {
   if (!dino) return null;
