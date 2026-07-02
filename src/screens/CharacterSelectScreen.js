@@ -11,7 +11,6 @@ import {
 import { CHARACTERS } from '../constants/characters';
 import { COLORS } from '../constants/colors';
 
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
 
@@ -65,41 +64,42 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
     );
   };
 
- return (
-  <View style={[
-    styles.container,
-    IS_DESKTOP && {
-      width: SCREEN_WIDTH * 0.33,
-      alignSelf: 'center',
-    }
-  ]}>
-    <Text style={styles.title}>Válassz karaktert</Text>
+  return (
+    <View
+      style={[
+        styles.container,
+        IS_DESKTOP && {
+          width: SCREEN_WIDTH * 0.33,
+          alignSelf: 'center',
+        },
+      ]}
+    >
+      <Text style={styles.title}>Válassz karaktert</Text>
 
-<Animated.FlatList
-  data={CHARACTERS}
-  keyExtractor={(item) => item.id}
-  renderItem={renderItem}
-  horizontal
-  showsHorizontalScrollIndicator={false}
-  snapToInterval={ITEM_WIDTH}
-  decelerationRate="fast"
+      <Animated.FlatList
+        data={CHARACTERS}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={ITEM_WIDTH}
+        decelerationRate="fast"
+        style={{ flexGrow: 0, height: 320 }}
+        contentContainerStyle={{
+          paddingHorizontal: ITEM_SPACING,
+          alignItems: 'center',
+        }}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false }
+        )}
+        scrollEventThrottle={16}
+      />
 
-  style={{ flexGrow: 0, height: 320 }}
-  contentContainerStyle={{
-    paddingHorizontal: ITEM_SPACING,
-    alignItems: 'center',
-  }}
-
-  onScroll={Animated.event(
-    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-    { useNativeDriver: false }
-  )}
-      scrollEventThrottle={16}
-    />
-
-    <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
-  </View>
-);
+      <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
