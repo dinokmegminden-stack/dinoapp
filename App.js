@@ -8,6 +8,7 @@ import RegionLevel from './src/screens/RegionLevel';
 
 import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
+console.log("Character screen mounted");
 
 export default function App() {
   const [fontsLoaded] = useFonts({
