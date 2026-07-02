@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import { COLORS } from '../constants/colors';
 
 import { resolveImage } from '../services/imageResolver';
@@ -8,6 +8,9 @@ import { safeText } from '../services/safeText';
 export default function DinoCard({ dino, imageSource, showTimeline = true }) {
   if (!dino) return null;
 
+  const { width } = useWindowDimensions();
+  const imageHeight = width >= 700 ? 420 : 200;
+
   const img = imageSource || resolveImage(dino);
 
   return (
@@ -15,7 +18,7 @@ export default function DinoCard({ dino, imageSource, showTimeline = true }) {
       {img && (
         <Image
           source={img}
-          style={styles.image}
+          style={[styles.image, { height: imageHeight }]}
           resizeMode="contain"
         />
       )}
