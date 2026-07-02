@@ -11,6 +11,11 @@ import {
 import { CHARACTERS } from '../constants/characters';
 import { COLORS } from '../constants/colors';
 
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const IS_DESKTOP = SCREEN_WIDTH >= 1024;
+
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ITEM_WIDTH = 220;
 const ITEM_SPACING = (SCREEN_WIDTH - ITEM_WIDTH) / 2;
@@ -62,9 +67,15 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Válassz karaktert</Text>
+ return (
+  <View style={[
+    styles.container,
+    IS_DESKTOP && {
+      width: SCREEN_WIDTH * 0.33,
+      alignSelf: 'center',
+    }
+  ]}>
+    <Text style={styles.title}>Válassz karaktert</Text>
 
 <Animated.FlatList
   data={CHARACTERS}
@@ -85,14 +96,12 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
     { useNativeDriver: false }
   )}
-  scrollEventThrottle={16}
-/>
+      scrollEventThrottle={16}
+    />
 
-
-      <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
-    </View>
-  );
-}
+    <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
