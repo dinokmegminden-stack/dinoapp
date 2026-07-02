@@ -1,93 +1,207 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  View, Text, TouchableOpacity, ScrollView,
-  StyleSheet, ActivityIndicator,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+  Platform,
+  useWindowDimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { supabase } from '../services/supabaseClient';
-import { adaptCreature } from '../services/creaturesService';
-import { groupByPackage, csomagToPackId, getRegionKeyFromEdu } from '../services/packageUtils';
-import { generateQuestions } from '../services/questionGenerator';
-import { REGION_PACKS, isPackUnlocked } from './regionProgress';
+// --- KÖZPONTI MODULOK IMPORTÁLÁSA (A korábbi darabolás eredménye) ---
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
-import DinoCard from '../components/DinoCard';
+import { getCreaturesByRegion, adaptCreature } from '../services/creaturesService';
+import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
+import DinoCard from './DinoCard';
+import { CHARACTERS } from '../constants/characters';
+import CharacterCompare from '../components/CharacterCompare';
+// Segédfüggvény a dínók csomagokba rendezéséhez
+function groupByPackage(list) {
+  const map = {};
+  list.forEach((d) => {
+    const key = d.csomag || 1;
+    if (!map[key]) map[key] = [];
+    map[key].push(d);
+  });
+  return Object.keys(map)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((csomag) => ({ csomag, dinos: map[csomag] }));
+}
 
-const QUIZ_QUESTION_COUNT = 5;
-const QUIZ_PASS_THRESHOLD = 4;
+// Csomagszám -> regionProgress packId konverzió (pl. 'karpat', 1 -> 'km_pack1')
+function csomagToPackId(regionKey, csomag) {
+  return REGION_PACKS[regionKey]?.[csomag - 1];
+}
 
-// ─── Fő komponens ────────────────────────────────────────────────────────────
+function resolveImage(dino) {
+  if (dino.image_url) return { uri: dino.image_url };
+  return IMAGE_MAP[dino.nev_tudomanyos] || null;
+}
 
-export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
+// --- DINAMIKUS ADATBEVIELI HOOK ---
+export function useRegionData(regionKey, enabled = true) {
   const [creatures, setCreatures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [screen, setScreen] = useState('packages');
-  const [selectedCsomag, setSelectedCsomag] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!enabled || !regionKey) return;
     let mounted = true;
     (async () => {
-      const { data } = await supabase
-        .from('creatures')
-        .select('*')
-        .eq('edu', eduLevel)
-        .lt('pack_number', 100); // NHM bulk import kizárása
+      setLoading(true);
+      const { data, error } = await getCreaturesByRegion(regionKey);
       if (!mounted) return;
-      setCreatures((data || []).map(adaptCreature));
+      if (error) {
+        setError(error);
+      } else {
+        setCreatures((data || []).map(adaptCreature));
+      }
       setLoading(false);
     })();
-    return () => { mounted = false; };
-  }, [eduLevel]);
+    return () => {
+      mounted = false;
+    };
+  }, [enabled, regionKey]);
 
   const packages = useMemo(() => groupByPackage(creatures), [creatures]);
 
+  return { creatures, packages, loading, error };
+}
+
+// --- TESZT KÉRDÉSEK GENERÁLÁSA ---
+function shuffle(arr) {
+  return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
+}
+
+const FALLBACK_DISTRACTORS = {
+  korszak: ['triász', 'kora kréta', 'jura', 'perm'],
+  hossz: ['1 m', '15 m', '0.5 m', '20 m'],
+  felfedezo: ['ismeretlen kutató', 'Charles Darwin', 'Richard Owen'],
+  nev_tudomanyos: ['Tyrannosaurus rex', 'Triceratops horridus', 'Velociraptor mongoliensis'],
+};
+
+function pickDistractors(correctValue, pool, field, count = 3) {
+  const values = [
+    ...new Set(
+      pool
+        .map((d) => d[field])
+        .filter((v) => v && v !== 'ismeretlen' && v !== correctValue)
+    ),
+  ];
+  let distractors = shuffle(values).slice(0, count);
+  if (distractors.length < count && FALLBACK_DISTRACTORS[field]) {
+    const extra = FALLBACK_DISTRACTORS[field].filter((v) => v !== correctValue && !distractors.includes(v));
+    distractors = [...distractors, ...extra].slice(0, count);
+  }
+  return distractors;
+}
+
+const QUESTION_TEMPLATES = [
+  { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
+  { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
+  { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
+  { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
+];
+
+function buildQuestion(dino, template, pool) {
+  const correct = dino[template.field];
+  const distractors = pickDistractors(correct, pool, template.field, 3);
+  const options = shuffle([correct, ...distractors]);
+  return {
+    question: template.text(dino),
+    options,
+    correctIndex: options.indexOf(correct),
+  };
+}
+
+function generatePackageQuestions(packageDinos, fullPool, count = 5) {
+  let combos = [];
+  packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
+  combos = shuffle(combos).slice(0, count);
+  return combos.map(({ d, t }) => buildQuestion(d, t, fullPool));
+}
+
+// --- UI SHELL ---
+function LevelShell({ children }) {
+  const { width } = useWindowDimensions();
+  const isWideWeb = Platform.OS === 'web' && width >= 700;
+  return (
+    <View style={s.outer}>
+      <View style={[s.inner, isWideWeb && s.innerWide]}>{children}</View>
+    </View>
+  );
+}
+
+// --- FŐ GENERIKUS REGIONLEVEL KOMPONENS ---
+export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
+  const { packages, creatures, loading, error } = useRegionData(eduLevel);
+  
+  const [currentScreen, setCurrentScreen] = useState('packages'); // 'packages' | 'browse' | 'quiz'
+  const [selectedCsomag, setSelectedCsomag] = useState(null);
+
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator color={COLORS.green} />
-        <Text style={styles.loadingText}>Betöltés…</Text>
-      </View>
+      <LevelShell>
+        <Text style={s.loadingText}>Dínók betöltése a(z) {eduLevel} régióból...</Text>
+      </LevelShell>
     );
   }
 
-  if (screen === 'packages') {
+  if (error) {
+    return (
+      <LevelShell>
+        <Text style={s.errorText}>Hiba történt az adatok betöltésekor.</Text>
+      </LevelShell>
+    );
+  }
+
+  // Útvonalválasztás a belső képernyők között
+  if (currentScreen === 'packages') {
     return (
       <PackagesScreen
         eduLevel={eduLevel}
         progress={progress}
         packages={packages}
-        onOpen={(csomag) => { setSelectedCsomag(csomag); setScreen('browse'); }}
+        onOpenPackage={(csomag) => {
+          setSelectedCsomag(csomag);
+          setCurrentScreen('browse');
+        }}
         onBack={onBack}
       />
     );
   }
 
-  if (screen === 'browse') {
+  if (currentScreen === 'browse') {
     return (
-      <BrowseScreen
+      <PackageBrowseScreen
         csomag={selectedCsomag}
         packages={packages}
-        onStartQuiz={() => setScreen('quiz')}
-        onBack={() => setScreen('packages')}
+        onStartQuiz={() => setCurrentScreen('quiz')}
+        onBack={() => setCurrentScreen('packages')}
       />
     );
   }
 
-  if (screen === 'quiz') {
+  if (currentScreen === 'quiz') {
     return (
-      <QuizScreen
+      <PackageQuizScreen
         eduLevel={eduLevel}
         csomag={selectedCsomag}
         packages={packages}
         creatures={creatures}
-        onPassed={(csomag, score) => {
-          const packId = csomagToPackId(eduLevel, csomag, REGION_PACKS);
+        onPassed={(csomag, packId, score) => {
           onPassed(csomag, packId, score);
-          setScreen('packages');
+          setCurrentScreen('packages');
         }}
-        onRetry={() => setScreen('quiz')}
-        onBack={() => setScreen('packages')}
+        onRetry={() => setCurrentScreen('quiz')}
+        onBack={() => setCurrentScreen('packages')}
       />
     );
   }
@@ -95,51 +209,66 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   return null;
 }
 
-// ─── PackagesScreen ───────────────────────────────────────────────────────────
-
-function PackagesScreen({ eduLevel, progress, packages, onOpen, onBack }) {
-  const regionKey = getRegionKeyFromEdu(eduLevel);
+// --- ALKÉPERNYŐ: CSOMAGVÁLASZTÓ ---
+function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack }) {
+  // Régiónevek szépítése a felületen
+  const regionNames = { karpat: 'Kárpát-medence', europa: 'Európa', america: 'Észak-Amerika' };
 
   return (
-    <View style={styles.screen}>
-      <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-        <Text style={styles.backText}>← Főmenü</Text>
-      </TouchableOpacity>
+    <LevelShell>
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+      <ScrollView contentContainerStyle={s.packagesScroll}>
+        <TouchableOpacity onPress={onBack} style={s.backLink}>
+          <Text style={s.backLinkText}>← FŐMENÜ</Text>
+        </TouchableOpacity>
 
-      <ScrollView contentContainerStyle={styles.list}>
+        <Text style={s.levelTitle}>FELFEDEZÉS</Text>
+        <Text style={s.levelSubtitle}>{regionNames[eduLevel] || eduLevel}</Text>
+        <Text style={s.levelDesc}>
+          Minden csomag végén egy 5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
+        </Text>
+
         {packages.map(({ csomag, dinos }) => {
-          const packId = csomagToPackId(eduLevel, csomag, REGION_PACKS);
-          const unlocked = isPackUnlocked(regionKey, packId, progress);
-          const passed = progress?.[regionKey]?.[packId]?.quizPassed === true;
+          const packId = csomagToPackId(eduLevel, csomag);
+          const unlocked = isPackUnlocked(eduLevel, packId, progress);
+          const passed = !!progress?.[eduLevel]?.[packId]?.quizPassed;
 
           return (
             <TouchableOpacity
               key={csomag}
-              style={[styles.packCard, !unlocked && styles.packCardLocked]}
-              onPress={() => unlocked && onOpen(csomag)}
-              activeOpacity={unlocked ? 0.7 : 1}
+              disabled={!unlocked}
+              onPress={() => onOpenPackage(csomag)}
+              style={[s.packageCard, !unlocked && s.packageCardLocked]}
             >
-              <View style={styles.packRow}>
-                <Text style={styles.packTitle}>
-                  {unlocked ? '' : '🔒 '}{csomag}. csomag
-                </Text>
-                {passed && <Text style={styles.passedBadge}>✓ Teljesítve</Text>}
+              <View style={s.packageIconWrap}>
+                <Text style={s.packageIcon}>{unlocked ? (passed ? '✅' : '🦴') : '🔒'}</Text>
               </View>
-              <Text style={styles.packSub}>{dinos.length} dínó</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={s.packageName}>{csomag}. csomag</Text>
+                <Text style={s.packageMeta}>
+                  {dinos.length} dínó · {dinos.map((d) => d.nev_koznapi).join(', ')}
+                </Text>
+                {!unlocked && (
+                  <Text style={s.packageLockedHint}>
+                    Nyitáshoz teljesítsd hibátlanra az előző csomag tesztjét
+                  </Text>
+                )}
+                {passed && <Text style={s.packagePassedHint}>Teszt teljesítve ✓</Text>}
+              </View>
             </TouchableOpacity>
           );
         })}
       </ScrollView>
-    </View>
+    </LevelShell>
   );
 }
 
-// ─── BrowseScreen ─────────────────────────────────────────────────────────────
-
+// --- ALKÉPERNYŐ: BÖNGÉSZŐ ---
 function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
   const pkg = packages.find((p) => p.csomag === csomag);
   const dinos = pkg?.dinos || [];
   const [index, setIndex] = useState(0);
+  const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
 
   const dino = dinos[index];
 
@@ -154,11 +283,19 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
 
       <ScrollView contentContainerStyle={{ padding: 14 }}>
         {dino && (
-          <DinoCard
-            dino={dino}
-            imageSource={IMAGE_MAP[dino.nev_tudomanyos] || null}
-            showTimeline
-          />
+          <>
+            <DinoCard
+              dino={dino}
+              imageSource={IMAGE_MAP[dino.nev_tudomanyos] || null}
+              showTimeline
+            />
+            <CharacterCompare
+              creature={dino}
+              character={selectedCharacter}
+              characters={CHARACTERS}
+              onSelectCharacter={setSelectedCharacter}
+            />
+          </>
         )}
       </ScrollView>
 
@@ -190,308 +327,159 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
   );
 }
 
-// ─── QuizScreen ───────────────────────────────────────────────────────────────
-
-function QuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack }) {
-  const pkg = packages.find((p) => p.csomag === csomag);
-  const packageDinos = pkg?.dinos || [];
-
-  const questions = useMemo(
-    () => generateQuestions(packageDinos, creatures, QUIZ_QUESTION_COUNT),
-    [packageDinos, creatures]
-  );
+// --- ALKÉPERNYŐ: TESZT ---
+function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack }) {
+  const pack = packages.find((p) => p.csomag === csomag);
+  const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [], creatures)).current;
 
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);
-  const [score, setScore] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
 
   const question = questions[qIndex];
 
-  const handleAnswer = (optionIndex) => {
-    if (selected !== null) return;
-    setSelected(optionIndex);
-    const correct = optionIndex === question.correctIndex;
-    if (correct) {
-      playQuizSfx('correct');
-      setScore((s) => s + 1);
+  const handleSelect = (idx) => {
+    if (revealed) return;
+    setSelected(idx);
+    setRevealed(true);
+    
+    const isCorrect = idx === question.correctIndex;
+    if (isCorrect) {
+      setCorrectCount((c) => c + 1);
+      playQuizSfx('correct'); // Központi audio-sfx hívás
     } else {
-      playQuizSfx('wrong');
+      playQuizSfx('wrong'); // Központi audio-sfx hívás
     }
 
     setTimeout(() => {
       if (qIndex + 1 < questions.length) {
         setQIndex((i) => i + 1);
         setSelected(null);
+        setRevealed(false);
       } else {
         setFinished(true);
       }
-    }, 900);
+    }, 1200);
   };
 
   if (finished) {
-    const passed = score >= QUIZ_PASS_THRESHOLD;
+    const passed = correctCount === questions.length;
     return (
-      <View style={styles.center}>
-        <Text style={styles.resultEmoji}>{passed ? '🏆' : '😔'}</Text>
-        <Text style={styles.resultTitle}>
-          {passed ? 'Teljesítve!' : 'Nem sikerült'}
-        </Text>
-        <Text style={styles.resultScore}>
-          {score} / {questions.length} helyes
-        </Text>
-
-        {passed ? (
-          <TouchableOpacity
-            style={styles.primaryBtn}
-            onPress={() => onPassed(csomag, score / questions.length)}
-          >
-            <Text style={styles.primaryBtnText}>Tovább</Text>
+      <LevelShell>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+        <View style={s.resultWrap}>
+          <Text style={s.resultEmoji}>{passed ? '🏆' : '😕'}</Text>
+          <Text style={s.resultTitle}>{correctCount} / {questions.length} helyes válasz</Text>
+          <Text style={s.resultDesc}>
+            {passed
+              ? 'Hibátlan eredmény! A következő csomag kinyílt.'
+              : 'A csomag kinyitásához hibátlan (5/5) eredmény szükséges. Próbáld újra!'}
+          </Text>
+          {passed ? (
+            <TouchableOpacity
+              style={s.primaryBtn}
+              onPress={() => onPassed(csomag, csomagToPackId(eduLevel, csomag), correctCount / questions.length)}
+            >
+              <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={s.primaryBtn} onPress={onRetry}>
+              <Text style={s.primaryBtnText}>Újrapróbálom</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity style={s.backLink} onPress={onBack}>
+            <Text style={s.backLinkText}>← Vissza a csomagokhoz</Text>
           </TouchableOpacity>
-        ) : (
-          <>
-            <TouchableOpacity style={styles.primaryBtn} onPress={onRetry}>
-              <Text style={styles.primaryBtnText}>Újra</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.secondaryBtn} onPress={onBack}>
-              <Text style={styles.secondaryBtnText}>Vissza</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-    );
-  }
-
-  if (!question) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.loadingText}>Nincs elegendő adat a kvízhez.</Text>
-        <TouchableOpacity style={styles.secondaryBtn} onPress={onBack}>
-          <Text style={styles.secondaryBtnText}>Vissza</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </LevelShell>
     );
   }
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.quizHeader}>
+    <LevelShell>
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+      <View style={s.browseHeader}>
         <TouchableOpacity onPress={onBack}>
-          <Text style={styles.backText}>← Vissza</Text>
+          <Text style={s.backLinkText}>← Vissza</Text>
         </TouchableOpacity>
-        <Text style={styles.quizProgress}>{qIndex + 1} / {questions.length}</Text>
+        <Text style={s.browseCounter}>Kérdés {qIndex + 1} / {questions.length}</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.quizBody}>
-        <Text style={styles.quizQuestion}>{question.question}</Text>
+      <View style={s.quizQuestionBox}>
+        <Text style={s.quizQuestionText}>{question.question}</Text>
+      </View>
 
-        {question.options.map((opt, i) => {
-          let btnStyle = styles.optionBtn;
-          let textStyle = styles.optionText;
-
-          if (selected !== null) {
-            if (i === question.correctIndex) {
-              btnStyle = [styles.optionBtn, styles.optionCorrect];
-            } else if (i === selected && selected !== question.correctIndex) {
-              btnStyle = [styles.optionBtn, styles.optionWrong];
-            }
+      <View style={{ gap: 9, marginTop: 10 }}>
+        {question.options.map((opt, idx) => {
+          let optStyle = [s.optionBtn];
+          if (revealed) {
+            if (idx === question.correctIndex) optStyle.push(s.optionBtnCorrect);
+            else if (idx === selected) optStyle.push(s.optionBtnIncorrect);
+          } else if (selected === idx) {
+            optStyle.push(s.optionBtnSelected);
           }
-
           return (
-            <TouchableOpacity
-              key={i}
-              style={btnStyle}
-              onPress={() => handleAnswer(i)}
-              activeOpacity={selected !== null ? 1 : 0.7}
-            >
-              <Text style={textStyle}>{opt}</Text>
+            <TouchableOpacity key={idx} style={optStyle} disabled={revealed} onPress={() => handleSelect(idx)}>
+              <Text style={s.optionBtnText}>{['A', 'B', 'C', 'D'][idx]}: {opt}</Text>
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
-    </View>
+      </View>
+    </LevelShell>
   );
 }
 
-// ─── Stílusok ─────────────────────────────────────────────────────────────────
+// --- STÍLUSOK (A központi COLORS-ra építve) ---
+const s = StyleSheet.create({
+  outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center' },
+  inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
+  innerWide: { maxWidth: 720 },
+  loadingText: { color: '#FEFAE0', fontSize: 16, textAlign: 'center', marginTop: 40 },
+  errorText: { color: '#BC6C25', fontSize: 16, textAlign: 'center', marginTop: 40 },
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: COLORS.bg,
-  },
-  center: {
-    flex: 1,
-    backgroundColor: COLORS.bg,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  loadingText: {
-    color: COLORS.textSecondary,
-    marginTop: 12,
-    fontSize: 14,
-  },
-  backBtn: {
-    padding: 16,
-  },
-  backText: {
-    color: COLORS.green,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  list: {
-    padding: 16,
-    gap: 12,
-  },
-  packCard: {
-    backgroundColor: COLORS.card,
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  packCardLocked: {
-    opacity: 0.45,
-  },
-  packRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  packTitle: {
-    color: COLORS.textPrimary,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  passedBadge: {
-    color: COLORS.green,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  packSub: {
-    color: COLORS.textMuted,
-    fontSize: 13,
-    marginTop: 4,
-  },
-  browseHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  browseCounter: {
-    color: COLORS.textMuted,
-    fontSize: 13,
-  },
-  navRow: {
-    flexDirection: 'row',
-    gap: 10,
-    padding: 16,
-  },
-  navBtn: {
-    flex: 1,
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  navBtnPrimary: {
-    backgroundColor: COLORS.green,
-    borderColor: COLORS.green,
-  },
-  navBtnText: {
-    color: COLORS.textPrimary,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  navBtnPrimaryText: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  navBtnDisabled: {
-    color: COLORS.textMuted,
-  },
-  quizHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  quizProgress: {
-    color: COLORS.textMuted,
-    fontSize: 13,
-  },
-  quizBody: {
-    padding: 16,
-    gap: 12,
-  },
-  quizQuestion: {
-    color: COLORS.textPrimary,
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 16,
-    lineHeight: 26,
-  },
-  optionBtn: {
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 10,
-  },
-  optionCorrect: {
-    backgroundColor: COLORS.greenBg,
-    borderColor: COLORS.green,
-  },
-  optionWrong: {
-    backgroundColor: COLORS.coralBg,
-    borderColor: COLORS.coral,
-  },
-  optionText: {
-    color: COLORS.textPrimary,
-    fontSize: 15,
-  },
-  resultEmoji: {
-    fontSize: 56,
-    marginBottom: 12,
-  },
-  resultTitle: {
-    color: COLORS.textPrimary,
-    fontSize: 24,
-    fontWeight: '900',
-    marginBottom: 8,
-  },
-  resultScore: {
-    color: COLORS.textSecondary,
-    fontSize: 16,
-    marginBottom: 32,
-  },
-  primaryBtn: {
-    backgroundColor: COLORS.green,
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    marginBottom: 12,
-  },
-  primaryBtnText: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  secondaryBtn: {
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-  },
-  secondaryBtnText: {
-    color: COLORS.textSecondary,
-    fontSize: 14,
-  },
+  backLink: { paddingVertical: 8, marginBottom: 4 },
+  backLinkText: { color: COLORS.gold || '#DDA15E', ...Platform.select({ web: { cursor: 'pointer' } }), fontSize: 13, fontWeight: '800' },
+
+  primaryBtn: { backgroundColor: COLORS.action || '#BC6C25', borderRadius: 24, paddingVertical: 14, paddingHorizontal: 28, alignItems: 'center', width: '100%' },
+  primaryBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
+
+  packagesScroll: { paddingBottom: 60 },
+  levelTitle: { color: COLORS.gold || '#DDA15E', fontSize: 12, fontWeight: '900', letterSpacing: 2, marginTop: 8 },
+  levelSubtitle: { color: '#FEFAE0', fontSize: 24, fontWeight: '900', marginTop: 2 },
+  levelDesc: { color: 'rgba(254,250,224,0.55)', fontSize: 12, lineHeight: 17, marginTop: 8, marginBottom: 18 },
+
+  packageCard: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'rgba(254,250,224,0.06)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(254,250,224,0.16)', padding: 14, marginBottom: 12 },
+  packageCardLocked: { opacity: 0.5 },
+  packageIconWrap: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.06)', justifyContent: 'center', alignItems: 'center' },
+  packageIcon: { fontSize: 22 },
+  packageName: { color: '#FEFAE0', fontSize: 15, fontWeight: '800' },
+  packageMeta: { color: 'rgba(254,250,224,0.55)', fontSize: 11, marginTop: 2 },
+  packageLockedHint: { color: '#BC6C25', fontSize: 10, marginTop: 4, fontWeight: '600' },
+  packagePassedHint: { color: '#606C38', fontSize: 10, marginTop: 4, fontWeight: '700' },
+
+  browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  browseCounter: { color: 'rgba(254,250,224,0.55)', fontSize: 12, fontWeight: '700' },
+
+  browseNavRow: { flexDirection: 'row', gap: 10, marginTop: 12 },
+  navBtn: { flex: 1, backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: 'rgba(254,250,224,0.16)', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  navBtnDisabled: { opacity: 0.3 },
+  navBtnText: { color: '#FEFAE0', fontSize: 13, fontWeight: '700' },
+
+  quizStartBtn: { backgroundColor: 'rgba(221,161,94,0.16)', borderWidth: 1, borderColor: COLORS.gold || '#DDA15E', borderRadius: 14, paddingVertical: 14, alignItems: 'center', marginTop: 14, marginBottom: 24 },
+  quizStartBtnText: { color: COLORS.gold || '#DDA15E', fontSize: 13, fontWeight: '800' },
+
+  quizQuestionBox: { backgroundColor: 'rgba(255,255,255,0.03)', borderLeftWidth: 3, borderLeftColor: COLORS.gold || '#DDA15E', padding: 16, borderRadius: 8, marginTop: 4 },
+  quizQuestionText: { color: '#FEFAE0', fontSize: 15, fontWeight: '700', lineHeight: 21 },
+  optionBtn: { backgroundColor: 'rgba(255,255,255,0.04)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12 },
+  optionBtnText: { color: '#FEFAE0', fontSize: 13, fontWeight: '500' },
+  optionBtnSelected: { backgroundColor: 'rgba(221,161,94,0.18)', borderColor: COLORS.gold || '#DDA15E' },
+  optionBtnCorrect: { backgroundColor: '#606C38', borderColor: '#7d8d49' },
+  optionBtnIncorrect: { backgroundColor: '#BC6C25', borderColor: '#9c5419' },
+
+  resultWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 60 },
+  resultEmoji: { fontSize: 56, marginBottom: 12 },
+  resultTitle: { color: '#FEFAE0', fontSize: 20, fontWeight: '900', textAlign: 'center' },
+  resultDesc: { color: 'rgba(254,250,224,0.55)', fontSize: 13, textAlign: 'center', marginTop: 8, marginBottom: 24, lineHeight: 18, paddingHorizontal: 12 },
 });
