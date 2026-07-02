@@ -5,6 +5,7 @@ import Shell from '../components/Shell';
 import MuteButton from '../components/MuteButton';
 import LaserBorderButton from '../components/LaserBorderButton';
 import { playSound } from '../audio/audioSystem';
+import { FONTS } from '../constants/fonts';
 
 const BG_IMAGE = require('../../assets/images/landing_menu_bg.png');
 
@@ -22,10 +23,8 @@ export default function LandingPage({ onEnterRegion }) {
 
   const handlePress = (eduLevel) => {
     playSound('click');
-    onEnterRegion(eduLevel); // mindig szám (1-5)
+    onEnterRegion(eduLevel);
   };
-
-
 
   return (
     <Shell>
@@ -115,5 +114,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
     marginTop: -3,
+    fontFamily: FONTS.bold,   // ✔ SAFE FONT ADDED
   },
 });

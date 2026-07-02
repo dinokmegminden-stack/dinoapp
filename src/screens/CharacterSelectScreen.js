@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Image,
@@ -20,6 +20,7 @@ const ITEM_SPACING = (SCREEN_WIDTH - ITEM_WIDTH) / 2;
 
 export default function CharacterSelectScreen({ onSelectCharacter }) {
   const scrollX = useRef(new Animated.Value(0)).current;
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const handleConfirm = (characterId) => {
     onSelectCharacter(characterId);
@@ -44,13 +45,29 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
       extrapolate: 'clamp',
     });
 
+    // Desktop hover scale
+    const hoverScale = hoveredIndex === index ? 1.08 : 1;
+
     return (
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={() => handleConfirm(item.id)}
         style={styles.itemWrapper}
+        onMouseEnter={() => IS_DESKTOP && setHoveredIndex(index)}
+        onMouseLeave={() => IS_DESKTOP && setHoveredIndex(null)}
       >
-        <Animated.View style={[styles.card, { transform: [{ scale }], opacity }]}>
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              transform: [{ scale }, { scale: hoverScale }],
+              opacity,
+              ...(hoveredIndex === index && IS_DESKTOP
+                ? styles.hoveredCard
+                : null),
+            },
+          ]}
+        >
           <Image
             source={item.imageAsset}
             style={{
@@ -123,6 +140,14 @@ const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
     justifyContent: 'flex-end',
+    transitionDuration: '150ms', // RN Web only
+  },
+  hoveredCard: {
+    shadowColor: '#fff',
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
+    filter: 'brightness(1.15)',
   },
   name: {
     fontFamily: FONTS.body,
