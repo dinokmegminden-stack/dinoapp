@@ -1,3 +1,6 @@
+console.log("SHELL RENDER");
+
+
 const styles = StyleSheet.create({
   shellOuter: {
     flex: 1,

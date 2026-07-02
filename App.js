@@ -1,3 +1,6 @@
+console.log("APP STARTED");
+
+
 import { useState } from 'react';
 import { View, StatusBar } from 'react-native';
 

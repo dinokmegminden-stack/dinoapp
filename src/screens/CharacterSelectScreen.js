@@ -1,3 +1,6 @@
+console.log("CHARACTER SCREEN RENDER");
+
+
 import React, { useRef, useState } from 'react';
 import {
   View,

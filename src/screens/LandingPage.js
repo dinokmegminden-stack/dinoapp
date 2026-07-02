@@ -1,3 +1,5 @@
+console.log("LANDING PAGE RENDER");
+
 import { useState } from 'react';
 import { View, Text, Image, ScrollView, StatusBar, StyleSheet } from 'react-native';
 
