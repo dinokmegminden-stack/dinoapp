@@ -19,7 +19,8 @@ import { playQuizSfx } from '../audio/audioSystem';
 import { getCreaturesByRegion, adaptCreature } from '../services/creaturesService';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
 import DinoCard from './DinoCard';
-
+import { CHARACTERS } from '../constants/characters';
+import CharacterCompare from '../components/CharacterCompare';
 // Segédfüggvény a dínók csomagokba rendezéséhez
 function groupByPackage(list) {
   const map = {};
@@ -263,47 +264,66 @@ function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack })
 }
 
 // --- ALKÉPERNYŐ: BÖNGÉSZŐ ---
-function PackageBrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
-  const pack = packages.find((p) => p.csomag === csomag);
-  const dinos = pack ? pack.dinos : [];
+function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
+  const pkg = packages.find((p) => p.csomag === csomag);
+  const dinos = pkg?.dinos || [];
   const [index, setIndex] = useState(0);
+  const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
+
   const dino = dinos[index];
 
-  if (!dino) return null;
-
   return (
-    <LevelShell>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
-      <View style={s.browseHeader}>
+    <View style={styles.screen}>
+      <View style={styles.browseHeader}>
         <TouchableOpacity onPress={onBack}>
-          <Text style={s.backLinkText}>← Csomagok</Text>
+          <Text style={styles.backText}>← Csomagok</Text>
         </TouchableOpacity>
-        <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
+        <Text style={styles.browseCounter}>{index + 1} / {dinos.length}</Text>
       </View>
 
-      <DinoCard dino={dino} imageSource={resolveImage(dino)} showTimeline={false} />
+      <ScrollView contentContainerStyle={{ padding: 14 }}>
+        {dino && (
+          <>
+            <DinoCard
+              dino={dino}
+              imageSource={IMAGE_MAP[dino.nev_tudomanyos] || null}
+              showTimeline
+            />
+            <CharacterCompare
+              creature={dino}
+              character={selectedCharacter}
+              characters={CHARACTERS}
+              onSelectCharacter={setSelectedCharacter}
+            />
+          </>
+        )}
+      </ScrollView>
 
-      <View style={s.browseNavRow}>
+      <View style={styles.navRow}>
         <TouchableOpacity
-          style={[s.navBtn, index === 0 && s.navBtnDisabled]}
-          disabled={index === 0}
+          style={styles.navBtn}
           onPress={() => setIndex((i) => Math.max(0, i - 1))}
+          disabled={index === 0}
         >
-          <Text style={s.navBtnText}>← Előző</Text>
+          <Text style={[styles.navBtnText, index === 0 && styles.navBtnDisabled]}>
+            ← Előző
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[s.navBtn, index === dinos.length - 1 && s.navBtnDisabled]}
-          disabled={index === dinos.length - 1}
-          onPress={() => setIndex((i) => Math.min(dinos.length - 1, i + 1))}
-        >
-          <Text style={s.navBtnText}>Következő →</Text>
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={s.quizStartBtn} onPress={onStartQuiz}>
-        <Text style={s.quizStartBtnText}>📝 Csomagteszt indítása (5 kérdés)</Text>
-      </TouchableOpacity>
-    </LevelShell>
+        {index === dinos.length - 1 ? (
+          <TouchableOpacity style={[styles.navBtn, styles.navBtnPrimary]} onPress={onStartQuiz}>
+            <Text style={styles.navBtnPrimaryText}>Kvíz indítása →</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.navBtn}
+            onPress={() => setIndex((i) => Math.min(dinos.length - 1, i + 1))}
+          >
+            <Text style={styles.navBtnText}>Következő →</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 }
 
