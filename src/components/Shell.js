@@ -1,5 +1,5 @@
 console.log("SHELL RENDER");
-
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   shellOuter: {
