@@ -15,8 +15,6 @@ import { COLORS } from '../constants/colors';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
 
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const ITEM_WIDTH = 220;
 const ITEM_SPACING = (SCREEN_WIDTH - ITEM_WIDTH) / 2;
 
