@@ -18,7 +18,7 @@ import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
 import { getCreaturesByRegion, adaptCreature } from '../services/creaturesService';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
-import DinoCard from './DinoCard';
+import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
 import CharacterCompare from '../components/CharacterCompare';
 // Segédfüggvény a dínók csomagokba rendezéséhez
