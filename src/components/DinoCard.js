@@ -16,7 +16,7 @@ export default function DinoCard({ dino, imageSource, showTimeline = true }) {
         <Image
           source={img}
           style={styles.image}
-          resizeMode="cover"
+          resizeMode="contain"
         />
       )}
 
@@ -24,22 +24,37 @@ export default function DinoCard({ dino, imageSource, showTimeline = true }) {
         <Text style={styles.name}>{safeText(dino.nev_koznapi)}</Text>
         <Text style={styles.latin}>{safeText(dino.nev_tudomanyos)}</Text>
 
-        <Text style={styles.meta}>
-          Korszak: {safeText(dino.korszak)}
-        </Text>
+        {!!dino.taxonomy_group && (
+          <Text style={styles.badge}>{safeText(dino.taxonomy_group)}</Text>
+        )}
 
-        <Text style={styles.meta}>
-          Hossz: {safeText(dino.hossz)}
-        </Text>
+        {!!dino.description_hu && (
+          <Text style={styles.description}>{safeText(dino.description_hu)}</Text>
+        )}
 
-        <Text style={styles.meta}>
-          Felfedező: {safeText(dino.felfedezo)}
-        </Text>
+        <View style={styles.metaBlock}>
+          {!!dino.korszak && (
+            <Text style={styles.meta}>🌍 Korszak: {safeText(dino.korszak)}</Text>
+          )}
+          {!!dino.period && (
+            <Text style={styles.meta}>📅 Időszak: {safeText(dino.period)}</Text>
+          )}
+          {!!dino.hossz && (
+            <Text style={styles.meta}>📏 Hossz: {safeText(dino.hossz)} m</Text>
+          )}
+          {!!dino.felfedezo && (
+            <Text style={styles.meta}>🔍 Felfedező: {safeText(dino.felfedezo)}</Text>
+          )}
+          {!!dino.rarity && (
+            <Text style={styles.meta}>⭐ Ritkaság: {safeText(dino.rarity)}</Text>
+          )}
+        </View>
 
-        {showTimeline && (
+        {showTimeline && !!dino.mya_min && (
           <View style={styles.timeline}>
             <Text style={styles.timelineText}>
-              {safeText(dino.mya_min)} – {safeText(dino.mya_max)} millió év
+              {safeText(dino.mya_min)}
+              {dino.mya_max ? ` – ${safeText(dino.mya_max)}` : ''} millió éve
             </Text>
           </View>
         )}
@@ -56,15 +71,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     borderColor: COLORS.border,
+    alignSelf: 'stretch',
   },
   image: {
     width: '100%',
-    height: 220,
+    height: 200,
     borderRadius: 12,
     marginBottom: 12,
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   info: {
-    gap: 4,
+    gap: 6,
   },
   name: {
     color: COLORS.textPrimary,
@@ -75,14 +92,36 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontSize: 14,
     fontStyle: 'italic',
-    marginBottom: 8,
+    marginBottom: 4,
+  },
+  badge: {
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.greenBg,
+    color: COLORS.green,
+    fontSize: 11,
+    fontWeight: '700',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 4,
+    overflow: 'hidden',
+  },
+  description: {
+    color: COLORS.textSecondary,
+    fontSize: 13,
+    lineHeight: 19,
+    marginBottom: 4,
+  },
+  metaBlock: {
+    gap: 3,
+    marginTop: 4,
   },
   meta: {
     color: COLORS.textMuted,
     fontSize: 13,
   },
   timeline: {
-    marginTop: 10,
+    marginTop: 8,
     padding: 8,
     backgroundColor: COLORS.greenBg,
     borderRadius: 8,
