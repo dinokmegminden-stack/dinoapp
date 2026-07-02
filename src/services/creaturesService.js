@@ -21,11 +21,12 @@ export function adaptCreature(row) {
     csomag: Number(row.pack_number || row.csomag || 1),
     edu: Number(row.edu || row.education_level || 1),
     image_url: row.image_url || null,
-    // új mezők
     description_hu: safe(row.description_hu),
     period: safe(row.period),
     rarity: safe(row.rarity),
     taxonomy_group: safe(row.taxonomy_group),
+    height_m_max: row.height_m_max != null ? Number(row.height_m_max) : null,
+    length_m_max: row.length_m_max != null ? Number(row.length_m_max) : null,
   };
 }
 
