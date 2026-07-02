@@ -1,5 +1,5 @@
-console.log("SHELL RENDER");
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 
 let _styles;
 function getStyles() {
@@ -15,3 +15,14 @@ function getStyles() {
 }
 
 export const styles = new Proxy({}, { get: (_, key) => getStyles()[key] });
+
+export default function Shell({ children, wide = false }) {
+  const s = getStyles();
+  return (
+    <View style={s.shellOuter}>
+      <View style={[s.shellInner, wide && s.shellInnerWide]}>
+        {children}
+      </View>
+    </View>
+  );
+}
