@@ -2,37 +2,38 @@ import { useState } from 'react';
 import { View, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 
-// --- KÉPERNYŐK ---
+import CharacterSelectScreen from './src/screens/CharacterSelectScreen';
 import LandingPage from './src/screens/LandingPage';
 import RegionLevel from './src/screens/RegionLevel';
 
-// --- FONTOK ---
 import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
 import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 
 export default function App() {
-  // --- FONTOK BETÖLTÉSE ---
   const [fontsLoaded] = useFonts({
     Cinzel_700Bold,
     Roboto_400Regular,
     Roboto_700Bold,
   });
 
-  // --- APP STATE ---
-  const [view, setView] = useState('landing');   // 'landing' | 'region'
-  const [eduLevel, setEduLevel] = useState(null); // 1–5
+  const [view, setView] = useState('character'); // 'character' | 'landing' | 'region'
+  const [eduLevel, setEduLevel] = useState(null);
+  const [characterId, setCharacterId] = useState(null);
 
   if (!fontsLoaded) {
     return <View style={{ flex: 1, backgroundColor: '#0a0a06' }} />;
   }
 
-  // --- LANDING → REGION váltás ---
+  const handleSelectCharacter = (charId) => {
+    setCharacterId(charId);
+    setView('landing');
+  };
+
   const handleEnterRegion = (level) => {
-    setEduLevel(level);   // mindig szám
+    setEduLevel(level);
     setView('region');
   };
 
-  // --- VISSZA A FŐMENÜBE ---
   const handleBackToMenu = () => {
     setView('landing');
     setEduLevel(null);
@@ -42,6 +43,10 @@ export default function App() {
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
 
+      {view === 'character' && (
+        <CharacterSelectScreen onSelectCharacter={handleSelectCharacter} />
+      )}
+
       {view === 'landing' && (
         <LandingPage onEnterRegion={handleEnterRegion} />
       )}
@@ -49,8 +54,9 @@ export default function App() {
       {view === 'region' && eduLevel != null && (
         <RegionLevel
           eduLevel={eduLevel}
+          characterId={characterId}
           onBack={handleBackToMenu}
-          progress={{}}   // később ide jön a valódi progress
+          progress={{}}
           onPassed={() => {}}
         />
       )}
