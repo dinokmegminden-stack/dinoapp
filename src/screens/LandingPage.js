@@ -18,7 +18,7 @@ const REGION_BUTTONS = [
 
 export default function LandingPage({ onEnterRegion }) {
   const [stageWidth, setStageWidth] = useState(0);
-  //const [ratio, setRatio] = useState(1.79); // fallback, amíg Image.getSize lefut
+  const [ratio, setRatio] = useState(1.79); // fallback, amíg Image.getSize lefut
   const stageHeight = stageWidth * 1.777;
   useEffect(() => {
     const resolved = Image.resolveAssetSource(BG_IMAGE);
@@ -38,7 +38,7 @@ export default function LandingPage({ onEnterRegion }) {
     onEnterRegion(eduLevel); // mindig szám (1-5)
   };
 
-  const stageHeight = stageWidth * ratio;
+
 
   return (
     <Shell>
