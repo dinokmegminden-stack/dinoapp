@@ -4,6 +4,9 @@
 node_modules/
 Who-Wants-to-Be-a-Millionaire/
 Who-Wants-to-Be-a-Millionaire/.git/
+
+non_used/
+
 # Expo
 .expo/
 dist/
