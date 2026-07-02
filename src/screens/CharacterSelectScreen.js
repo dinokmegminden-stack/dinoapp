@@ -99,7 +99,7 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
       <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
     </View>
   );
-}
+} // ← THIS WAS MISSING
 
 const styles = StyleSheet.create({
   container: {
