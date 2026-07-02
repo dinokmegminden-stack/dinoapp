@@ -71,17 +71,23 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
   keyExtractor={(item) => item.id}
   renderItem={renderItem}
   horizontal
-  style={{ flexGrow: 0, height: 320 }}
   showsHorizontalScrollIndicator={false}
   snapToInterval={ITEM_WIDTH}
   decelerationRate="fast"
-  contentContainerStyle={{ paddingHorizontal: ITEM_SPACING, alignItems: 'center' }}
+
+  style={{ flexGrow: 0, height: 320 }}
+  contentContainerStyle={{
+    paddingHorizontal: ITEM_SPACING,
+    alignItems: 'center',
+  }}
+
   onScroll={Animated.event(
     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
     { useNativeDriver: false }
   )}
   scrollEventThrottle={16}
 />
+
 
       <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
     </View>
