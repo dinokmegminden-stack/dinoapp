@@ -1,10 +1,18 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+
+
+
 import { COLORS } from '../constants/colors';
+import { IMAGE_MAP } from '../constants/imageMap';
 import { getScaledDimensions } from '../utils/scaleUtils';
 
 export default function CharacterCompare({ creature, character, characters, onSelectCharacter }) {
+  const dinoImg = IMAGE_MAP[creature.nev_tudomanyos] || null;
   const dims = character ? getScaledDimensions(character, creature) : null;
+
+
+
 
   return (
     <View style={styles.wrap}>
@@ -12,12 +20,16 @@ export default function CharacterCompare({ creature, character, characters, onSe
 
       {dims ? (
         <View style={styles.stage}>
-          <View style={[styles.figure, { height: dims.character.height, width: dims.character.width }]}>
-            <Image
-              source={character.imageAsset}
-              style={styles.img}
-              resizeMode="contain"
-            />
+         
+            <View style={[styles.figure, { height: dims.dino.height, width: dims.dino.width }]}>
+            {dinoImg ? (
+              <Image
+                source={dinoImg}
+                style={styles.img}
+                resizeMode="contain"
+              />
+            ) : null}
+          
           </View>
           <View style={[styles.figure, { height: dims.dino.height, width: dims.dino.width }]}>
             {creature.image_url ? (
