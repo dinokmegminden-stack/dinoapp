@@ -163,3 +163,4 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
 });
+//fixed the font family for the title, name, and hint text to use the FONTS constants instead of hardcoded values.
