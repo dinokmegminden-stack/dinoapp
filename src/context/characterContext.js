@@ -6,10 +6,13 @@ const CharacterContext = createContext(null);
 export function CharacterProvider({ children }) {
   const [selectedCharacterId, setSelectedCharacterId] = useState(CHARACTERS[0].id);
 
-  const selectedCharacter = CHARACTERS.find(c => c.id === selectedCharacterId) ?? CHARACTERS[0];
+  const selectedCharacter =
+    CHARACTERS.find(c => c.id === selectedCharacterId) ?? CHARACTERS[0];
 
   return (
-    <CharacterContext.Provider value={{ selectedCharacter, selectedCharacterId, setSelectedCharacterId }}>
+    <CharacterContext.Provider
+      value={{ selectedCharacter, selectedCharacterId, setSelectedCharacterId }}
+    >
       {children}
     </CharacterContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import { COLORS } from '../constants/colors';
+import { FONTS } from '../constants/fonts';
 
 import { resolveImage } from '../services/imageResolver';
 import { safeText } from '../services/safeText';
@@ -90,12 +91,14 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 20,
     fontWeight: '900',
+    fontFamily: FONTS.heading,
   },
   latin: {
     color: COLORS.textSecondary,
     fontSize: 14,
     fontStyle: 'italic',
     marginBottom: 4,
+    fontFamily: FONTS.body,
   },
   badge: {
     alignSelf: 'flex-start',
@@ -108,12 +111,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 4,
     overflow: 'hidden',
+    fontFamily: FONTS.bold,
   },
   description: {
     color: COLORS.textSecondary,
     fontSize: 13,
     lineHeight: 19,
     marginBottom: 4,
+    fontFamily: FONTS.body,
   },
   metaBlock: {
     gap: 3,
@@ -122,6 +127,7 @@ const styles = StyleSheet.create({
   meta: {
     color: COLORS.textMuted,
     fontSize: 13,
+    fontFamily: FONTS.body,
   },
   timeline: {
     marginTop: 8,
@@ -133,5 +139,6 @@ const styles = StyleSheet.create({
     color: COLORS.green,
     fontSize: 13,
     fontWeight: '700',
+    fontFamily: FONTS.bold,
   },
 });

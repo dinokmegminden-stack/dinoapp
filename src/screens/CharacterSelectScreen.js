@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { CHARACTERS } from '../constants/characters';
 import { COLORS } from '../constants/colors';
+import { FONTS } from '../constants/fonts';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
@@ -99,7 +100,7 @@ export default function CharacterSelectScreen({ onSelectCharacter }) {
       <Text style={styles.hint}>Koppints a kiválasztáshoz</Text>
     </View>
   );
-} // ← THIS WAS MISSING
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontFamily: 'Cinzel',
+    fontFamily: FONTS.heading,
     fontSize: 22,
     color: COLORS.textPrimary,
     textAlign: 'center',
@@ -124,13 +125,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   name: {
-    fontFamily: 'Roboto',
+    fontFamily: FONTS.body,
     fontSize: 16,
     color: COLORS.textPrimary,
     marginTop: 8,
   },
   hint: {
-    fontFamily: 'Roboto',
+    fontFamily: FONTS.body,
     fontSize: 13,
     color: COLORS.textSecondary,
     textAlign: 'center',

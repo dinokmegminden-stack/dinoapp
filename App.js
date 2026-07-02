@@ -1,29 +1,16 @@
 import { useState } from 'react';
 import { View, StatusBar } from 'react-native';
-import { useFonts } from 'expo-font';
 
 import CharacterSelectScreen from './src/screens/CharacterSelectScreen';
 import LandingPage from './src/screens/LandingPage';
 import RegionLevel from './src/screens/RegionLevel';
 
-import { Cinzel_700Bold } from '@expo-google-fonts/cinzel';
-import { Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
 console.log("Character screen mounted");
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    Cinzel_700Bold,
-    Roboto_400Regular,
-    Roboto_700Bold,
-  });
-
   const [view, setView] = useState('character'); // 'character' | 'landing' | 'region'
   const [eduLevel, setEduLevel] = useState(null);
   const [characterId, setCharacterId] = useState(null);
-
-  if (!fontsLoaded) {
-    return <View style={{ flex: 1, backgroundColor: '#0a0a06' }} />;
-  }
 
   const handleSelectCharacter = (charId) => {
     setCharacterId(charId);
