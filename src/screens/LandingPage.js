@@ -1,7 +1,7 @@
 console.log("LANDING PAGE RENDER");
 
 import { useState } from 'react';
-import { View, Text, Image, ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StatusBar, StyleSheet, useWindowDimensions } from 'react-native';
 
 import Shell from '../components/Shell';
 import MuteButton from '../components/MuteButton';
@@ -14,13 +14,15 @@ const BG_IMAGE = require('../../assets/images/landing_menu_bg.png');
 const REGION_BUTTONS = [
   { key: 1, label: 'Kárpát-medence', centerY: 10, color: '#c7d39a' },
   { key: 2, label: 'Európa',          centerY: 30, color: '#9fd17a' },
-  { key: 3, label: 'Afrika',          centerY: 50, color: '#3a3424' },
-  { key: 4, label: 'Ázsia',           centerY: 70, color: '#fff1d6' },
-  { key: 5, label: 'Amerika',         centerY: 90, color: '#ffe0b0' },
+  { key: 3, label: 'Afrika',           centerY: 50, color: '#3a3424' },
+  { key: 4, label: 'Ázsia',            centerY: 70, color: '#fff1d6' },
+  { key: 5, label: 'Amerika',          centerY: 90, color: '#ffe0b0' },
 ];
 
 export default function LandingPage({ onEnterRegion }) {
-  const [stageWidth, setStageWidth] = useState(0);
+  // A useWindowDimensions dinamikusan követi a képernyő szélességét re-render loop nélkül
+  const { width: windowWidth } = useWindowDimensions();
+  const stageWidth = windowWidth > 600 ? 600 : windowWidth; // Opcionális: maximális szélesség korlát, ha mobilos arányt akarsz weben is tartani
   const stageHeight = stageWidth * 1.777;
 
   const handlePress = (eduLevel) => {
@@ -38,33 +40,29 @@ export default function LandingPage({ onEnterRegion }) {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View
-            style={styles.stageWrapper}
-            onLayout={(e) => setStageWidth(e.nativeEvent.layout.width)}
-          >
-            {stageWidth > 0 && (
-              <View style={[styles.stage, { width: stageWidth, height: stageHeight }]}>
-                <Image
-                  source={BG_IMAGE}
-                  style={styles.background}
-                  resizeMode="stretch"
-                />
+          <View style={styles.stageWrapper}>
+            <View style={[styles.stage, { width: stageWidth, height: stageHeight }]}>
+              <Image
+                source={BG_IMAGE}
+                style={[styles.background, styles.imageResize]} // resizeMode a stílusba ágyazva a warning ellen
+              />
 
-                {REGION_BUTTONS.map((btn) => (
-                  <LaserBorderButton
-                    key={btn.key}
-                    style={[styles.regionButton, { top: `${btn.centerY}%` }]}
-                    color={btn.color}
-                    borderRadius={28}
-                    onPress={() => handlePress(btn.key)}
-                  >
-                    <View style={styles.arrowWrap}>
-                      <Text style={styles.arrowText}>›</Text>
-                    </View>
-                  </LaserBorderButton>
-                ))}
-              </View>
-            )}
+              {REGION_BUTTONS.map((btn) => (
+                <LaserBorderButton
+                  key={btn.key}
+                  style={[styles.regionButton, { top: `${btn.centerY}%` }]}
+                  color={btn.color}
+                  borderRadius={28}
+                  onPress={() => handlePress(btn.key)}
+                  accessibilityLabel={`Régió kiválasztása: ${btn.label}`} // Kiszedi az accessibility hibát a DevTools-ból
+                  accessibilityRole="button"
+                >
+                  <View style={styles.arrowWrap}>
+                    <Text style={styles.arrowText}>›</Text>
+                  </View>
+                </LaserBorderButton>
+              ))}
+            </View>
           </View>
         </ScrollView>
 
@@ -97,6 +95,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  imageResize: {
+    resizeMode: 'stretch', // Így már szabványos modern RN-ben és weben is
+  },
   regionButton: {
     position: 'absolute',
     right: '4%',
@@ -116,6 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
     marginTop: -3,
-    fontFamily: FONTS.bold,   // ✔ SAFE FONT ADDED
+    fontFamily: FONTS.bold,
   },
 });
