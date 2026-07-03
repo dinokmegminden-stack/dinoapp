@@ -5,6 +5,16 @@ import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { getScaledDimensions } from '../utils/scaleUtils';
 
+if (typeof Image !== 'undefined') {
+  // DOM Image constructor hijack
+  const OrigImage = Image;
+  globalThis.Image = function(...args) {
+    console.warn('DOM Image constructor called:', args);
+    return new OrigImage(...args);
+  };
+}
+
+
 export default function DinoCard({ dino, imageSource, character, showTimeline = true }) {
   if (!dino) return null;
 
