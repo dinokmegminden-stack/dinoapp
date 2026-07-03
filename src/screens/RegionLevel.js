@@ -40,6 +40,15 @@ function csomagToPackId(regionKey, csomag) {
   return REGION_PACKS[regionKey]?.[csomag - 1];
 }
 
+// edu (1-5) -> REGION_PACKS/isPackUnlocked kulcs
+const EDU_TO_REGION = {
+  1: 'karpat',
+  2: 'europa',
+  3: 'afrika',
+  4: 'azsia',
+  5: 'amerika',
+};
+
 function resolveImage(dino) {
   if (dino.image_url) return { uri: dino.image_url };
   return IMAGE_MAP[dino.nev_tudomanyos] || null;
@@ -208,7 +217,8 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
 // --- ALKÉPERNYŐ: CSOMAGVÁLASZTÓ ---
 function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack }) {
   // Régiónevek szépítése a felületen
-  const regionNames = { karpat: 'Kárpát-medence', europa: 'Európa', america: 'Észak-Amerika' };
+  const regionNames = { karpat: 'Kárpát-medence', europa: 'Európa', afrika: 'Afrika', azsia: 'Ázsia', amerika: 'Amerika' };
+  const regionKey = EDU_TO_REGION[eduLevel] || eduLevel;
 
   return (
     <LevelShell>
@@ -219,15 +229,15 @@ function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack })
         </TouchableOpacity>
 
         <Text style={s.levelTitle}>FELFEDEZÉS</Text>
-        <Text style={s.levelSubtitle}>{regionNames[eduLevel] || eduLevel}</Text>
+        <Text style={s.levelSubtitle}>{regionNames[regionKey] || regionKey}</Text>
         <Text style={s.levelDesc}>
           Minden csomag végén egy 5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
         </Text>
 
         {packages.map(({ csomag, dinos }) => {
-          const packId = csomagToPackId(eduLevel, csomag);
-          const unlocked = isPackUnlocked(eduLevel, packId, progress);
-          const passed = !!progress?.[eduLevel]?.[packId]?.quizPassed;
+          const packId = csomagToPackId(regionKey, csomag);
+          const unlocked = isPackUnlocked(regionKey, packId, progress);
+          const passed = !!progress?.[regionKey]?.[packId]?.quizPassed;
 
           return (
             <TouchableOpacity
@@ -376,7 +386,7 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
           {passed ? (
             <TouchableOpacity
               style={s.primaryBtn}
-              onPress={() => onPassed(csomag, csomagToPackId(eduLevel, csomag), correctCount / questions.length)}
+              onPress={() => onPassed(csomag, csomagToPackId(EDU_TO_REGION[eduLevel] || eduLevel, csomag), correctCount / questions.length)}
             >
               <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
             </TouchableOpacity>
