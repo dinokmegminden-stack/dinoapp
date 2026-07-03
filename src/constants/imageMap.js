@@ -36,6 +36,7 @@ export const IMAGE_MAP = {
   "Petrustitan hungaricus": require('../../assets/images/petrustitan.jpg'),
   "Uriash kadici": require('../../assets/images/uriash_kadici.jpg'),
   "Komlosaurus carbonis": require('../../assets/images/komlosaurus.jpg'),
+  "Hylaeosaurus armatus": require('../../assets/images/hylaeosaurus.jpg'),
 };
 
 
