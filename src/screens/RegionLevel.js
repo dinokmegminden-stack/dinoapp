@@ -17,9 +17,9 @@ import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
 import { fetchCreaturesByEdu } from '../services/creaturesService';
-import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
 import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
+import { REGION_PACKS, isPackUnlocked, PASS_THRESHOLD } from './regionProgress'; // Haladási logika elérése
 // Segédfüggvény a dínók csomagokba rendezéséhez
 function groupByPackage(list) {
   const map = {};
