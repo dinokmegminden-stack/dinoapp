@@ -1,8 +1,5 @@
-
-
-
 export const IMAGE_MAP = {
-  "Iguanodon bernissartensis": require('../../assets/images/Iguanodon2.jpg'),
+  "Iguanodon bernissartensis": require('../../assets/images/iguanodon.jpg'),
   "Megalosaurus bucklandii": require('../../assets/images/megalosaurus.jpg'),
   "Baryonyx walkeri": require('../../assets/images/baryonyx.jpg'),
   "Hypsilophodon foxii": require('../../assets/images/hypsilophodon.jpg'),
@@ -37,6 +34,46 @@ export const IMAGE_MAP = {
   "Uriash kadici": require('../../assets/images/uriash_kadici.jpg'),
   "Komlosaurus carbonis": require('../../assets/images/komlosaurus.jpg'),
   "Hylaeosaurus armatus": require('../../assets/images/hylaeosaurus.jpg'),
+
+  // --- meg nincs kep hozza, kikommentelve ---
+  "Spinosaurus": require('../../assets/images/spinosaurus.jpg'),
+  "Gigantoraptor": require('../../assets/images/gigantoraptor.jpg'),
+  "Nigersaurus": require('../../assets/images/nigersaurus.jpg'),
+  // "Compsognathus": require('../../assets/images/compsognathus.jpg'),
+  // "Therizinosaurus": require('../../assets/images/therizinosaurus.jpg'),
+  // "Masiakasaurus": require('../../assets/images/masiakasaurus.jpg'),
+  // "Qantassaurus": require('../../assets/images/qantassaurus.jpg'),
+  // "Giraffatitan": require('../../assets/images/giraffatitan.jpg'),
+  // "Tarbosaurus": require('../../assets/images/tarbosaurus.jpg'),
+  // "Polacanthus": require('../../assets/images/polacanthus.jpg'),
+  // "Eustreptospondylus": require('../../assets/images/eustreptospondylus.jpg'),
+  // "Protoceratops": require('../../assets/images/protoceratops.jpg'),
+  // "Miragaia": require('../../assets/images/miragaia.jpg'),
+  // "Carcharodontosaurus": require('../../assets/images/carcharodontosaurus.jpg'),
+  // "Massospondylus": require('../../assets/images/massospondylus.jpg'),
+  // "Sinosauropteryx": require('../../assets/images/sinosauropteryx.jpg'),
+  // "Suchomimus": require('../../assets/images/suchomimus.jpg'),
+  // "Australotitan": require('../../assets/images/australotitan.jpg'),
+  // "Muttaburrasaurus": require('../../assets/images/muttaburrasaurus.jpg'),
+  // "Oviraptor": require('../../assets/images/oviraptor.jpg'),
+  // "Majungasaurus": require('../../assets/images/majungasaurus.jpg'),
+  // "Hatzegopteryx": require('../../assets/images/hatzegopteryx.jpg'),
+  // "Alioramus": require('../../assets/images/alioramus.jpg'),
+  // "Ouranosaurus": require('../../assets/images/ouranosaurus.jpg'),
+  // "Scelidosaurus": require('../../assets/images/scelidosaurus.jpg'),
+  // "Archaeopteryx": require('../../assets/images/archaeopteryx.jpg'),
+  // "Velociraptor": require('../../assets/images/velociraptor.jpg'),
+  // "Nagatitan": require('../../assets/images/nagatitan.jpg'),
+  // "Deinocheirus": require('../../assets/images/deinocheirus.jpg'),
+  // "Australovenator": require('../../assets/images/australovenator.jpg'),
+  // "Bauxitornis": require('../../assets/images/bauxitornis.jpg'),
+  // "Psittacosaurus": require('../../assets/images/psittacosaurus.jpg'),
+  // "Kunbarrasaurus": require('../../assets/images/kunbarrasaurus.jpg'),
+  // "Diamantinasaurus": require('../../assets/images/diamantinasaurus.jpg'),
+  // "Rhoetosaurus": require('../../assets/images/rhoetosaurus.jpg'),
+  // "Bakonydraco": require('../../assets/images/bakonydraco.jpg'),
+  // "Leaellynasaura": require('../../assets/images/leaellynasaura.jpg'),
+  // "Gallimimus": require('../../assets/images/gallimimus.jpg'),
+  "Balaur": require('../../assets/images/balaur.jpg'),
+  // "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
 };
-
-
