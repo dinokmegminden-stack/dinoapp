@@ -1,40 +1,63 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-
-
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { getScaledDimensions } from '../utils/scaleUtils';
 
+const STAGE_HEIGHT = 260;
+const FIGURE_GAP = 16;
+
 export default function CharacterCompare({ creature, character, characters, onSelectCharacter }) {
   const dinoImg = IMAGE_MAP[creature.nev_tudomanyos] || null;
   const dims = character ? getScaledDimensions(character, creature) : null;
 
+  let stageWidth = 0;
+  let characterLeft = 0;
+  let dinoLeft = 0;
 
-
+  if (dims) {
+    stageWidth = dims.character.width + FIGURE_GAP + dims.dino.width;
+    characterLeft = 0;
+    dinoLeft = dims.character.width + FIGURE_GAP;
+  }
 
   return (
     <View style={styles.wrap}>
       <Text style={styles.label}>Méretösszehasonlítás</Text>
 
       {dims ? (
-        <View style={styles.stage}>
-          <View style={[styles.figure, { height: dims.character.height, width: dims.character.width }]}>
+        <View style={styles.stageOuter}>
+          <View style={[styles.stage, { width: stageWidth }]}>
             {character?.imageAsset ? (
               <Image
                 source={character.imageAsset}
-                style={styles.img}
                 resizeMode="contain"
+                style={[
+                  styles.figureImg,
+                  {
+                    width: dims.character.width,
+                    height: dims.character.height,
+                    left: characterLeft,
+                    bottom: 0,
+                  },
+                ]}
               />
             ) : null}
-          </View>
-          <View style={[styles.figure, { height: dims.dino.height, width: dims.dino.width }]}>
+
             {dinoImg || creature.image_url ? (
               <Image
                 source={dinoImg || { uri: creature.image_url }}
-                style={styles.img}
                 resizeMode="contain"
+                style={[
+                  styles.figureImg,
+                  {
+                    width: dims.dino.width,
+                    height: dims.dino.height,
+                    left: dinoLeft,
+                    bottom: 0,
+                  },
+                ]}
               />
             ) : null}
           </View>
@@ -43,7 +66,7 @@ export default function CharacterCompare({ creature, character, characters, onSe
         <Text style={styles.noData}>Nincs elegendő méretadat az összehasonlításhoz.</Text>
       )}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.selector}>
+      <View style={styles.selectorGrid}>
         {characters.map((c) => (
           <TouchableOpacity
             key={c.id}
@@ -54,7 +77,7 @@ export default function CharacterCompare({ creature, character, characters, onSe
             <Text style={styles.thumbName} numberOfLines={1}>{c.name}</Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -74,20 +97,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 10,
   },
-  stage: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    height: 260,
-    gap: 16,
+  stageOuter: {
+    height: STAGE_HEIGHT,
     marginBottom: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  figure: {
-    justifyContent: 'flex-end',
+  stage: {
+    height: STAGE_HEIGHT,
+    position: 'relative',
   },
-  img: {
-    width: '100%',
-    height: '100%',
+  figureImg: {
+    position: 'absolute',
   },
   noData: {
     color: COLORS.textMuted,
@@ -95,14 +116,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 40,
   },
-  selector: {
+  selectorGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     gap: 10,
     paddingVertical: 4,
   },
   thumbWrap: {
-    width: 56,
+    width: 70,
     alignItems: 'center',
-    padding: 4,
+    padding: 6,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'transparent',
