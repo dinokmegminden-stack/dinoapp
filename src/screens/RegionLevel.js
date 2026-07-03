@@ -55,17 +55,17 @@ function resolveImage(dino) {
 }
 
 // --- DINAMIKUS ADATBEVIELI HOOK ---
-export function useRegionData(regionKey, enabled = true) {
+export function useRegionData(eduLevel, enabled = true) {
   const [creatures, setCreatures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!enabled || !regionKey) return;
+    if (!enabled || eduLevel == null) return;
     let mounted = true;
     (async () => {
       setLoading(true);
-      const data = await fetchCreaturesByEdu(regionKey);
+      const data = await fetchCreaturesByEdu(eduLevel);
       if (!mounted) return;
       setCreatures(data || []);
       setLoading(false);
@@ -73,7 +73,7 @@ export function useRegionData(regionKey, enabled = true) {
     return () => {
       mounted = false;
     };
-  }, [enabled, regionKey]);
+  }, [enabled, eduLevel]);
 
   const packages = useMemo(() => groupByPackage(creatures), [creatures]);
 
