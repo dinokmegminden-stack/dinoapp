@@ -185,7 +185,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
 
   if (currentScreen === 'browse') {
     return (
-      <PackageBrowseScreen
+      <BrowseScreen
         csomag={selectedCsomag}
         packages={packages}
         onStartQuiz={() => setCurrentScreen('quiz')}
