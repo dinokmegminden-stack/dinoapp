@@ -2,18 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
-import { IMAGE_MAP } from '../constants/imageMap';
 import { getScaledDimensions } from '../utils/scaleUtils';
-
-if (typeof Image !== 'undefined') {
-  // DOM Image constructor hijack
-  const OrigImage = Image;
-  globalThis.Image = function(...args) {
-    console.warn('DOM Image constructor called:', args);
-    return new OrigImage(...args);
-  };
-}
-
 
 export default function DinoCard({ dino, imageSource, character, showTimeline = true }) {
   if (!dino) return null;
@@ -21,7 +10,7 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
   const { width } = useWindowDimensions();
   const imageHeight = width >= 700 ? 420 : 200;
 
-  const img = imageSource || IMAGE_MAP[dino.nev_tudomanyos] || null;
+  const img = imageSource || null;
   
   // Character overlay setup
   const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
