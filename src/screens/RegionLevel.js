@@ -302,7 +302,13 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
                   onPress={() => setSelectedCharacter(c)}
                   style={[s.charThumb, selectedCharacter?.id === c.id && s.charThumbActive]}
                 >
-                  <Image source={c.imageAsset} style={s.charThumbImg} resizeMode="contain" />
+                  {c.imageAsset ? (
+                    <Image source={c.imageAsset} style={s.charThumbImg} resizeMode="contain" />
+                  ) : (
+                    <View style={[s.charThumbImg, s.charThumbPlaceholder]}>
+                      <Text style={s.charThumbInitial}>{c.name.charAt(0)}</Text>
+                    </View>
+                  )}
                   <Text style={s.charThumbName} numberOfLines={1}>{c.name}</Text>
                 </TouchableOpacity>
               ))}
@@ -483,6 +489,8 @@ const s = StyleSheet.create({
   charThumb: { width: 70, alignItems: 'center', padding: 6, borderRadius: 10, borderWidth: 1, borderColor: 'transparent' },
   charThumbActive: { borderColor: COLORS.green, backgroundColor: COLORS.greenBg },
   charThumbImg: { width: 50, height: 50 },
+  charThumbPlaceholder: { backgroundColor: 'rgba(254,250,224,0.1)', borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  charThumbInitial: { color: '#FEFAE0', fontSize: 20, fontWeight: '800' },
   charThumbName: { color: COLORS.textMuted, fontSize: 9, marginTop: 4, textAlign: 'center' },
 
   browseNavRow: { flexDirection: 'row', gap: 10, marginTop: 12 },
