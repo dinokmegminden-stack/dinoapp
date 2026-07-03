@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../constants/colors';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playQuizSfx } from '../audio/audioSystem';
-import { getCreaturesByRegion, adaptCreature } from '../services/creaturesService';
+import { fetchCreaturesByEdu } from '../services/creaturesService';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
 import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
@@ -56,13 +56,9 @@ export function useRegionData(regionKey, enabled = true) {
     let mounted = true;
     (async () => {
       setLoading(true);
-      const { data, error } = await getCreaturesByRegion(regionKey);
+      const data = await fetchCreaturesByEdu(regionKey);
       if (!mounted) return;
-      if (error) {
-        setError(error);
-      } else {
-        setCreatures((data || []).map(adaptCreature));
-      }
+      setCreatures(data || []);
       setLoading(false);
     })();
     return () => {
