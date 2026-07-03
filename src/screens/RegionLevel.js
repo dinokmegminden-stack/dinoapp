@@ -279,12 +279,12 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
   const dino = dinos[index];
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.browseHeader}>
+    <View style={s.screen}>
+      <View style={s.browseHeader}>
         <TouchableOpacity onPress={onBack}>
-          <Text style={styles.backText}>← Csomagok</Text>
+          <Text style={s.backText}>← Csomagok</Text>
         </TouchableOpacity>
-        <Text style={styles.browseCounter}>{index + 1} / {dinos.length}</Text>
+        <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 14 }}>
@@ -305,27 +305,27 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
         )}
       </ScrollView>
 
-      <View style={styles.navRow}>
+      <View style={s.navRow}>
         <TouchableOpacity
-          style={styles.navBtn}
+          style={s.navBtn}
           onPress={() => setIndex((i) => Math.max(0, i - 1))}
           disabled={index === 0}
         >
-          <Text style={[styles.navBtnText, index === 0 && styles.navBtnDisabled]}>
+          <Text style={[s.navBtnText, index === 0 && s.navBtnDisabled]}>
             ← Előző
           </Text>
         </TouchableOpacity>
 
         {index === dinos.length - 1 ? (
-          <TouchableOpacity style={[styles.navBtn, styles.navBtnPrimary]} onPress={onStartQuiz}>
-            <Text style={styles.navBtnPrimaryText}>Kvíz indítása →</Text>
+          <TouchableOpacity style={[s.navBtn, s.navBtnPrimary]} onPress={onStartQuiz}>
+            <Text style={s.navBtnPrimaryText}>Kvíz indítása →</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={styles.navBtn}
+            style={s.navBtn}
             onPress={() => setIndex((i) => Math.min(dinos.length - 1, i + 1))}
           >
-            <Text style={styles.navBtnText}>Következő →</Text>
+            <Text style={s.navBtnText}>Következő →</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -439,6 +439,11 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
 
 // --- STÍLUSOK (A központi COLORS-ra építve) ---
 const s = StyleSheet.create({
+  screen: { flex: 1, width: '100%', backgroundColor: COLORS.bg },
+  backText: { color: COLORS.gold || '#DDA15E', fontSize: 13, fontWeight: '800' },
+  navRow: { flexDirection: 'row', gap: 10, padding: 14 },
+  navBtnPrimary: { backgroundColor: 'rgba(221,161,94,0.16)', borderColor: COLORS.gold || '#DDA15E' },
+  navBtnPrimaryText: { color: COLORS.gold || '#DDA15E', fontSize: 13, fontWeight: '800' },
   outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center' },
   inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
   innerWide: { maxWidth: 720 },
