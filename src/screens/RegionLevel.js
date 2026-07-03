@@ -20,7 +20,6 @@ import { fetchCreaturesByEdu } from '../services/creaturesService';
 import { REGION_PACKS, isPackUnlocked } from './regionProgress'; // Haladási logika elérése
 import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
-import CharacterCompare from '../components/CharacterCompare';
 // Segédfüggvény a dínók csomagokba rendezéséhez
 function groupByPackage(list) {
   const map = {};
@@ -293,14 +292,21 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
             <DinoCard
               dino={dino}
               imageSource={IMAGE_MAP[dino.nev_tudomanyos] || null}
+              character={selectedCharacter}
               showTimeline
             />
-            <CharacterCompare
-              creature={dino}
-              character={selectedCharacter}
-              characters={CHARACTERS}
-              onSelectCharacter={setSelectedCharacter}
-            />
+            <View style={s.characterSelectorGrid}>
+              {CHARACTERS.map((c) => (
+                <TouchableOpacity
+                  key={c.id}
+                  onPress={() => setSelectedCharacter(c)}
+                  style={[s.charThumb, selectedCharacter?.id === c.id && s.charThumbActive]}
+                >
+                  <Image source={c.imageAsset} style={s.charThumbImg} resizeMode="contain" />
+                  <Text style={s.charThumbName} numberOfLines={1}>{c.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </>
         )}
       </ScrollView>
@@ -472,6 +478,12 @@ const s = StyleSheet.create({
 
   browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   browseCounter: { color: 'rgba(254,250,224,0.55)', fontSize: 12, fontWeight: '700' },
+
+  characterSelectorGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10, paddingVertical: 12 },
+  charThumb: { width: 70, alignItems: 'center', padding: 6, borderRadius: 10, borderWidth: 1, borderColor: 'transparent' },
+  charThumbActive: { borderColor: COLORS.green, backgroundColor: COLORS.greenBg },
+  charThumbImg: { width: 50, height: 50 },
+  charThumbName: { color: COLORS.textMuted, fontSize: 9, marginTop: 4, textAlign: 'center' },
 
   browseNavRow: { flexDirection: 'row', gap: 10, marginTop: 12 },
   navBtn: { flex: 1, backgroundColor: 'rgba(255,255,255,0.06)', borderWidth: 1, borderColor: 'rgba(254,250,224,0.16)', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },

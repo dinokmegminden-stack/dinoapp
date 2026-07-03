@@ -5,23 +5,45 @@ import { FONTS } from '../constants/fonts';
 
 import { resolveImage } from '../services/imageResolver';
 import { safeText } from '../services/safeText';
+import { getScaledDimensions } from '../utils/scaleUtils';
 
-export default function DinoCard({ dino, imageSource, showTimeline = true }) {
+export default function DinoCard({ dino, imageSource, character, showTimeline = true }) {
   if (!dino) return null;
 
   const { width } = useWindowDimensions();
   const imageHeight = width >= 700 ? 420 : 200;
 
   const img = imageSource || resolveImage(dino);
+  
+  // Character overlay setup
+  const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
+  const characterLeft = dims ? (dims.dino.width - dims.character.width) / 2 : 0;
 
   return (
     <View style={styles.card}>
       {img && (
-        <Image
-          source={img}
-          style={[styles.image, { height: imageHeight }]}
-          resizeMode="contain"
-        />
+        <View style={[styles.imageWrapper, { height: imageHeight }]}>
+          <Image
+            source={img}
+            style={[styles.image, { height: imageHeight }]}
+            resizeMode="contain"
+          />
+          {character?.imageAsset && dims && (
+            <Image
+              source={character.imageAsset}
+              resizeMode="contain"
+              style={[
+                styles.characterOverlay,
+                {
+                  width: dims.character.width,
+                  height: dims.character.height,
+                  left: characterLeft,
+                  bottom: 0,
+                },
+              ]}
+            />
+          )}
+        </View>
       )}
 
       <View style={styles.info}>
@@ -77,12 +99,21 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     alignSelf: 'stretch',
   },
+  imageWrapper: {
+    width: '100%',
+    borderRadius: 12,
+    marginBottom: 12,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    position: 'relative',
+    overflow: 'hidden',
+  },
   image: {
     width: '100%',
     height: 200,
     borderRadius: 12,
-    marginBottom: 12,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+  },
+  characterOverlay: {
+    position: 'absolute',
   },
   info: {
     gap: 6,

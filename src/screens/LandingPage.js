@@ -9,11 +9,11 @@ import { playSound } from '../audio/audioSystem';
 const BG_IMAGE = require('../../assets/images/landing_menu_bg.png');
 
 const REGION_BUTTONS = [
-  { key: 1, label: 'Kárpát-medence', centerY: 10 },
-  { key: 2, label: 'Európa',          centerY: 30 },
-  { key: 3, label: 'Afrika',           centerY: 50 },
-  { key: 4, label: 'Ázsia',            centerY: 70 },
-  { key: 5, label: 'Amerika',          centerY: 90 },
+  { key: 1, label: 'Kárpát-medence' },
+  { key: 2, label: 'Európa' },
+  { key: 3, label: 'Afrika' },
+  { key: 4, label: 'Ázsia' },
+  { key: 5, label: 'Amerika' },
 ];
 
 export default function LandingPage({ onEnterRegion }) {
@@ -43,18 +43,20 @@ export default function LandingPage({ onEnterRegion }) {
                 style={[styles.background, styles.imageResize]}
               />
 
-              {REGION_BUTTONS.map((btn) => (
-                <TouchableOpacity
-                  key={btn.key}
-                  style={[styles.dinoButton, { top: `${btn.centerY}%` }]}
-                  onPress={() => handlePress(btn.key)}
-                  activeOpacity={0.7}
-                  accessibilityLabel={`Régió kiválasztása: ${btn.label}`} // Weben ez tiszta aria-label lesz
-                  accessibilityRole="button"
-                >
-                  <Text style={styles.dinoIcon}>🦖</Text>
-                </TouchableOpacity>
-              ))}
+              <View style={styles.buttonGrid}>
+                {REGION_BUTTONS.map((btn) => (
+                  <TouchableOpacity
+                    key={btn.key}
+                    style={styles.regionButton}
+                    onPress={() => handlePress(btn.key)}
+                    activeOpacity={0.7}
+                    accessibilityLabel={`Régió kiválasztása: ${btn.label}`}
+                    accessibilityRole="button"
+                  >
+                    <Text style={styles.buttonLabel}>{btn.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -81,6 +83,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignSelf: 'center',
     overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   background: {
     position: 'absolute',
@@ -91,27 +95,27 @@ const styles = StyleSheet.create({
   imageResize: {
     resizeMode: 'stretch',
   },
-  dinoButton: {
-    position: 'absolute',
-    right: '6%',
-    width: 50,
-    height: 50,
-    marginTop: -25,
-    borderRadius: 25,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Áttetsző kör a dínó mögött, hogy látszódjon, gomb
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    alignItems: 'center',
+  buttonGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
-    // Finom árnyék, hogy kiemelkedjen a háttérből
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    alignItems: 'center',
+    gap: 12,
+    zIndex: 10,
   },
-  dinoIcon: {
-    fontSize: 26,
+  regionButton: {
+    backgroundColor: 'rgba(40, 54, 24, 0.85)',
+    borderWidth: 2,
+    borderColor: 'rgba(221, 161, 94, 0.6)',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  buttonLabel: {
+    color: '#FEFAE0',
+    fontSize: 14,
+    fontWeight: '700',
     textAlign: 'center',
   },
 });
