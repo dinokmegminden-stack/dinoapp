@@ -2,9 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
-
-import { resolveImage } from '../services/imageResolver';
-import { safeText } from '../services/safeText';
+import { IMAGE_MAP } from '../constants/imageMap';
 import { getScaledDimensions } from '../utils/scaleUtils';
 
 export default function DinoCard({ dino, imageSource, character, showTimeline = true }) {
@@ -13,7 +11,7 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
   const { width } = useWindowDimensions();
   const imageHeight = width >= 700 ? 420 : 200;
 
-  const img = imageSource || resolveImage(dino);
+  const img = imageSource || IMAGE_MAP[dino.nev_tudomanyos] || null;
   
   // Character overlay setup
   const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
@@ -47,40 +45,40 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
       )}
 
       <View style={styles.info}>
-        <Text style={styles.name}>{safeText(dino.nev_koznapi)}</Text>
-        <Text style={styles.latin}>{safeText(dino.nev_tudomanyos)}</Text>
+        <Text style={styles.name}>{String(dino.nev_koznapi)}</Text>
+        <Text style={styles.latin}>{String(dino.nev_tudomanyos)}</Text>
 
         {!!dino.taxonomy_group && (
-          <Text style={styles.badge}>{safeText(dino.taxonomy_group)}</Text>
+          <Text style={styles.badge}>{String(dino.taxonomy_group)}</Text>
         )}
 
         {!!dino.description_hu && (
-          <Text style={styles.description}>{safeText(dino.description_hu)}</Text>
+          <Text style={styles.description}>{String(dino.description_hu)}</Text>
         )}
 
         <View style={styles.metaBlock}>
           {!!dino.korszak && (
-            <Text style={styles.meta}>🌍 Korszak: {safeText(dino.korszak)}</Text>
+            <Text style={styles.meta}>🌍 Korszak: {String(dino.korszak)}</Text>
           )}
           {!!dino.period && (
-            <Text style={styles.meta}>📅 Időszak: {safeText(dino.period)}</Text>
+            <Text style={styles.meta}>📅 Időszak: {String(dino.period)}</Text>
           )}
           {!!dino.hossz && (
-            <Text style={styles.meta}>📏 Hossz: {safeText(dino.hossz)} m</Text>
+            <Text style={styles.meta}>📏 Hossz: {String(dino.hossz)} m</Text>
           )}
           {!!dino.felfedezo && (
-            <Text style={styles.meta}>🔍 Felfedező: {safeText(dino.felfedezo)}</Text>
+            <Text style={styles.meta}>🔍 Felfedező: {String(dino.felfedezo)}</Text>
           )}
           {!!dino.rarity && (
-            <Text style={styles.meta}>⭐ Ritkaság: {safeText(dino.rarity)}</Text>
+            <Text style={styles.meta}>⭐ Ritkaság: {String(dino.rarity)}</Text>
           )}
         </View>
 
         {showTimeline && !!dino.mya_min && (
           <View style={styles.timeline}>
             <Text style={styles.timelineText}>
-              {safeText(dino.mya_min)}
-              {dino.mya_max ? ` – ${safeText(dino.mya_max)}` : ''} millió éve
+              {String(dino.mya_min)}
+              {dino.mya_max ? ` – ${String(dino.mya_max)}` : ''} millió éve
             </Text>
           </View>
         )}
