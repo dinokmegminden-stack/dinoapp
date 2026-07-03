@@ -19,7 +19,8 @@ import { playQuizSfx } from '../audio/audioSystem';
 import { fetchCreaturesByEdu } from '../services/creaturesService';
 import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
-import { REGION_PACKS, isPackUnlocked, PASS_THRESHOLD } from './regionProgress'; // Haladási logika elérése
+
+import { REGION_PACKS, isPackUnlocked, PASS_THRESHOLD } from '../utils/regionProgress';
 // Segédfüggvény a dínók csomagokba rendezéséhez
 function groupByPackage(list) {
   const map = {};
