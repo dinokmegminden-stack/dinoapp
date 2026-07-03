@@ -12,15 +12,7 @@ export default function CharacterCompare({ creature, character, characters, onSe
   const dinoImg = IMAGE_MAP[creature.nev_tudomanyos] || null;
   const dims = character ? getScaledDimensions(character, creature) : null;
 
-  let stageWidth = 0;
-  let characterLeft = 0;
-  let dinoLeft = 0;
-
-  if (dims) {
-    stageWidth = dims.character.width + FIGURE_GAP + dims.dino.width;
-    characterLeft = 0;
-    dinoLeft = dims.character.width + FIGURE_GAP;
-  }
+  const characterLeft = dims ? (dims.dino.width - dims.character.width) / 2 : 0;
 
   return (
     <View style={styles.wrap}>
@@ -28,7 +20,18 @@ export default function CharacterCompare({ creature, character, characters, onSe
 
       {dims ? (
         <View style={styles.stageOuter}>
-          <View style={[styles.stage, { width: stageWidth }]}>
+          <View style={[styles.stage, { width: dims.dino.width }]}>
+            {dinoImg || creature.image_url ? (
+              <Image
+                source={dinoImg || { uri: creature.image_url }}
+                resizeMode="contain"
+                style={{
+                  width: dims.dino.width,
+                  height: dims.dino.height,
+                }}
+              />
+            ) : null}
+
             {character?.imageAsset ? (
               <Image
                 source={character.imageAsset}
@@ -39,22 +42,6 @@ export default function CharacterCompare({ creature, character, characters, onSe
                     width: dims.character.width,
                     height: dims.character.height,
                     left: characterLeft,
-                    bottom: 0,
-                  },
-                ]}
-              />
-            ) : null}
-
-            {dinoImg || creature.image_url ? (
-              <Image
-                source={dinoImg || { uri: creature.image_url }}
-                resizeMode="contain"
-                style={[
-                  styles.figureImg,
-                  {
-                    width: dims.dino.width,
-                    height: dims.dino.height,
-                    left: dinoLeft,
                     bottom: 0,
                   },
                 ]}
