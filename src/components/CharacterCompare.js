@@ -20,21 +20,19 @@ export default function CharacterCompare({ creature, character, characters, onSe
 
       {dims ? (
         <View style={styles.stage}>
-         
-            <View style={[styles.figure, { height: dims.dino.height, width: dims.dino.width }]}>
-            {dinoImg ? (
+          <View style={[styles.figure, { height: dims.character.height, width: dims.character.width }]}>
+            {character?.imageAsset ? (
               <Image
-                source={dinoImg}
+                source={character.imageAsset}
                 style={styles.img}
                 resizeMode="contain"
               />
             ) : null}
-          
           </View>
           <View style={[styles.figure, { height: dims.dino.height, width: dims.dino.width }]}>
-            {creature.image_url ? (
+            {dinoImg || creature.image_url ? (
               <Image
-                source={{ uri: creature.image_url }}
+                source={dinoImg || { uri: creature.image_url }}
                 style={styles.img}
                 resizeMode="contain"
               />
