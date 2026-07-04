@@ -35,8 +35,9 @@ export const IMAGE_MAP = {
   "Komlosaurus carbonis": require('../../assets/images/komlosaurus.jpg'),
   "Hylaeosaurus armatus": require('../../assets/images/hylaeosaurus.jpg'),
 
+  
   // --- meg nincs kep hozza, kikommentelve ---
-  "Spinosaurus": require('../../assets/images/spinosaurus.jpg'),
+  "Spinosaurus aegyptiacus": require('../../assets/images/spinosaurus.jpg'),
   "Gigantoraptor": require('../../assets/images/gigantoraptor.jpg'),
   "Nigersaurus": require('../../assets/images/nigersaurus.jpg'),
   "Compsognathus longipes": require('../../assets/images/compsognathus.jpg'),
