@@ -8,26 +8,6 @@ const DESKTOP_BREAKPOINT = 1024;
 const DESKTOP_MAX_WIDTH = 1280;
 const HERO_ASPECT_RATIO = 16 / 9;
 
-const DIET_ICON = {
-  carnivore: '🥩',
-  herbivore: '🌿',
-  piscivore: '🐟',
-  omnivore: '🍽️',
-};
-
-const RARITY_STYLES = {
-  gyakori: { text: '#c8ccbe', border: 'rgba(154,160,140,0.6)', bg: 'rgba(154,160,140,0.18)' },
-  ritka: { text: '#8ecbe6', border: 'rgba(96,165,204,0.55)', bg: 'rgba(96,165,204,0.16)' },
-  epikus: { text: '#c9a6e6', border: 'rgba(160,110,204,0.55)', bg: 'rgba(160,110,204,0.16)' },
-  legendás: { text: '#f0c674', border: 'rgba(221,161,94,0.7)', bg: 'rgba(221,161,94,0.18)' },
-};
-
-function formatRange(min, max, unit) {
-  if (min == null && max == null) return null;
-  if (min != null && max != null && min !== max) return `${min}–${max} ${unit}`;
-  return `${max ?? min} ${unit}`;
-}
-
 export default function DinoCard({ dino, imageSource, character, showTimeline = true }) {
   if (!dino) return null;
 
@@ -39,29 +19,17 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
   const mobileImageHeight = width >= 700 ? 420 : 200;
   const desktopCardWidth = Math.min(width - 48, DESKTOP_MAX_WIDTH);
   const desktopImageHeight = desktopCardWidth / HERO_ASPECT_RATIO;
+
   const imageHeight = isDesktop ? desktopImageHeight : mobileImageHeight;
 
   const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
   const characterLeft = dims ? (dims.dino.width - dims.character.width) / 2 : 0;
 
-  const rarityKey = String(dino.rarity || '').toLowerCase();
-  const rarityStyle = RARITY_STYLES[rarityKey] || RARITY_STYLES.gyakori;
-  const dietIcon = DIET_ICON[String(dino.diet_eng || '').toLowerCase()] || null;
-
-  const mya = formatRange(dino.mya_min, dino.mya_max, 'millió éve');
-  const length = formatRange(dino.length_m_min, dino.length_m_max, 'm');
-  const weight = formatRange(dino.weight_kg_min, dino.weight_kg_max, 'kg');
-
   const metaItems = [
-    dino.period && { label: 'Időszak', value: mya ? `${dino.period}\n${mya}` : String(dino.period) },
-    length && { label: 'Hossz', value: length },
-    weight && { label: 'Tömeg', value: weight },
-    dino.discoverer_name && {
-      label: 'Felfedező',
-      value: dino.discovery_year
-        ? `${dino.discoverer_name} (${dino.discovery_year})`
-        : String(dino.discoverer_name),
-    },
+    dino.epoch && { label: 'Időszak', value: String(dino.epoch) },
+    dino.hossz && { label: 'Hossz', value: `${String(dino.hossz)} m` },
+    dino.felfedezo && { label: 'Felfedező', value: String(dino.felfedezo) },
+    dino.rarity && { label: 'Ritkaság', value: String(dino.rarity) },
   ].filter(Boolean);
 
   const heroBlock = (
@@ -93,69 +61,56 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
             ]}
           />
         )}
-
-        {/* Overlay badges — csak desktopon, a hero kép fölött lebegve */}
-        {isDesktop && (
-          <>
-            {!!dino.diet_hu && (
-              <View style={[styles.overlayBadge, styles.badgeTopLeft]}>
-                {!!dietIcon && <Text style={styles.overlayIcon}>{dietIcon}</Text>}
-                <Text style={styles.overlayText}>{String(dino.diet_hu)}</Text>
-              </View>
-            )}
-            {!!dino.period && (
-              <View style={[styles.overlayBadge, styles.badgeTopRight]}>
-                <Text style={styles.overlayText}>{String(dino.period)}</Text>
-              </View>
-            )}
-            {!!dino.region && (
-              <View style={[styles.overlayBadge, styles.badgeBottomLeft]}>
-                <Text style={styles.overlayIcon}>🌍</Text>
-                <Text style={styles.overlayText}>{String(dino.region)}</Text>
-              </View>
-            )}
-            {!!dino.rarity && (
-              <View
-                style={[
-                  styles.overlayBadge,
-                  styles.badgeBottomRight,
-                  { borderColor: rarityStyle.border, backgroundColor: rarityStyle.bg },
-                ]}
-              >
-                <Text style={styles.overlayIcon}>💎</Text>
-                <Text style={[styles.overlayText, { color: rarityStyle.text }]}>
-                  {String(dino.rarity)}
-                </Text>
-              </View>
-            )}
-          </>
-        )}
       </View>
     )
   );
 
-  // --- DESKTOP: codex-kártya, 2/3 leírás + 1/3 metaadat --------------------
+  // --- DESKTOP: egységes, széles codex-kártya ---------------------------------
   if (isDesktop) {
     return (
       <View style={[styles.desktopCard, { width: desktopCardWidth }]}>
-        <View style={styles.heroSection}>{heroBlock}</View>
+        {/* Hero — teljes szélességű, uncropped 16:9 kép */}
+        <View style={styles.heroSection}>
+          {heroBlock}
+          {!!dino.rarity && (
+            <View style={[styles.rarityBadge, styles.rarityBadgeCommon]}>
+              <Text style={[styles.rarityBadgeText, styles.rarityBadgeTextCommon]}>
+                {String(dino.rarity)}
+              </Text>
+            </View>
+          )}
+        </View>
 
-        <View style={styles.contentRow}>
-          <View style={styles.descriptionCol}>
-            <Text style={styles.desktopName}>{String(dino.name_hu)}</Text>
-            {!!dino.name_latin && (
-              <Text style={styles.desktopLatin}>{String(dino.name_latin)}</Text>
-            )}
-            {!!dino.taxonomy_hu && (
-              <Text style={styles.badge}>{String(dino.taxonomy_hu)}</Text>
-            )}
-            {!!dino.description_hu && (
-              <Text style={styles.descriptionDesktop}>{String(dino.description_hu)}</Text>
+        {/* Title section */}
+        <View style={styles.titleSection}>
+          <View style={styles.titleRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.desktopName}>{String(dino.nev_koznapi)}</Text>
+              <Text style={styles.desktopLatin}>{String(dino.nev_tudomanyos)}</Text>
+            </View>
+            {!!dino.taxonomy_group && (
+              <Text style={styles.badge}>{String(dino.taxonomy_group)}</Text>
             )}
           </View>
+        </View>
 
-          {metaItems.length > 0 && (
-            <View style={styles.metaCol}>
+        <View style={styles.divider} />
+
+        {/* Description section */}
+        {!!dino.description_hu && (
+          <View style={styles.descriptionSection}>
+            <Text style={styles.sectionLabel}>Leírás</Text>
+            <Text style={styles.descriptionDesktop}>{String(dino.description_hu)}</Text>
+          </View>
+        )}
+
+        <View style={styles.divider} />
+
+        {/* Metadata section */}
+        {metaItems.length > 0 && (
+          <View style={styles.metaSection}>
+            <Text style={styles.sectionLabel}>Adatlap</Text>
+            <View style={styles.metaGrid}>
               {metaItems.map((item) => (
                 <View key={item.label} style={styles.metaGridCell}>
                   <Text style={styles.metaGridLabel}>{item.label}</Text>
@@ -163,23 +118,32 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
                 </View>
               ))}
             </View>
-          )}
-        </View>
+          </View>
+        )}
+
+        {showTimeline && !!dino.mya_min && (
+          <View style={styles.timelineDesktop}>
+            <Text style={styles.timelineText}>
+              {String(dino.mya_min)}
+              {dino.mya_max ? ` – ${String(dino.mya_max)}` : ''} millió éve
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
 
-  // --- MOBIL / TABLET: egy oszlopos elrendezés -------------------------------
+  // --- MOBIL / TABLET: eredeti, egy oszlopos elrendezés ----------------------
   return (
     <View style={styles.card}>
       {heroBlock}
 
       <View style={styles.info}>
-        <Text style={styles.name}>{String(dino.name_hu)}</Text>
-        {!!dino.name_latin && <Text style={styles.latin}>{String(dino.name_latin)}</Text>}
+        <Text style={styles.name}>{String(dino.nev_koznapi)}</Text>
+        <Text style={styles.latin}>{String(dino.nev_tudomanyos)}</Text>
 
-        {!!dino.taxonomy_hu && (
-          <Text style={styles.badge}>{String(dino.taxonomy_hu)}</Text>
+        {!!dino.taxonomy_group && (
+          <Text style={styles.badge}>{String(dino.taxonomy_group)}</Text>
         )}
 
         {!!dino.description_hu && (
@@ -187,21 +151,19 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
         )}
 
         <View style={styles.metaBlock}>
-          {!!dino.diet_hu && (
-            <Text style={styles.meta}>{dietIcon ? `${dietIcon} ` : ''}Étrend: {String(dino.diet_hu)}</Text>
-          )}
-          {!!dino.region && <Text style={styles.meta}>🌍 Régió: {String(dino.region)}</Text>}
           {metaItems.map((item) => (
             <Text key={item.label} style={styles.meta}>
-              {item.label}: {item.value.replace('\n', ' · ')}
+              {item.label}: {item.value}
             </Text>
           ))}
-          {!!dino.rarity && <Text style={styles.meta}>💎 Ritkaság: {String(dino.rarity)}</Text>}
         </View>
 
-        {showTimeline && !!mya && (
+        {showTimeline && !!dino.mya_min && (
           <View style={styles.timeline}>
-            <Text style={styles.timelineText}>{mya}</Text>
+            <Text style={styles.timelineText}>
+              {String(dino.mya_min)}
+              {dino.mya_max ? ` – ${String(dino.mya_max)}` : ''} millió éve
+            </Text>
           </View>
         )}
       </View>
@@ -293,32 +255,30 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
   },
 
-  // --- Overlay badges (csak desktop hero) ------------------------------------
-  overlayBadge: {
+  rarityBadge: {
     position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+    top: 16,
+    right: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: 'rgba(217,208,181,0.25)',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
   },
-  badgeTopLeft: { top: 16, left: 16 },
-  badgeTopRight: { top: 16, right: 16 },
-  badgeBottomLeft: { bottom: 16, left: 16 },
-  badgeBottomRight: { bottom: 16, right: 16 },
-  overlayIcon: { fontSize: 13 },
-  overlayText: {
-    color: '#e4e7dc',
-    fontSize: 12,
-    fontWeight: '700',
+  rarityBadgeCommon: {
+    backgroundColor: 'rgba(154,160,140,0.22)',
+    borderColor: 'rgba(154,160,140,0.65)',
+  },
+  rarityBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
     fontFamily: FONTS.bold,
   },
+  rarityBadgeTextCommon: {
+    color: '#e4e7dc',
+  },
 
-  // --- DESKTOP: codex-kártya ---------------------------------------------------
   desktopCard: {
     alignSelf: 'center',
     marginVertical: 24,
@@ -333,6 +293,7 @@ const styles = StyleSheet.create({
     shadowRadius: 32,
     elevation: 14,
   },
+
   heroSection: {
     width: '100%',
     backgroundColor: '#14140f',
@@ -343,56 +304,81 @@ const styles = StyleSheet.create({
     backgroundColor: '#14140f',
   },
 
-  contentRow: {
-    flexDirection: 'row',
-    gap: 32,
-    padding: 40,
+  titleSection: {
+    paddingHorizontal: 40,
+    paddingTop: 28,
+    paddingBottom: 20,
   },
-  descriptionCol: {
-    flex: 2,
-    minWidth: 0,
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 16,
   },
   desktopName: {
     color: COLORS.textPrimary,
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: '900',
     fontFamily: FONTS.heading,
     marginBottom: 4,
   },
   desktopLatin: {
     color: COLORS.textSecondary,
-    fontSize: 15,
+    fontSize: 16,
     fontStyle: 'italic',
-    marginBottom: 8,
-    fontFamily: FONTS.body,
-  },
-  descriptionDesktop: {
-    color: COLORS.textPrimary,
-    fontSize: 15,
-    lineHeight: 25,
-    marginTop: 12,
     fontFamily: FONTS.body,
   },
 
-  metaCol: {
-    flex: 1,
+  divider: {
+    height: 1,
+    backgroundColor: COLORS.border,
+    marginHorizontal: 40,
+  },
+
+  sectionLabel: {
+    color: COLORS.textMuted,
+    fontSize: 12,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 12,
+    fontFamily: FONTS.bold,
+  },
+
+  descriptionSection: {
+    paddingHorizontal: 40,
+    paddingVertical: 24,
+  },
+  descriptionDesktop: {
+    color: COLORS.textPrimary,
+    fontSize: 16,
+    lineHeight: 26,
+    maxWidth: 820,
+    fontFamily: FONTS.body,
+  },
+
+  metaSection: {
+    paddingHorizontal: 40,
+    paddingTop: 24,
+    paddingBottom: 8,
+  },
+  metaGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    alignContent: 'flex-start',
+    gap: 14,
   },
   metaGridCell: {
-    width: '47%',
     backgroundColor: 'rgba(255,255,255,0.06)',
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    minWidth: 150,
   },
   metaGridLabel: {
     color: COLORS.textMuted,
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -401,8 +387,18 @@ const styles = StyleSheet.create({
   },
   metaGridValue: {
     color: COLORS.textPrimary,
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '700',
     fontFamily: FONTS.body,
+  },
+
+  timelineDesktop: {
+    marginHorizontal: 40,
+    marginTop: 20,
+    marginBottom: 28,
+    padding: 12,
+    backgroundColor: COLORS.greenBg,
+    borderRadius: 10,
+    alignSelf: 'flex-start',
   },
 });
