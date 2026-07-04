@@ -8,6 +8,7 @@ import {
   ScrollView,
   StatusBar,
   Platform,
+  Image,
   useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +20,7 @@ import { playQuizSfx } from '../audio/audioSystem';
 import { fetchCreaturesByEdu } from '../services/creaturesService';
 import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
+import { buildQuiz } from '../utils/quizGenerator';
 
 import { REGION_PACKS, isPackUnlocked, PASS_THRESHOLD } from '../utils/regionProgress';
 // Segédfüggvény a dínók csomagokba rendezéséhez
@@ -40,13 +42,14 @@ function csomagToPackId(regionKey, csomag) {
   return REGION_PACKS[regionKey]?.[csomag - 1];
 }
 
-// edu (1-5) -> REGION_PACKS/isPackUnlocked kulcs
+// edu (1-7) -> REGION_PACKS/isPackUnlocked kulcs
 const EDU_TO_REGION = {
   1: 'karpat',
   2: 'europa',
   3: 'afrika',
   4: 'azsia',
-  5: 'amerika',
+  6: 'eszak_amerika',
+  7: 'del_amerika',
 };
 
 function resolveImage(dino) {
@@ -78,59 +81,6 @@ export function useRegionData(eduLevel, enabled = true) {
   const packages = useMemo(() => groupByPackage(creatures), [creatures]);
 
   return { creatures, packages, loading, error };
-}
-
-// --- TESZT KÉRDÉSEK GENERÁLÁSA ---
-function shuffle(arr) {
-  return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
-}
-
-const FALLBACK_DISTRACTORS = {
-  korszak: ['triász', 'kora kréta', 'jura', 'perm'],
-  hossz: ['1 m', '15 m', '0.5 m', '20 m'],
-  felfedezo: ['ismeretlen kutató', 'Charles Darwin', 'Richard Owen'],
-  nev_tudomanyos: ['Tyrannosaurus rex', 'Triceratops horridus', 'Velociraptor mongoliensis'],
-};
-
-function pickDistractors(correctValue, pool, field, count = 3) {
-  const values = [
-    ...new Set(
-      pool
-        .map((d) => d[field])
-        .filter((v) => v && v !== 'ismeretlen' && v !== correctValue)
-    ),
-  ];
-  let distractors = shuffle(values).slice(0, count);
-  if (distractors.length < count && FALLBACK_DISTRACTORS[field]) {
-    const extra = FALLBACK_DISTRACTORS[field].filter((v) => v !== correctValue && !distractors.includes(v));
-    distractors = [...distractors, ...extra].slice(0, count);
-  }
-  return distractors;
-}
-
-const QUESTION_TEMPLATES = [
-  { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
-  { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
-  { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
-  { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
-];
-
-function buildQuestion(dino, template, pool) {
-  const correct = dino[template.field];
-  const distractors = pickDistractors(correct, pool, template.field, 3);
-  const options = shuffle([correct, ...distractors]);
-  return {
-    question: template.text(dino),
-    options,
-    correctIndex: options.indexOf(correct),
-  };
-}
-
-function generatePackageQuestions(packageDinos, fullPool, count = 5) {
-  let combos = [];
-  packageDinos.forEach((d) => QUESTION_TEMPLATES.forEach((t) => combos.push({ d, t })));
-  combos = shuffle(combos).slice(0, count);
-  return combos.map(({ d, t }) => buildQuestion(d, t, fullPool));
 }
 
 // --- UI SHELL ---
@@ -217,7 +167,14 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
 // --- ALKÉPERNYŐ: CSOMAGVÁLASZTÓ ---
 function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack }) {
   // Régiónevek szépítése a felületen
-  const regionNames = { karpat: 'Kárpát-medence', europa: 'Európa', afrika: 'Afrika', azsia: 'Ázsia', amerika: 'Amerika' };
+  const regionNames = {
+    karpat: 'Kárpát-medence',
+    europa: 'Európa',
+    afrika: 'Afrika',
+    azsia: 'Ázsia',
+    eszak_amerika: 'Észak-Amerika',
+    del_amerika: 'Dél-Amerika',
+  };
   const regionKey = EDU_TO_REGION[eduLevel] || eduLevel;
 
   return (
@@ -231,7 +188,7 @@ function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack })
         <Text style={s.levelTitle}>FELFEDEZÉS</Text>
         <Text style={s.levelSubtitle}>{regionNames[regionKey] || regionKey}</Text>
         <Text style={s.levelDesc}>
-          Minden csomag végén egy 5 kérdéses teszt vár — hibátlan eredmény kell a következő csomag kinyitásához.
+          Minden csomag végén teszt vár — legalább {Math.round(PASS_THRESHOLD * 100)}%-os eredmény kell a következő csomag kinyitásához.
         </Text>
 
         {packages.map(({ csomag, dinos }) => {
@@ -256,7 +213,7 @@ function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack })
                 </Text>
                 {!unlocked && (
                   <Text style={s.packageLockedHint}>
-                    Nyitáshoz teljesítsd hibátlanra az előző csomag tesztjét
+                    Nyitáshoz teljesítsd az előző csomag tesztjét
                   </Text>
                 )}
                 {passed && <Text style={s.packagePassedHint}>Teszt teljesítve ✓</Text>}
@@ -349,7 +306,7 @@ function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
 // --- ALKÉPERNYŐ: TESZT ---
 function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack }) {
   const pack = packages.find((p) => p.csomag === csomag);
-  const questions = useRef(generatePackageQuestions(pack ? pack.dinos : [], creatures)).current;
+  const questions = useRef(buildQuiz(pack ? pack.dinos : [], creatures)).current;
 
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -384,7 +341,7 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
   };
 
   if (finished) {
-    const passed = correctCount === questions.length;
+    const passed = questions.length > 0 && correctCount / questions.length >= PASS_THRESHOLD;
     return (
       <LevelShell>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
@@ -393,8 +350,8 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
           <Text style={s.resultTitle}>{correctCount} / {questions.length} helyes válasz</Text>
           <Text style={s.resultDesc}>
             {passed
-              ? 'Hibátlan eredmény! A következő csomag kinyílt.'
-              : 'A csomag kinyitásához hibátlan (5/5) eredmény szükséges. Próbáld újra!'}
+              ? 'Szép munka! A következő csomag kinyílt.'
+              : `A csomag kinyitásához legalább ${Math.round(PASS_THRESHOLD * 100)}% helyes válasz szükséges. Próbáld újra!`}
           </Text>
           {passed ? (
             <TouchableOpacity

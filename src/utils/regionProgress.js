@@ -2,9 +2,8 @@
 // Régió- és pakk-szintű progress / unlock logika a Dínó Milliomos kártyajátékhoz.
 // AsyncStorage-alapú, nickname szerint particionált.
 //
-// REFACTOR (edu-alapú): a régiók azonosítója mostantól az `edu` szám (int),
-// nem a string régiókulcs. Tárolt kulcs: dino_progress_v2_<nickname>
-// (v2 prefix megakadályozza az ütközést a régi string-alapú mentéssel).
+// HUB MODEL: a régiók egyenrangú választások, nincs lánc-feloldás köztük.
+// edu=5 megszűnt (Amerika Észak/Dél-re bontva: edu=6, edu=7).
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,23 +13,23 @@ export const EDU_LABELS = {
   2: 'Európa',
   3: 'Afrika',
   4: 'Ázsia',
-  5: 'Amerika',
+  6: 'Észak-Amerika',
+  7: 'Dél-Amerika',
 };
 
 // --- Konfiguráció: edu-kulcsok és a bennük lévő pakkok (pack_number-ek) -----
-// Kulcs: edu (int), érték: pack_number tömb (int[])
-export const REGION_ORDER = [1, 2, 3, 4, 5];
+export const REGION_ORDER = [1, 2, 3, 4, 6, 7];
 
-// Induló régiók: az 1. csomag mindig nyitott, nem kell hozzá előző régió.
-// Ázsia (4) és Amerika (5) láncos feloldással nyílik.
-export const STARTER_REGIONS = [1, 2, 3];
+// Hub model: minden régió egyenrangú, egyik sem zár másikra.
+export const STARTER_REGIONS = REGION_ORDER;
 
 export const REGION_PACKS = {
-  1: [1, 2, 3],          // Kárpát-medence
-  2: [1, 2, 3, 4, 5],   // Európa
-  3: [1, 2],             // Afrika
-  4: [1, 2, 3, 4],       // Ázsia
-  5: [1, 2, 3, 4, 5],   // Amerika (placeholder)
+  1: [1, 2, 3],          // Kárpát-medence — 4,5,6 dínó/csomag
+  2: [1, 2, 3, 4, 5],    // Európa — 2,3,4,5,6 dínó/csomag
+  3: [1, 2],             // Afrika — 5,5 dínó/csomag
+  4: [1, 2, 3, 4, 5],    // Ázsia — 2,3,4,5,6 dínó/csomag
+  6: [1, 2, 3, 4, 5],    // Észak-Amerika — 3,4,5,6,7 dínó/csomag
+  7: [1, 2, 3, 4],       // Dél-Amerika — 3,4,5,6 dínó/csomag
 };
 
 // Régió string → edu szám (App.js routing kompatibilitás)
@@ -38,8 +37,9 @@ export const REGION_TO_EDU = {
   karpat: 1,
   europa: 2,
   afrika: 3,
-  asia:   4,
-  america: 5,
+  asia: 4,
+  eszak_amerika: 6,
+  del_amerika: 7,
 };
 
 const STORAGE_PREFIX = 'dino_progress_v2_';
@@ -52,12 +52,6 @@ function storageKey(nickname) {
 }
 
 // --- Alap progress objektum --------------------------------------------------
-// Struktúra:
-// {
-//   1: { 1: { quizPassed: false, bestScore: 0, attempts: 0 }, 2: {...}, ... },
-//   2: { 1: {...}, ... },
-//   ...
-// }
 
 function createEmptyProgress() {
   const progress = {};
@@ -78,7 +72,6 @@ export async function loadProgress(nickname) {
     if (!raw) return createEmptyProgress();
 
     const parsed = JSON.parse(raw);
-    // Védelem: új edu/pakk config esetén hiányzó kulcsokat pótoljuk
     const merged = createEmptyProgress();
     REGION_ORDER.forEach((edu) => {
       REGION_PACKS[edu].forEach((packNum) => {
@@ -125,7 +118,7 @@ export async function recordPackQuizResult(nickname, eduLevel, packNumber, score
 }
 
 // --- Pakk feloldási logika ------------------------------------------------------
-// Az 1. csomag nyitott, ha a régió maga fel van oldva.
+// Az 1. csomag nyitott, ha a régió maga fel van oldva (hub modelben mindig).
 // Többi csomagnál: az előző pack quizPassed === true kell.
 
 export function isPackUnlocked(eduLevel, packNumber, progress) {
@@ -144,21 +137,10 @@ export function isPackUnlocked(eduLevel, packNumber, progress) {
 }
 
 // --- Régió feloldási logika -------------------------------------------------------
-// Induló régiók (1, 2, 3) mindig nyitottak.
-// Ázsia (4): Afrika (3) összes pakkja kell.
-// Amerika (5): Ázsia (4) összes pakkja kell.
+// Hub model: minden régió egyenrangú, egyik sincs másikhoz láncolva.
 
 export function isRegionUnlocked(eduLevel, progress) {
-  if (STARTER_REGIONS.includes(eduLevel)) return true;
-
-  const idx = REGION_ORDER.indexOf(eduLevel);
-  if (idx === -1) return false;
-  if (idx === 0) return true;
-
-  const prevEdu = REGION_ORDER[idx - 1];
-  const prevPacks = REGION_PACKS[prevEdu];
-
-  return prevPacks.every((packNum) => progress[prevEdu]?.[packNum]?.quizPassed === true);
+  return REGION_ORDER.includes(eduLevel);
 }
 
 // --- Segédfüggvények UI-hoz --------------------------------------------------------
