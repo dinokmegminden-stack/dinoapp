@@ -8,29 +8,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // --- EDU → Megjelenített régiónév map (UI-hoz) ------------------------------
+
+
 export const EDU_LABELS = {
   1: 'Kárpát-medence',
   2: 'Európa',
   3: 'Afrika',
   4: 'Ázsia',
-  6: 'Észak-Amerika',
-  7: 'Dél-Amerika',
+  5: 'Amerika',
 };
 
-// --- Konfiguráció: edu-kulcsok és a bennük lévő pakkok (pack_number-ek) -----
-export const REGION_ORDER = [1, 2, 3, 4, 6, 7];
-
-// Hub model: minden régió egyenrangú, egyik sem zár másikra.
+export const REGION_ORDER = [1, 2, 3, 4, 5];
 export const STARTER_REGIONS = REGION_ORDER;
 
 export const REGION_PACKS = {
-  1: [1, 2, 3],          // Kárpát-medence — 4,5,6 dínó/csomag
-  2: [1, 2, 3, 4, 5],    // Európa — 2,3,4,5,6 dínó/csomag
-  3: [1, 2],             // Afrika — 5,5 dínó/csomag
-  4: [1, 2, 3, 4, 5],    // Ázsia — 2,3,4,5,6 dínó/csomag
-  6: [1, 2, 3, 4, 5],    // Észak-Amerika — 3,4,5,6,7 dínó/csomag
-  7: [1, 2, 3, 4],       // Dél-Amerika — 3,4,5,6 dínó/csomag
+  1: [1, 2, 3],
+  2: [1, 2, 3, 4, 5],
+  3: [1, 2],
+  4: [1, 2, 3, 4, 5],
+  5: [1, 2, 3, 4, 5, 6, 7, 8, 9],
 };
+
+
 
 // Régió string → edu szám (App.js routing kompatibilitás)
 export const REGION_TO_EDU = {
