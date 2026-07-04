@@ -39,9 +39,10 @@ export const IMAGE_MAP = {
   // --- meg nincs kep hozza, kikommentelve ---
   "Spinosaurus aegyptiacus": require('../../assets/images/spinosaurus.jpg'),
   "Gigantoraptor": require('../../assets/images/gigantoraptor.jpg'),
-  "Nigersaurus": require('../../assets/images/nigersaurus.jpg'),
+  "Nigersaurus taqueti": require('../../assets/images/nigersaurus.jpg'),
   "Compsognathus longipes": require('../../assets/images/compsognathus.jpg'),
   "Therizinosaurus cheloniformis": require('../../assets/images/therizinosaurus.jpg'),
+  "Pantydraco": require('../../assets/images/pantydraco.jpg'),
   // "Masiakasaurus": require('../../assets/images/masiakasaurus.jpg'),
   // "Qantassaurus": require('../../assets/images/qantassaurus.jpg'),
   // "Giraffatitan": require('../../assets/images/giraffatitan.jpg'),
