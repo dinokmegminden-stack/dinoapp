@@ -59,7 +59,7 @@ export default function LandingPage({ onEnterRegion }) {
           </View>
         </ScrollView>
 
-        <MuteButton />
+        
       </View>
     </Shell>
   );
