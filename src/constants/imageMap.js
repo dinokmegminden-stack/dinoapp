@@ -43,6 +43,7 @@ export const IMAGE_MAP = {
   "Compsognathus longipes": require('../../assets/images/compsognathus.jpg'),
   "Therizinosaurus cheloniformis": require('../../assets/images/therizinosaurus.jpg'),
   "Pantydraco": require('../../assets/images/pantydraco.jpg'),
+  "Hatzegopteryx thambema": require('../../assets/images/hategopteryx.jpg'),
   // "Masiakasaurus": require('../../assets/images/masiakasaurus.jpg'),
   // "Qantassaurus": require('../../assets/images/qantassaurus.jpg'),
   // "Giraffatitan": require('../../assets/images/giraffatitan.jpg'),
