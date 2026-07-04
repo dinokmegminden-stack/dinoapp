@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { View, StatusBar } from 'react-native';
 
 import LandingPage from './src/screens/LandingPage';
-import RegionLevel from './screens/regionLevel/RegionLevel';
 
+import RegionLevel from './src/screens/regionLevel/RegionLevel';
 export default function App() {
   const [view, setView] = useState('landing'); // 'landing' | 'region'
   const [eduLevel, setEduLevel] = useState(null);

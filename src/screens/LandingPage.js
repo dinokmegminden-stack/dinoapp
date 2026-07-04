@@ -3,7 +3,7 @@ console.log("LANDING PAGE RENDER");
 import { View, Text, Image, ScrollView, StatusBar, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 
 import Shell from '../components/Shell';
-import MuteButton from '../components/MuteButton';
+//import MuteButton from '../components/MuteButton';
 import { playSound } from '../audio/audioSystem';
 
 const BG_IMAGE = require('../../assets/images/landing_menu_bg.png');
