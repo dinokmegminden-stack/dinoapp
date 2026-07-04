@@ -22,7 +22,8 @@ import DinoCard from '../components/DinoCard';
 import { CHARACTERS } from '../constants/characters';
 import { buildQuiz } from '../utils/quizGenerator';
 
-import { REGION_PACKS, isPackUnlocked, PASS_THRESHOLD } from '../utils/regionProgress';
+import { REGION_PACKS, isPackUnlocked, PASS_THRESHOLD, EDU_LABELS } from '../utils/regionProgress';
+
 // Segédfüggvény a dínók csomagokba rendezéséhez
 function groupByPackage(list) {
   const map = {};
@@ -37,20 +38,10 @@ function groupByPackage(list) {
     .map((csomag) => ({ csomag, dinos: map[csomag] }));
 }
 
-// Csomagszám -> regionProgress packId konverzió (pl. 'karpat', 1 -> 'km_pack1')
-function csomagToPackId(regionKey, csomag) {
-  return REGION_PACKS[regionKey]?.[csomag - 1];
+// Csomagszám -> tényleges pack_number (REGION_PACKS-ból, edu-kulccsal)
+function csomagToPackId(eduLevel, csomag) {
+  return REGION_PACKS[eduLevel]?.[csomag - 1];
 }
-
-// edu (1-7) -> REGION_PACKS/isPackUnlocked kulcs
-const EDU_TO_REGION = {
-  1: 'karpat',
-  2: 'europa',
-  3: 'afrika',
-  4: 'azsia',
-  6: 'eszak_amerika',
-  7: 'del_amerika',
-};
 
 function resolveImage(dino) {
   if (dino.image_url) return { uri: dino.image_url };
@@ -117,7 +108,6 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
     );
   }
 
-  // Útvonalválasztás a belső képernyők között
   if (currentScreen === 'packages') {
     return (
       <PackagesScreen
@@ -166,17 +156,6 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
 
 // --- ALKÉPERNYŐ: CSOMAGVÁLASZTÓ ---
 function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack }) {
-  // Régiónevek szépítése a felületen
-  const regionNames = {
-    karpat: 'Kárpát-medence',
-    europa: 'Európa',
-    afrika: 'Afrika',
-    azsia: 'Ázsia',
-    eszak_amerika: 'Észak-Amerika',
-    del_amerika: 'Dél-Amerika',
-  };
-  const regionKey = EDU_TO_REGION[eduLevel] || eduLevel;
-
   return (
     <LevelShell>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
@@ -186,15 +165,15 @@ function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack })
         </TouchableOpacity>
 
         <Text style={s.levelTitle}>FELFEDEZÉS</Text>
-        <Text style={s.levelSubtitle}>{regionNames[regionKey] || regionKey}</Text>
+        <Text style={s.levelSubtitle}>{EDU_LABELS[eduLevel] || eduLevel}</Text>
         <Text style={s.levelDesc}>
           Minden csomag végén teszt vár — legalább {Math.round(PASS_THRESHOLD * 100)}%-os eredmény kell a következő csomag kinyitásához.
         </Text>
 
         {packages.map(({ csomag, dinos }) => {
-          const packId = csomagToPackId(regionKey, csomag);
-          const unlocked = isPackUnlocked(regionKey, packId, progress);
-          const passed = !!progress?.[regionKey]?.[packId]?.quizPassed;
+          const packId = csomagToPackId(eduLevel, csomag);
+          const unlocked = isPackUnlocked(eduLevel, packId, progress);
+          const passed = !!progress?.[eduLevel]?.[packId]?.quizPassed;
 
           return (
             <TouchableOpacity
@@ -324,9 +303,9 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
     const isCorrect = idx === question.correctIndex;
     if (isCorrect) {
       setCorrectCount((c) => c + 1);
-      playQuizSfx('correct'); // Központi audio-sfx hívás
+      playQuizSfx('correct');
     } else {
-      playQuizSfx('wrong'); // Központi audio-sfx hívás
+      playQuizSfx('wrong');
     }
 
     setTimeout(() => {
@@ -356,7 +335,7 @@ function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, on
           {passed ? (
             <TouchableOpacity
               style={s.primaryBtn}
-              onPress={() => onPassed(csomag, csomagToPackId(EDU_TO_REGION[eduLevel] || eduLevel, csomag), correctCount / questions.length)}
+              onPress={() => onPassed(csomag, csomagToPackId(eduLevel, csomag), correctCount / questions.length)}
             >
               <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
             </TouchableOpacity>
