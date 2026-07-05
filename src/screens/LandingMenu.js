@@ -41,21 +41,12 @@ function RegionRow({ region, isDesktop, onPress }) {
 export default function LandingMenu({ onSelectRegion }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= DESKTOP_BREAKPOINT;
-  const columns = width >= 1100 ? 3 : 2;
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.list,
-          isDesktop && [styles.grid, { maxWidth: columns * 340 }],
-        ]}
-      >
+      <View style={styles.list}>
         {REGIONS.map((region) => (
-          <View
-            key={region.edu}
-            style={isDesktop ? { width: `${100 / columns}%`, padding: 8 } : styles.fullWidthItem}
-          >
+          <View key={region.edu} style={styles.fullWidthItem}>
             <RegionRow region={region} isDesktop={isDesktop} onPress={onSelectRegion} />
           </View>
         ))}
@@ -78,11 +69,6 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignSelf: 'center',
   },
   fullWidthItem: {
     width: '100%',
