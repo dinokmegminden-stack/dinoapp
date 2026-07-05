@@ -54,15 +54,6 @@ export default function LandingPage({ onEnterRegion }) {
     {/* progress + dots */}
   </View>
 
-
-
-
-            {/* Feature kártyák (2 darab) */}
-            <View style={styles.cardsColumn}>
-              <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
-              <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
-            </View>
-
             {/* Progress bar lent */}
             <View style={styles.progressBarSection}>
               <View style={styles.progressBarOuter}>
