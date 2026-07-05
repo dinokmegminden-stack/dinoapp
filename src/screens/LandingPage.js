@@ -1,8 +1,7 @@
 // LandingPage.js
-console.log("LANDING PAGE RENDER");
+console.log("LANDING PAGE RENDER - LANDSCAPE UX OPTIMIZED");
 
-import { View, Text, StatusBar, StyleSheet, Platform } from 'react-native';
-
+import { View, Text, StatusBar, StyleSheet, Platform, ScrollView } from 'react-native';
 import Shell from '../components/Shell';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
@@ -16,49 +15,70 @@ export default function LandingPage({ onEnterRegion }) {
   return (
     <Shell>
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#0a0a06" />
-        <View style={styles.hero}>
-          <Text style={styles.mainTitle}>DÍNÓ TUDÓS</Text>
-          <Text style={styles.subtitle}>
-            Gyűjtsd össze a kártyákat, oldd meg a kvízeket, és válj paleontológus szakértővé.
-          </Text>
+        {/* Vidám, de nem dedós dínó-zöld státuszbár */}
+        <StatusBar barStyle="light-content" backgroundColor="#1E4620" />
+        
+        {/* Bal oldali fix sáv: Cím és a Régióválasztó Főgombok */}
+        <View style={styles.leftColumn}>
+          <View style={styles.hero}>
+            <Text style={styles.mainTitle}>DÍNÓ TUDÓS</Text>
+            <Text style={styles.subtitle}>
+              Gyűjtsd össze a kártyákat, oldd meg a kvízeket, és válj paleontológus szakértővé!
+            </Text>
+          </View>
+          
+          {/* A te menüd, ami a navigációt és indítást kezeli */}
+          <View style={styles.menuWrapper}>
+            <LandingMenu onSelectRegion={handleSelectRegion} />
+          </View>
         </View>
 
-        <View style={styles.featuresContainer}>
-          <FeatureCard
-            icon="🎴"
-            title="Gyűjtsd össze a kártyákat"
-            desc="51 dinoszaurus fajta 5 kontinensen — teljes paleontológiai enciklopédia."
-          />
-          <FeatureCard
-            icon="🧠"
-            title="Válaszolj a kvízekre"
-            desc="ABCD kérdések mindegyik dinóról — tanulj a játék közben."
-          />
-          <FeatureCard
-            icon="🌍"
-            title="Fedezd fel a dinoszauruszokat"
-            desc="Kárpát-medence, Európa, Afrika, Ázsia, Amerika — világméretű felfedezés."
-          />
-          <FeatureCard
-            icon="👑"
-            title="Érj el professzori szintet"
-            desc="Nyisd fel az összes pakk és válj a dinoszauruszok végső szakértőjévé."
-          />
+        {/* Jobb oldali sáv: 2x2-es interaktív jellemző-kártyák */}
+        <View style={styles.rightColumn}>
+          <View style={styles.gridContainer}>
+            <FeatureCard
+              icon="🎴"
+              title="Kártyagyűjtemény"
+              desc="51 dínó fajta 5 kontinensen — teljes enciklopédia."
+              badgeColor="#FF6B6B"
+            />
+            <FeatureCard
+              icon="🧠"
+              title="Dínó Kvízek"
+              desc="ABCD kérdések minden lényről. Tanulj játszva!"
+              badgeColor="#4D96FF"
+            />
+            <FeatureCard
+              icon="🌍"
+              title="Felfedezés"
+              desc="Kárpát-medence, Afrika, Amerika és azon túl."
+              badgeColor="#6BCB77"
+            />
+            <FeatureCard
+              icon="👑"
+              title="Professzor Szint"
+              desc="Nyiss ki minden pakkot, és légy a végső szakértő!"
+              badgeColor="#FFD93D"
+            />
+          </View>
         </View>
 
-        <LandingMenu onSelectRegion={handleSelectRegion} />
       </View>
     </Shell>
   );
 }
 
-function FeatureCard({ icon, title, desc }) {
+// 3D-s hatású, modern játék-kártya komponens
+function FeatureCard({ icon, title, desc, badgeColor }) {
   return (
     <View style={styles.featureCard}>
-      <Text style={styles.featureIcon}>{icon}</Text>
-      <Text style={styles.featureTitle}>{title}</Text>
-      <Text style={styles.featureDesc}>{desc}</Text>
+      <View style={[styles.iconBadge, { backgroundColor: badgeColor }]}>
+        <Text style={styles.featureIcon}>{icon}</Text>
+      </View>
+      <View style={styles.cardContent}>
+        <Text style={styles.featureTitle}>{title}</Text>
+        <Text style={styles.featureDesc} numberOfLines={2}>{desc}</Text>
+      </View>
     </View>
   );
 }
@@ -66,62 +86,100 @@ function FeatureCard({ icon, title, desc }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a06',
+    flexDirection: 'row', // Fekvő nézet miatt egymás mellett vannak a hasábok!
+    backgroundColor: '#F4F7F4', // Kellemes, világos "paleo-kaland" háttér
+    padding: 20,
+  },
+  leftColumn: {
+    flex: 4, // 40% szélesség a címnek és a főmenünek
+    justifyContent: 'center',
+    paddingRight: 15,
+  },
+  rightColumn: {
+    flex: 6, // 60% szélesség a feature kártyáknak
+    justifyContent: 'center',
   },
   hero: {
-    paddingTop: 48,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: 20,
   },
   mainTitle: {
-    fontSize: Platform.select({ web: 56, default: 40 }),
+    fontSize: Platform.select({ web: 42, default: 36 }),
     fontWeight: '900',
     fontFamily: Platform.select({
-      web: "'Impact', 'Arial Black', sans-serif",
+      web: 'system-ui, -apple-system, sans-serif',
       default: 'System',
     }),
-    color: '#ECEFF1',
-    textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: 3,
+    color: '#1A3A1C', // Mély dínó-zöld
+    letterSpacing: 1.5,
+    marginBottom: 6,
   },
   subtitle: {
-    fontSize: 15,
-    color: 'rgba(236,239,241,0.75)',
-    textAlign: 'center',
-    maxWidth: 480,
-    lineHeight: 22,
+    fontSize: 14,
+    color: '#4A5D4B',
+    lineHeight: 20,
   },
-  featuresContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 24,
-    gap: 12,
+  menuWrapper: {
+    width: '100%',
+    // Itt a LandingMenu-d stílusát finomhangolhatod, hogy jól mutasson a bal sávban
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 14,
+    justifyContent: 'space-between',
   },
   featureCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    width: '48%', // 2x2-es elrendezés a résen belül
+    borderRadius: 16,
+    padding: 16,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
+    alignItems: 'center',
+    gap: 14,
+    // 3D Játék-effektus: az alsó szegély vastagabb, mintha megnyomható lenne
+    borderBottomWidth: 4,
+    borderBottomColor: '#E0E5E0',
+    // Kellemes, lágy árnyékok
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.06,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 3,
+      },
+      web: {
+        shadowColor: 'rgba(0,0,0,0.06)',
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 12,
+      }
+    })
+  },
+  iconBadge: {
+    width: 46,
+    height: 46,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   featureIcon: {
-    fontSize: 28,
-    marginTop: 2,
+    fontSize: 24,
+  },
+  cardContent: {
+    flex: 1,
   },
   featureTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#ECEFF1',
-    flex: 1,
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#1A3A1C',
+    marginBottom: 2,
   },
   featureDesc: {
     fontSize: 12,
-    color: 'rgba(236,239,241,0.65)',
-    flex: 1,
+    color: '#607261',
+    lineHeight: 16,
   },
 });
