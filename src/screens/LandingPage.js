@@ -38,23 +38,34 @@ export default function LandingPage({ onEnterRegion }) {
         {/* === ALSÓ SÁV: KÉT HASÁBOS ELRENDEZÉS === */}
         <View style={styles.mainContentRow}>
           
-          {/* BAL OLDAL: Kompakt XP Panel (progress lent) */}
+          {/* BAL OLDAL: Kompakt XP Panel + Feature Cards + Progress */}
           <View style={styles.leftDashboardColumn}>
             
-  <View style={styles.xpPanelCompact}>
-    {/* XP tartalom */}
-  </View>
+            {/* XP Panel top */}
+            <View style={styles.xpPanelCompact}>
+              <View style={styles.xpHeaderRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.xpPanelTitle}>PROFESSZOR SZINT</Text>
+                  <Text style={styles.xpSubTitle}>
+                    HALADÁS: <Text style={styles.xpHighlight}>{playerStats.currentXp} / {playerStats.maxXp} XP</Text>
+                  </Text>
+                </View>
+                <View style={styles.avatarWrap}>
+                  <Text style={styles.avatarEmoji}>🎓</Text>
+                </View>
+              </View>
+            </View>
 
-  <View style={styles.cardsColumn}>
-    <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
-    <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
-  </View>
+            {/* Feature cards middle */}
+            <View style={styles.cardsColumn}>
+              <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
+              <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
+            </View>
 
-  <View style={styles.progressBarSection}>
-    {/* progress + dots */}
-  </View>
+            {/* Flexible spacer */}
+            <View style={{ flex: 1 }} />
 
-            {/* Progress bar lent */}
+            {/* Progress section bottom */}
             <View style={styles.progressBarSection}>
               <View style={styles.progressBarOuter}>
                 <View style={[styles.progressBarInner, { width: progressPercent }]} />
@@ -130,9 +141,9 @@ const styles = StyleSheet.create({
     gap: 28,
   },
   leftDashboardColumn: {
-    flex: 4.5, 
-    gap: 12,
-    justifyContent: 'space-between',
+    flex: 4.5,
+    gap: 14,
+    justifyContent: 'flex-start',
   },
   rightMenuColumn: {
     flex: 5.5,
@@ -212,20 +223,21 @@ const styles = StyleSheet.create({
     color: 'rgba(254,250,224,0.45)',
     fontSize: 10,
   },
-  // Progress bar lent
   progressBarSection: {
-    gap: 10,
+    minHeight: 120,
+    justifyContent: 'center',
+    gap: 14,
   },
   progressBarOuter: {
-    height: 8,
+    height: 12,
     backgroundColor: 'rgba(254,250,224,0.08)',
-    borderRadius: 4,
+    borderRadius: 6,
     overflow: 'hidden',
   },
   progressBarInner: {
     height: '100%',
     backgroundColor: COLORS.gold || '#DDA15E',
-    borderRadius: 4,
+    borderRadius: 6,
   },
   packStatusRow: {
     flexDirection: 'row',
