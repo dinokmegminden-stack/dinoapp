@@ -27,7 +27,7 @@ export default function LandingPage({ onEnterRegion }) {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
         
-        {/* === FENTI SÁV: TELJES SZÉLESSÉGŰ CÍM (TOP KOMPONENS) === */}
+        {/* === FENTI SÁV: TELJES SZÉLESSÉGŰ CÍM === */}
         <View style={styles.topHero}>
           <Text style={styles.mainTitle}>DÍNÓ TUDÓS</Text>
           <Text style={styles.subtitle}>
@@ -38,10 +38,10 @@ export default function LandingPage({ onEnterRegion }) {
         {/* === ALSÓ SÁV: KÉT HASÁBOS ELRENDEZÉS === */}
         <View style={styles.mainContentRow}>
           
-          {/* BAL OLDAL: Kompaktabb Dashboard & Kártyák (Most már kevesebb helyet foglal) */}
+          {/* BAL OLDAL: Kompakt XP Panel (progress lent) */}
           <View style={styles.leftDashboardColumn}>
             
-            {/* Kisebb, letisztultabb XP Panel */}
+            {/* XP Panel header + avatar csak */}
             <View style={styles.xpPanelCompact}>
               <View style={styles.xpHeaderRow}>
                 <View style={{ flex: 1 }}>
@@ -51,16 +51,22 @@ export default function LandingPage({ onEnterRegion }) {
                   </Text>
                 </View>
                 <View style={styles.avatarWrap}>
-                  <Text style={styles.avatarEmoji}>🤠</Text>
+                  <Text style={styles.avatarEmoji}>🎓</Text>
                 </View>
               </View>
+            </View>
 
-              {/* Vékonyabb, kisebb progress bar */}
+            {/* Feature kártyák (2 darab) */}
+            <View style={styles.cardsColumn}>
+              <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
+              <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
+            </View>
+
+            {/* Progress bar lent */}
+            <View style={styles.progressBarSection}>
               <View style={styles.progressBarOuter}>
                 <View style={[styles.progressBarInner, { width: progressPercent }]} />
               </View>
-
-              {/* Kompaktabb lakat/pipa sor */}
               <View style={styles.packStatusRow}>
                 <View style={[styles.packDot, styles.packDotDone]}><Text style={styles.packDotText}>✓</Text></View>
                 <View style={[styles.packDot, styles.packDotDone]}><Text style={styles.packDotText}>✓</Text></View>
@@ -69,17 +75,10 @@ export default function LandingPage({ onEnterRegion }) {
                 <View style={styles.packDot}><Text style={styles.packDotText}>🔒</Text></View>
               </View>
             </View>
-
-            {/* Feature kártyák listája */}
-            <View style={styles.cardsColumn}>
-              <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
-              <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
-              <FeatureCard icon="🌍" title="Felfedezés" desc="Kárpát-medence és a nagyvilág." />
-            </View>
             
           </View>
 
-          {/* JOBB OLDAL: NAGYOBB, OLVASHATÓBB RÉGIÓGOMBOK */}
+          {/* JOBB OLDAL: RÉGIÓGOMBOK */}
           <View style={styles.rightMenuColumn}>
             <LandingMenu onSelectRegion={handleSelectRegion} />
           </View>
@@ -111,7 +110,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 28,
   },
-  // Teljes szélességű felső rész
   topHero: {
     width: '100%',
     alignItems: 'center',
@@ -134,30 +132,26 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'center',
   },
-  // Alsó kétoszlopos elrendezés
   mainContentRow: {
     flex: 1,
     flexDirection: 'row',
     gap: 28,
   },
-  // Bal hasáb (Kompaktabb méretre szabva)
   leftDashboardColumn: {
     flex: 4.5, 
-    gap: 14,
-    justifyContent: 'flex-start',
+    gap: 12,
+    justifyContent: 'space-between',
   },
-  // Jobb hasáb (Nagyobb súly a gomboknak)
   rightMenuColumn: {
     flex: 5.5,
     justifyContent: 'center',
   },
-  // Kisebb, áramvonalasított XP Panel
   xpPanelCompact: {
     backgroundColor: 'rgba(254,250,224,0.03)',
     borderWidth: 1,
     borderColor: 'rgba(254,250,224,0.1)',
     borderRadius: 20,
-    padding: 16,
+    padding: 14,
   },
   xpHeaderRow: {
     flexDirection: 'row',
@@ -166,13 +160,13 @@ const styles = StyleSheet.create({
   },
   xpPanelTitle: {
     color: COLORS.gold || '#DDA15E',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '900',
     letterSpacing: 0.5,
   },
   xpSubTitle: {
     color: '#FEFAE0',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
     marginTop: 2,
   },
@@ -180,59 +174,16 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   avatarWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: 'rgba(255,255,255,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarEmoji: {
-    fontSize: 22,
+    fontSize: 20,
   },
-  // Kisebb Progress Bar
-  progressBarOuter: {
-    height: 10, // Vékonyabb csík
-    backgroundColor: 'rgba(254,250,224,0.08)',
-    borderRadius: 5,
-    overflow: 'hidden',
-    marginVertical: 10,
-  },
-  progressBarInner: {
-    height: '100%',
-    backgroundColor: COLORS.gold || '#DDA15E',
-    borderRadius: 5,
-  },
-  packStatusRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    gap: 8,
-    marginTop: 2,
-  },
-  packDot: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.04)',
-    borderWidth: 1,
-    borderColor: 'rgba(254,250,224,0.12)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  packDotDone: {
-    backgroundColor: '#606C38',
-    borderColor: '#7d8d49',
-  },
-  packDotActive: {
-    backgroundColor: COLORS.action || '#BC6C25',
-    borderColor: '#e2873a',
-  },
-  packDotText: {
-    color: '#FEFAE0',
-    fontSize: 10,
-    fontWeight: '800',
-  },
-  // Feature kártyák csoportja
   cardsColumn: {
     gap: 8,
   },
@@ -268,5 +219,48 @@ const styles = StyleSheet.create({
   cardDesc: {
     color: 'rgba(254,250,224,0.45)',
     fontSize: 10,
+  },
+  // Progress bar lent
+  progressBarSection: {
+    gap: 10,
+  },
+  progressBarOuter: {
+    height: 8,
+    backgroundColor: 'rgba(254,250,224,0.08)',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressBarInner: {
+    height: '100%',
+    backgroundColor: COLORS.gold || '#DDA15E',
+    borderRadius: 4,
+  },
+  packStatusRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 6,
+  },
+  packDot: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  packDotDone: {
+    backgroundColor: '#606C38',
+    borderColor: '#7d8d49',
+  },
+  packDotActive: {
+    backgroundColor: COLORS.action || '#BC6C25',
+    borderColor: '#e2873a',
+  },
+  packDotText: {
+    color: '#FEFAE0',
+    fontSize: 10,
+    fontWeight: '800',
   },
 });
