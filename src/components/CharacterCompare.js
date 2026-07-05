@@ -42,7 +42,7 @@ export default function CharacterCompare({ creature, character, characters, onSe
                     width: dims.character.width,
                     height: dims.character.height,
                     left: characterLeft,
-                    bottom: 0,
+                    bottom: dims.characterBottom
                   },
                 ]}
               />
