@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, useWindowDimensions, Platform } from 'react-native';
-
-const DESKTOP_BREAKPOINT = 768;
+import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import { COLORS } from '../constants/colors'; // Beimportálva a színeidhez
 
 const REGIONS = [
   { edu: 1, label: 'Kárpát-medence' },
@@ -11,7 +10,7 @@ const REGIONS = [
   { edu: 5, label: 'Amerika' },
 ];
 
-function RegionButton({ region, isDesktop, onPress }) {
+function RegionButton({ region, onPress }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -20,28 +19,23 @@ function RegionButton({ region, isDesktop, onPress }) {
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       style={[
-        styles.glassBtn,
-        isDesktop && styles.glassBtnDesktop,
-        hovered && styles.glassBtnHovered,
+        styles.navBtnPrimary,
+        hovered && styles.navBtnPrimaryHovered,
       ]}
     >
-      <Text style={styles.glassBtnText}>{region.label}</Text>
+      <Text style={styles.navBtnPrimaryText}>{region.label}</Text>
     </Pressable>
   );
 }
 
 export default function LandingMenu({ onSelectRegion }) {
-  const { width } = useWindowDimensions();
-  const isDesktop = width >= DESKTOP_BREAKPOINT;
-
   return (
-    <View style={styles.hero}>
+    <View style={styles.menuContainer}>
       <View style={styles.list}>
         {REGIONS.map((region) => (
           <RegionButton
             key={region.edu}
             region={region}
-            isDesktop={isDesktop}
             onPress={onSelectRegion}
           />
         ))}
@@ -51,60 +45,55 @@ export default function LandingMenu({ onSelectRegion }) {
 }
 
 const styles = StyleSheet.create({
-  hero: {
-    flex: 1,
+  menuContainer: {
+    // KUKA a 100vh és a #2C3E50 háttér! Most már csak egy tiszta konténer.
     width: '100%',
-    minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2C3E50',
   },
   list: {
     width: '100%',
-    maxWidth: 420,
-    gap: 20,
-    paddingHorizontal: 24,
+    gap: 12, // Kicsit szorosabb, hogy jobban elférjen fekvőben
+    paddingHorizontal: 8,
   },
-  glassBtn: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 36,
+  // A te stílusfájlod mintájára épített prémium gomb dizájn
+  navBtnPrimary: {
+    width: '100%',
+    backgroundColor: 'rgba(221,161,94,0.14)', // Az aranyod áttetsző verziója
+    borderWidth: 2, // Kicsit vastagabb keret a jobb visszajelzésért
+    borderColor: COLORS.gold || '#DDA15E',
+    borderRadius: 16, // Modern, lekerekített sarkok
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     alignItems: 'center',
+    justifyContent: 'center',
     ...Platform.select({
       web: {
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.3)',
-        transition: 'all 0.3s ease',
+        backdropFilter: 'blur(4px)',
+        WebkitBackdropFilter: 'blur(4px)',
+        transition: 'all 0.2s ease-in-out',
         cursor: 'pointer',
       },
     }),
   },
-  glassBtnDesktop: {
-    paddingVertical: 20,
-  },
-  glassBtnHovered: {
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderColor: 'rgba(255,255,255,0.25)',
+  navBtnPrimaryHovered: {
+    backgroundColor: 'rgba(221,161,94,0.25)',
     ...Platform.select({
       web: {
-        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.4)',
-        transform: 'translateY(-2px)',
+        transform: 'scale(1.02)', // Finom ugrás hoverre
       },
     }),
   },
-  glassBtnText: {
-    color: '#ECEFF1',
+  navBtnPrimaryText: {
+    color: COLORS.gold || '#DDA15E',
     fontFamily: Platform.select({
-      web: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      web: "system-ui, -apple-system, sans-serif",
       default: 'System',
     }),
-    fontWeight: '700',
-    fontSize: 18,
-    letterSpacing: 2,
+    fontWeight: '900', // Szuper vastag betűk a 10+ korosztálynak
+    fontSize: 15,
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
+    textAlign: 'center',
   },
 });
