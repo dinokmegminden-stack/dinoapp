@@ -20,17 +20,22 @@ function CarpathianIcon({ color, size = 40 }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Path
-        d="M10 78 L32 40 L44 58 L56 30 L72 58 L82 44 L92 78 Z"
+        d="M 22 36 
+           C 25 25, 40 16, 55 18 
+           C 68 20, 82 22, 88 35 
+           C 92 42, 86 52, 92 60
+           C 96 66, 91 75, 84 78
+           C 72 82, 60 90, 48 85
+           C 38 82, 25 88, 15 82
+           C 8 78, 12 68, 10 60
+           C 8 52, 16 46, 15 42
+           Z"
         fill={color}
         fillOpacity={0.25}
         stroke={color}
         strokeWidth={3}
         strokeLinejoin="round"
-      />
-      <Path
-        d="M50 30 L56 30 L60 38 L52 38 Z"
-        fill={color}
-        fillOpacity={0.5}
+        strokeLinecap="round"
       />
     </Svg>
   );
