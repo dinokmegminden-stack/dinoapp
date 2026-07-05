@@ -27,7 +27,7 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
           <>
             <DinoCard
               dino={dino}
-              imageSource={IMAGE_MAP[dino.nev_tudomanyos] || null}
+              imageSource={IMAGE_MAP[dino.name_hu] || null}
               character={selectedCharacter}
               showTimeline
             />

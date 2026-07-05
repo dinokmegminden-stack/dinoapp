@@ -9,10 +9,11 @@ const DESKTOP_MAX_WIDTH = 1280;
 const HERO_ASPECT_RATIO = 16 / 9;
 
 const DIET_ICON = {
-  carnivore: '🥩',
-  herbivore: '🌿',
-  piscivore: '🐟',
-  omnivore: '🍽️',
+  ragadozó: '🥩',
+  növényevő: '🌿',
+  halevő: '🐟',
+  mindenevő: '🍽️',
+  ismeretlen: '❓',
 };
 
 const RARITY_STYLES = {
@@ -46,7 +47,7 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
 
   const rarityKey = String(dino.rarity || '').toLowerCase();
   const rarityStyle = RARITY_STYLES[rarityKey] || RARITY_STYLES.gyakori;
-  const dietIcon = DIET_ICON[String(dino.diet_eng || '').toLowerCase()] || null;
+  const dietIcon = DIET_ICON[String(dino.diet_hu || '').toLowerCase()] || null;
 
   const mya = formatRange(dino.mya_min, dino.mya_max, 'millió éve');
   const length = formatRange(dino.length_m_min, dino.length_m_max, 'm');
