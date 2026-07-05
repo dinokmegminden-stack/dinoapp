@@ -21,13 +21,13 @@ export const CHARACTERS = [
     heightCm: 194,
     aspectRatio: 0.45,
   },
-  {
-    id: 'ch4',
-    name: 'John Hammond',
-    imageAsset: null,
-    heightCm: 178,
-    aspectRatio: 0.45,
-  },
+{
+  id: 'ch4',
+  name: 'John Hammond',
+  imageAsset: require('../../assets/images/john.png'),
+  heightCm: 178,
+  aspectRatio: 0.45,
+},
   {
     id: 'ch5',
     name: 'Donald Gennaro',
