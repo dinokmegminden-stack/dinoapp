@@ -5,7 +5,7 @@ import { FONTS } from '../constants/fonts';
 import { getScaledDimensions } from '../utils/scaleUtils';
 
 const DESKTOP_BREAKPOINT = 1024;
-const DESKTOP_MAX_WIDTH = 1280;
+const DESKTOP_MAX_WIDTH = 860; // Maximum width for the desktop card layout
 const HERO_ASPECT_RATIO = 16 / 9;
 
 const DIET_ICON = {
@@ -38,8 +38,8 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
   const img = imageSource || null;
 
   const mobileImageHeight = width >= 700 ? 420 : 200;
-  const desktopCardWidth = Math.min(width - 48, DESKTOP_MAX_WIDTH);
-  const desktopImageHeight = desktopCardWidth / HERO_ASPECT_RATIO;
+ const desktopCardWidth = Math.min(width - 48, DESKTOP_MAX_WIDTH);
+const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 380);
   const imageHeight = isDesktop ? desktopImageHeight : mobileImageHeight;
 
   const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
@@ -320,9 +320,11 @@ const styles = StyleSheet.create({
   },
 
   // --- DESKTOP: codex-kártya ---------------------------------------------------
+
+
   desktopCard: {
     alignSelf: 'center',
-    marginVertical: 24,
+    marginVertical: 12,
     backgroundColor: COLORS.card,
     borderRadius: 20,
     overflow: 'hidden',
@@ -346,8 +348,8 @@ const styles = StyleSheet.create({
 
   contentRow: {
     flexDirection: 'row',
-    gap: 32,
-    padding: 40,
+    gap: 24,
+    padding: 24,
   },
   descriptionCol: {
     flex: 2,
