@@ -11,9 +11,6 @@ const REGIONS = [
   { edu: 5, label: 'Amerika' },
 ];
 
-const FOSSIL_PATTERN_URI =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%2334495e' fill-opacity='0.6'%3E%3Cpath d='M10 15c-1.5 0-3 1-3 2.5S8.5 20 10 20s3-1 3-2.5S11.5 15 10 15zm3 3.5c0 .8-.7 1.5-1.5 1.5h-3C7.7 20 7 19.3 7 18.5v-1c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5v1zM5 17c0-1.7 1.3-3 3-3h4c1.7 0 3 1.3 3 3v1c0 1.7-1.3 3-3 3H8c-1.7 0-3-1.3-3-3v-1z'/%3E%3Crect x='45' y='15' width='12' height='4' rx='2'/%3E%3Crect x='49' y='11' width='4' height='12' rx='2'/%3E%3Cpath d='M20 50h4v4h-4zm6 0h4v4h-4zm-3 5h4v4h-4z'/%3E%3Cpath d='M60 45c2-2 5-2 7 0l4 4c2 2 2 5 0 7l-4 4c-2 2-5 2-7 0l-4-4c-2-2-2-5 0-7l4-4z'/%3E%3C/g%3E%3C/svg%3E";
-
 function RegionButton({ region, isDesktop, onPress }) {
   const [hovered, setHovered] = useState(false);
 
@@ -61,13 +58,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#2C3E50',
-    ...Platform.select({
-      web: {
-        backgroundImage: `url("${FOSSIL_PATTERN_URI}")`,
-        backgroundRepeat: 'repeat',
-        backgroundSize: '80px 80px',
-      },
-    }),
   },
   list: {
     width: '100%',

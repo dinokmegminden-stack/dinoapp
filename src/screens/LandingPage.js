@@ -22,6 +22,19 @@ export default function LandingPage({ onEnterRegion }) {
   );
 }
 
+title: {
+  fontSize: 28,
+  fontWeight: '800',
+  fontFamily: Platform.select({
+    web: "'Times New Roman', Georgia, serif",
+    default: 'serif',
+  }),
+  color: '#ECEFF1',
+  textAlign: 'center',
+  marginBottom: 8,
+},
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
