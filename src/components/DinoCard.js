@@ -43,7 +43,8 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
   const imageHeight = isDesktop ? desktopImageHeight : mobileImageHeight;
 
   const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
-  const characterLeft = dims ? (dims.dino.width - dims.character.width) / 2 : 0;
+  const characterLeftMargin = isDesktop ? 32 : 16;
+  const characterLeft = dims ? characterLeftMargin : 0;
 
   const rarityKey = String(dino.rarity || '').toLowerCase();
   const rarityStyle = RARITY_STYLES[rarityKey] || RARITY_STYLES.gyakori;
@@ -304,17 +305,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(217,208,181,0.25)',
     backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
   },
   badgeTopLeft: { top: 16, left: 16 },
   badgeTopRight: { top: 16, right: 16 },
   badgeBottomLeft: { bottom: 16, left: 16 },
   badgeBottomRight: { bottom: 16, right: 16 },
-  overlayIcon: { fontSize: 13 },
+  overlayIcon: { fontSize: 16 },
   overlayText: {
     color: '#e4e7dc',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     fontFamily: FONTS.bold,
   },
@@ -379,13 +380,11 @@ const styles = StyleSheet.create({
 
   metaCol: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     gap: 12,
-    alignContent: 'flex-start',
   },
   metaGridCell: {
-    width: '47%',
+    width: '100%',
     backgroundColor: 'rgba(255,255,255,0.06)',
     borderWidth: 1,
     borderColor: COLORS.border,

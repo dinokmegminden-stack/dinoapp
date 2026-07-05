@@ -1,3 +1,5 @@
+//we track here the size of the dinosaur images and their real-world height, so we can scale the character images accordingly
+
 const imageCalibration = {
   "Allosaurus": {
     imageWidth: 1024,
