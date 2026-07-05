@@ -7,6 +7,7 @@ import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
+import { View, Text, StatusBar, StyleSheet } from 'react-native';
 
 export default function LandingPage({ onEnterRegion }) {
   const handleSelectRegion = (eduLevel) => {
