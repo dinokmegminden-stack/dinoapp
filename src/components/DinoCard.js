@@ -39,7 +39,7 @@ export default function DinoCard({ dino, imageSource, character, showTimeline = 
 
   const mobileImageHeight = width >= 700 ? 420 : 200;
  const desktopCardWidth = Math.min(width - 48, DESKTOP_MAX_WIDTH);
-const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 380);
+const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 450);
   const imageHeight = isDesktop ? desktopImageHeight : mobileImageHeight;
 
   const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
