@@ -41,20 +41,21 @@ export default function LandingPage({ onEnterRegion }) {
           {/* BAL OLDAL: Kompakt XP Panel (progress lent) */}
           <View style={styles.leftDashboardColumn}>
             
-            {/* XP Panel header + avatar csak */}
-            <View style={styles.xpPanelCompact}>
-              <View style={styles.xpHeaderRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.xpPanelTitle}>PROFESSZOR SZINT</Text>
-                  <Text style={styles.xpSubTitle}>
-                    HALADÁS: <Text style={styles.xpHighlight}>{playerStats.currentXp} / {playerStats.maxXp} XP</Text>
-                  </Text>
-                </View>
-                <View style={styles.avatarWrap}>
-                  <Text style={styles.avatarEmoji}>🎓</Text>
-                </View>
-              </View>
-            </View>
+  <View style={styles.xpPanelCompact}>
+    {/* XP tartalom */}
+  </View>
+
+  <View style={styles.cardsColumn}>
+    <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
+    <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
+  </View>
+
+  <View style={styles.progressBarSection}>
+    {/* progress + dots */}
+  </View>
+
+
+
 
             {/* Feature kártyák (2 darab) */}
             <View style={styles.cardsColumn}>
