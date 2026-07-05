@@ -1,8 +1,9 @@
 // LandingPage.js
 console.log("LANDING PAGE RENDER - WIDE HERO & COMPACT XP");
 
-import { View, Text, StatusBar, StyleSheet, Platform } from 'react-native';
+import { View, StatusBar, StyleSheet } from 'react-native';
 import Shell from '../components/Shell';
+import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
@@ -16,8 +17,6 @@ export default function LandingPage({ onEnterRegion }) {
   const playerStats = {
     currentXp: 4500,
     maxXp: 6000,
-    passedPacks: 2,
-    totalPacks: 5
   };
 
   const progressPercent = `${Math.min((playerStats.currentXp / playerStats.maxXp) * 100, 100)}%`;
@@ -26,22 +25,13 @@ export default function LandingPage({ onEnterRegion }) {
     <Shell>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
-        
-        {/* === FENTI SÁV: TELJES SZÉLESSÉGŰ CÍM === */}
-        <View style={styles.topHero}>
-          <Text style={styles.mainTitle}>DÍNÓ TUDÓS</Text>
-          <Text style={styles.subtitle}>
-            Gyűjtsd össze a kártyákat, oldd meg a kvízeket, és válj paleontológus szakértővé!
-          </Text>
-        </View>
 
-        {/* === ALSÓ SÁV: KÉT HASÁBOS ELRENDEZÉS === */}
+        <HeroTop />
+
         <View style={styles.mainContentRow}>
-          
-          {/* BAL OLDAL: Kompakt XP Panel + Feature Cards + Progress */}
+
           <View style={styles.leftDashboardColumn}>
-            
-            {/* XP Panel top */}
+
             <View style={styles.xpPanelCompact}>
               <View style={styles.xpHeaderRow}>
                 <View style={{ flex: 1 }}>
@@ -56,16 +46,13 @@ export default function LandingPage({ onEnterRegion }) {
               </View>
             </View>
 
-            {/* Feature cards middle */}
             <View style={styles.cardsColumn}>
               <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
               <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
             </View>
 
-            {/* Flexible spacer */}
             <View style={{ flex: 1 }} />
 
-            {/* Progress section bottom */}
             <View style={styles.progressBarSection}>
               <View style={styles.progressBarOuter}>
                 <View style={[styles.progressBarInner, { width: progressPercent }]} />
@@ -78,10 +65,9 @@ export default function LandingPage({ onEnterRegion }) {
                 <View style={styles.packDot}><Text style={styles.packDotText}>🔒</Text></View>
               </View>
             </View>
-            
+
           </View>
 
-          {/* JOBB OLDAL: RÉGIÓGOMBOK */}
           <View style={styles.rightMenuColumn}>
             <LandingMenu onSelectRegion={handleSelectRegion} />
           </View>
@@ -110,35 +96,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.bg || '#283618',
-    paddingVertical: 20,
-    paddingHorizontal: 28,
-  },
-  topHero: {
-    width: '100%',
-    alignItems: 'center',
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(254,250,224,0.08)',
-    marginBottom: 16,
-  },
-  mainTitle: {
-    fontSize: Platform.select({ web: 44, default: 36 }),
-    fontWeight: '950',
-    color: COLORS.gold || '#DDA15E',
-    letterSpacing: 4,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#FEFAE0',
-    opacity: 0.75,
-    marginTop: 4,
-    textAlign: 'center',
   },
   mainContentRow: {
     flex: 1,
     flexDirection: 'row',
     gap: 28,
+    paddingVertical: 20,
+    paddingHorizontal: 28,
   },
   leftDashboardColumn: {
     flex: 4.5,

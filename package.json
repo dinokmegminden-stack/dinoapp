@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@expo-google-fonts/cinzel": "^0.4.2",
+    "@expo-google-fonts/fredoka": "^0.4.1",
+    "@expo-google-fonts/luckiest-guy": "^0.4.1",
     "@expo-google-fonts/roboto": "^0.4.3",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/native": "^7.3.1",
