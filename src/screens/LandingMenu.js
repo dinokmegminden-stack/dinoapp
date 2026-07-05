@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, useWindowDimensions, Platform } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
 
 const DESKTOP_BREAKPOINT = 768;
@@ -7,106 +8,38 @@ const DESKTOP_BREAKPOINT = 768;
 // --- Régió-konfiguráció ------------------------------------------------------
 
 const REGIONS = [
-  { edu: 1, label: 'Kárpát-medence', bg: '#2F3E2F', text: '#FFFDEE', Icon: CarpathianIcon },
-  { edu: 2, label: 'Európa', bg: '#78866B', text: '#FFFDEE', Icon: EuropeIcon },
-  { edu: 3, label: 'Afrika', bg: '#D6A870', text: '#FFFDEE', Icon: AfricaIcon },
-  { edu: 4, label: 'Ázsia', bg: '#FBF7E4', text: '#2F3E2F', Icon: AsiaIcon },
-  { edu: 5, label: 'Amerika', bg: '#D1914A', text: '#FFFDEE', Icon: AmericaIcon },
+  { edu: 1, label: 'Kárpát-medence', bg: '#2F3E2F', bgDark: '#1C2A1C', text: '#FFFDEE', icon: '🏔️' },
+  { edu: 2, label: 'Európa', bg: '#78866B', bgDark: '#586347', text: '#FFFDEE', icon: '🇪🇺' },
+  { edu: 3, label: 'Afrika', bg: '#D6A870', bgDark: '#B3854F', text: '#FFFDEE', icon: '🌍' },
+  { edu: 4, label: 'Ázsia', bg: '#FBF7E4', bgDark: '#E4DCC0', text: '#2F3E2F', icon: '🐉' },
+  { edu: 5, label: 'Amerika', bg: '#D1914A', bgDark: '#A96F32', text: '#FFFDEE', icon: '🌎' },
 ];
 
-// --- Duotone kontinens-ikonok --------------------------------------------------
+// --- Halvány lábnyom-minta háttér ------------------------------------------
 
-function CarpathianIcon({ color, size = 40 }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
-      <Path
-        d="M 22 36 
-           C 25 25, 40 16, 55 18 
-           C 68 20, 82 22, 88 35 
-           C 92 42, 86 52, 92 60
-           C 96 66, 91 75, 84 78
-           C 72 82, 60 90, 48 85
-           C 38 82, 25 88, 15 82
-           C 8 78, 12 68, 10 60
-           C 8 52, 16 46, 15 42
-           Z"
-        fill={color}
-        fillOpacity={0.25}
-        stroke={color}
-        strokeWidth={3}
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
-    </Svg>
+function FootprintPattern({ color }) {
+  const footprint = (x, y, rotation = 0, scale = 1) => (
+    <Path
+      key={`${x}-${y}`}
+      d="M0 4 C-2 4 -3 2 -3 0 C-3 -2 -2 -4 0 -4 C2 -4 3 -2 3 0 C3 2 2 4 0 4 Z M-5 -6 C-6 -6 -6.5 -7 -6.5 -8 C-6.5 -9 -6 -10 -5 -10 C-4 -10 -3.5 -9 -3.5 -8 C-3.5 -7 -4 -6 -5 -6 Z M5 -6 C4 -6 3.5 -7 3.5 -8 C3.5 -9 4 -10 5 -10 C6 -10 6.5 -9 6.5 -8 C6.5 -7 6 -6 5 -6 Z"
+      fill={color}
+      transform={`translate(${x} ${y}) rotate(${rotation}) scale(${scale})`}
+    />
   );
-}
 
-function EuropeIcon({ color, size = 40 }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
-      <Path
-        d="M30 10 C34 14 30 20 36 22 C44 24 42 14 50 16 C58 18 54 28 62 30 C70 32 74 24 80 30 C86 36 78 42 82 50 C86 58 76 56 74 64 C72 72 78 78 70 84 C62 90 58 80 50 82 C42 84 40 92 32 88 C24 84 30 76 24 70 C18 64 10 66 12 56 C14 46 22 48 22 38 C22 28 16 26 20 18 C24 10 26 6 30 10 Z"
-        fill={color}
-        fillOpacity={0.25}
-        stroke={color}
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
-
-function AfricaIcon({ color, size = 40 }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
-      {/* Afrika szárazföld */}
-      <Path
-        d="M38.8,11.2 c-2.4,0 -4.7,0.7 -6.8,2 c-2.7,1.8 -4.7,4.5 -5.2,7.7 c-0.2,1.3 -0.1,2.5 0.2,3.8 c1.2,5.2 -1,10.1 -5.6,12.3 c-3.3,1.6 -6.5,4 -8.5,7.1 c-3,4.6 -2.9,10.6 -0.1,15.1 c2.2,3.5,5.6,6.3,9.7,7.7 c1.3,0.5,2.6,0.8,3.9,1.1 c6.8,1.4,12.8,7.3,13.9,14.3 c0.3,2,0.5,4.1,0.5,6.1 c0,6.6,2.1,13.1,6,18.5 c3.4,4.7,9,7.5,14.8,7.3 c5,-0.1,9.7,-2.4,12.9,-6.2 c1.6,-1.9,2.8,-4.2,3.3,-6.6 c2.1,-9,7.4,-16.6,14.5,-22.1 c1.8,-1.4,3.8,-2.6,6,-3.5 c10.3,-4.2,14,-15.5,10.9,-25 c-1.6,-4.9,-5.4,-8.7,-10.1,-10.5 c-3.8,-1.5,-7,-4.3,-8.9,-7.9 c-3.1,-6,-8.7,-10,-15.4,-10.9 c-2,-0.3,-4.1,-0.4,-6.1,-0.4 C38.8,11.2,38.8,11.2,38.8,11.2 z"
-        fill={color}
-        fillOpacity={0.25}
-        stroke={color}
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
-      {/* Madagaszkár */}
-      <Path
-        d="M74.8,61.4 c0.8,-0.2,1.7,-0.3,2.6,-0.1 c1.8,0.3,3.3,1.7,3.6,3.5 c0.1,0.8,0.1,1.5,0,2.3 c-0.6,4.5,-1.9,8.8,-3.8,12.9 c-0.6,1.4,-1.3,2.7,-2.3,3.9 c-0.7,0.8,-1.6,1.4,-2.6,1.6 c-0.6,0.1,-1.2,0,-1.7,-0.1 c-0.8,-0.3,-1.6,-0.8,-2.1,-1.5 c-1.1,-1.7,-1.6,-3.6,-1.7,-5.6 c-0.1,-3.5,0.7,-6.9,2.3,-10.1 c0.5,-1.1,1.1,-2.2,1.8,-3.2 C71.9,62.1,73.4,61.7,74.8,61.4 z"
-        fill={color}
-        fillOpacity={0.25}
-        stroke={color}
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
-
-function AsiaIcon({ color, size = 40 }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
-      <Path
-        d="M14 34 C24 24 34 30 42 24 C50 18 56 8 66 14 C76 20 70 30 78 36 C86 42 92 38 90 48 C88 58 76 54 72 62 C68 70 74 78 64 80 C54 82 52 72 44 74 C36 76 34 86 26 82 C18 78 24 70 18 64 C12 58 6 60 8 50 C10 40 8 42 14 34 Z"
-        fill={color}
-        fillOpacity={0.25}
-        stroke={color}
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
-
-function AmericaIcon({ color, size = 40 }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
-      <Path
-        d="M46 6 C54 6 58 14 64 16 C70 18 76 14 76 22 C76 30 68 30 66 36 C64 42 70 44 66 50 C62 56 54 52 52 58 C50 64 56 66 52 72 C48 78 44 72 42 78 C40 84 44 90 38 92 C32 94 32 86 30 80 C28 74 22 76 22 68 C22 60 28 60 28 52 C28 44 22 42 26 36 C30 30 36 32 38 26 C40 20 34 16 40 12 C44 9 42 6 46 6 Z"
-        fill={color}
-        fillOpacity={0.25}
-        stroke={color}
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
+    <Svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 400 140"
+      style={StyleSheet.absoluteFill}
+      preserveAspectRatio="xMidYMid slice"
+    >
+      {footprint(60, 30, -15, 2.2)}
+      {footprint(140, 90, 10, 2.6)}
+      {footprint(230, 40, -8, 2)}
+      {footprint(310, 100, 15, 2.4)}
+      {footprint(370, 25, -20, 1.8)}
     </Svg>
   );
 }
@@ -115,7 +48,6 @@ function AmericaIcon({ color, size = 40 }) {
 
 function RegionRow({ region, isDesktop, onPress }) {
   const [hovered, setHovered] = useState(false);
-  const Icon = region.Icon;
 
   return (
     <Pressable
@@ -124,14 +56,18 @@ function RegionRow({ region, isDesktop, onPress }) {
       onHoverOut={() => setHovered(false)}
       style={[
         styles.row,
-        { backgroundColor: region.bg },
         isDesktop && styles.rowDesktop,
         isDesktop && hovered && styles.rowDesktopHovered,
       ]}
     >
-      <View style={styles.rowIcon}>
-        <Icon color={region.text} size={40} />
-      </View>
+      <LinearGradient
+        colors={[region.bg, region.bgDark]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <FootprintPattern color={region.text} style={{ opacity: 0.06 }} />
+      <Text style={styles.rowIcon}>{region.icon}</Text>
       <Text style={[styles.rowLabel, { color: region.text }]}>{region.label}</Text>
     </Pressable>
   );
@@ -183,6 +119,7 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingHorizontal: 28,
     paddingVertical: 18,
+    overflow: 'hidden',
   },
   rowDesktop: {
     borderRadius: 18,
@@ -203,8 +140,7 @@ const styles = StyleSheet.create({
     }),
   },
   rowIcon: {
-    width: 40,
-    height: 40,
+    fontSize: 40,
   },
   rowLabel: {
     fontSize: 24,
