@@ -3,11 +3,11 @@ import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
 import { COLORS } from '../constants/colors'; // Beimportálva a színeidhez
 
 const REGIONS = [
-  { edu: 1, label: 'Kárpát-medence' },
-  { edu: 2, label: 'Európa' },
-  { edu: 3, label: 'Afrika' },
-  { edu: 4, label: 'Ázsia' },
-  { edu: 5, label: 'Amerika' },
+  { edu: 1, label: '🦴 Kárpát-medence' }, 
+  { edu: 2, label: '🦕 Európa' },         
+  { edu: 3, label: '🌍 Afrika' },          
+  { edu: 4, label: '🪶 Ázsia' },           
+  { edu: 5, label: '🦖 Amerika' },         
 ];
 
 function RegionButton({ region, onPress }) {
