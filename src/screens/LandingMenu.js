@@ -7,7 +7,7 @@ const DESKTOP_BREAKPOINT = 768;
 
 const REGIONS = [
   { edu: 1, label: 'Kárpát-medence', bg: '#2F3E2F', text: '#FFFDEE', icon: '🏔️' },
-  { edu: 2, label: 'Európa', bg: '#78866B', text: '#FFFDEE', icon: '🏰' },
+  { edu: 2, label: 'Európa', bg: '#78866B', text: '#FFFDEE', icon: '🇪🇺' },
   { edu: 3, label: 'Afrika', bg: '#D6A870', text: '#FFFDEE', icon: '🌍' },
   { edu: 4, label: 'Ázsia', bg: '#FBF7E4', text: '#2F3E2F', icon: '🐉' },
   { edu: 5, label: 'Amerika', bg: '#D1914A', text: '#FFFDEE', icon: '🌎' },
