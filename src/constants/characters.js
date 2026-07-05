@@ -24,7 +24,7 @@ export const CHARACTERS = [
 {
   id: 'ch4',
   name: 'John Hammond',
-  imageAsset: require('../../assets/images/john.png'),
+  imageAsset: require('../../assets/characters/john.png'),
   heightCm: 178,
   aspectRatio: 0.45,
 },
