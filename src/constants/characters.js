@@ -17,9 +17,9 @@ export const CHARACTERS = [
   {
     id: 'ch3',
     name: 'Dr. Ian Malcolm',
-    imageAsset: null,
+    imageAsset: require('../../assets/characters/ian.png'),
     heightCm: 194,
-    aspectRatio: 0.45,
+    aspectRatio: 1,
   },
 {
   id: 'ch4',
