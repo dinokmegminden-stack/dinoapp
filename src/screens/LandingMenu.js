@@ -113,7 +113,7 @@ export default function LandingMenu({ onSelectRegion }) {
   const { width } = useWindowDimensions();
   //const isDesktop = width >= DESKTOP_BREAKPOINT;
   const isDesktop = false;
-  const columns = width >= 1100 ? 5 : 1;
+  const columns = width >= 1100 ? 3 : 2;
 
   return (
     <View style={styles.container}>
