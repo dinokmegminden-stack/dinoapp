@@ -17,5 +17,5 @@ export default function Shell({ children, wide = false }) {
 const s = StyleSheet.create({
   outer: { flex: 1, width: '100%', backgroundColor: '#283618', alignItems: 'center', justifyContent: 'center' },
   inner: { flex: 1, width: '100%', maxWidth: 480 },
-  innerWide: { maxWidth: 720 },
+  innerWide: { maxWidth: 1200, flexDirection: 'row', gap: 28, paddingHorizontal: 28, paddingVertical: 20 },
 });

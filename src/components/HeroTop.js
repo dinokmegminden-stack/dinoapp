@@ -53,7 +53,7 @@ export default function HeroTop() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    backgroundColor: '#1b3318',
+   // backgroundColor: '#1b3318',
     paddingVertical: 28,
     paddingHorizontal: 20,
     alignItems: 'center',
