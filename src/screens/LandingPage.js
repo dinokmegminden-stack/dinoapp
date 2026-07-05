@@ -1,7 +1,7 @@
 // LandingPage.js
 console.log("LANDING PAGE RENDER - WIDE HERO & COMPACT XP");
 
-import { View, StatusBar, StyleSheet } from 'react-native';
+
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
