@@ -33,20 +33,7 @@ export default function LandingPage({ onEnterRegion }) {
 
           <View style={styles.leftDashboardColumn}>
 
-            <View style={styles.xpPanelCompact}>
-              <View style={styles.xpHeaderRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.xpPanelTitle}>PROFESSZOR SZINT</Text>
-                  <Text style={styles.xpSubTitle}>
-                    HALADÁS: <Text style={styles.xpHighlight}>{playerStats.currentXp} / {playerStats.maxXp} XP</Text>
-                  </Text>
-                </View>
-                <View style={styles.avatarWrap}>
-                  <Text style={styles.avatarEmoji}>🎓</Text>
-                </View>
-              </View>
-            </View>
-
+            
             <View style={styles.cardsColumn}>
               <FeatureCard icon="🎴" title="Kártyagyűjtemény" desc="51 dínó fajta 5 kontinensen." />
               <FeatureCard icon="🧠" title="Dínó Kvízek" desc="ABCD kérdések minden lényről." />
@@ -64,6 +51,19 @@ export default function LandingPage({ onEnterRegion }) {
                 <View style={[styles.packDot, styles.packDotActive]}><Text style={styles.packDotText}>🔒</Text></View>
                 <View style={styles.packDot}><Text style={styles.packDotText}>🔒</Text></View>
                 <View style={styles.packDot}><Text style={styles.packDotText}>🔒</Text></View>
+              </View>
+            </View>
+            <View style={styles.xpPanelCompact}>
+              <View style={styles.xpHeaderRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.xpPanelTitle}>PROFESSZOR SZINT</Text>
+                  <Text style={styles.xpSubTitle}>
+                    HALADÁS: <Text style={styles.xpHighlight}>{playerStats.currentXp} / {playerStats.maxXp} XP</Text>
+                  </Text>
+                </View>
+                <View style={styles.avatarWrap}>
+                  <Text style={styles.avatarEmoji}>🎓</Text>
+                </View>
               </View>
             </View>
 
