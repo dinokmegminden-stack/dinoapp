@@ -1,6 +1,6 @@
 // src/components/HeroTop.js
 import React from 'react';
-import { View, Text, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Platform, useWindowDimensions, Image } from 'react-native';
 import {
   useFonts as useLuckiest,
   LuckiestGuy_400Regular,
@@ -10,6 +10,8 @@ import {
   Fredoka_400Regular,
 } from '@expo-google-fonts/fredoka';
 
+const afrikaIcon = require('../../assets/icons/icon_afrika.png');
+
 export default function HeroTop() {
   const { width } = useWindowDimensions();
 
@@ -18,11 +20,16 @@ export default function HeroTop() {
 
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
   const titleSize = width < 768 ? 42 : 58;
-  const subtitleSize = width < 768 ? 13 : 15;
+  const isDesktop = width >= 768;
 
   return (
     <View style={styles.container}>
-      <View style={styles.heroCard}>
+      <View style={[styles.heroCard, isDesktop && styles.heroCardWide]}>
+        {isDesktop && (
+          <View style={styles.iconContainer}>
+            <Image source={afrikaIcon} style={styles.heroIcon} />
+          </View>
+        )}
         <Text
           style={[
             styles.mainTitle,
@@ -34,17 +41,6 @@ export default function HeroTop() {
         >
           DÍNÓ TUDÓS
         </Text>
-        <Text
-          style={[
-            styles.subtitle,
-            {
-              fontSize: subtitleSize,
-              fontFamily: fontsLoaded ? 'Fredoka_400Regular' : 'System',
-            },
-          ]}
-        >
-          Gyűjtsd össze a kártyákat, oldd meg a kvízeket, és válj paleontológus szakértővé!
-        </Text>
       </View>
     </View>
   );
@@ -53,7 +49,6 @@ export default function HeroTop() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-   // backgroundColor: '#1b3318',
     paddingVertical: 28,
     paddingHorizontal: 20,
     alignItems: 'center',
@@ -74,20 +69,28 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  heroCardWide: {
+    maxWidth: 800,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  iconContainer: {
+    marginRight: 20,
+  },
+  heroIcon: {
+    width: 120,
+    height: 120,
+    resizeMode: 'contain',
+  },
   mainTitle: {
     color: '#dca962',
     letterSpacing: 4,
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 0,
     textShadowColor: '#0a0a06',
     textShadowOffset: { width: 3, height: 5 },
     textShadowRadius: 1,
-  },
-  subtitle: {
-    color: '#e2ebd5',
-    textAlign: 'center',
-    lineHeight: 22,
-    maxWidth: 500,
-    opacity: 0.9,
   },
 });

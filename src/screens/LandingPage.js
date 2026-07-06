@@ -1,16 +1,13 @@
 // LandingPage.js
-console.log("LANDING PAGE RENDER - WIDE HERO & COMPACT XP");
-
+console.log("LANDING PAGE RENDER - REDESIGNED");
 
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
-import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
-import { View, Text, StatusBar, StyleSheet } from 'react-native';
-
-const INTRO_TEXT = "A Dínó Tudós egy magyar nyelvű, ingyenes dínó-kártyagyűjtő és kvízjáték gyerekeknek és minden korosztálynak, ahol 5 kontinens (Kárpát-medence, Európa, Afrika, Ázsia, Amerika) őslényeit fedezheted fel. Minden régióban csomagokra bontva várnak a dínók: nézd meg a kártyájukat, tanuld meg a tényeket róluk, majd egy kvízzel zárd le a csomagot, hogy a következő kinyíljon. A kérdések a korszakról, a felfedezőről, a felfedezés évéről és a tudományos névről szólnak — így játék közben valódi paleontológiai tudást szerzel. A sikeresen teljesített csomagok dínói bekerülnek a személyes galériádba, ahol bármikor visszanézheted őket. XP-t gyűjtve fejlődsz \"professzor szintben\", miközben végigjárod a világ őskori élővilágát. Nincs bonyolult regisztráció: csak lépj be, válassz régiót, és kezdődhet a felfedezés.";
+import { REGION_BUTTONS } from '../constants/regionButtons';
+import { View, Text, StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function LandingPage({ onEnterRegion, onOpenGallery }) {
   const handleSelectRegion = (eduLevel) => {
@@ -30,21 +27,46 @@ export default function LandingPage({ onEnterRegion, onOpenGallery }) {
 
         <HeroTop />
 
-        <View style={styles.mainContentRow}>
-
-          <View style={styles.leftDashboardColumn}>
-            <View style={styles.introWrap}>
-              <Text style={styles.introText}>{INTRO_TEXT}</Text>
+        <View style={styles.content}>
+          <View style={styles.introSection}>
+            <Text style={styles.tagline}>Gyűjtsd össze a dínókat, tanulj és játssz!</Text>
+            <View style={styles.bulletList}>
+              <BulletPoint text="5 kontinens 100+ őslénye" />
+              <BulletPoint text="Csomagokra bontva, kvízzel zárolva" />
+              <BulletPoint text="Tanulj paleontológiát játék közben" />
+              <BulletPoint text="Gyűjts XP-t és érj el professzori szintet!" />
             </View>
           </View>
 
-          <View style={styles.rightMenuColumn}>
-            <LandingMenu onSelectRegion={handleSelectRegion} onOpenGallery={handleOpenGallery} />
+          <View style={styles.regionsGrid}>
+            {REGION_BUTTONS.map((region) => (
+              <TouchableOpacity
+                key={region.key}
+                style={[styles.regionBtn, { borderColor: region.color }]}
+                onPress={() => handleSelectRegion(region.key)}
+              >
+                <Text style={[styles.regionBtnText, { color: region.color }]}>
+                  {region.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
 
+          <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
+            <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Shell>
+  );
+}
+
+function BulletPoint({ text }) {
+  return (
+    <View style={styles.bulletRow}>
+      <Text style={styles.bulletDot}>•</Text>
+      <Text style={styles.bulletText}>{text}</Text>
+    </View>
   );
 }
 
@@ -53,34 +75,84 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.bg || '#283618',
   },
-  mainContentRow: {
+  content: {
     flex: 1,
-    flexDirection: 'row',
-    gap: 28,
-    paddingVertical: 20,
+    paddingVertical: 24,
     paddingHorizontal: 28,
-  },
-  leftDashboardColumn: {
-    flex: 5,
-    justifyContent: 'center',
-  },
-  rightMenuColumn: {
-    flex: 5,
-    justifyContent: 'center',
-  },
-  introWrap: {
+    justifyContent: 'space-between',
+    maxWidth: 800,
+    alignSelf: 'center',
     width: '100%',
-    borderRadius: 20,
-    padding: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(254,250,224,0.1)',
-    backgroundColor: 'rgba(254,250,224,0.03)',
   },
-  introText: {
+  introSection: {
+    marginBottom: 32,
+  },
+  tagline: {
+    color: '#DDA15E',
+    fontFamily: FONTS.bold,
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  bulletList: {
+    gap: 10,
+  },
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  bulletDot: {
+    color: '#DDA15E',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: -2,
+  },
+  bulletText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 16,
-    lineHeight: 26,
-    textAlign: 'left',
+    fontSize: 15,
+    lineHeight: 22,
+    flex: 1,
+  },
+  regionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  regionBtn: {
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 2,
+    backgroundColor: 'rgba(254,250,224,0.05)',
+    minWidth: 140,
+    alignItems: 'center',
+  },
+  regionBtnText: {
+    fontFamily: FONTS.bold,
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  galleryBtn: {
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 12,
+    backgroundColor: 'rgba(254,250,224,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.2)',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  galleryBtnText: {
+    color: '#FEFAE0',
+    fontFamily: FONTS.bold,
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
 });
