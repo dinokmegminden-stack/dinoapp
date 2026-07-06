@@ -53,7 +53,7 @@ export const IMAGE_MAP = {
   "Scelidosaurus": require('../../assets/images/scelidosaurus.jpg'),
   "Archaeopteryx": require('../../assets/images/archaeopteryx.jpg'),
   
-  "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'),
+  // "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'), // TODO: fájl hiányzik
   "Bakonydraco": require('../../assets/images/bakonydraco.jpg'),
   // --- name_hu lista alapján még hiányzó fájlok ---
   // Ezek a kulcsok léteznek az adatbázisban (name_hu), de nincs hozzájuk
