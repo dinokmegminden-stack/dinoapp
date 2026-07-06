@@ -1,69 +1,135 @@
 // src/utils/quizGenerator.js
 // A csomag-kvízek generálásának egyetlen, központi helye.
+// Mezőnevek a creaturesService.js / adaptCreature() kimenetéhez igazítva:
+// name_hu, name_latin, latin_name_ending, epoch, discoverer_name, discovery_year, length_m_min/max, edu.
 
 function shuffle(arr) {
   return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
 }
 
-const FALLBACK_DISTRACTORS = {
-  korszak: ['triász', 'kora kréta', 'jura', 'perm'],
-  hossz: ['1 m', '15 m', '0.5 m', '20 m'],
-  felfedezo: ['ismeretlen kutató', 'Charles Darwin', 'Richard Owen'],
-  nev_tudomanyos: ['Tyrannosaurus rex', 'Triceratops horridus', 'Velociraptor mongoliensis'],
-};
-
-const FACT_TEMPLATES = [
-  { field: 'nev_tudomanyos', text: (d) => `Mi a "${d.nev_koznapi}" tudományos neve?` },
-  { field: 'korszak', text: (d) => `Melyik korszakban élt a ${d.nev_koznapi}?` },
-  { field: 'hossz', text: (d) => `Mekkora volt körülbelül a ${d.nev_koznapi} testhossza?` },
-  { field: 'felfedezo', text: (d) => `Ki fedezte fel a ${d.nev_koznapi}-t?` },
-];
-
-function pickDistractors(correctValue, pool, field, count = 3) {
-  const values = [
-    ...new Set(
-      pool
-        .map((d) => d[field])
-        .filter((v) => v && v !== 'ismeretlen' && v !== correctValue)
-    ),
-  ];
-  let distractors = shuffle(values).slice(0, count);
-  if (distractors.length < count && FALLBACK_DISTRACTORS[field]) {
-    const extra = FALLBACK_DISTRACTORS[field].filter((v) => v !== correctValue && !distractors.includes(v));
-    distractors = [...distractors, ...extra].slice(0, count);
-  }
-  return distractors;
+function distinctValues(pool, field) {
+  return [...new Set(pool.map((d) => d[field]).filter((v) => v !== null && v !== undefined && v !== ''))];
 }
 
-function buildFactQuestion(dino, template, pool) {
-  const correct = dino[template.field];
-  const distractors = pickDistractors(correct, pool, template.field, 3);
-  const options = shuffle([correct, ...distractors]);
+// Csak az adott edu level pool-jából válogat rossz válaszokat is — nincs kívülről fallback.
+function pickDistinctDistractors(correctValue, pool, field, count = 3) {
+  const values = distinctValues(pool, field).filter((v) => v !== correctValue);
+  return shuffle(values).slice(0, count);
+}
+
+function buildEpochQuestion(dino, pool) {
+  if (!dino.epoch) return null;
+  const distractors = pickDistinctDistractors(dino.epoch, pool, 'epoch', 3);
+  if (distractors.length === 0) return null;
+  const options = shuffle([dino.epoch, ...distractors]);
   return {
     type: 'fact',
-    question: template.text(dino),
+    question: `Melyik korszakban élt a ${dino.name_hu}?`,
     options,
-    correctIndex: options.indexOf(correct),
+    correctIndex: options.indexOf(dino.epoch),
   };
 }
 
-function parseLength(hossz) {
-  const n = parseFloat(String(hossz ?? '').replace(',', '.'));
-  return Number.isFinite(n) ? n : null;
+function buildDiscovererQuestion(dino, pool) {
+  if (!dino.discoverer_name) return null;
+  const distractors = pickDistinctDistractors(dino.discoverer_name, pool, 'discoverer_name', 3);
+  if (distractors.length === 0) return null;
+  const options = shuffle([dino.discoverer_name, ...distractors]);
+  return {
+    type: 'fact',
+    question: `Ki fedezte fel a ${dino.name_hu}-t?`,
+    options,
+    correctIndex: options.indexOf(dino.discoverer_name),
+  };
+}
+
+function buildDiscoveryYearQuestion(dino, pool) {
+  if (!dino.discovery_year) return null;
+  const distractors = pickDistinctDistractors(dino.discovery_year, pool, 'discovery_year', 3);
+  if (distractors.length === 0) return null;
+  const options = shuffle([dino.discovery_year, ...distractors]).map(String);
+  return {
+    type: 'fact',
+    question: `Mikor fedezték fel a ${dino.name_hu}-t?`,
+    options,
+    correctIndex: options.indexOf(String(dino.discovery_year)),
+  };
+}
+
+// A genus-részt a name_latin mezőből vonjuk le a latin_name_ending levágásával —
+// nincs whitespace-alapú találgatás, mindkét mező a Supabase-ből jön.
+function genusFromLatin(nameLatin, ending) {
+  const full = String(nameLatin || '').trim();
+  const suffix = String(ending || '').trim();
+  if (!full) return '';
+  if (suffix && full.toLowerCase().endsWith(suffix.toLowerCase())) {
+    return full.slice(0, full.length - suffix.length).trim();
+  }
+  return full.split(/\s+/)[0] || '';
+}
+
+// A teljes tudományos név kérdésnél a válaszlehetőségek csak a fajnévben (latin_name_ending)
+// térnek el — a genus minden opcióban a helyes dínóé marad. A rossz fajnév-végződéseket
+// más dínóktól kölcsönözzük (name_hu alapján megkülönböztetve az egyedeket).
+function buildLatinNameQuestion(dino, pool) {
+  const ending = dino.latin_name_ending;
+  if (!dino.name_latin || !ending) return null;
+
+  const genus = genusFromLatin(dino.name_latin, ending);
+  if (!genus) return null;
+
+  const otherDinos = pool.filter((d) => d.name_hu !== dino.name_hu);
+  const distractorEndings = shuffle(
+    distinctValues(otherDinos, 'latin_name_ending').filter((e) => e !== ending)
+  ).slice(0, 3);
+  if (distractorEndings.length === 0) return null;
+
+  const options = shuffle([ending, ...distractorEndings]).map((e) => `${genus} ${e}`);
+  return {
+    type: 'fact',
+    question: `Mi a ${dino.name_hu} teljes tudományos neve?`,
+    options,
+    correctIndex: options.indexOf(`${genus} ${ending}`),
+  };
+}
+
+const FACT_BUILDERS = [
+  buildEpochQuestion,
+  buildDiscovererQuestion,
+  buildDiscoveryYearQuestion,
+  buildLatinNameQuestion,
+];
+
+function buildFactQuestionForDino(dino, pool) {
+  for (const builder of shuffle(FACT_BUILDERS)) {
+    const q = builder(dino, pool);
+    if (q) return q;
+  }
+  return null;
+}
+
+// --- Hossz-összehasonlító kérdés ---------------------------------------------
+
+function midLength(d) {
+  const min = d.length_m_min;
+  const max = d.length_m_max;
+  if (min == null && max == null) return null;
+  if (min != null && max != null) return (Number(min) + Number(max)) / 2;
+  return Number(max ?? min);
 }
 
 function buildComparisonQuestion(dinoA, dinoB) {
-  const lenA = parseLength(dinoA.hossz);
-  const lenB = parseLength(dinoB.hossz);
+  const lenA = midLength(dinoA);
+  const lenB = midLength(dinoB);
   if (lenA == null || lenB == null || lenA === lenB) return null;
 
   const longer = lenA > lenB ? dinoA : dinoB;
-  const options = shuffle([dinoA.nev_koznapi, dinoB.nev_koznapi]);
+  const options = shuffle([dinoA.name_hu, dinoB.name_hu]);
   return {
     type: 'comparison',
-    question: `Melyik volt hosszabb: a ${dinoA.nev_koznapi} vagy a ${dinoB.nev_koznapi}?`,
+    question: `Melyik volt hosszabb: a ${dinoA.name_hu} vagy a ${dinoB.name_hu}?`,
     options,
-    correctIndex: options.indexOf(longer.nev_koznapi),
+    correctIndex: options.indexOf(longer.name_hu),
   };
 }
 
@@ -79,19 +145,23 @@ function allPairs(list) {
 
 /**
  * Kérdésszám = csomag dínóinak száma + 2.
- * 1 ténykérdés / dínó, a maradék összehasonlító kérdés (hossz alapján).
- * Ha nincs elég használható összehasonlítás (pl. hiányzó hossz-adat),
- * a hiányt tényke kérdésekkel tölti fel.
+ * 1 ténykérdés / dínó (korszak (epoch) / felfedező / felfedezés éve / teljes név — véletlen sorrendben próbálva,
+ * amíg van elég adat), a maradék összehasonlító kérdés (hossz alapján).
+ * A rossz válaszok mindig csak az adott edu level (régió) dínóinak distinct értékei közül jönnek —
+ * nincs régión kívüli vagy kitalált fallback érték.
  */
 export function buildQuiz(packageDinos, fullPool) {
   if (!packageDinos || packageDinos.length === 0) return [];
 
-  const questionCount = packageDinos.length + 2;
-  const pool = fullPool && fullPool.length ? fullPool : packageDinos;
+  const eduLevel = packageDinos[0].edu;
+  const basePool = fullPool && fullPool.length ? fullPool : packageDinos;
+  const pool = eduLevel != null ? basePool.filter((d) => d.edu === eduLevel) : basePool;
 
-  const factQuestions = packageDinos.map((d) =>
-    buildFactQuestion(d, shuffle(FACT_TEMPLATES)[0], pool)
-  );
+  const questionCount = packageDinos.length + 2;
+
+  const factQuestions = packageDinos
+    .map((d) => buildFactQuestionForDino(d, pool))
+    .filter(Boolean);
 
   const needed = questionCount - factQuestions.length;
   const comparisonQuestions = [];
@@ -104,14 +174,16 @@ export function buildQuiz(packageDinos, fullPool) {
   }
 
   let combined = [...factQuestions, ...comparisonQuestions];
-  const extraTemplates = shuffle(FACT_TEMPLATES);
+
+  // Ha még mindig hiányzik kérdés (kevés összehasonlítható adat), próbálunk extra tény-kérdést
+  // ugyanazokból a dínókból, más mezővel.
   let fillIndex = 0;
-  while (combined.length < questionCount) {
+  while (combined.length < questionCount && fillIndex < packageDinos.length * FACT_BUILDERS.length) {
     const dino = packageDinos[fillIndex % packageDinos.length];
-    const template = extraTemplates[fillIndex % extraTemplates.length];
-    combined.push(buildFactQuestion(dino, template, pool));
+    const builder = FACT_BUILDERS[fillIndex % FACT_BUILDERS.length];
+    const q = builder(dino, pool);
+    if (q) combined.push(q);
     fillIndex++;
-    if (fillIndex > questionCount * 2) break;
   }
 
   return shuffle(combined).slice(0, questionCount);
