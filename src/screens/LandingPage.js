@@ -34,7 +34,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery }) {
               <BulletPoint text="5 kontinens 100+ őslénye" />
               <BulletPoint text="Csomagokra bontva, kvízzel zárolva" />
               <BulletPoint text="Tanulj paleontológiát játék közben" />
-              <BulletPoint text="Gyűjtsd és szerezd a szinted: professzor" />
+              <BulletPoint text="Gyűjts XP-t és érj el professzori szintet!" />
             </View>
           </View>
 
