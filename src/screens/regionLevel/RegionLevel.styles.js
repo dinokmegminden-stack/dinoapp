@@ -33,8 +33,17 @@ export const s = StyleSheet.create({
   packageLockedHint: { color: '#BC6C25', fontSize: 10, marginTop: 4, fontWeight: '600' },
   packagePassedHint: { color: '#606C38', fontSize: 10, marginTop: 4, fontWeight: '700' },
 
-  browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, paddingHorizontal: 14 },
   browseCounter: { color: 'rgba(254,250,224,0.55)', fontSize: 12, fontWeight: '700' },
+
+  browseMainRow: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 8 },
+  sideBtnLeft: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 25, backgroundColor: 'rgba(255,255,255,0.08)', borderWidth: 1, borderColor: 'rgba(254,250,224,0.15)' },
+  sideBtnRight: { width: 50, height: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 25, backgroundColor: 'rgba(255,255,255,0.08)', borderWidth: 1, borderColor: 'rgba(254,250,224,0.15)' },
+  sideBtnPrimary: { backgroundColor: 'rgba(221,161,94,0.2)', borderColor: 'rgba(221,161,94,0.4)' },
+  sideBtnText: { color: '#FEFAE0', fontSize: 20, fontWeight: '700' },
+  sideBtnPrimaryText: { color: COLORS.gold || '#DDA15E', fontSize: 20, fontWeight: '700' },
+  sideBtnDisabled: { opacity: 0.3 },
+  sideBtnDisabledText: { opacity: 0.5 },
 
   characterSelectorGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10, paddingVertical: 12 },
   charThumb: { width: 70, alignItems: 'center', padding: 6, borderRadius: 10, borderWidth: 1, borderColor: 'transparent' },
