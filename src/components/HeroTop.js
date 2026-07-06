@@ -10,7 +10,7 @@ import {
   Fredoka_400Regular,
 } from '@expo-google-fonts/fredoka';
 
-const afrikaIcon = require('../assets/icons/icon_afrika.png');
+const afrikaIcon = require('../../assets/icons/icon_afrika.png');
 
 export default function HeroTop() {
   const { width } = useWindowDimensions();
