@@ -144,11 +144,14 @@ function allPairs(list) {
 }
 
 /**
- * Kérdésszám = csomag dínóinak száma + 2.
+ * Kérdésszám: minimum 5. Ha a csomagban 5-nél több dínó van, akkor dínószám + 1.
  * 1 ténykérdés / dínó (korszak (epoch) / felfedező / felfedezés éve / teljes név — véletlen sorrendben próbálva,
  * amíg van elég adat), a maradék összehasonlító kérdés (hossz alapján).
  * A rossz válaszok mindig csak az adott edu level (régió) dínóinak distinct értékei közül jönnek —
  * nincs régión kívüli vagy kitalált fallback érték.
+ * Ha a valós adatokból (hiányzó mezők/túl kevés distinct érték miatt) nem jön ki elég egyedi kérdés,
+ * a hiányzó darabszámot a már legenerált kérdések ismétlésével tölti fel — a minimum darabszám
+ * garantált, de sok hiányzó adat esetén előfordulhat ismétlődő kérdés.
  */
 export function buildQuiz(packageDinos, fullPool) {
   if (!packageDinos || packageDinos.length === 0) return [];
@@ -157,14 +160,16 @@ export function buildQuiz(packageDinos, fullPool) {
   const basePool = fullPool && fullPool.length ? fullPool : packageDinos;
   const pool = eduLevel != null ? basePool.filter((d) => d.edu === eduLevel) : basePool;
 
-  const questionCount = packageDinos.length + 2;
+  const questionCount = packageDinos.length > 5 ? packageDinos.length + 1 : 5;
 
+  // 1. kör: minden dínóhoz egy ténykérdés (az első sikeres builder, véletlen sorrendben próbálva)
   const factQuestions = packageDinos
     .map((d) => buildFactQuestionForDino(d, pool))
     .filter(Boolean);
 
-  const needed = questionCount - factQuestions.length;
+  // 2. kör: hossz-összehasonlító kérdések a hiányzó darabszámig
   const comparisonQuestions = [];
+  const needed = questionCount - factQuestions.length;
   if (needed > 0) {
     for (const [a, b] of allPairs(packageDinos)) {
       if (comparisonQuestions.length >= needed) break;
@@ -175,15 +180,36 @@ export function buildQuiz(packageDinos, fullPool) {
 
   let combined = [...factQuestions, ...comparisonQuestions];
 
-  // Ha még mindig hiányzik kérdés (kevés összehasonlítható adat), próbálunk extra tény-kérdést
-  // ugyanazokból a dínókból, más mezővel.
-  let fillIndex = 0;
-  while (combined.length < questionCount && fillIndex < packageDinos.length * FACT_BUILDERS.length) {
-    const dino = packageDinos[fillIndex % packageDinos.length];
-    const builder = FACT_BUILDERS[fillIndex % FACT_BUILDERS.length];
-    const q = builder(dino, pool);
-    if (q) combined.push(q);
-    fillIndex++;
+  // 3. kör: minden dínó × minden builder kombináció kimerítése (nem csak az első sikeres),
+  // hogy a hiányos mezők ellenére is minél több egyedi kérdés szülessen.
+  if (combined.length < questionCount) {
+    for (const dino of packageDinos) {
+      for (const builder of FACT_BUILDERS) {
+        if (combined.length >= questionCount) break;
+        const q = builder(dino, pool);
+        if (q) combined.push(q);
+      }
+      if (combined.length >= questionCount) break;
+    }
+  }
+
+  // 4. kör: ha még mindig kevés (nagyon hiányos adatok), az allPairs-t is kimerítjük
+  if (combined.length < questionCount) {
+    for (const [a, b] of allPairs(packageDinos)) {
+      if (combined.length >= questionCount) break;
+      const q = buildComparisonQuestion(a, b);
+      if (q) combined.push(q);
+    }
+  }
+
+  // 5. végső garancia: ha a valós adatokból ennyi sem jön ki, a meglévő kérdéseket
+  // ismételve töltjük fel a minimum darabszámig.
+  if (combined.length > 0) {
+    let repeatIndex = 0;
+    while (combined.length < questionCount) {
+      combined.push(combined[repeatIndex % combined.length]);
+      repeatIndex++;
+    }
   }
 
   return shuffle(combined).slice(0, questionCount);
