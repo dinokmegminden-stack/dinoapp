@@ -28,7 +28,22 @@ function RegionButton({ region, onPress }) {
   );
 }
 
-export default function LandingMenu({ onSelectRegion }) {
+function GalleryButton({ onPress }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={[styles.galleryBtn, hovered && styles.galleryBtnHovered]}
+    >
+      <Text style={styles.galleryBtnText}>🖼️ Galéria</Text>
+    </Pressable>
+  );
+}
+
+export default function LandingMenu({ onSelectRegion, onOpenGallery }) {
   return (
     <View style={styles.menuContainer}>
       <View style={styles.list}>
@@ -39,6 +54,7 @@ export default function LandingMenu({ onSelectRegion }) {
             onPress={onSelectRegion}
           />
         ))}
+        {onOpenGallery && <GalleryButton onPress={onOpenGallery} />}
       </View>
     </View>
   );
@@ -93,6 +109,46 @@ const styles = StyleSheet.create({
     fontWeight: '900', // Szuper vastag betűk a 10+ korosztálynak
     fontSize: 15,
     letterSpacing: 1.5,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  galleryBtn: {
+    width: '100%',
+    backgroundColor: 'rgba(254,250,224,0.05)',
+    borderWidth: 2,
+    borderColor: 'rgba(254,250,224,0.25)',
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+    ...Platform.select({
+      web: {
+        backdropFilter: 'blur(4px)',
+        WebkitBackdropFilter: 'blur(4px)',
+        transition: 'all 0.2s ease-in-out',
+        cursor: 'pointer',
+      },
+    }),
+  },
+  galleryBtnHovered: {
+    backgroundColor: 'rgba(254,250,224,0.1)',
+    ...Platform.select({
+      web: {
+        transform: 'scale(1.02)',
+      },
+    }),
+  },
+  galleryBtnText: {
+    color: '#FEFAE0',
+    fontFamily: Platform.select({
+      web: "system-ui, -apple-system, sans-serif",
+      default: 'System',
+    }),
+    fontWeight: '800',
+    fontSize: 13,
+    letterSpacing: 1,
     textTransform: 'uppercase',
     textAlign: 'center',
   },

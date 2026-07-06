@@ -9,10 +9,15 @@ import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
 import { View, Text, StatusBar, StyleSheet } from 'react-native';
 
-export default function LandingPage({ onEnterRegion }) {
+export default function LandingPage({ onEnterRegion, onOpenGallery }) {
   const handleSelectRegion = (eduLevel) => {
     playSound('click');
     onEnterRegion(eduLevel);
+  };
+
+  const handleOpenGallery = () => {
+    playSound('click');
+    onOpenGallery();
   };
 
   const playerStats = {
@@ -70,7 +75,7 @@ export default function LandingPage({ onEnterRegion }) {
           </View>
 
           <View style={styles.rightMenuColumn}>
-            <LandingMenu onSelectRegion={handleSelectRegion} />
+            <LandingMenu onSelectRegion={handleSelectRegion} onOpenGallery={handleOpenGallery} />
           </View>
 
         </View>
