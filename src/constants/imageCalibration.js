@@ -25,6 +25,17 @@ const imageCalibration = {
   realHeightM: 2.3,
   pixelPerMeter: 190.43
 },
+
+"euoplocephalus": {
+  imageWidth: 1376,
+  imageHeight: 768,
+  topY: 287,
+  groundY: 702,
+  realHeightM: 2.33,
+  pixelPerMeter: 178.11
+},
+
+
 };
 
 export default imageCalibration;
