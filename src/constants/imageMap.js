@@ -52,7 +52,7 @@ export const IMAGE_MAP = {
   "Ouranosaurus": require('../../assets/images/ouranosaurus.jpg'),
   "Scelidosaurus": require('../../assets/images/scelidosaurus.jpg'),
   "Archaeopteryx": require('../../assets/images/archaeopteryx.jpg'),
-  "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'),
+  "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'), //na
   // --- name_hu lista alapján még hiányzó fájlok ---
   // Ezek a kulcsok léteznek az adatbázisban (name_hu), de nincs hozzájuk
   // megerősített kép a assets/images mappában. Kikommentelve maradnak,
