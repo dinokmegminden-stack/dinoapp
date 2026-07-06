@@ -14,18 +14,27 @@ function distinctValues(pool, field) {
   return [...new Set(pool.map((d) => d[field]).filter((v) => v !== null && v !== undefined && v !== ''))];
 }
 
-// Csak az adott edu level pool-jából válogat rossz válaszokat is — nincs kívülről fallback.
-function pickDistinctDistractors(correctValue, pool, field, count = 3) {
+// Rossz válaszokat az adott pool-ból veszi, ha kevés, fallback pool-ból is szed.
+function pickDistinctDistractors(correctValue, pool, field, count = 3, fallbackPool = null) {
   const values = distinctValues(pool, field).filter((v) => v !== correctValue);
-  return shuffle(values).slice(0, count);
+  if (values.length >= count) {
+    return shuffle(values).slice(0, count);
+  }
+  // Ha nincs elég distraktort az edu-szintű pool-ból, fallback pool-ból szedünk
+  if (fallbackPool) {
+    const fallbackValues = distinctValues(fallbackPool, field).filter((v) => v !== correctValue && !values.includes(v));
+    const combined = [...values, ...shuffle(fallbackValues)];
+    return combined.slice(0, count);
+  }
+  return values; // Ha nincs fallback, visszaadjuk amit találtunk
 }
 
 // --- Ténykérdések (1 dínóról szólnak) -----------------------------------------
 
-function buildEpochQuestion(dino, pool) {
+function buildEpochQuestion(dino, pool, fullPool = null) {
   if (!dino.epoch) return null;
-  const distractors = pickDistinctDistractors(dino.epoch, pool, 'epoch', 3);
-  if (distractors.length === 0) return null;
+  const distractors = pickDistinctDistractors(dino.epoch, pool, 'epoch', 3, fullPool);
+  if (distractors.length < 3) return null;
   const options = shuffle([dino.epoch, ...distractors]);
   return {
     type: 'fact',
@@ -35,10 +44,10 @@ function buildEpochQuestion(dino, pool) {
   };
 }
 
-function buildDiscovererQuestion(dino, pool) {
+function buildDiscovererQuestion(dino, pool, fullPool = null) {
   if (!dino.discoverer_name) return null;
-  const distractors = pickDistinctDistractors(dino.discoverer_name, pool, 'discoverer_name', 3);
-  if (distractors.length === 0) return null;
+  const distractors = pickDistinctDistractors(dino.discoverer_name, pool, 'discoverer_name', 3, fullPool);
+  if (distractors.length < 3) return null;
   const options = shuffle([dino.discoverer_name, ...distractors]);
   return {
     type: 'fact',
@@ -48,10 +57,10 @@ function buildDiscovererQuestion(dino, pool) {
   };
 }
 
-function buildDiscoveryYearQuestion(dino, pool) {
+function buildDiscoveryYearQuestion(dino, pool, fullPool = null) {
   if (!dino.discovery_year) return null;
-  const distractors = pickDistinctDistractors(dino.discovery_year, pool, 'discovery_year', 3);
-  if (distractors.length === 0) return null;
+  const distractors = pickDistinctDistractors(dino.discovery_year, pool, 'discovery_year', 3, fullPool);
+  if (distractors.length < 3) return null;
   const options = shuffle([dino.discovery_year, ...distractors]).map(String);
   return {
     type: 'fact',
@@ -76,7 +85,7 @@ function genusFromLatin(nameLatin, ending) {
 // A teljes tudományos név kérdésnél a válaszlehetőségek csak a fajnévben (latin_name_ending)
 // térnek el — a genus minden opcióban a helyes dínóé marad. A rossz fajnév-végződéseket
 // más dínóktól kölcsönözzük (name_hu alapján megkülönböztetve az egyedeket).
-function buildLatinNameQuestion(dino, pool) {
+function buildLatinNameQuestion(dino, pool, fullPool = null) {
   const ending = dino.latin_name_ending;
   if (!dino.name_latin || !ending) return null;
 
@@ -84,10 +93,19 @@ function buildLatinNameQuestion(dino, pool) {
   if (!genus) return null;
 
   const otherDinos = pool.filter((d) => d.name_hu !== dino.name_hu);
-  const distractorEndings = shuffle(
+  let distractorEndings = shuffle(
     distinctValues(otherDinos, 'latin_name_ending').filter((e) => e !== ending)
   ).slice(0, 3);
-  if (distractorEndings.length === 0) return null;
+
+  if (distractorEndings.length < 3 && fullPool) {
+    const fallbackDinos = fullPool.filter((d) => d.name_hu !== dino.name_hu);
+    const fallbackEndings = distinctValues(fallbackDinos, 'latin_name_ending').filter(
+      (e) => e !== ending && !distractorEndings.includes(e)
+    );
+    distractorEndings = [...distractorEndings, ...shuffle(fallbackEndings)].slice(0, 3);
+  }
+
+  if (distractorEndings.length < 3) return null;
 
   const options = shuffle([ending, ...distractorEndings]).map((e) => `${genus} ${e}`);
   return {
@@ -105,7 +123,7 @@ function buildRegionQuestion(dino) {
   const region = REGION_BUTTONS.find((r) => r.key === dino.edu);
   if (!region) return null;
   const distractorRegions = shuffle(REGION_BUTTONS.filter((r) => r.key !== dino.edu)).slice(0, 3);
-  if (distractorRegions.length === 0) return null;
+  if (distractorRegions.length < 3) return null;
   const options = shuffle([region.label, ...distractorRegions.map((r) => r.label)]);
   return {
     type: 'fact',
@@ -191,7 +209,7 @@ function allPairs(list) {
 // Minden dínóhoz minden ténytípust, minden dínópárhoz minden összehasonlítást legenerálunk,
 // és egy stabil kulccsal (builder név + dínó id / rendezett id-pár) dedupoljuk — így ugyanaz
 // a kérdés soha nem kerülhet be kétszer a jelöltlistába.
-function buildCandidates(packageDinos, pool) {
+function buildCandidates(packageDinos, pool, fullPool) {
   const seen = new Set();
   const candidates = [];
 
@@ -203,7 +221,7 @@ function buildCandidates(packageDinos, pool) {
 
   for (const dino of packageDinos) {
     for (const builder of FACT_BUILDERS) {
-      tryAdd(`${builder.name}:${dino.id}`, builder(dino, pool), [dino.id]);
+      tryAdd(`${builder.name}:${dino.id}`, builder(dino, pool, fullPool), [dino.id]);
     }
   }
 
@@ -241,13 +259,11 @@ function selectByQuota(candidates, questionCount) {
  * Kérdésszám: minimum 5. Ha a csomagban 5-nél több dínó van, akkor dínószám + 1.
  * Ténykérdés-típusok: korszak, felfedező, felfedezés éve, teljes tudományos név, régió.
  * Összehasonlító típusok: hossz, kor (mya).
- * A rossz válaszok mindig csak az adott edu level (régió) dínóinak distinct értékei közül
- * jönnek — nincs régión kívüli vagy kitalált fallback érték (a régió-kérdés kivétel, mert
- * annak épp a régiók közti különbségtétel a lényege).
+ * Mindig 4 opció per kérdés. A rossz válaszok előbb az adott edu level (régió) pool-ból,
+ * ha kevés, a fullPool-ból is szedünk (nem korlátozódunk az edu szintre).
  * Minden lehetséges kérdés egyszer generálódik (dedupolt jelöltlista), majd kvóta alapján
  * választunk úgy, hogy minden dínóról legalább egy kérdés bekerüljön, mielőtt bármelyikről
- * második is bekerülne. Ha a valós adatokból (hiányzó mezők miatt) nem jön ki elég egyedi
- * kérdés, a kvíz rövidebb lesz a minimumnál — nincs ismétlődő kérdés fallback.
+ * második is bekerülne.
  */
 export function buildQuiz(packageDinos, fullPool) {
   if (!packageDinos || packageDinos.length === 0) return [];
@@ -258,7 +274,7 @@ export function buildQuiz(packageDinos, fullPool) {
 
   const questionCount = packageDinos.length > 5 ? packageDinos.length + 1 : 5;
 
-  const candidates = buildCandidates(packageDinos, pool);
+  const candidates = buildCandidates(packageDinos, pool, basePool);
   const selected = selectByQuota(candidates, questionCount);
 
   return shuffle(selected);
