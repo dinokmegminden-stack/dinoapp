@@ -35,6 +35,15 @@ const imageCalibration = {
   pixelPerMeter: 178.11
 },
 
+"hatzegopteryx": {
+  imageWidth: 1376,
+  imageHeight: 768,
+  topY: 48,
+  groundY: 696,
+  realHeightM: 5,
+  pixelPerMeter: 129.60
+},
+
 
 };
 
