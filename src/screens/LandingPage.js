@@ -9,7 +9,7 @@ import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
 import { View, Text, StatusBar, StyleSheet, Image } from 'react-native';
 
-const tectonicGif = require('../assets/tectonic.gif');
+const tectonicGif = require('../assets/tectonic2.gif');
 
 export default function LandingPage({ onEnterRegion, onOpenGallery }) {
   const handleSelectRegion = (eduLevel) => {
