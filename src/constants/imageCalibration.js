@@ -26,7 +26,7 @@ const imageCalibration = {
   pixelPerMeter: 190.43
 },
 
-"euoplocephalus": {
+"Euoplocephalus": {
   imageWidth: 1376,
   imageHeight: 768,
   topY: 287,
@@ -35,7 +35,7 @@ const imageCalibration = {
   pixelPerMeter: 178.11
 },
 
-"hatzegopteryx": {
+"Hatzegopteryx": {
   imageWidth: 1376,
   imageHeight: 768,
   topY: 48,
