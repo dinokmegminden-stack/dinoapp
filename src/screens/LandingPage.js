@@ -1,6 +1,7 @@
 // LandingPage.js
 console.log("LANDING PAGE RENDER - REDESIGNED");
 
+import { LinearGradient } from 'expo-linear-gradient';
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
@@ -36,7 +37,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
 
   return (
     <Shell wide={isWideWeb}>
-      <View style={styles.container}>
+      <LinearGradient colors={['#283618', '#606C38']} style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
         <HeroTop />
@@ -73,7 +74,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
             </TouchableOpacity>
           )}
         </View>
-      </View>
+      </LinearGradient>
 
       {isWideWeb && (
         <View style={styles.sideMenu}>
@@ -109,7 +110,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg || '#283618',
     order: 1,
   },
   content: {
