@@ -72,18 +72,9 @@ const styles = StyleSheet.create({
   heroCard: {
     width: '100%',
     maxWidth: 640,
-    backgroundColor: 'rgba(10, 26, 10, 0.55)',
-    borderWidth: 2,
-    borderColor: '#dca962',
-    borderRadius: 18,
     paddingVertical: 32,
     paddingHorizontal: 28,
     alignItems: 'center',
-    ...Platform.select({
-      web: {
-        boxShadow: '0 8px 32px rgba(0,0,0,0.55)',
-      },
-    }),
   },
   heroCardWide: {
     maxWidth: 800,
