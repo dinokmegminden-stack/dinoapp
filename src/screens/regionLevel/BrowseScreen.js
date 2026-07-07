@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, useWindowDimensions } from 'react-native';
 import { IMAGE_MAP } from '../../constants/imageMap';
 import { CHARACTERS } from '../../constants/characters';
 import DinoCard from '../../components/DinoCard';
@@ -10,6 +10,8 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
   const dinos = pkg?.dinos || [];
   const [index, setIndex] = useState(0);
   const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 1024;
 
   const dino = dinos[index];
 
@@ -23,14 +25,16 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
       </View>
 
       <View style={s.browseMainRow}>
-        {/* Bal gomb */}
-        <TouchableOpacity
-          style={[s.sideBtnLeft, index === 0 && s.sideBtnDisabled]}
-          onPress={() => setIndex((i) => Math.max(0, i - 1))}
-          disabled={index === 0}
-        >
-          <Text style={[s.sideBtnText, index === 0 && s.sideBtnDisabledText]}>←</Text>
-        </TouchableOpacity>
+        {/* Bal gomb - csak desktop nézetnél */}
+        {isDesktop && (
+          <TouchableOpacity
+            style={[s.sideBtnLeft, index === 0 && s.sideBtnDisabled]}
+            onPress={() => setIndex((i) => Math.max(0, i - 1))}
+            disabled={index === 0}
+          >
+            <Text style={[s.sideBtnText, index === 0 && s.sideBtnDisabledText]}>←</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Középső tartalom */}
         <ScrollView contentContainerStyle={{ padding: 14, flexGrow: 1 }}>
@@ -74,21 +78,23 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
           )}
         </ScrollView>
 
-        {/* Jobb gomb */}
-        <TouchableOpacity
-          style={[s.sideBtnRight, index === dinos.length - 1 && s.sideBtnPrimary]}
-          onPress={() => {
-            if (index === dinos.length - 1) {
-              onStartQuiz();
-            } else {
-              setIndex((i) => Math.min(dinos.length - 1, i + 1));
-            }
-          }}
-        >
-          <Text style={[s.sideBtnText, index === dinos.length - 1 && s.sideBtnPrimaryText]}>
-            {index === dinos.length - 1 ? '▶' : '→'}
-          </Text>
-        </TouchableOpacity>
+        {/* Jobb gomb - csak desktop nézetnél */}
+        {isDesktop && (
+          <TouchableOpacity
+            style={[s.sideBtnRight, index === dinos.length - 1 && s.sideBtnPrimary]}
+            onPress={() => {
+              if (index === dinos.length - 1) {
+                onStartQuiz();
+              } else {
+                setIndex((i) => Math.min(dinos.length - 1, i + 1));
+              }
+            }}
+          >
+            <Text style={[s.sideBtnText, index === dinos.length - 1 && s.sideBtnPrimaryText]}>
+              {index === dinos.length - 1 ? '▶' : '→'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
