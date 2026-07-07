@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#283618"/>
+
+  <!-- Kárpát-medence (1) - Magyarország area -->
+  <g id="region-1" class="world-region" data-region="1" style="cursor: pointer;">
+    <rect x="380" y="240" width="90" height="80" fill="#606C38" opacity="0.7"/>
+    <text x="425" y="285" text-anchor="middle" font-size="14" fill="#FEFAE0" font-weight="bold">🦴</text>
+  </g>
+
+  <!-- Európa (2) -->
+  <g id="region-2" class="world-region" data-region="2" style="cursor: pointer;">
+    <rect x="320" y="180" width="280" height="120" fill="#8B9D3D" opacity="0.7"/>
+    <text x="460" y="240" text-anchor="middle" font-size="16" fill="#FEFAE0" font-weight="bold">🦕</text>
+  </g>
+
+  <!-- Afrika (3) -->
+  <g id="region-3" class="world-region" data-region="3" style="cursor: pointer;">
+    <rect x="480" y="340" width="200" height="240" fill="#A4AC86" opacity="0.7"/>
+    <text x="580" y="470" text-anchor="middle" font-size="16" fill="#FEFAE0" font-weight="bold">🌍</text>
+  </g>
+
+  <!-- Ázsia (4) -->
+  <g id="region-4" class="world-region" data-region="4" style="cursor: pointer;">
+    <rect x="700" y="200" width="350" height="220" fill="#9CAF5E" opacity="0.7"/>
+    <text x="875" y="310" text-anchor="middle" font-size="16" fill="#FEFAE0" font-weight="bold">🪶</text>
+  </g>
+
+  <!-- Amerika (5) - North and South -->
+  <g id="region-5" class="world-region" data-region="5" style="cursor: pointer;">
+    <!-- North America -->
+    <rect x="80" y="200" width="140" height="160" fill="#B5C99A" opacity="0.7"/>
+    <!-- South America -->
+    <rect x="120" y="380" width="100" height="180" fill="#B5C99A" opacity="0.7"/>
+    <text x="150" y="290" text-anchor="middle" font-size="16" fill="#FEFAE0" font-weight="bold">🦖</text>
+  </g>
+
+  <!-- Óceánok -->
+  <text x="200" y="600" text-anchor="middle" font-size="12" fill="#606C38" opacity="0.5">Óceán</text>
+  <text x="950" y="600" text-anchor="middle" font-size="12" fill="#606C38" opacity="0.5">Óceán</text>
+</svg>

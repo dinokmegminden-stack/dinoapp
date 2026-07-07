@@ -4,6 +4,7 @@ console.log("LANDING PAGE RENDER - REDESIGNED");
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
+import InteractiveWorldMap from '../components/InteractiveWorldMap';
 import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
@@ -47,26 +48,29 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
             </View>
           </View>
 
-          {!isWideWeb && (
-            <View style={styles.regionsGrid}>
-              {REGION_BUTTONS.map((region) => (
-                <TouchableOpacity
-                  key={region.key}
-                  style={[styles.regionBtn, { borderColor: region.color }]}
-                  onPress={() => handleSelectRegion(region.key)}
-                >
-                  <Text style={[styles.regionBtnText, { color: region.color }]}>
-                    {region.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
+          {/* Interactive World Map - Replace buttons on desktop, show simplified on mobile */}
+          {isWideWeb ? (
+            <InteractiveWorldMap onSelectRegion={handleSelectRegion} />
+          ) : (
+            <>
+              <View style={styles.regionsGrid}>
+                {REGION_BUTTONS.map((region) => (
+                  <TouchableOpacity
+                    key={region.key}
+                    style={[styles.regionBtn, { borderColor: region.color }]}
+                    onPress={() => handleSelectRegion(region.key)}
+                  >
+                    <Text style={[styles.regionBtnText, { color: region.color }]}>
+                      {region.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
-          {!isWideWeb && (
-            <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
-              <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
+                <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
+              </TouchableOpacity>
+            </>
           )}
         </View>
       </View>
