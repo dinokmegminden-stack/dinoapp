@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } 
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { getScaledDimensions } from '../utils/scaleUtils';
+import PeriodTimeline from './PeriodTimeline';
 
 const DESKTOP_BREAKPOINT = 1024;
 const DESKTOP_MAX_WIDTH = 860; // Maximum width for the desktop card layout
@@ -51,11 +52,12 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
   const dietIcon = DIET_ICON[String(dino.diet_hu || '').toLowerCase()] || null;
 
   const mya = formatRange(dino.mya_min, dino.mya_max, 'millió éve');
+  const myaRange = formatRange(dino.mya_min, dino.mya_max, '');
   const length = formatRange(dino.length_m_min, dino.length_m_max, 'm');
   const weight = formatRange(dino.weight_kg_min, dino.weight_kg_max, 'kg');
 
   const metaItems = [
-    dino.period && { label: 'Időszak', value: mya ? `${dino.period}\n${mya}` : String(dino.period) },
+    dino.epoch && { label: 'Epoch', value: String(dino.epoch) },
     length && { label: 'Hossz', value: length },
     weight && { label: 'Tömeg', value: weight },
     dino.discoverer_name && {
@@ -105,11 +107,6 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
                 <Text style={styles.overlayText}>{String(dino.diet_hu)}</Text>
               </View>
             )}
-            {!!dino.period && (
-              <View style={[styles.overlayBadge, styles.badgeTopRight]}>
-                <Text style={styles.overlayText}>{String(dino.period)}</Text>
-              </View>
-            )}
             {!!dino.region && (
               <View style={[styles.overlayBadge, styles.badgeBottomLeft]}>
                 <Text style={styles.overlayIcon}>🌍</Text>
@@ -136,20 +133,20 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
         {/* Lapozó gombok - overlay */}
         {onPrevious && (
           <TouchableOpacity
-            style={[styles.navButtonLeft, isFirstDino && styles.navButtonDisabled]}
+            style={[styles.playButtonLeft, isFirstDino && styles.navButtonDisabled]}
             onPress={onPrevious}
             disabled={isFirstDino}
           >
-            <Text style={[styles.navButtonText, isFirstDino && styles.navButtonDisabledText]}>←</Text>
+            <View style={[styles.playTriangle, styles.playTriangleLeft]} />
           </TouchableOpacity>
         )}
         {onNext && (
           <TouchableOpacity
-            style={[styles.navButtonRight, isLastDino && styles.navButtonDisabled]}
+            style={[styles.playButtonRight, isLastDino && styles.navButtonDisabled]}
             onPress={onNext}
             disabled={isLastDino}
           >
-            <Text style={[styles.navButtonText, isLastDino && styles.navButtonDisabledText]}>→</Text>
+            <View style={[styles.playTriangle, styles.playTriangleRight]} />
           </TouchableOpacity>
         )}
       </View>
@@ -161,6 +158,12 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
     return (
       <View style={[styles.desktopCard, { width: desktopCardWidth }]}>
         <View style={styles.heroSection}>{heroBlock}</View>
+
+        {showTimeline && !!mya && (
+          <View style={styles.desktopTimelineContainer}>
+            <PeriodTimeline mya_min={dino.mya_min} mya_max={dino.mya_max} />
+          </View>
+        )}
 
         <View style={styles.contentRow}>
           <View style={styles.descriptionCol}>
@@ -257,44 +260,52 @@ const styles = StyleSheet.create({
   characterOverlay: {
     position: 'absolute',
   },
-  navButtonLeft: {
+  playButtonLeft: {
     position: 'absolute',
     left: 12,
     top: '50%',
-    transform: [{ translateY: -20 }],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    transform: [{ translateY: -10 }],
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.12)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  navButtonRight: {
+  playButtonRight: {
     position: 'absolute',
     right: 12,
     top: '50%',
-    transform: [{ translateY: -20 }],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    transform: [{ translateY: -10 }],
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.12)',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  playTriangle: {
+    width: 0,
+    height: 0,
+  },
+  playTriangleLeft: {
+    borderTopWidth: 16,
+    borderBottomWidth: 16,
+    borderRightWidth: 28,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderRightColor: '#FEFAE0',
+  },
+  playTriangleRight: {
+    borderTopWidth: 16,
+    borderBottomWidth: 16,
+    borderLeftWidth: 28,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderLeftColor: '#FEFAE0',
+  },
   navButtonDisabled: {
     opacity: 0.3,
-  },
-  navButtonText: {
-    color: '#FEFAE0',
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  navButtonDisabledText: {
-    opacity: 0.5,
   },
   info: {
     gap: 6,
@@ -403,6 +414,12 @@ const styles = StyleSheet.create({
   heroSection: {
     width: '100%',
     backgroundColor: '#14140f',
+  },
+  desktopTimelineContainer: {
+    padding: 24,
+    backgroundColor: COLORS.bg,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(217,208,181,0.1)',
   },
   imageWrapperDesktop: {
     marginBottom: 0,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { COLORS } from '../constants/colors';
 
 const START_MA = 252;
 const END_MA = 66;
@@ -107,11 +108,11 @@ const styles = StyleSheet.create({
   },
   rangeBar: {
     position: 'absolute',
-    top: 6,
-    height: 10,
-    backgroundColor: 'rgba(120, 177, 89, 0.4)',
-    borderWidth: 1,
-    borderColor: '#78b159',
+    top: 1,
+    height: 20,
+    backgroundColor: `${COLORS.amber}26`,
+    borderWidth: 3,
+    borderColor: COLORS.amber,
     borderRadius: 2,
   },
   markerWrap: {
