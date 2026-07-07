@@ -31,17 +31,27 @@ export default function HeroTop() {
             <Image source={afrikaIcon} style={styles.heroIcon} />
           </View>
         )}
-        <Text
-          style={[
-            styles.mainTitle,
-            {
-              fontSize: titleSize,
-              fontFamily: fontsLoaded ? 'LuckiestGuy_400Regular' : 'System',
-            },
-          ]}
-        >
-          DÍNÓ TUDÓS
-        </Text>
+        <View style={styles.titleBlock}>
+          <Text
+            style={[
+              styles.mainTitle,
+              {
+                fontSize: titleSize,
+                fontFamily: fontsLoaded ? 'LuckiestGuy_400Regular' : 'System',
+              },
+            ]}
+          >
+            DÍNÓ TUDÓS
+          </Text>
+          <Text
+            style={[
+              styles.subtitle,
+              { fontFamily: fontsLoaded ? 'Fredoka_400Regular' : 'System' },
+            ]}
+          >
+            Gyűjts, tanulj, játssz!
+          </Text>
+        </View>
         {isDesktop && (
           <View style={styles.iconContainerRight}>
             <Image source={amerikaIcon} style={styles.heroIcon} />
@@ -93,6 +103,9 @@ const styles = StyleSheet.create({
     height: 120,
     resizeMode: 'contain',
   },
+  titleBlock: {
+    alignItems: 'center',
+  },
   mainTitle: {
     color: '#dca962',
     letterSpacing: 4,
@@ -101,5 +114,12 @@ const styles = StyleSheet.create({
     textShadowColor: '#0a0a06',
     textShadowOffset: { width: 3, height: 5 },
     textShadowRadius: 1,
+  },
+  subtitle: {
+    color: '#FEFAE0',
+    fontSize: 18,
+    letterSpacing: 1,
+    textAlign: 'center',
+    marginTop: 6,
   },
 });

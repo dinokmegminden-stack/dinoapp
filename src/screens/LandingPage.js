@@ -43,7 +43,6 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
 
         <View style={styles.content}>
           <View style={styles.introSection}>
-            <Text style={styles.tagline}>Gyűjtsd össze a dínókat, tanulj és játssz!</Text>
             <View style={styles.bulletList}>
               <BulletPoint text="5 kontinens 100+ őslénye" />
               <BulletPoint text="Csomagokra bontva, kvízzel zárolva" />
@@ -124,14 +123,6 @@ const styles = StyleSheet.create({
   },
   introSection: {
     marginBottom: 32,
-  },
-  tagline: {
-    color: '#DDA15E',
-    fontFamily: FONTS.bold,
-    fontSize: 28,
-    fontWeight: '700',
-    marginBottom: 16,
-    textAlign: 'center',
   },
   bulletList: {
     gap: 10,
