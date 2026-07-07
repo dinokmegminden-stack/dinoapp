@@ -1,7 +1,6 @@
 // LandingPage.js
 console.log("LANDING PAGE RENDER - REDESIGNED");
 
-import { LinearGradient } from 'expo-linear-gradient';
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
@@ -36,9 +35,10 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
   };
 
   return (
-    <Shell wide={isWideWeb}>
-      <LinearGradient colors={['#283618', '#606C38']} style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+    <Shell wide={isWideWeb} gradientColors={['#283618', '#606C38']}>
+      <View style={[styles.body, isWideWeb && styles.bodyWide]}>
+        <View style={styles.container}>
+          <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
         <HeroTop />
 
@@ -73,19 +73,20 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
               <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
             </TouchableOpacity>
           )}
+          </View>
         </View>
-      </LinearGradient>
 
-      {isWideWeb && (
-        <View style={styles.sideMenu}>
-          <LandingMenu
-            onSelectRegion={handleSelectRegion}
-            onOpenGallery={handleOpenGallery}
-            onLightningQuiz={handleStartLightningQuiz}
-            onMillionaire={handleStartMillionaire}
-          />
-        </View>
-      )}
+        {isWideWeb && (
+          <View style={styles.sideMenu}>
+            <LandingMenu
+              onSelectRegion={handleSelectRegion}
+              onOpenGallery={handleOpenGallery}
+              onLightningQuiz={handleStartLightningQuiz}
+              onMillionaire={handleStartMillionaire}
+            />
+          </View>
+        )}
+      </View>
     </Shell>
   );
 }
@@ -100,17 +101,22 @@ function BulletPoint({ text }) {
 }
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+  },
+  bodyWide: {
+    flexDirection: 'row',
+    gap: 28,
+  },
   sideMenu: {
     width: 240,
     borderLeftWidth: 1,
     borderLeftColor: 'rgba(221,161,94,0.2)',
     paddingVertical: 20,
     paddingHorizontal: 8,
-    order: 2,
   },
   container: {
     flex: 1,
-    order: 1,
   },
   content: {
     flex: 1,
