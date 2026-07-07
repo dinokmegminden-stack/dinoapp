@@ -238,8 +238,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: COLORS.card,
     borderRadius: 16,
-    padding: 12,
-    marginVertical: 10,
+    padding: 6,
+    marginVertical: 5,
     borderWidth: 1,
     borderColor: COLORS.border,
     alignSelf: 'stretch',
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   imageWrapper: {
     width: '100%',
     borderRadius: 12,
-    marginBottom: 12,
+    marginBottom: 6,
     backgroundColor: 'rgba(0,0,0,0.1)',
     position: 'relative',
     overflow: 'hidden',
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
   },
   timelineContainer: {
-    marginBottom: 12,
+    marginBottom: 6,
     paddingHorizontal: 0,
   },
   timeline: {
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#14140f',
   },
   desktopTimelineContainer: {
-    padding: 24,
+    padding: 12,
     backgroundColor: COLORS.bg,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(217,208,181,0.1)',

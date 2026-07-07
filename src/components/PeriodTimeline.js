@@ -40,13 +40,13 @@ export default function PeriodTimeline({ korMillioev, mya_min, mya_max }) {
     <View style={styles.container}>
       {/* Korszak sávok */}
       <View style={styles.barRow}>
-        <View style={[styles.barSegment, { width: `${TRIASSIC_WIDTH}%`, backgroundColor: '#9c66a6' }]}>
+        <View style={[styles.barSegment, { width: `${TRIASSIC_WIDTH}%`, backgroundColor: 'rgba(156, 102, 166, 0.4)' }]}>
           <Text style={styles.barLabel}>Triász</Text>
         </View>
-        <View style={[styles.barSegment, { width: `${JURASSIC_WIDTH}%`, backgroundColor: '#4ba3c3' }]}>
+        <View style={[styles.barSegment, { width: `${JURASSIC_WIDTH}%`, backgroundColor: 'rgba(75, 163, 195, 0.4)' }]}>
           <Text style={styles.barLabel}>Jura</Text>
         </View>
-        <View style={[styles.barSegment, { width: `${CRETACEOUS_WIDTH}%`, backgroundColor: '#3caea3', borderRightWidth: 0 }]}>
+        <View style={[styles.barSegment, { width: `${CRETACEOUS_WIDTH}%`, backgroundColor: 'rgba(60, 174, 163, 0.4)', borderRightWidth: 0 }]}>
           <Text style={styles.barLabel}>Kréta</Text>
         </View>
       </View>
@@ -67,19 +67,18 @@ export default function PeriodTimeline({ korMillioev, mya_min, mya_max }) {
           </View>
         )}
       </View>
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { width: '100%' },
+  container: { width: '100%', position: 'relative', height: 28 },
   barRow: {
     flexDirection: 'row',
     height: 28,
     width: '100%',
     borderRadius: 4,
-    overflow: 'hidden',
+    overflow: 'visible',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.15)',
   },
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     borderRightColor: 'rgba(0,0,0,0.2)',
   },
   barLabel: { fontSize: 13, fontWeight: '700', color: '#000' },
-  markerTrack: { width: '100%', height: 22, marginTop: 4, position: 'relative' },
+  markerTrack: { width: '100%', height: 22, position: 'absolute', top: 3, left: 0, zIndex: 10 },
   trackLine: {
     position: 'absolute',
     top: 0,
