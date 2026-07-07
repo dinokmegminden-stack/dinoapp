@@ -40,13 +40,13 @@ export default function PeriodTimeline({ korMillioev, mya_min, mya_max }) {
     <View style={styles.container}>
       {/* Korszak sávok */}
       <View style={styles.barRow}>
-        <View style={[styles.barSegment, { width: `${TRIASSIC_WIDTH}%`, backgroundColor: 'rgba(156, 102, 166, 0.4)' }]}>
+        <View style={[styles.barSegment, { width: `${TRIASSIC_WIDTH}%`, backgroundColor: '#ffb703' }]}>
           <Text style={styles.barLabel}>Triász</Text>
         </View>
-        <View style={[styles.barSegment, { width: `${JURASSIC_WIDTH}%`, backgroundColor: 'rgba(75, 163, 195, 0.4)' }]}>
+        <View style={[styles.barSegment, { width: `${JURASSIC_WIDTH}%`, backgroundColor: '#219ebc' }]}>
           <Text style={styles.barLabel}>Jura</Text>
         </View>
-        <View style={[styles.barSegment, { width: `${CRETACEOUS_WIDTH}%`, backgroundColor: 'rgba(60, 174, 163, 0.4)', borderRightWidth: 0 }]}>
+        <View style={[styles.barSegment, { width: `${CRETACEOUS_WIDTH}%`, backgroundColor: '#8ecae6', borderRightWidth: 0 }]}>
           <Text style={styles.barLabel}>Kréta</Text>
         </View>
       </View>
