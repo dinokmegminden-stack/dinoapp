@@ -3,13 +3,17 @@ console.log("LANDING PAGE RENDER - REDESIGNED");
 
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
+import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { REGION_BUTTONS } from '../constants/regionButtons';
-import { View, Text, StatusBar, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StatusBar, StyleSheet, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 
-export default function LandingPage({ onEnterRegion, onOpenGallery }) {
+export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz }) {
+  const { width } = useWindowDimensions();
+  const isWideWeb = Platform.OS === 'web' && width >= 700;
+
   const handleSelectRegion = (eduLevel) => {
     playSound('click');
     onEnterRegion(eduLevel);
@@ -17,11 +21,16 @@ export default function LandingPage({ onEnterRegion, onOpenGallery }) {
 
   const handleOpenGallery = () => {
     playSound('click');
-    onOpenGallery();
+    onOpenGallery?.();
+  };
+
+  const handleStartLightningQuiz = () => {
+    playSound('click');
+    onStartLightningQuiz?.();
   };
 
   return (
-    <Shell>
+    <Shell wide={isWideWeb}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
@@ -38,25 +47,39 @@ export default function LandingPage({ onEnterRegion, onOpenGallery }) {
             </View>
           </View>
 
-          <View style={styles.regionsGrid}>
-            {REGION_BUTTONS.map((region) => (
-              <TouchableOpacity
-                key={region.key}
-                style={[styles.regionBtn, { borderColor: region.color }]}
-                onPress={() => handleSelectRegion(region.key)}
-              >
-                <Text style={[styles.regionBtnText, { color: region.color }]}>
-                  {region.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          {!isWideWeb && (
+            <View style={styles.regionsGrid}>
+              {REGION_BUTTONS.map((region) => (
+                <TouchableOpacity
+                  key={region.key}
+                  style={[styles.regionBtn, { borderColor: region.color }]}
+                  onPress={() => handleSelectRegion(region.key)}
+                >
+                  <Text style={[styles.regionBtnText, { color: region.color }]}>
+                    {region.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
-          <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
-            <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
-          </TouchableOpacity>
+          {!isWideWeb && (
+            <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
+              <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
+
+      {isWideWeb && (
+        <View style={styles.sideMenu}>
+          <LandingMenu
+            onSelectRegion={handleSelectRegion}
+            onOpenGallery={handleOpenGallery}
+            onLightningQuiz={handleStartLightningQuiz}
+          />
+        </View>
+      )}
     </Shell>
   );
 }
@@ -71,9 +94,18 @@ function BulletPoint({ text }) {
 }
 
 const styles = StyleSheet.create({
+  sideMenu: {
+    width: 240,
+    borderLeftWidth: 1,
+    borderLeftColor: 'rgba(221,161,94,0.2)',
+    paddingVertical: 20,
+    paddingHorizontal: 8,
+    order: 2,
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.bg || '#283618',
+    order: 1,
   },
   content: {
     flex: 1,

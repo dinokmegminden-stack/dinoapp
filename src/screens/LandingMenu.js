@@ -43,7 +43,22 @@ function GalleryButton({ onPress }) {
   );
 }
 
-export default function LandingMenu({ onSelectRegion, onOpenGallery }) {
+function LightningQuizButton({ onPress }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={[styles.lightningBtn, hovered && styles.lightningBtnHovered]}
+    >
+      <Text style={styles.lightningBtnText}>⚡ 5MP KÉPKVÍZ</Text>
+    </Pressable>
+  );
+}
+
+export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightningQuiz }) {
   return (
     <View style={styles.menuContainer}>
       <View style={styles.list}>
@@ -55,6 +70,7 @@ export default function LandingMenu({ onSelectRegion, onOpenGallery }) {
           />
         ))}
         {onOpenGallery && <GalleryButton onPress={onOpenGallery} />}
+        {onLightningQuiz && <LightningQuizButton onPress={onLightningQuiz} />}
       </View>
     </View>
   );
@@ -149,6 +165,46 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: 13,
     letterSpacing: 1,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  lightningBtn: {
+    width: '100%',
+    backgroundColor: 'rgba(255,193,7,0.14)',
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    ...Platform.select({
+      web: {
+        backdropFilter: 'blur(4px)',
+        WebkitBackdropFilter: 'blur(4px)',
+        transition: 'all 0.2s ease-in-out',
+        cursor: 'pointer',
+      },
+    }),
+  },
+  lightningBtnHovered: {
+    backgroundColor: 'rgba(255,193,7,0.25)',
+    ...Platform.select({
+      web: {
+        transform: 'scale(1.02)',
+      },
+    }),
+  },
+  lightningBtnText: {
+    color: '#FFD700',
+    fontFamily: Platform.select({
+      web: "system-ui, -apple-system, sans-serif",
+      default: 'System',
+    }),
+    fontWeight: '900',
+    fontSize: 15,
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
     textAlign: 'center',
   },
