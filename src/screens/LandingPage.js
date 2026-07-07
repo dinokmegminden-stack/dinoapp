@@ -10,7 +10,7 @@ import { FONTS } from '../constants/fonts';
 import { REGION_BUTTONS } from '../constants/regionButtons';
 import { View, Text, StatusBar, StyleSheet, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 
-export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz }) {
+export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
 
@@ -27,6 +27,11 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
   const handleStartLightningQuiz = () => {
     playSound('click');
     onStartLightningQuiz?.();
+  };
+
+  const handleStartMillionaire = () => {
+    playSound('click');
+    onStartMillionaire?.();
   };
 
   return (
@@ -77,6 +82,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
             onSelectRegion={handleSelectRegion}
             onOpenGallery={handleOpenGallery}
             onLightningQuiz={handleStartLightningQuiz}
+            onMillionaire={handleStartMillionaire}
           />
         </View>
       )}

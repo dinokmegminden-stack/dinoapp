@@ -58,7 +58,22 @@ function LightningQuizButton({ onPress }) {
   );
 }
 
-export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightningQuiz }) {
+function MillionaireButton({ onPress }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={[styles.lightningBtn, hovered && styles.lightningBtnHovered]}
+    >
+      <Text style={styles.lightningBtnText}>💰 XP MILLIOMOS</Text>
+    </Pressable>
+  );
+}
+
+export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightningQuiz, onMillionaire }) {
   return (
     <View style={styles.menuContainer}>
       <View style={styles.list}>
@@ -71,6 +86,7 @@ export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightning
         ))}
         {onOpenGallery && <GalleryButton onPress={onOpenGallery} />}
         {onLightningQuiz && <LightningQuizButton onPress={onLightningQuiz} />}
+        {onMillionaire && <MillionaireButton onPress={onMillionaire} />}
       </View>
     </View>
   );

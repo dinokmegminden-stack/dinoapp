@@ -6,6 +6,7 @@ import { View, StatusBar } from 'react-native';
 import LandingPage from './src/screens/LandingPage';
 import RegionLevel from './src/screens/regionLevel/RegionLevel';
 import VillamkvizScreen from './src/screens/VillamkvizScreen';
+import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
 import XPBar from './src/components/XPBar';
 import { loadProgress, recordPackQuizResult } from './src/utils/regionProgress';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
@@ -61,6 +62,10 @@ export default function App() {
     // TODO: Implement gallery view
   };
 
+  const handleStartMillionaire = () => {
+    setView('millionaire');
+  };
+
   const handlePassed = async (csomag, packId, score) => {
     const updated = await recordPackQuizResult(PLAYER_NICKNAME, eduLevel, csomag, score);
     setProgress(updated);
@@ -76,6 +81,7 @@ export default function App() {
           onEnterRegion={handleEnterRegion}
           onOpenGallery={handleOpenGallery}
           onStartLightningQuiz={handleStartLightningQuiz}
+          onStartMillionaire={handleStartMillionaire}
         />
       )}
 
@@ -95,6 +101,10 @@ export default function App() {
           allDinos={allDinos}
           onBack={handleBackFromLightningQuiz}
         />
+      )}
+
+      {view === 'millionaire' && (
+        <MillionaireQuizScreen onBack={() => setView('landing')} />
       )}
     </View>
   );
