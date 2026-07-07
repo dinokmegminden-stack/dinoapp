@@ -2,24 +2,25 @@
 export const CHARACTERS = [
   {
     id: 'ch1',
-    name: 'Dr. Alan Grant',
-    imageAsset: null,
-    heightCm: 183,
+    name: 'Gideon Mantel',
+    imageAsset: require('../../assets/characters/gideon.png'),
+    heightCm: 180,
     aspectRatio: 0.45,
   },
+
   {
     id: 'ch2',
-    name: 'Dr. Ellie Sattler',
-    imageAsset: null,
-    heightCm: 179,
-    aspectRatio: 0.45,
-  },
-  {
-    id: 'ch3',
-    name: 'Dr. Ian Malcolm',
-    imageAsset: require('../../assets/characters/ian.png'),
+    name: 'Othniel C. Marsh',
+    imageAsset: require('../../assets/characters/marsh.png'),
     heightCm: 194,
     aspectRatio: 1,
+  },
+    {
+    id: 'ch3',
+    name: 'Edward Drinker Cope',
+    imageAsset: require('../../assets/characters/drinker.png'),
+    heightCm: 180,
+    aspectRatio: 0.45,
   },
 {
   id: 'ch4',
@@ -28,18 +29,6 @@ export const CHARACTERS = [
   heightCm: 178,
   aspectRatio: 1,
 },
-  {
-    id: 'ch5',
-    name: 'Donald Gennaro',
-    imageAsset: null,
-    heightCm: 165,
-    aspectRatio: 0.45,
-  },
-  {
-    id: 'ch6',
-    name: 'Dennis Nedry',
-    imageAsset: null,
-    heightCm: 170,
-    aspectRatio: 0.45,
-  },
+
+ 
 ];
