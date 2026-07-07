@@ -41,6 +41,16 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
                 imageSource={IMAGE_MAP[dino.name_hu] || null}
                 character={selectedCharacter}
                 showTimeline
+                onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
+                onNext={() => {
+                  if (index === dinos.length - 1) {
+                    onStartQuiz();
+                  } else {
+                    setIndex((i) => Math.min(dinos.length - 1, i + 1));
+                  }
+                }}
+                isFirstDino={index === 0}
+                isLastDino={index === dinos.length - 1}
               />
               <View style={s.characterSelectorGrid}>
                 {CHARACTERS.map((c) => (

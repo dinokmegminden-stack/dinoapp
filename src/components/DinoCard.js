@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { getScaledDimensions } from '../utils/scaleUtils';
@@ -29,7 +29,7 @@ function formatRange(min, max, unit) {
   return `${max ?? min} ${unit}`;
 }
 
-export default function DinoCard({ dino, imageSource, character, showTimeline = true }) {
+export default function DinoCard({ dino, imageSource, character, showTimeline = true, onPrevious, onNext, isFirstDino, isLastDino }) {
   if (!dino) return null;
 
   const { width } = useWindowDimensions();
@@ -132,6 +132,26 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
             )}
           </>
         )}
+
+        {/* Lapozó gombok - overlay */}
+        {onPrevious && (
+          <TouchableOpacity
+            style={[styles.navButtonLeft, isFirstDino && styles.navButtonDisabled]}
+            onPress={onPrevious}
+            disabled={isFirstDino}
+          >
+            <Text style={[styles.navButtonText, isFirstDino && styles.navButtonDisabledText]}>←</Text>
+          </TouchableOpacity>
+        )}
+        {onNext && (
+          <TouchableOpacity
+            style={[styles.navButtonRight, isLastDino && styles.navButtonDisabled]}
+            onPress={onNext}
+            disabled={isLastDino}
+          >
+            <Text style={[styles.navButtonText, isLastDino && styles.navButtonDisabledText]}>→</Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   );
@@ -176,6 +196,12 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
     <View style={styles.card}>
       {heroBlock}
 
+      {showTimeline && !!mya && (
+        <View style={styles.timelineContainer}>
+          <PeriodTimeline mya_min={dino.mya_min} mya_max={dino.mya_max} />
+        </View>
+      )}
+
       <View style={styles.info}>
         <Text style={styles.name}>{String(dino.name_hu)}</Text>
         {!!dino.name_latin && <Text style={styles.latin}>{String(dino.name_latin)}</Text>}
@@ -200,12 +226,6 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
           ))}
           {!!dino.rarity && <Text style={styles.meta}>💎 Ritkaság: {String(dino.rarity)}</Text>}
         </View>
-
-        {showTimeline && !!mya && (
-          <View style={styles.timeline}>
-            <Text style={styles.timelineText}>{mya}</Text>
-          </View>
-        )}
       </View>
     </View>
   );
@@ -236,6 +256,45 @@ const styles = StyleSheet.create({
   },
   characterOverlay: {
     position: 'absolute',
+  },
+  navButtonLeft: {
+    position: 'absolute',
+    left: 12,
+    top: '50%',
+    transform: [{ translateY: -20 }],
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navButtonRight: {
+    position: 'absolute',
+    right: 12,
+    top: '50%',
+    transform: [{ translateY: -20 }],
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navButtonDisabled: {
+    opacity: 0.3,
+  },
+  navButtonText: {
+    color: '#FEFAE0',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  navButtonDisabledText: {
+    opacity: 0.5,
   },
   info: {
     gap: 6,
@@ -281,6 +340,10 @@ const styles = StyleSheet.create({
     color: COLORS.textMuted,
     fontSize: 13,
     fontFamily: FONTS.body,
+  },
+  timelineContainer: {
+    marginBottom: 12,
+    paddingHorizontal: 0,
   },
   timeline: {
     marginTop: 8,

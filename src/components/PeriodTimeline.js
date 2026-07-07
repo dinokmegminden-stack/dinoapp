@@ -25,10 +25,15 @@ function clampPercent(p) {
   return Math.min(100, Math.max(0, p));
 }
 
-export default function PeriodTimeline({ korMillioev }) {
+export default function PeriodTimeline({ korMillioev, mya_min, mya_max }) {
   const markerMa = parseKorMillioev(korMillioev);
   const markerPositionPercent =
     markerMa !== null ? clampPercent(((START_MA - markerMa) / TOTAL_DURATION) * 100) : null;
+
+  const rangeStart = mya_max !== null && mya_max !== undefined ? ((START_MA - mya_max) / TOTAL_DURATION) * 100 : null;
+  const rangeEnd = mya_min !== null && mya_min !== undefined ? ((START_MA - mya_min) / TOTAL_DURATION) * 100 : null;
+  const rangeWidth = rangeStart !== null && rangeEnd !== null ? rangeEnd - rangeStart : null;
+  const rangeStartClamped = rangeStart !== null ? clampPercent(rangeStart) : null;
 
   return (
     <View style={styles.container}>
@@ -52,6 +57,9 @@ export default function PeriodTimeline({ korMillioev }) {
           const leftPos = ((START_MA - tick) / TOTAL_DURATION) * 100;
           return <View key={tick} style={[styles.tickMark, { left: `${leftPos}%` }]} />;
         })}
+        {rangeStartClamped !== null && rangeWidth !== null && (
+          <View style={[styles.rangeBar, { left: `${rangeStartClamped}%`, width: `${rangeWidth}%` }]} />
+        )}
         {markerPositionPercent !== null && (
           <View style={[styles.markerWrap, { left: `${markerPositionPercent}%` }]}>
             <View style={styles.markerShield} />
@@ -96,6 +104,15 @@ const styles = StyleSheet.create({
     width: 1,
     height: 8,
     backgroundColor: '#9ca3af',
+  },
+  rangeBar: {
+    position: 'absolute',
+    top: 6,
+    height: 10,
+    backgroundColor: 'rgba(120, 177, 89, 0.4)',
+    borderWidth: 1,
+    borderColor: '#78b159',
+    borderRadius: 2,
   },
   markerWrap: {
     position: 'absolute',
