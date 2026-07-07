@@ -57,7 +57,7 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
   const weight = formatRange(dino.weight_kg_min, dino.weight_kg_max, 'kg');
 
   const metaItems = [
-    dino.epoch && { label: 'Epoch', value: String(dino.epoch) },
+    dino.epoch && { label: 'Epoch', value: `${dino.epoch}, ${myaRange}` },
     length && { label: 'Hossz', value: length },
     weight && { label: 'Tömeg', value: weight },
     dino.discoverer_name && {
