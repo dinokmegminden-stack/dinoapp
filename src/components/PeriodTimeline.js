@@ -61,7 +61,7 @@ export default function PeriodTimeline({ korMillioev, mya_min, mya_max }) {
         {rangeStartClamped !== null && rangeWidth !== null && (
           <View style={[styles.rangeBar, { left: `${rangeStartClamped}%`, width: `${rangeWidth}%` }]} />
         )}
-        {markerPositionPercent !== null && (
+        {markerPositionPercent !== null && (rangeStartClamped === null || rangeWidth === null) && (
           <View style={[styles.markerWrap, { left: `${markerPositionPercent}%` }]}>
             <View style={styles.markerShield} />
           </View>
