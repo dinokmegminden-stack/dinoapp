@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/fredoka';
 
 const afrikaIcon = require('../../assets/icons/icon_afrika.png');
+const amerikaIcon = require('../../assets/icons/icon_amerika.png');
 
 export default function HeroTop() {
   const { width } = useWindowDimensions();
@@ -41,6 +42,11 @@ export default function HeroTop() {
         >
           DÍNÓ TUDÓS
         </Text>
+        {isDesktop && (
+          <View style={styles.iconContainerRight}>
+            <Image source={amerikaIcon} style={styles.heroIcon} />
+          </View>
+        )}
       </View>
     </View>
   );
@@ -78,6 +84,9 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: 20,
+  },
+  iconContainerRight: {
+    marginLeft: 20,
   },
   heroIcon: {
     width: 120,
