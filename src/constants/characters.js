@@ -5,14 +5,14 @@ export const CHARACTERS = [
     name: 'Gideon Mantel',
     imageAsset: require('../../assets/characters/gideon.png'),
     heightCm: 180,
-    aspectRatio: 0.45,
+    aspectRatio: 1,
   },
 
   {
     id: 'ch2',
     name: 'Othniel C. Marsh',
     imageAsset: require('../../assets/characters/marsh.png'),
-    heightCm: 194,
+    heightCm: 180,
     aspectRatio: 1,
   },
     {
@@ -20,15 +20,15 @@ export const CHARACTERS = [
     name: 'Edward Drinker Cope',
     imageAsset: require('../../assets/characters/drinker.png'),
     heightCm: 180,
-    aspectRatio: 0.45,
+    aspectRatio: 0.1,
   },
-{
-  id: 'ch4',
-  name: 'John Hammond',
-  imageAsset: require('../../assets/characters/john.png'),
-  heightCm: 178,
-  aspectRatio: 1,
-},
+// {
+//   id: 'ch4',
+//   name: 'John Hammond',
+//   imageAsset: require('../../assets/characters/john.png'),
+//   heightCm: 178,
+//   aspectRatio: 1,
+// },
 
  
 ];
