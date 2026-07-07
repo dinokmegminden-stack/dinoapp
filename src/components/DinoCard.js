@@ -30,7 +30,7 @@ function formatRange(min, max, unit) {
   return `${max ?? min} ${unit}`;
 }
 
-export default function DinoCard({ dino, imageSource, character, showTimeline = true, onPrevious, onNext, isFirstDino, isLastDino }) {
+export default function DinoCard({ dino, imageSource, character, showTimeline = true, onPrevious, onNext, isFirstDino, isLastDino, characters, selectedCharacter, onCharacterSelect }) {
   if (!dino) return null;
 
   const { width } = useWindowDimensions();
@@ -187,6 +187,26 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
                   <Text style={styles.metaGridValue}>{item.value}</Text>
                 </View>
               ))}
+              {characters && characters.length > 0 && (
+                <View style={styles.charSelectorDesktop}>
+                  {characters.map((c) => (
+                    <TouchableOpacity
+                      key={c.id}
+                      onPress={() => onCharacterSelect?.(c)}
+                      style={[styles.charThumbDesktop, selectedCharacter?.id === c.id && styles.charThumbActiveDesktop]}
+                    >
+                      {c.imageAsset ? (
+                        <Image source={c.imageAsset} style={styles.charThumbImgDesktop} resizeMode="contain" />
+                      ) : (
+                        <View style={[styles.charThumbImgDesktop, styles.charThumbPlaceholder]}>
+                          <Text style={styles.charThumbInitial}>{c.name.charAt(0)}</Text>
+                        </View>
+                      )}
+                      <Text style={styles.charThumbNameDesktop} numberOfLines={1}>{c.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
             </View>
           )}
         </View>
@@ -486,5 +506,39 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     fontFamily: FONTS.body,
+  },
+
+  charSelectorDesktop: {
+    marginTop: 8,
+    gap: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  charThumbDesktop: {
+    width: '48%',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    alignItems: 'center',
+    gap: 6,
+  },
+  charThumbActiveDesktop: {
+    borderColor: COLORS.amber,
+    backgroundColor: 'rgba(221,161,94,0.15)',
+  },
+  charThumbImgDesktop: {
+    width: 40,
+    height: 40,
+    borderRadius: 6,
+  },
+  charThumbNameDesktop: {
+    color: COLORS.textPrimary,
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: FONTS.bold,
+    textAlign: 'center',
   },
 });

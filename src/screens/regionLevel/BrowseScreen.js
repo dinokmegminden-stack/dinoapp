@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { IMAGE_MAP } from '../../constants/imageMap';
 import { CHARACTERS } from '../../constants/characters';
 import DinoCard from '../../components/DinoCard';
@@ -55,25 +55,10 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
                 }}
                 isFirstDino={index === 0}
                 isLastDino={index === dinos.length - 1}
+                characters={CHARACTERS}
+                selectedCharacter={selectedCharacter}
+                onCharacterSelect={setSelectedCharacter}
               />
-              <View style={s.characterSelectorGrid}>
-                {CHARACTERS.map((c) => (
-                  <TouchableOpacity
-                    key={c.id}
-                    onPress={() => setSelectedCharacter(c)}
-                    style={[s.charThumb, selectedCharacter?.id === c.id && s.charThumbActive]}
-                  >
-                    {c.imageAsset ? (
-                      <Image source={c.imageAsset} style={s.charThumbImg} resizeMode="contain" />
-                    ) : (
-                      <View style={[s.charThumbImg, s.charThumbPlaceholder]}>
-                        <Text style={s.charThumbInitial}>{c.name.charAt(0)}</Text>
-                      </View>
-                    )}
-                    <Text style={s.charThumbName} numberOfLines={1}>{c.name}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
             </>
           )}
         </ScrollView>
