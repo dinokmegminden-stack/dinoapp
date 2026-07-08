@@ -13,6 +13,8 @@ import {
 const afrikaIcon = require('../../assets/icons/icon_afrika.png');
 const amerikaIcon = require('../../assets/icons/icon_amerika.png');
 
+import { COLORS } from '../constants/theme';
+
 export default function HeroTop() {
   const { width } = useWindowDimensions();
 
@@ -96,18 +98,19 @@ const styles = StyleSheet.create({
   },
   titleBlock: {
     alignItems: 'center',
+    transform: [{ rotate: '-3deg' }],
   },
   mainTitle: {
-    color: '#dca962',
+    color: COLORS.accent,
     letterSpacing: 4,
     textAlign: 'center',
     marginBottom: 0,
-    textShadowColor: '#0a0a06',
+    textShadowColor: COLORS.accentDark,
     textShadowOffset: { width: 3, height: 5 },
     textShadowRadius: 1,
   },
   subtitle: {
-    color: '#FEFAE0',
+    color: COLORS.accent,
     fontSize: 18,
     letterSpacing: 1,
     textAlign: 'center',

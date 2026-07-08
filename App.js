@@ -80,7 +80,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
-      <XPBar />
+      {view !== 'landing' && <XPBar />}
 
       {view === 'landing' && (
         <LandingPage

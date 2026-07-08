@@ -1,13 +1,17 @@
-import React from 'react';
+// DinoCard — redesign spec 4. pont.
+// Kritikus megkötés: a kép mindig 16:9, sosem torzul és nem vágódik
+// (a forrásképek natívan 16:9-esek, a cover így pixelpontos).
+// Mobil (<700): oszlop — kép, badge-ek a képen, név/latin, metadata kártyák, leírás.
+// Desktop (>=700): a kép változatlanul felül, alatta row: 180px meta-oszlop + leírás.
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
-import { COLORS } from '../constants/colors';
+import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { getScaledDimensions } from '../utils/scaleUtils';
 import PeriodTimeline from './PeriodTimeline';
+import PressableButton from './PressableButton';
 
-const DESKTOP_BREAKPOINT = 1024;
-const DESKTOP_MAX_WIDTH = 860; // Maximum width for the desktop card layout
-const HERO_ASPECT_RATIO = 16 / 9;
+const DESKTOP_BREAKPOINT = 700;
 
 const DIET_ICON = {
   ragadozó: '🥩',
@@ -30,191 +34,175 @@ function formatRange(min, max, unit) {
   return `${max ?? min} ${unit}`;
 }
 
-export default function DinoCard({ dino, imageSource, character, showTimeline = true, onPrevious, onNext, isFirstDino, isLastDino, characters, selectedCharacter, onCharacterSelect }) {
+function OverlayBadge({ position, icon, text, colorStyle }) {
+  return (
+    <View style={[styles.overlayBadge, styles[position], colorStyle && { borderColor: colorStyle.border }]}>
+      {!!icon && <Text style={styles.overlayIcon}>{icon}</Text>}
+      <Text style={[styles.overlayText, colorStyle && { color: colorStyle.text }]}>{text}</Text>
+    </View>
+  );
+}
+
+function MetaCard({ label, value }) {
+  return (
+    <View style={styles.metaCard}>
+      <Text style={styles.metaCardLabel}>{label}</Text>
+      <Text style={styles.metaCardValue}>{value}</Text>
+    </View>
+  );
+}
+
+export default function DinoCard({
+  dino,
+  imageSource,
+  character,
+  showTimeline = true,
+  onPrevious,
+  onNext,
+  isFirstDino,
+  isLastDino,
+  characters,
+  selectedCharacter,
+  onCharacterSelect,
+  onDetails,
+}) {
   if (!dino) return null;
 
   const { width } = useWindowDimensions();
   const isDesktop = width >= DESKTOP_BREAKPOINT;
+  const [heroWidth, setHeroWidth] = useState(0);
+  const heroHeight = heroWidth * (9 / 16);
 
   const img = imageSource || null;
-
-  const mobileImageHeight = width >= 700 ? 420 : 200;
- const desktopCardWidth = Math.min(width - 48, DESKTOP_MAX_WIDTH);
-const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
-  const imageHeight = isDesktop ? desktopImageHeight : mobileImageHeight;
-
-  const dims = character ? getScaledDimensions(character, dino, imageHeight) : null;
-  const characterLeftMargin = isDesktop ? 32 : 16;
-  const characterLeft = dims ? characterLeftMargin : 0;
-
   const rarityKey = String(dino.rarity || '').toLowerCase();
   const rarityStyle = RARITY_STYLES[rarityKey] || RARITY_STYLES.gyakori;
   const dietIcon = DIET_ICON[String(dino.diet_hu || '').toLowerCase()] || null;
 
   const mya = formatRange(dino.mya_min, dino.mya_max, 'millió éve');
-  const myaRange = formatRange(dino.mya_min, dino.mya_max, '');
   const length = formatRange(dino.length_m_min, dino.length_m_max, 'm');
   const weight = formatRange(dino.weight_kg_min, dino.weight_kg_max, 'kg');
+  const latinFull = [dino.name_latin, dino.latin_name_ending].filter(Boolean).join(' ');
 
-  const metaItems = [
-    dino.epoch && { label: 'Epoch', value: `${dino.epoch}, ${myaRange}` },
-    length && { label: 'Hossz', value: length },
-    weight && { label: 'Tömeg', value: weight },
+  const dims =
+    character && heroHeight > 0 ? getScaledDimensions(character, dino, heroHeight) : null;
+
+  const metaCards = [
+    mya && { label: 'Kor', value: dino.epoch ? `${dino.epoch} · ${mya}` : mya },
     dino.discoverer_name && {
       label: 'Felfedező',
       value: dino.discovery_year
         ? `${dino.discoverer_name} (${dino.discovery_year})`
         : String(dino.discoverer_name),
     },
+    dino.diet_hu && { label: 'Étrend', value: `${dietIcon ? `${dietIcon} ` : ''}${dino.diet_hu}` },
+    dino.region && { label: 'Régió', value: `🌍 ${dino.region}` },
   ].filter(Boolean);
 
   const heroBlock = (
-    img && (
-      <View
-        style={[
-          styles.imageWrapper,
-          { height: imageHeight },
-          isDesktop && styles.imageWrapperDesktop,
-        ]}
-      >
+    <View
+      style={styles.heroWrapper}
+      onLayout={(e) => setHeroWidth(e.nativeEvent.layout.width)}
+    >
+      {img ? (
+        <Image source={img} style={styles.heroImage} resizeMode="cover" />
+      ) : (
+        <View style={[styles.heroImage, styles.heroFallback]}>
+          <Text style={styles.heroFallbackText}>🦴</Text>
+        </View>
+      )}
+
+      {character?.imageAsset && dims && (
         <Image
-          source={img}
-          style={[styles.image, { height: imageHeight }]}
-          resizeMode={isDesktop ? 'contain' : 'cover'}
+          source={character.imageAsset}
+          resizeMode="contain"
+          style={[
+            styles.characterOverlay,
+            {
+              width: dims.character.width,
+              height: dims.character.height,
+              left: 16,
+              bottom: 0,
+            },
+          ]}
         />
-        {character?.imageAsset && dims && (
-          <Image
-            source={character.imageAsset}
-            resizeMode="contain"
-            style={[
-              styles.characterOverlay,
-              {
-                width: dims.character.width,
-                height: dims.character.height,
-                left: characterLeft,
-                bottom: 0,
-              },
-            ]}
-          />
-        )}
+      )}
 
-        {/* Overlay badges — csak desktopon, a hero kép fölött lebegve */}
-        {isDesktop && (
-          <>
-            {!!dino.diet_hu && (
-              <View style={[styles.overlayBadge, styles.badgeTopLeft]}>
-                {!!dietIcon && <Text style={styles.overlayIcon}>{dietIcon}</Text>}
-                <Text style={styles.overlayText}>{String(dino.diet_hu)}</Text>
-              </View>
-            )}
-            {!!dino.region && (
-              <View style={[styles.overlayBadge, styles.badgeBottomLeft]}>
-                <Text style={styles.overlayIcon}>🌍</Text>
-                <Text style={styles.overlayText}>{String(dino.region)}</Text>
-              </View>
-            )}
-            {!!dino.rarity && (
-              <View
-                style={[
-                  styles.overlayBadge,
-                  styles.badgeBottomRight,
-                  { borderColor: rarityStyle.border, backgroundColor: rarityStyle.bg },
-                ]}
-              >
-                <Text style={styles.overlayIcon}>💎</Text>
-                <Text style={[styles.overlayText, { color: rarityStyle.text }]}>
-                  {String(dino.rarity)}
-                </Text>
-              </View>
-            )}
-          </>
-        )}
+      {/* 4 badge: bal-fent ritkaság, jobb-fent kor, bal-lent hossz, jobb-lent súly */}
+      {!!dino.rarity && (
+        <OverlayBadge position="badgeTopLeft" icon="💎" text={String(dino.rarity)} colorStyle={rarityStyle} />
+      )}
+      {!!dino.epoch && <OverlayBadge position="badgeTopRight" text={String(dino.epoch)} />}
+      {!!length && <OverlayBadge position="badgeBottomLeft" icon="📏" text={length} />}
+      {!!weight && <OverlayBadge position="badgeBottomRight" icon="⚖️" text={weight} />}
 
-        {/* Lapozó gombok - overlay */}
-        {onPrevious && (
-          <TouchableOpacity
-            style={[styles.playButtonLeft, isFirstDino && styles.navButtonDisabled]}
-            onPress={onPrevious}
-            disabled={isFirstDino}
-          >
-            <View style={[styles.playTriangle, styles.playTriangleLeft]} />
-          </TouchableOpacity>
-        )}
-        {onNext && (
-          <TouchableOpacity
-            style={[styles.playButtonRight, isLastDino && styles.navButtonDisabled]}
-            onPress={onNext}
-            disabled={isLastDino}
-          >
-            <View style={[styles.playTriangle, styles.playTriangleRight]} />
-          </TouchableOpacity>
-        )}
-      </View>
-    )
+      {/* Lapozó gombok — overlay */}
+      {onPrevious && (
+        <TouchableOpacity
+          style={[styles.navBtn, styles.navBtnLeft, isFirstDino && styles.navBtnDisabled]}
+          onPress={onPrevious}
+          disabled={isFirstDino}
+        >
+          <Text style={styles.navBtnText}>‹</Text>
+        </TouchableOpacity>
+      )}
+      {onNext && (
+        <TouchableOpacity
+          style={[styles.navBtn, styles.navBtnRight, isLastDino && styles.navBtnDisabled]}
+          onPress={onNext}
+          disabled={isLastDino}
+        >
+          <Text style={styles.navBtnText}>›</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 
-  // --- DESKTOP: codex-kártya, 2/3 leírás + 1/3 metaadat --------------------
-  if (isDesktop) {
-    return (
-      <View style={[styles.desktopCard, { width: desktopCardWidth }]}>
-        <View style={styles.heroSection}>{heroBlock}</View>
+  const nameBlock = (
+    <View>
+      <Text style={styles.name}>{String(dino.name_hu)}</Text>
+      {!!latinFull && <Text style={styles.latin}>{latinFull}</Text>}
+    </View>
+  );
 
-        {showTimeline && !!mya && (
-          <View style={styles.desktopTimelineContainer}>
-            <PeriodTimeline mya_min={dino.mya_min} mya_max={dino.mya_max} />
-          </View>
-        )}
+  const descriptionBlock = (
+    <View style={styles.descriptionCol}>
+      {!!dino.description_hu && (
+        <Text style={styles.description}>{String(dino.description_hu)}</Text>
+      )}
+      {onDetails && (
+        <PressableButton
+          onPress={onDetails}
+          style={styles.detailsBtn}
+          shadowColor={COLORS.accentDark}
+          containerStyle={styles.detailsBtnContainer}
+        >
+          <Text style={styles.detailsBtnText}>Részletek</Text>
+        </PressableButton>
+      )}
+    </View>
+  );
 
-        <View style={styles.contentRow}>
-          <View style={styles.descriptionCol}>
-            <Text style={styles.desktopName}>{String(dino.name_hu)}</Text>
-            {!!dino.name_latin && (
-              <Text style={styles.desktopLatin}>{String(dino.name_latin)}</Text>
-            )}
-            {!!dino.taxonomy_hu && (
-              <Text style={styles.badge}>{String(dino.taxonomy_hu)}</Text>
-            )}
-            {!!dino.description_hu && (
-              <Text style={styles.descriptionDesktop}>{String(dino.description_hu)}</Text>
-            )}
-          </View>
-
-          {metaItems.length > 0 && (
-            <View style={styles.metaCol}>
-              {metaItems.map((item) => (
-                <View key={item.label} style={styles.metaGridCell}>
-                  <Text style={styles.metaGridLabel}>{item.label}</Text>
-                  <Text style={styles.metaGridValue}>{item.value}</Text>
-                </View>
-              ))}
-              {characters && characters.length > 0 && (
-                <View style={styles.charSelectorDesktop}>
-                  {characters.map((c) => (
-                    <TouchableOpacity
-                      key={c.id}
-                      onPress={() => onCharacterSelect?.(c)}
-                      style={[styles.charThumbDesktop, selectedCharacter?.id === c.id && styles.charThumbActiveDesktop]}
-                    >
-                      {c.imageAsset ? (
-                        <Image source={c.imageAsset} style={styles.charThumbImgDesktop} resizeMode="contain" />
-                      ) : (
-                        <View style={[styles.charThumbImgDesktop, styles.charThumbPlaceholder]}>
-                          <Text style={styles.charThumbInitial}>{c.name.charAt(0)}</Text>
-                        </View>
-                      )}
-                      <Text style={styles.charThumbNameDesktop} numberOfLines={1}>{c.name}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
+  const characterSelector = isDesktop && characters && characters.length > 0 && (
+    <View style={styles.charSelector}>
+      {characters.map((c) => (
+        <TouchableOpacity
+          key={c.id}
+          onPress={() => onCharacterSelect?.(c)}
+          style={[styles.charThumb, selectedCharacter?.id === c.id && styles.charThumbActive]}
+        >
+          {c.imageAsset ? (
+            <Image source={c.imageAsset} style={styles.charThumbImg} resizeMode="contain" />
+          ) : (
+            <View style={[styles.charThumbImg, styles.charThumbPlaceholder]}>
+              <Text style={styles.charThumbInitial}>{c.name.charAt(0)}</Text>
             </View>
           )}
-        </View>
-      </View>
-    );
-  }
+          <Text style={styles.charThumbName} numberOfLines={1}>{c.name}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 
-  // --- MOBIL / TABLET: egy oszlopos elrendezés -------------------------------
   return (
     <View style={styles.card}>
       {heroBlock}
@@ -225,30 +213,18 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
         </View>
       )}
 
-      <View style={styles.info}>
-        <Text style={styles.name}>{String(dino.name_hu)}</Text>
-        {!!dino.name_latin && <Text style={styles.latin}>{String(dino.name_latin)}</Text>}
-
-        {!!dino.taxonomy_hu && (
-          <Text style={styles.badge}>{String(dino.taxonomy_hu)}</Text>
-        )}
-
-        {!!dino.description_hu && (
-          <Text style={styles.description}>{String(dino.description_hu)}</Text>
-        )}
-
-        <View style={styles.metaBlock}>
-          {!!dino.diet_hu && (
-            <Text style={styles.meta}>{dietIcon ? `${dietIcon} ` : ''}Étrend: {String(dino.diet_hu)}</Text>
-          )}
-          {!!dino.region && <Text style={styles.meta}>🌍 Régió: {String(dino.region)}</Text>}
-          {metaItems.map((item) => (
-            <Text key={item.label} style={styles.meta}>
-              {item.label}: {item.value.replace('\n', ' · ')}
-            </Text>
-          ))}
-          {!!dino.rarity && <Text style={styles.meta}>💎 Ritkaság: {String(dino.rarity)}</Text>}
+      {/* Mobil: oszlop. Desktop: bal oszlop (180px) = név + metadata; jobb = leírás + CTA */}
+      <View style={[styles.content, { flexDirection: isDesktop ? 'row' : 'column', gap: 16 }]}>
+        <View style={isDesktop ? styles.leftCol : null}>
+          {nameBlock}
+          <View style={styles.metaList}>
+            {metaCards.map((item) => (
+              <MetaCard key={item.label} label={item.label} value={item.value} />
+            ))}
+          </View>
+          {characterSelector}
         </View>
+        {descriptionBlock}
       </View>
     </View>
   );
@@ -256,286 +232,194 @@ const desktopImageHeight = Math.min(desktopCardWidth / HERO_ASPECT_RATIO, 500);
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.card,
-    borderRadius: 16,
-    padding: 6,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: COLORS.border,
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.cardLarge,
+    overflow: 'hidden',
     alignSelf: 'stretch',
+    marginVertical: 8,
   },
-  imageWrapper: {
+  heroWrapper: {
     width: '100%',
-    borderRadius: 12,
-    marginBottom: 6,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    aspectRatio: 16 / 9,
+    backgroundColor: COLORS.bgDark,
     position: 'relative',
     overflow: 'hidden',
   },
-  image: {
+  heroImage: {
     width: '100%',
-    height: 200,
-    borderRadius: 12,
+    height: '100%',
+  },
+  heroFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroFallbackText: {
+    fontSize: 44,
   },
   characterOverlay: {
     position: 'absolute',
   },
-  playButtonLeft: {
-    position: 'absolute',
-    left: 12,
-    top: '50%',
-    transform: [{ translateY: -10 }],
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playButtonRight: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    transform: [{ translateY: -10 }],
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playTriangle: {
-    width: 0,
-    height: 0,
-  },
-  playTriangleLeft: {
-    borderTopWidth: 16,
-    borderBottomWidth: 16,
-    borderRightWidth: 28,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderRightColor: '#FEFAE0',
-  },
-  playTriangleRight: {
-    borderTopWidth: 16,
-    borderBottomWidth: 16,
-    borderLeftWidth: 28,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderLeftColor: '#FEFAE0',
-  },
-  navButtonDisabled: {
-    opacity: 0.3,
-  },
-  info: {
-    gap: 6,
-  },
-  name: {
-    color: COLORS.textPrimary,
-    fontSize: 20,
-    fontWeight: '900',
-    fontFamily: FONTS.heading,
-  },
-  latin: {
-    color: COLORS.textSecondary,
-    fontSize: 14,
-    fontStyle: 'italic',
-    marginBottom: 4,
-    fontFamily: FONTS.body,
-  },
-  badge: {
-    alignSelf: 'flex-start',
-    backgroundColor: COLORS.greenBg,
-    color: COLORS.green,
-    fontSize: 11,
-    fontWeight: '700',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    marginBottom: 4,
-    overflow: 'hidden',
-    fontFamily: FONTS.bold,
-  },
-  description: {
-    color: COLORS.textSecondary,
-    fontSize: 13,
-    lineHeight: 19,
-    marginBottom: 4,
-    fontFamily: FONTS.body,
-  },
-  metaBlock: {
-    gap: 3,
-    marginTop: 4,
-  },
-  meta: {
-    color: COLORS.textMuted,
-    fontSize: 13,
-    fontFamily: FONTS.body,
-  },
-  timelineContainer: {
-    marginBottom: 6,
-    paddingHorizontal: 0,
-  },
-  timeline: {
-    marginTop: 8,
-    padding: 8,
-    backgroundColor: COLORS.greenBg,
-    borderRadius: 8,
-  },
-  timelineText: {
-    color: COLORS.green,
-    fontSize: 13,
-    fontWeight: '700',
-    fontFamily: FONTS.bold,
-  },
 
-  // --- Overlay badges (csak desktop hero) ------------------------------------
   overlayBadge: {
     position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    borderRadius: 999,
+    gap: 5,
+    borderRadius: RADIUS.pill,
     borderWidth: 1,
-    borderColor: 'rgba(217,208,181,0.25)',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingHorizontal: 14,
+    borderColor: 'rgba(254,250,224,0.25)',
+    backgroundColor: 'rgba(40,54,24,0.72)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  badgeTopLeft: { top: 10, left: 10 },
+  badgeTopRight: { top: 10, right: 10 },
+  badgeBottomLeft: { bottom: 10, left: 10 },
+  badgeBottomRight: { bottom: 10, right: 10 },
+  overlayIcon: { fontSize: 12 },
+  overlayText: {
+    color: COLORS.cream,
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: FONTS.bold,
+  },
+
+  navBtn: {
+    position: 'absolute',
+    top: '50%',
+    transform: [{ translateY: -18 }],
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(40,54,24,0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navBtnLeft: { left: 10 },
+  navBtnRight: { right: 10 },
+  navBtnDisabled: { opacity: 0.3 },
+  navBtnText: {
+    color: COLORS.cream,
+    fontSize: 24,
+    fontWeight: '700',
+    lineHeight: 26,
+  },
+
+  timelineContainer: {
+    paddingHorizontal: 12,
+    paddingTop: 10,
+  },
+
+  content: {
+    padding: 16,
+  },
+  leftCol: {
+    width: 180,
+  },
+  name: {
+    color: COLORS.bgDark,
+    fontSize: 20,
+    fontWeight: '900',
+    fontFamily: FONTS.bold,
+  },
+  latin: {
+    color: COLORS.accentDark,
+    fontSize: 14,
+    fontStyle: 'italic',
+    fontFamily: FONTS.heading,
+    marginTop: 2,
+  },
+  metaList: {
+    gap: 8,
+    marginTop: 12,
+  },
+  metaCard: {
+    backgroundColor: COLORS.cardMuted,
+    borderRadius: RADIUS.card,
+    paddingHorizontal: 12,
     paddingVertical: 8,
   },
-  badgeTopLeft: { top: 16, left: 16 },
-  badgeTopRight: { top: 16, right: 16 },
-  badgeBottomLeft: { bottom: 16, left: 16 },
-  badgeBottomRight: { bottom: 16, right: 16 },
-  overlayIcon: { fontSize: 16 },
-  overlayText: {
-    color: '#e4e7dc',
-    fontSize: 15,
-    fontWeight: '700',
-    fontFamily: FONTS.bold,
-  },
-
-  // --- DESKTOP: codex-kártya ---------------------------------------------------
-
-
-  desktopCard: {
-    alignSelf: 'center',
-    marginVertical: 12,
-    backgroundColor: COLORS.card,
-    borderRadius: 20,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(217,208,181,0.5)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 18 },
-    shadowOpacity: 0.4,
-    shadowRadius: 32,
-    elevation: 14,
-  },
-  heroSection: {
-    width: '100%',
-    backgroundColor: '#14140f',
-  },
-  desktopTimelineContainer: {
-    padding: 12,
-    backgroundColor: COLORS.bg,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(217,208,181,0.1)',
-  },
-  imageWrapperDesktop: {
-    marginBottom: 0,
-    borderRadius: 0,
-    backgroundColor: '#14140f',
-  },
-
-  contentRow: {
-    flexDirection: 'row',
-    gap: 24,
-    padding: 24,
-  },
-  descriptionCol: {
-    flex: 2,
-    minWidth: 0,
-  },
-  desktopName: {
-    color: COLORS.textPrimary,
-    fontSize: 32,
-    fontWeight: '900',
-    fontFamily: FONTS.heading,
-    marginBottom: 4,
-  },
-  desktopLatin: {
-    color: COLORS.textSecondary,
-    fontSize: 15,
-    fontStyle: 'italic',
-    marginBottom: 8,
-    fontFamily: FONTS.body,
-  },
-  descriptionDesktop: {
-    color: COLORS.textPrimary,
-    fontSize: 15,
-    lineHeight: 25,
-    marginTop: 12,
-    fontFamily: FONTS.body,
-  },
-
-  metaCol: {
-    flex: 1,
-    flexDirection: 'column',
-    gap: 12,
-  },
-  metaGridCell: {
-    width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-  },
-  metaGridLabel: {
-    color: COLORS.textMuted,
+  metaCardLabel: {
+    color: COLORS.accentDark,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '800',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 3,
+    letterSpacing: 0.8,
+    marginBottom: 2,
     fontFamily: FONTS.bold,
   },
-  metaGridValue: {
-    color: COLORS.textPrimary,
+  metaCardValue: {
+    color: COLORS.bgDark,
     fontSize: 13,
     fontWeight: '700',
     fontFamily: FONTS.body,
   },
 
-  charSelectorDesktop: {
-    marginTop: 8,
-    gap: 10,
+  descriptionCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  description: {
+    color: COLORS.bgDark,
+    fontSize: 14,
+    lineHeight: 22,
+    fontFamily: FONTS.body,
+  },
+  detailsBtn: {
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.button,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+  },
+  detailsBtnContainer: {
+    marginTop: 16,
+    alignSelf: 'flex-start',
+  },
+  detailsBtnText: {
+    color: COLORS.bgDark,
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+
+  charSelector: {
+    marginTop: 12,
+    gap: 8,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  charThumbDesktop: {
-    width: '48%',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+  charThumb: {
+    width: '47%',
+    backgroundColor: COLORS.cardMuted,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: 'rgba(40,54,24,0.12)',
+    borderRadius: RADIUS.card,
     paddingHorizontal: 8,
     paddingVertical: 8,
     alignItems: 'center',
     gap: 6,
   },
-  charThumbActiveDesktop: {
-    borderColor: COLORS.amber,
-    backgroundColor: 'rgba(221,161,94,0.15)',
+  charThumbActive: {
+    borderColor: COLORS.accent,
+    backgroundColor: 'rgba(221,161,94,0.25)',
   },
-  charThumbImgDesktop: {
+  charThumbImg: {
     width: 40,
     height: 40,
     borderRadius: 6,
   },
-  charThumbNameDesktop: {
-    color: COLORS.textPrimary,
+  charThumbPlaceholder: {
+    backgroundColor: 'rgba(40,54,24,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  charThumbInitial: {
+    color: COLORS.bgDark,
+    fontWeight: '800',
+  },
+  charThumbName: {
+    color: COLORS.bgDark,
     fontSize: 12,
     fontWeight: '700',
     fontFamily: FONTS.bold,

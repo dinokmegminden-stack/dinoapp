@@ -56,13 +56,15 @@ export const IMAGE_MAP = {
   // "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'), // TODO: fájl hiányzik
   "Bakonydraco": require('../../assets/images/bakonydraco.jpg'),
   "Bauxitornis": require('../../assets/images/bauxitornis.jpg'),
+  "Leaellynasaura": require('../../assets/images/leaellynasaura.jpg'),
+  "Edmontosaurus": require('../../assets/images/edmontosaurus.jpg'),
   // --- name_hu lista alapján még hiányzó fájlok ---
   // Ezek a kulcsok léteznek az adatbázisban (name_hu), de nincs hozzájuk
   // megerősített kép a assets/images mappában. Kikommentelve maradnak,
   // amíg a fájl fel nem kerül — a lookup ("IMAGE_MAP[name] || null")
   // ettől nem törik el, csak kép nélkül jelenik meg a kártya.
-  // "Leaellynasaura": require('../../assets/images/leaellynasaura.jpg'),
-  // "Edmontosaurus": require('../../assets/images/edmontosaurus.jpg'),
+  // 
+  // 
   // "Gallimimus": require('../../assets/images/gallimimus.jpg'),
   // "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
   // "Albertosaurus": require('../../assets/images/albertosaurus.jpg'),

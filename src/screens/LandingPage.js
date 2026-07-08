@@ -1,18 +1,55 @@
-// LandingPage.js
-console.log("LANDING PAGE RENDER - REDESIGNED");
-
+// LandingPage — redesign spec 3. pont: header sáv (XP pill + ikon gombok),
+// döntött logó blokk, majd a LandingMenu szekciói egyetlen oszlopban.
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+} from 'react-native';
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
-import { playSound } from '../audio/audioSystem';
-import { COLORS } from '../constants/colors';
-import { FONTS } from '../constants/fonts';
-import { REGION_BUTTONS } from '../constants/regionButtons';
-import { View, Text, StatusBar, StyleSheet, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
+import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
+import { getTotalXP } from '../components/XPBar';
+import { COLORS, RADIUS } from '../constants/theme';
+
+function XPPill() {
+  const [xp, setXP] = useState(0);
+
+  useEffect(() => {
+    getTotalXP().then(setXP);
+    const interval = setInterval(() => {
+      getTotalXP().then(setXP);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <View style={styles.xpPill}>
+      <Text style={styles.xpPillText}>⭐ {xp} XP</Text>
+    </View>
+  );
+}
+
+function RoundIconButton({ icon, onPress }) {
+  return (
+    <Pressable style={styles.roundBtn} onPress={onPress}>
+      <Text style={styles.roundBtnIcon}>{icon}</Text>
+    </Pressable>
+  );
+}
 
 export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory }) {
-  const { width } = useWindowDimensions();
-  const isWideWeb = Platform.OS === 'web' && width >= 700;
+  const [muted, setMuted] = useState(getSoundMuted());
+
+  const toggleMute = () => {
+    const next = !getSoundMuted();
+    setSoundMuted(next);
+    setMuted(next);
+  };
 
   const handleSelectRegion = (eduLevel) => {
     playSound('click');
@@ -40,160 +77,83 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
   };
 
   return (
-    <Shell wide={isWideWeb} gradientColors={['#283618', '#606C38']}>
-      <View style={[styles.body, isWideWeb && styles.bodyWide]}>
-        <View style={styles.container}>
-          <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+    <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.column}>
+          <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
-        <HeroTop />
-
-        <View style={styles.content}>
-          <View style={styles.introSection}>
-            <View style={styles.bulletList}>
-              <BulletPoint text="5 kontinens 100+ őslénye" />
-              <BulletPoint text="Csomagokra bontva, kvízzel zárolva" />
-              <BulletPoint text="Tanulj paleontológiát játék közben" />
-              <BulletPoint text="Gyűjts XP-t és érj el professzori szintet!" />
+          {/* 1. Header sáv: XP pill balra, ikon gombok jobbra */}
+          <View style={styles.headerBar}>
+            <XPPill />
+            <View style={styles.headerIcons}>
+              <RoundIconButton icon={muted ? '🔇' : '🔊'} onPress={toggleMute} />
+              <RoundIconButton icon="👤" onPress={() => playSound('click')} />
             </View>
           </View>
 
-          {!isWideWeb && (
-            <View style={styles.regionsGrid}>
-              {REGION_BUTTONS.map((region) => (
-                <TouchableOpacity
-                  key={region.key}
-                  style={[styles.regionBtn, { borderColor: region.color }]}
-                  onPress={() => handleSelectRegion(region.key)}
-                >
-                  <Text style={[styles.regionBtnText, { color: region.color }]}>
-                    {region.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
+          {/* 2. Logó blokk (döntött cím, accent alcím) */}
+          <HeroTop />
 
-          {!isWideWeb && (
-            <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
-              <Text style={styles.galleryBtnText}>🗂️ GYŰJTEMÉNY</Text>
-            </TouchableOpacity>
-          )}
-          </View>
+          {/* 3–5. Menü szekciók */}
+          <LandingMenu
+            onSelectRegion={handleSelectRegion}
+            onOpenGallery={handleOpenGallery}
+            onLightningQuiz={handleStartLightningQuiz}
+            onMillionaire={handleStartMillionaire}
+            onMemory={handleStartMemory}
+          />
         </View>
-
-        {isWideWeb && (
-          <View style={styles.sideMenu}>
-            <LandingMenu
-              onSelectRegion={handleSelectRegion}
-              onOpenGallery={handleOpenGallery}
-              onLightningQuiz={handleStartLightningQuiz}
-              onMillionaire={handleStartMillionaire}
-              onMemory={handleStartMemory}
-            />
-          </View>
-        )}
-      </View>
+      </ScrollView>
     </Shell>
   );
 }
 
-function BulletPoint({ text }) {
-  return (
-    <View style={styles.bulletRow}>
-      <Text style={styles.bulletDot}>•</Text>
-      <Text style={styles.bulletText}>{text}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  body: {
+  scroll: {
     flex: 1,
-  },
-  bodyWide: {
-    flexDirection: 'row',
-    gap: 28,
-  },
-  sideMenu: {
-    width: 240,
-    borderLeftWidth: 1,
-    borderLeftColor: 'rgba(221,161,94,0.2)',
-    paddingVertical: 20,
-    paddingHorizontal: 8,
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingVertical: 24,
-    paddingHorizontal: 28,
-    justifyContent: 'space-between',
-    maxWidth: 800,
-    alignSelf: 'center',
     width: '100%',
   },
-  introSection: {
-    marginBottom: 32,
+  scrollContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingBottom: 32,
   },
-  bulletList: {
+  column: {
+    width: '100%',
+    maxWidth: 520,
+    paddingHorizontal: 20,
+  },
+  headerBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 16,
+  },
+  xpPill: {
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+  },
+  xpPillText: {
+    color: COLORS.bgDark,
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  headerIcons: {
+    flexDirection: 'row',
     gap: 10,
   },
-  bulletRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  bulletDot: {
-    color: '#DDA15E',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: -2,
-  },
-  bulletText: {
-    color: '#FEFAE0',
-    fontFamily: FONTS.body,
-    fontSize: 15,
-    lineHeight: 22,
-    flex: 1,
-  },
-  regionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+  roundBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.bgMid,
+    alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
   },
-  regionBtn: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    borderWidth: 2,
-    backgroundColor: 'rgba(254,250,224,0.05)',
-    minWidth: 140,
-    alignItems: 'center',
-  },
-  regionBtnText: {
-    fontFamily: FONTS.bold,
-    fontSize: 14,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  galleryBtn: {
-    paddingVertical: 12,
-    paddingHorizontal: 28,
-    borderRadius: 12,
-    backgroundColor: 'rgba(254,250,224,0.08)',
-    borderWidth: 1,
-    borderColor: 'rgba(254,250,224,0.2)',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  galleryBtnText: {
-    color: '#FEFAE0',
-    fontFamily: FONTS.bold,
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+  roundBtnIcon: {
+    fontSize: 18,
   },
 });
