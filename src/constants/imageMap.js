@@ -29,7 +29,7 @@ export const IMAGE_MAP = {
   "Ajkaceratops": require('../../assets/images/ajkaceratops.jpg'),
   "Pneumatoraptor": require('../../assets/images/pneumatoraptor_fodori.jpg'),
   "Mochlodon": require('../../assets/images/mochlodon_vorosi.jpg'),
-  "Telmatosaurus": require('../../assets/images/telmatosaurus.jpg'),
+  "Telmatosaurus": require('../../assets/images/telmatosaurus_43.jpg'),
   "Struthiosaurus": require('../../assets/images/struthiosaurus.jpg'),
   "Petrustitan": require('../../assets/images/petrustitan.jpg'),
   "Uriash": require('../../assets/images/uriash_kadici.jpg'),
@@ -53,7 +53,7 @@ export const IMAGE_MAP = {
   "Scelidosaurus": require('../../assets/images/scelidosaurus.jpg'),
   "Archaeopteryx": require('../../assets/images/archaeopteryx.jpg'),
   
-  // "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'), // TODO: fájl hiányzik
+  "Euoplocephalus": require('../../assets/images/euoplocephalus.jpg'), 
   "Bakonydraco": require('../../assets/images/bakonydraco.jpg'),
   "Bauxitornis": require('../../assets/images/bauxitornis.jpg'),
   "Leaellynasaura": require('../../assets/images/leaellynasaura.jpg'),

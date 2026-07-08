@@ -9,6 +9,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import LandingMenu from './LandingMenu';
@@ -29,7 +30,8 @@ function XPPill() {
 
   return (
     <View style={styles.xpPill}>
-      <Text style={styles.xpPillText}>⭐ {xp} XP</Text>
+      <MaterialCommunityIcons name="star" size={16} color={COLORS.bgDark} />
+      <Text style={styles.xpPillText}>{xp} XP</Text>
     </View>
   );
 }
@@ -37,7 +39,7 @@ function XPPill() {
 function RoundIconButton({ icon, onPress }) {
   return (
     <Pressable style={styles.roundBtn} onPress={onPress}>
-      <Text style={styles.roundBtnIcon}>{icon}</Text>
+      <MaterialCommunityIcons name={icon} size={18} color={COLORS.cream} />
     </Pressable>
   );
 }
@@ -86,8 +88,8 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
           <View style={styles.headerBar}>
             <XPPill />
             <View style={styles.headerIcons}>
-              <RoundIconButton icon={muted ? '🔇' : '🔊'} onPress={toggleMute} />
-              <RoundIconButton icon="👤" onPress={() => playSound('click')} />
+              <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
+              <RoundIconButton icon="account-circle" onPress={() => playSound('click')} />
             </View>
           </View>
 
@@ -130,6 +132,9 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   xpPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     backgroundColor: COLORS.cream,
     borderRadius: RADIUS.pill,
     paddingVertical: 6,

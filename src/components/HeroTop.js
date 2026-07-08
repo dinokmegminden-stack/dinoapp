@@ -1,6 +1,9 @@
-// src/components/HeroTop.js
+// src/components/HeroTop.js — redesign: egyetlen központi "érme" a cím fölött,
+// halvány, ismétlődő csontmintával a háttérben (nem a korábbi két
+// esetlegesen kiválasztott oldalikon). Kisebb, középre rendezett, egy méret
+// minden töréspontnál — a látványt a minta+érme adja, nem a szélesség.
 import React from 'react';
-import { View, Text, StyleSheet, Platform, useWindowDimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, Image } from 'react-native';
 import {
   useFonts as useLuckiest,
   LuckiestGuy_400Regular,
@@ -9,11 +12,36 @@ import {
   useFonts as useFredoka,
   Fredoka_400Regular,
 } from '@expo-google-fonts/fredoka';
-
-const afrikaIcon = require('../../assets/icons/icon_afrika.png');
-const amerikaIcon = require('../../assets/icons/icon_amerika.png');
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
+
+const heroCoin = require('../../assets/icons/icon_karpat.png');
+
+const PATTERN_ROWS = [
+  { offset: 0, rotations: [-12, 8, -6, 14, -10, 6, -14] },
+  { offset: 26, rotations: [10, -8, 12, -6, 8, -12, 10] },
+  { offset: 0, rotations: [-8, 14, -10, 6, -14, 10, -6] },
+];
+
+function BonePattern() {
+  return (
+    <View style={styles.pattern} pointerEvents="none">
+      {PATTERN_ROWS.map((row, rowIndex) => (
+        <View key={rowIndex} style={[styles.patternRow, { marginLeft: row.offset }]}>
+          {row.rotations.map((deg, i) => (
+            <MaterialCommunityIcons
+              key={i}
+              name="bone"
+              size={22}
+              color={COLORS.cream}
+              style={[styles.patternIcon, { transform: [{ rotate: `${deg}deg` }] }]}
+            />
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+}
 
 export default function HeroTop() {
   const { width } = useWindowDimensions();
@@ -22,17 +50,17 @@ export default function HeroTop() {
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular });
 
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
-  const titleSize = width < 768 ? 42 : 58;
-  const isDesktop = width >= 768;
+  const titleSize = width < 768 ? 38 : 50;
 
   return (
     <View style={styles.container}>
-      <View style={[styles.heroCard, isDesktop && styles.heroCardWide]}>
-        {isDesktop && (
-          <View style={styles.iconContainer}>
-            <Image source={afrikaIcon} style={styles.heroIcon} />
-          </View>
-        )}
+      <View style={styles.heroCard}>
+        <BonePattern />
+
+        <View style={styles.coinWrapper}>
+          <Image source={heroCoin} style={styles.coin} />
+        </View>
+
         <View style={styles.titleBlock}>
           <Text
             style={[
@@ -54,11 +82,6 @@ export default function HeroTop() {
             Gyűjts, tanulj, játssz!
           </Text>
         </View>
-        {isDesktop && (
-          <View style={styles.iconContainerRight}>
-            <Image source={amerikaIcon} style={styles.heroIcon} />
-          </View>
-        )}
       </View>
     </View>
   );
@@ -67,33 +90,44 @@ export default function HeroTop() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingVertical: 28,
+    paddingVertical: 8,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
   heroCard: {
     width: '100%',
-    maxWidth: 640,
-    paddingVertical: 32,
-    paddingHorizontal: 28,
+    maxWidth: 420,
     alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    paddingVertical: 12,
   },
-  heroCardWide: {
-    maxWidth: 800,
+  pattern: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'space-evenly',
+    opacity: 0.1,
+  },
+  patternRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 40,
+    paddingHorizontal: 4,
   },
-  iconContainer: {
-    marginRight: 20,
+  patternIcon: {
+    opacity: 0.9,
   },
-  iconContainerRight: {
-    marginLeft: 20,
+  coinWrapper: {
+    marginBottom: -18,
+    zIndex: 1,
+    transform: [{ rotate: '-6deg' }],
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 8,
   },
-  heroIcon: {
-    width: 120,
-    height: 120,
+  coin: {
+    width: 104,
+    height: 104,
     resizeMode: 'contain',
   },
   titleBlock: {

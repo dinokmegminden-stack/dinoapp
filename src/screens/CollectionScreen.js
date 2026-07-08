@@ -1,3 +1,8 @@
+// CollectionScreen (a spec DinoGallery.js-ének megfelelője) — redesign spec 5. pont.
+// SectionList csomagonként (nem taxonomy_category szerint), mert nagy gyűjteménynél
+// kevesebb re-render buggal jár, mint a FlatList + manuális header-injektálás.
+// Zárolt (quiz még nem sikerült) csomagoknál placeholder slotok jelennek meg,
+// hogy a felhasználó lássa mennyi van még hátra — nem tűnnek el a listából.
 import React, { useMemo } from 'react';
 import {
   View,
@@ -5,102 +10,139 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
+  SectionList,
   StatusBar,
 } from 'react-native';
 import Shell from '../components/Shell';
 import { IMAGE_MAP } from '../constants/imageMap';
-import { COLORS } from '../constants/colors';
+import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
-import { PASS_THRESHOLD } from '../utils/regionProgress';
+import { REGION_ORDER, REGION_PACKS, EDU_LABELS, PASS_THRESHOLD } from '../utils/regionProgress';
 
-const DEFAULT_CATEGORY = 'Egyéb őslények';
-const CARD_WIDTH = 150;
-const CARD_IMAGE_HEIGHT = CARD_WIDTH * (9 / 16);
+const NUM_COLUMNS = 3;
+
+const RARITY_COLOR = {
+  gyakori: '#c8ccbe',
+  ritka: '#8ecbe6',
+  epikus: '#c9a6e6',
+  legendás: COLORS.accent,
+};
+
+function chunk(list, size) {
+  const rows = [];
+  for (let i = 0; i < list.length; i += size) rows.push(list.slice(i, i + size));
+  return rows;
+}
 
 function MiniDinoCard({ dino }) {
   const imageSource = IMAGE_MAP[dino.name_hu] || null;
+  const rarityColor = RARITY_COLOR[String(dino.rarity || '').toLowerCase()];
+
   return (
     <View style={styles.card}>
-      {imageSource ? (
-        <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
-      ) : (
-        <View style={[styles.cardImage, styles.cardImageFallback]}>
-          <Text style={styles.cardImageFallbackText}>🦴</Text>
-        </View>
-      )}
+      <View style={styles.cardImageWrapper}>
+        {imageSource ? (
+          <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
+        ) : (
+          <View style={[styles.cardImage, styles.cardImageFallback]}>
+            <Text style={styles.cardImageFallbackText}>🦴</Text>
+          </View>
+        )}
+        {!!rarityColor && (
+          <View style={[styles.rarityBadge, { borderColor: rarityColor }]}>
+            <Text style={styles.rarityBadgeIcon}>💎</Text>
+          </View>
+        )}
+      </View>
       <Text style={styles.cardName} numberOfLines={1}>{dino.name_hu}</Text>
-      <Text style={styles.cardLatin} numberOfLines={1}>{dino.name_latin}</Text>
+    </View>
+  );
+}
+
+function LockedSlot() {
+  return (
+    <View style={[styles.card, styles.lockedCard]}>
+      <View style={[styles.cardImageWrapper, styles.lockedImageWrapper]}>
+        <Text style={styles.lockedIcon}>🔒</Text>
+      </View>
+      <Text style={styles.lockedText}>Zárolva</Text>
     </View>
   );
 }
 
 export default function CollectionScreen({ allDinos, progress, onBack }) {
-  // Csak azok a dínók, amelyeknek a csomagkvíze sikerült (>= 80%)
   const { sections, collectedCount, totalCount } = useMemo(() => {
-    const collected = (allDinos || []).filter(
-      (d) => progress?.[d.edu]?.[d.csomag]?.quizPassed === true
-    );
+    let collected = 0;
+    let total = 0;
+    const built = [];
 
-    const byCategory = {};
-    collected.forEach((d) => {
-      const category = d.taxonomy_category || DEFAULT_CATEGORY;
-      if (!byCategory[category]) byCategory[category] = [];
-      byCategory[category].push(d);
+    REGION_ORDER.forEach((edu) => {
+      REGION_PACKS[edu].forEach((packId) => {
+        const packDinos = (allDinos || [])
+          .filter((d) => d.edu === edu && d.csomag === packId)
+          .sort((a, b) => a.name_hu.localeCompare(b.name_hu, 'hu'));
+        if (packDinos.length === 0) return;
+
+        const unlocked = progress?.[edu]?.[packId]?.quizPassed === true;
+        total += packDinos.length;
+        if (unlocked) collected += packDinos.length;
+
+        built.push({
+          key: `${edu}-${packId}`,
+          title: `${packId}. CSOMAG · ${EDU_LABELS[edu] || edu}`,
+          unlocked,
+          data: chunk(packDinos, NUM_COLUMNS),
+        });
+      });
     });
 
-    const built = Object.keys(byCategory)
-      .sort((a, b) => a.localeCompare(b, 'hu'))
-      .map((category) => ({
-        category,
-        dinos: byCategory[category].sort((a, b) =>
-          a.name_hu.localeCompare(b.name_hu, 'hu')
-        ),
-      }));
-
-    return {
-      sections: built,
-      collectedCount: collected.length,
-      totalCount: (allDinos || []).length,
-    };
+    return { sections: built, collectedCount: collected, totalCount: total };
   }, [allDinos, progress]);
 
   return (
     <Shell>
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
           <Text style={styles.title}>🗂️ GYŰJTEMÉNY</Text>
-          <Text style={styles.counter}>{collectedCount}/{totalCount} kártya</Text>
-        </View>
-
-        {sections.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyEmoji}>🥚</Text>
-            <Text style={styles.emptyTitle}>Még üres a gyűjteményed</Text>
-            <Text style={styles.emptyText}>
-              Nézd végig egy csomag dínóit, és zárd a kvízt legalább{' '}
-              {Math.round(PASS_THRESHOLD * 100)}%-ra — a csomag kártyái ide kerülnek be!
-            </Text>
+          <View style={styles.progressPill}>
+            <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
           </View>
-        ) : (
-          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-            {sections.map((section) => (
-              <View key={section.category} style={styles.section}>
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.sectionTitle}>{section.category}</Text>
-                  <Text style={styles.sectionCount}>{section.dinos.length}</Text>
-                </View>
-                <View style={styles.grid}>
-                  {section.dinos.map((dino) => (
-                    <MiniDinoCard key={dino.id} dino={dino} />
-                  ))}
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-        )}
+        </View>
+        <Text style={styles.headerHint}>
+          Egy csomag kártyái akkor oldódnak fel, ha a záró kvízt legalább{' '}
+          {Math.round(PASS_THRESHOLD * 100)}%-ra teljesíted.
+        </Text>
+
+        <SectionList
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          sections={sections}
+          keyExtractor={(row) => row.map((d) => d.id).join('-')}
+          renderSectionHeader={({ section }) => (
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+              {section.unlocked ? (
+                <Text style={styles.sectionBadgeUnlocked}>✓</Text>
+              ) : (
+                <Text style={styles.sectionBadgeLocked}>🔒</Text>
+              )}
+            </View>
+          )}
+          renderItem={({ item: row, section }) => (
+            <View style={styles.row}>
+              {row.map((dino) =>
+                section.unlocked ? (
+                  <MiniDinoCard key={dino.id} dino={dino} />
+                ) : (
+                  <LockedSlot key={dino.id} />
+                )
+              )}
+            </View>
+          )}
+          stickySectionHeadersEnabled={false}
+        />
 
         <TouchableOpacity style={styles.backBtn} onPress={onBack}>
           <Text style={styles.backBtnText}>✕</Text>
@@ -113,131 +155,153 @@ export default function CollectionScreen({ allDinos, progress, onBack }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg || '#283618',
+    backgroundColor: COLORS.bgDark,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 14,
+    paddingTop: 14,
   },
   title: {
-    color: '#DDA15E',
+    color: COLORS.accent,
     fontFamily: FONTS.bold,
     fontSize: 20,
     fontWeight: '700',
     letterSpacing: 1,
   },
-  counter: {
-    color: '#FEFAE0',
+  progressPill: {
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 5,
+    paddingHorizontal: 14,
+  },
+  progressPillText: {
+    color: COLORS.bgDark,
+    fontFamily: FONTS.bold,
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  headerHint: {
+    color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 14,
-    opacity: 0.85,
+    fontSize: 12,
+    opacity: 0.75,
+    paddingHorizontal: 20,
+    paddingTop: 6,
   },
-  scroll: {
+  list: {
     flex: 1,
+    marginTop: 10,
   },
-  scrollContent: {
+  listContent: {
     paddingHorizontal: 16,
     paddingBottom: 80,
   },
-  section: {
-    marginBottom: 24,
-  },
   sectionHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    backgroundColor: COLORS.bgDark,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(221,161,94,0.35)',
     paddingBottom: 6,
-    marginBottom: 12,
+    paddingTop: 16,
+    marginBottom: 10,
   },
   sectionTitle: {
-    color: '#DDA15E',
+    color: COLORS.accent,
     fontFamily: FONTS.bold,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
+    letterSpacing: 0.3,
   },
-  sectionCount: {
-    color: '#283618',
-    backgroundColor: '#DDA15E',
-    fontFamily: FONTS.bold,
-    fontSize: 12,
-    fontWeight: '700',
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 1,
-    overflow: 'hidden',
+  sectionBadgeUnlocked: {
+    color: '#8DA34D',
+    fontSize: 14,
+    fontWeight: '900',
   },
-  grid: {
+  sectionBadgeLocked: {
+    fontSize: 13,
+    opacity: 0.7,
+  },
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    gap: 10,
+    marginBottom: 10,
   },
   card: {
-    width: CARD_WIDTH,
+    width: '31%',
     backgroundColor: 'rgba(254,250,224,0.06)',
     borderWidth: 1,
     borderColor: 'rgba(221,161,94,0.5)',
-    borderRadius: 10,
+    borderRadius: RADIUS.card,
     overflow: 'hidden',
-    paddingBottom: 8,
+    paddingBottom: 6,
+  },
+  cardImageWrapper: {
+    width: '100%',
+    aspectRatio: 16 / 9,
+    backgroundColor: '#1a1a1a',
+    position: 'relative',
   },
   cardImage: {
     width: '100%',
-    height: CARD_IMAGE_HEIGHT,
-    backgroundColor: '#1a1a1a',
+    height: '100%',
   },
   cardImageFallback: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardImageFallbackText: {
-    fontSize: 28,
+    fontSize: 20,
   },
-  cardName: {
-    color: '#FEFAE0',
-    fontFamily: FONTS.bold,
-    fontSize: 13,
-    fontWeight: '700',
-    paddingHorizontal: 8,
-    paddingTop: 6,
-  },
-  cardLatin: {
-    color: '#DDA15E',
-    fontFamily: FONTS.heading,
-    fontSize: 11,
-    fontStyle: 'italic',
-    paddingHorizontal: 8,
-    paddingTop: 2,
-  },
-  emptyBox: {
-    flex: 1,
+  rarityBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 1.5,
+    backgroundColor: 'rgba(0,0,0,0.55)',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
   },
-  emptyEmoji: {
-    fontSize: 48,
-    marginBottom: 12,
+  rarityBadgeIcon: {
+    fontSize: 8,
   },
-  emptyTitle: {
-    color: '#DDA15E',
+  cardName: {
+    color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 20,
+    fontSize: 11,
     fontWeight: '700',
-    marginBottom: 8,
+    paddingHorizontal: 6,
+    paddingTop: 5,
     textAlign: 'center',
   },
-  emptyText: {
-    color: '#FEFAE0',
+  lockedCard: {
+    borderStyle: 'dashed',
+    borderColor: 'rgba(254,250,224,0.3)',
+    backgroundColor: 'transparent',
+  },
+  lockedImageWrapper: {
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lockedIcon: {
+    fontSize: 22,
+    opacity: 0.6,
+  },
+  lockedText: {
+    color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 14,
-    lineHeight: 21,
+    fontSize: 10,
+    opacity: 0.5,
     textAlign: 'center',
-    opacity: 0.85,
+    paddingTop: 5,
   },
   backBtn: {
     position: 'absolute',

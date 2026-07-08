@@ -2,14 +2,13 @@ import { StyleSheet, Platform } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
 export const s = StyleSheet.create({
-  screen: { flex: 1, width: '100%', backgroundColor: COLORS.bg },
   backText: { color: COLORS.gold || '#DDA15E', fontSize: 13, fontWeight: '800' },
   navRow: { flexDirection: 'row', gap: 10, padding: 14 },
   navBtnPrimary: { backgroundColor: 'rgba(221,161,94,0.16)', borderColor: COLORS.gold || '#DDA15E' },
   navBtnPrimaryText: { color: COLORS.gold || '#DDA15E', fontSize: 13, fontWeight: '800' },
   outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center' },
   inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
-  innerWide: { maxWidth: 720 },
+  innerWide: { maxWidth: 900 },
   loadingText: { color: '#FEFAE0', fontSize: 16, textAlign: 'center', marginTop: 40 },
   errorText: { color: '#BC6C25', fontSize: 16, textAlign: 'center', marginTop: 40 },
 
