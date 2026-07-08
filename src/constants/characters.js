@@ -20,7 +20,7 @@ export const CHARACTERS = [
     name: 'Edward Drinker Cope',
     imageAsset: require('../../assets/characters/drinker.png'),
     heightCm: 180,
-    aspectRatio: 0.1,
+    aspectRatio: 1,
   },
 // {
 //   id: 'ch4',
