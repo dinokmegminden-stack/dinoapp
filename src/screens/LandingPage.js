@@ -10,7 +10,7 @@ import { FONTS } from '../constants/fonts';
 import { REGION_BUTTONS } from '../constants/regionButtons';
 import { View, Text, StatusBar, StyleSheet, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 
-export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire }) {
+export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
 
@@ -32,6 +32,11 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
   const handleStartMillionaire = () => {
     playSound('click');
     onStartMillionaire?.();
+  };
+
+  const handleStartMemory = () => {
+    playSound('click');
+    onStartMemory?.();
   };
 
   return (
@@ -70,7 +75,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
 
           {!isWideWeb && (
             <TouchableOpacity style={styles.galleryBtn} onPress={handleOpenGallery}>
-              <Text style={styles.galleryBtnText}>🖼️ GALÉRIA</Text>
+              <Text style={styles.galleryBtnText}>🗂️ GYŰJTEMÉNY</Text>
             </TouchableOpacity>
           )}
           </View>
@@ -83,6 +88,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
               onOpenGallery={handleOpenGallery}
               onLightningQuiz={handleStartLightningQuiz}
               onMillionaire={handleStartMillionaire}
+              onMemory={handleStartMemory}
             />
           </View>
         )}

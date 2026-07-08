@@ -7,6 +7,8 @@ import LandingPage from './src/screens/LandingPage';
 import RegionLevel from './src/screens/regionLevel/RegionLevel';
 import VillamkvizScreen from './src/screens/VillamkvizScreen';
 import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
+import MemoryGameScreen from './src/screens/MemoryGameScreen';
+import CollectionScreen from './src/screens/CollectionScreen';
 import XPBar from './src/components/XPBar';
 import { loadProgress, recordPackQuizResult } from './src/utils/regionProgress';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
@@ -59,11 +61,15 @@ export default function App() {
   };
 
   const handleOpenGallery = () => {
-    // TODO: Implement gallery view
+    setView('collection');
   };
 
   const handleStartMillionaire = () => {
     setView('millionaire');
+  };
+
+  const handleStartMemory = () => {
+    setView('memory');
   };
 
   const handlePassed = async (csomag, packId, score) => {
@@ -82,6 +88,7 @@ export default function App() {
           onOpenGallery={handleOpenGallery}
           onStartLightningQuiz={handleStartLightningQuiz}
           onStartMillionaire={handleStartMillionaire}
+          onStartMemory={handleStartMemory}
         />
       )}
 
@@ -105,6 +112,18 @@ export default function App() {
 
       {view === 'millionaire' && (
         <MillionaireQuizScreen onBack={() => setView('landing')} />
+      )}
+
+      {view === 'memory' && (
+        <MemoryGameScreen onBack={() => setView('landing')} />
+      )}
+
+      {view === 'collection' && (
+        <CollectionScreen
+          allDinos={allDinos}
+          progress={progress}
+          onBack={() => setView('landing')}
+        />
       )}
     </View>
   );

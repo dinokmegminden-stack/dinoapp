@@ -38,7 +38,7 @@ function GalleryButton({ onPress }) {
       onHoverOut={() => setHovered(false)}
       style={[styles.galleryBtn, hovered && styles.galleryBtnHovered]}
     >
-      <Text style={styles.galleryBtnText}>🖼️ Galéria</Text>
+      <Text style={styles.galleryBtnText}>🗂️ Gyűjtemény</Text>
     </Pressable>
   );
 }
@@ -73,7 +73,22 @@ function MillionaireButton({ onPress }) {
   );
 }
 
-export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightningQuiz, onMillionaire }) {
+function MemoryButton({ onPress }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={[styles.lightningBtn, hovered && styles.lightningBtnHovered]}
+    >
+      <Text style={styles.lightningBtnText}>🧩 PÁROK</Text>
+    </Pressable>
+  );
+}
+
+export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightningQuiz, onMillionaire, onMemory }) {
   return (
     <View style={styles.menuContainer}>
       <View style={styles.list}>
@@ -87,6 +102,7 @@ export default function LandingMenu({ onSelectRegion, onOpenGallery, onLightning
         {onOpenGallery && <GalleryButton onPress={onOpenGallery} />}
         {onLightningQuiz && <LightningQuizButton onPress={onLightningQuiz} />}
         {onMillionaire && <MillionaireButton onPress={onMillionaire} />}
+        {onMemory && <MemoryButton onPress={onMemory} />}
       </View>
     </View>
   );
