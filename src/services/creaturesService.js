@@ -35,6 +35,7 @@ export function adaptCreature(row) {
     rarity: safe(row.rarity),
     taxonomy_group: safe(row.taxonomy_group),
     taxonomy_hu: safe(row.taxonomy_hu),
+    taxonomy_category: safe(row.taxonomy_category),
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
     discovery_year: row.discovery_year != null ? Number(row.discovery_year) : null,
