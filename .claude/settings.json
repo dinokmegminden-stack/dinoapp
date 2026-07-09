@@ -9,5 +9,18 @@
       "Bash(git commit)",
       "Bash(git checkout)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/sync-image-map.js || true",
+            "statusMessage": "Új dínóképek szinkronizálása az imageMap.js-hez..."
+          }
+        ]
+      }
+    ]
   }
 }

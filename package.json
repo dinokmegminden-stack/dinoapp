@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:check": "expo export --platform web"
+    "build:check": "expo export --platform web",
+    "sync-images": "node scripts/sync-image-map.js"
   },
   "dependencies": {
     "@expo-google-fonts/cinzel": "^0.4.2",

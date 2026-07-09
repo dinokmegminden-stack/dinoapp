@@ -67,7 +67,7 @@ export const IMAGE_MAP = {
   // ettől nem törik el, csak kép nélkül jelenik meg a kártya.
   // 
   // 
-  // "Gallimimus": require('../../assets/images/gallimimus.jpg'),
+  "Gallimimus": require('../../assets/images/gallimimus.jpg'),
   // "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
   // "Albertosaurus": require('../../assets/images/albertosaurus.jpg'),
   // "Amargasaurus": require('../../assets/images/amargasaurus.jpg'),
