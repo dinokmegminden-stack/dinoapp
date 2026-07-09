@@ -1,9 +1,9 @@
-// src/components/HeroTop.js — redesign: egyetlen központi "érme" a cím fölött,
-// halvány, ismétlődő csontmintával a háttérben (nem a korábbi két
-// esetlegesen kiválasztott oldalikon). Kisebb, középre rendezett, egy méret
-// minden töréspontnál — a látványt a minta+érme adja, nem a szélesség.
+// src/components/HeroTop.js — redesign: nincs külön ikon/érme a cím fölött,
+// dínó emoji keretezi a "DÍNÓ TUDÓS" feliratot magában a címsorban, halvány
+// csontmintával a háttérben. Az érme eltávolítása szándékosan csökkenti a
+// blokk teljes magasságát, mert az emoji nem foglal külön sort.
 import React from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import {
   useFonts as useLuckiest,
   LuckiestGuy_400Regular,
@@ -14,8 +14,6 @@ import {
 } from '@expo-google-fonts/fredoka';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
-
-const heroCoin = require('../../assets/icons/icon_karpat.png');
 
 const PATTERN_ROWS = [
   { offset: 0, rotations: [-12, 8, -6, 14, -10, 6, -14] },
@@ -51,28 +49,29 @@ export default function HeroTop() {
 
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
   const titleSize = width < 768 ? 38 : 50;
+  const emojiSize = width < 768 ? 26 : 34;
 
   return (
     <View style={styles.container}>
       <View style={styles.heroCard}>
         <BonePattern />
 
-        <View style={styles.coinWrapper}>
-          <Image source={heroCoin} style={styles.coin} />
-        </View>
-
         <View style={styles.titleBlock}>
-          <Text
-            style={[
-              styles.mainTitle,
-              {
-                fontSize: titleSize,
-                fontFamily: fontsLoaded ? 'LuckiestGuy_400Regular' : 'System',
-              },
-            ]}
-          >
-            DÍNÓ TUDÓS
-          </Text>
+          <View style={styles.titleRow}>
+            <Text style={[styles.titleEmoji, { fontSize: emojiSize }]}>🦖</Text>
+            <Text
+              style={[
+                styles.mainTitle,
+                {
+                  fontSize: titleSize,
+                  fontFamily: fontsLoaded ? 'LuckiestGuy_400Regular' : 'System',
+                },
+              ]}
+            >
+              DÍNÓ TUDÓS
+            </Text>
+            <Text style={[styles.titleEmoji, { fontSize: emojiSize }]}>🦕</Text>
+          </View>
           <Text
             style={[
               styles.subtitle,
@@ -90,7 +89,7 @@ export default function HeroTop() {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingVertical: 8,
+    paddingVertical: 4,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     overflow: 'hidden',
-    paddingVertical: 12,
+    paddingVertical: 8,
   },
   pattern: {
     ...StyleSheet.absoluteFillObject,
@@ -115,24 +114,17 @@ const styles = StyleSheet.create({
   patternIcon: {
     opacity: 0.9,
   },
-  coinWrapper: {
-    marginBottom: -18,
-    zIndex: 1,
-    transform: [{ rotate: '-6deg' }],
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 8,
-  },
-  coin: {
-    width: 104,
-    height: 104,
-    resizeMode: 'contain',
-  },
   titleBlock: {
     alignItems: 'center',
     transform: [{ rotate: '-3deg' }],
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  titleEmoji: {
+    textAlign: 'center',
   },
   mainTitle: {
     color: COLORS.accent,
