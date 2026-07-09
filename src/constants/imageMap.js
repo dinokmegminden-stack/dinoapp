@@ -58,6 +58,8 @@ export const IMAGE_MAP = {
   "Bauxitornis": require('../../assets/images/bauxitornis.jpg'),
   "Leaellynasaura": require('../../assets/images/leaellynasaura.jpg'),
   "Edmontosaurus": require('../../assets/images/edmontosaurus.jpg'),
+  "Struthiomimus": require('../../assets/images/struthiomimus.jpg'),
+
   // --- name_hu lista alapján még hiányzó fájlok ---
   // Ezek a kulcsok léteznek az adatbázisban (name_hu), de nincs hozzájuk
   // megerősített kép a assets/images mappában. Kikommentelve maradnak,
@@ -107,7 +109,7 @@ export const IMAGE_MAP = {
   // "Styracosaurus": require('../../assets/images/styracosaurus.jpg'),
   // "Ornithomimus": require('../../assets/images/ornithomimus.jpg'),
   // "Alioramus": require('../../assets/images/alioramus.jpg'),
-  // "Struthiomimus": require('../../assets/images/struthiomimus.jpg'),
+  // 
   // "Utahraptor": require('../../assets/images/utahraptor.jpg'),
   // "Pentaceratops": require('../../assets/images/pentaceratops.jpg'),
   // "Coelophysis": require('../../assets/images/coelophysis.jpg'),
