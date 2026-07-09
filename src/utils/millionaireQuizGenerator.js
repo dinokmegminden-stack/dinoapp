@@ -3,7 +3,9 @@
 // Forrás: assets/quiz_questions.json — tényleges mezőnevek (ellenőrizve):
 // { id, difficulty: 'easy'|'medium'|'hard', question, options: [4], correctIndex, hint }
 
-import { MILLIONAIRE_DIFFICULTY_COUNTS } from '../constants/millionaireXP';
+import { MILLIONAIRE_DIFFICULTY_COUNTS, MILLIONAIRE_XP_TABLE } from '../constants/millionaireXP';
+
+const TOTAL_QUESTIONS = MILLIONAIRE_XP_TABLE.length;
 
 const QUESTIONS = require('../../assets/quiz_questions.json');
 
@@ -34,10 +36,10 @@ const FALLBACK_ORDER = {
 };
 
 /**
- * 10 kérdés kiválasztása: 4 easy → 3 medium → 3 hard, poolon belül randomizálva.
+ * 15 kérdés kiválasztása: 5 easy → 5 medium → 5 hard, poolon belül randomizálva.
  * A nehézségi sorrend fix (easy→medium→hard), így illeszkedik a
  * MILLIONAIRE_XP_TABLE soraihoz.
- * Visszatérés: 10 elemű tömb, vagy üres tömb, ha nincs elég érvényes kérdés.
+ * Visszatérés: 15 elemű tömb, vagy üres tömb, ha nincs elég érvényes kérdés.
  */
 export function buildMillionaireQuiz() {
   const valid = QUESTIONS.filter(isValidQuestion);
@@ -78,8 +80,8 @@ export function buildMillionaireQuiz() {
     selected.push(...picked);
   }
 
-  if (selected.length < 10) {
-    console.warn(`Millionaire kvíz: összesen csak ${selected.length}/10 kérdés áll rendelkezésre.`);
+  if (selected.length < TOTAL_QUESTIONS) {
+    console.warn(`Millionaire kvíz: összesen csak ${selected.length}/${TOTAL_QUESTIONS} kérdés áll rendelkezésre.`);
     return [];
   }
 

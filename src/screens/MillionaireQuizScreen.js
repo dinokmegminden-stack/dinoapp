@@ -1,11 +1,11 @@
 // src/screens/MillionaireQuizScreen.js
 // "Legyen Ön is XP Milliomos" — Millionaire-stílusú XP kvíz.
-// 10 kérdés (4 easy, 3 medium, 3 hard), nincs segítség/joker,
-// egy rossz válasz azonnal lezárja a játékot. Max 100 XP.
+// 15 kérdés (5 easy, 5 medium, 5 hard), nincs segítség/joker,
+// egy rossz válasz azonnal lezárja a játékot. Max 200 XP.
 //
 // XP jóváírás szabályai (design doc 9. pont):
 // - vesztes futás (rossz válasz): addigi XP jóváírva
-// - győztes futás (10/10): 100 XP jóváírva
+// - győztes futás (15/15): 200 XP jóváírva
 // - megszakított futás (Kilépés játék közben): NINCS jóváírás
 
 import React, { useState } from 'react';
@@ -105,11 +105,11 @@ export default function MillionaireQuizScreen({ onBack }) {
             <Text style={styles.title}>💰 Legyen Ön is XP Milliomos!</Text>
 
             <View style={styles.rulesBox}>
-              <RuleRow text="10 kérdés, egyre nehezebbek" />
+              <RuleRow text={`${MILLIONAIRE_XP_TABLE.length} kérdés, egyre nehezebbek`} />
               <RuleRow text="Nincs segítség, nincs joker" />
               <RuleRow text="Egy rossz válasz — vége a játéknak" />
               <RuleRow text="A megszerzett XP hibánál is megmarad" />
-              <RuleRow text={`Mind a 10 helyes: ${MILLIONAIRE_MAX_XP} XP + XP Milliomos cím`} />
+              <RuleRow text={`Mind a ${MILLIONAIRE_XP_TABLE.length} helyes: ${MILLIONAIRE_MAX_XP} XP + XP Milliomos cím`} />
             </View>
 
             <View style={styles.ladderBox}>
@@ -146,7 +146,7 @@ export default function MillionaireQuizScreen({ onBack }) {
   // --- Eredmény képernyő ----------------------------------------------------
   if (gameStatus === 'won' || gameStatus === 'lost') {
     const isMillionaire = gameStatus === 'won';
-    const reachedQuestion = isMillionaire ? 10 : currentQuestionIndex + 1;
+    const reachedQuestion = isMillionaire ? MILLIONAIRE_XP_TABLE.length : currentQuestionIndex + 1;
     return (
       <Shell>
         <View style={styles.container}>
@@ -156,13 +156,13 @@ export default function MillionaireQuizScreen({ onBack }) {
               <>
                 <Text style={styles.badgeEmoji}>🏆</Text>
                 <Text style={styles.title}>XP MILLIOMOS!</Text>
-                <Text style={styles.resultSubtitle}>Mind a 10 kérdésre helyesen válaszoltál!</Text>
+                <Text style={styles.resultSubtitle}>Mind a {MILLIONAIRE_XP_TABLE.length} kérdésre helyesen válaszoltál!</Text>
               </>
             ) : (
               <>
                 <Text style={styles.badgeEmoji}>😕</Text>
                 <Text style={styles.title}>Vége a játéknak</Text>
-                <Text style={styles.resultSubtitle}>{reachedQuestion}/10 kérdésig jutottál.</Text>
+                <Text style={styles.resultSubtitle}>{reachedQuestion}/{MILLIONAIRE_XP_TABLE.length} kérdésig jutottál.</Text>
               </>
             )}
 
@@ -198,7 +198,7 @@ export default function MillionaireQuizScreen({ onBack }) {
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
         <View style={styles.header}>
-          <Text style={styles.headerCounter}>Kérdés {currentQuestionIndex + 1} / 10</Text>
+          <Text style={styles.headerCounter}>Kérdés {currentQuestionIndex + 1} / {questions.length}</Text>
           <Text style={[styles.headerDifficulty, { color: difficultyColor }]}>
             {DIFFICULTY_LABELS[tableRow.difficulty]} · +{tableRow.xp} XP
           </Text>
