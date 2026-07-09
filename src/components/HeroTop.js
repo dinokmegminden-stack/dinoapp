@@ -1,7 +1,5 @@
 // src/components/HeroTop.js — redesign: nincs külön ikon/érme a cím fölött,
-// dínó emoji keretezi a "DÍNÓ TUDÓS" feliratot magában a címsorban, halvány
-// csontmintával a háttérben. Az érme eltávolítása szándékosan csökkenti a
-// blokk teljes magasságát, mert az emoji nem foglal külön sort.
+// csak a "DÍNÓ TUDÓS" felirat.
 import React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import {
@@ -12,34 +10,7 @@ import {
   useFonts as useFredoka,
   Fredoka_400Regular,
 } from '@expo-google-fonts/fredoka';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
-
-const PATTERN_ROWS = [
-  { offset: 0, rotations: [-12, 8, -6, 14, -10, 6, -14] },
-  { offset: 26, rotations: [10, -8, 12, -6, 8, -12, 10] },
-  { offset: 0, rotations: [-8, 14, -10, 6, -14, 10, -6] },
-];
-
-function BonePattern() {
-  return (
-    <View style={styles.pattern} pointerEvents="none">
-      {PATTERN_ROWS.map((row, rowIndex) => (
-        <View key={rowIndex} style={[styles.patternRow, { marginLeft: row.offset }]}>
-          {row.rotations.map((deg, i) => (
-            <MaterialCommunityIcons
-              key={i}
-              name="bone"
-              size={22}
-              color={COLORS.cream}
-              style={[styles.patternIcon, { transform: [{ rotate: `${deg}deg` }] }]}
-            />
-          ))}
-        </View>
-      ))}
-    </View>
-  );
-}
 
 export default function HeroTop() {
   const { width } = useWindowDimensions();
@@ -49,16 +20,12 @@ export default function HeroTop() {
 
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
   const titleSize = width < 768 ? 38 : 50;
-  const emojiSize = width < 768 ? 26 : 34;
 
   return (
     <View style={styles.container}>
       <View style={styles.heroCard}>
-        <BonePattern />
-
         <View style={styles.titleBlock}>
           <View style={styles.titleRow}>
-            <Text style={[styles.titleEmoji, { fontSize: emojiSize }]}>🦖</Text>
             <Text
               style={[
                 styles.mainTitle,
@@ -70,7 +37,6 @@ export default function HeroTop() {
             >
               DÍNÓ TUDÓS
             </Text>
-            <Text style={[styles.titleEmoji, { fontSize: emojiSize }]}>🦕</Text>
           </View>
           <Text
             style={[
@@ -101,19 +67,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingVertical: 8,
   },
-  pattern: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'space-evenly',
-    opacity: 0.1,
-  },
-  patternRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 4,
-  },
-  patternIcon: {
-    opacity: 0.9,
-  },
   titleBlock: {
     alignItems: 'center',
     transform: [{ rotate: '-3deg' }],
@@ -122,9 +75,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  titleEmoji: {
-    textAlign: 'center',
   },
   mainTitle: {
     color: COLORS.accent,

@@ -4,11 +4,13 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StatusBar,
   StyleSheet,
   Pressable,
   ScrollView,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
@@ -17,6 +19,11 @@ import LandingMenu from './LandingMenu';
 import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { COLORS, RADIUS } from '../constants/theme';
+
+// Kísérlet: háttér-illusztráció a menügombok mögött — kivehető, ha nem válik be.
+// Csak asztali nézetben jelenik meg, mobilon túl zsúfolt lenne.
+const bgDino = require('../../assets/images/bg.png');
+const DESKTOP_BREAKPOINT = 700;
 
 function XPPill() {
   const [xp, setXP] = useState(0);
@@ -61,6 +68,8 @@ function RoundIconButton({ icon, onPress }) {
 
 export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory }) {
   const [muted, setMuted] = useState(getSoundMuted());
+  const { width, height } = useWindowDimensions();
+  const isDesktop = width >= DESKTOP_BREAKPOINT;
 
   const toggleMute = () => {
     const next = !getSoundMuted();
@@ -111,14 +120,23 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
           {/* 2. Logó blokk (döntött cím, accent alcím) */}
           <HeroTop />
 
-          {/* 3–5. Menü szekciók */}
-          <LandingMenu
-            onSelectRegion={handleSelectRegion}
-            onOpenGallery={handleOpenGallery}
-            onLightningQuiz={handleStartLightningQuiz}
-            onMillionaire={handleStartMillionaire}
-            onMemory={handleStartMemory}
-          />
+          {/* 3–5. Menü szekciók — a háttérkép mögöttük ül, nem blokkolja a koppintást */}
+          <View style={styles.menuWrapper}>
+            {isDesktop && (
+              <Image
+                source={bgDino}
+                style={[styles.bgDino, { height: height * 0.7 }]}
+                pointerEvents="none"
+              />
+            )}
+            <LandingMenu
+              onSelectRegion={handleSelectRegion}
+              onOpenGallery={handleOpenGallery}
+              onLightningQuiz={handleStartLightningQuiz}
+              onMillionaire={handleStartMillionaire}
+              onMemory={handleStartMemory}
+            />
+          </View>
         </View>
       </ScrollView>
     </Shell>
@@ -139,6 +157,18 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 520,
     paddingHorizontal: 20,
+  },
+  menuWrapper: {
+    position: 'relative',
+  },
+  bgDino: {
+    position: 'fixed',
+    top: -20,
+    left: '50%',
+    marginLeft: '-162.5%',
+    width: '325%',
+    opacity: 0.16,
+    resizeMode: 'contain',
   },
   headerBar: {
     flexDirection: 'row',
