@@ -1,7 +1,9 @@
 import { Audio } from 'expo-av';
 
+// Minden hang helyi, bundlelt fájl (Kenney.nl, CC0) — korábban a 'click' egy
+// külső Google URL-t használt, ami nem mindig töltődött be megbízhatóan.
 export const SOUNDS = {
-  click: 'https://actions.google.com/sounds/v1/ui/click_on_furniture.ogg',
+  click: require('../../assets/sounds/click.mp3'),
 };
 
 export const QUIZ_SOUND_FILES = {
@@ -18,6 +20,8 @@ export const QUIZ_SOUND_FILES = {
   hard: require('../../assets/sounds/hard.mp3'),
   hardMillion: require('../../assets/sounds/hard_million.mp3'),
   winningTheme: require('../../assets/sounds/winning_theme.mp3'),
+  cardFlip: require('../../assets/sounds/card_flip.mp3'),
+  cardMatch: require('../../assets/sounds/card_match.mp3'),
 };
 
 // --- Némítás (globális) ---
@@ -45,10 +49,7 @@ export async function playSound(soundKey) {
       await loadedSounds[soundKey].replayAsync();
       return;
     }
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: SOUNDS[soundKey] },
-      { shouldPlay: true }
-    );
+    const { sound } = await Audio.Sound.createAsync(SOUNDS[soundKey], { shouldPlay: true });
     loadedSounds[soundKey] = sound;
   } catch (error) {
     console.warn(`Nem sikerült a hang lejátszása: ${soundKey}`, error);

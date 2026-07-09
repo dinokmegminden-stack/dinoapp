@@ -150,7 +150,7 @@ export default function MemoryGameScreen({ onBack }) {
   useEffect(() => {
     if (pairCount > 0 && matchedPairs === pairCount && !won) {
       setWon(true);
-      playQuizSfx('correct');
+      playQuizSfx('winningTheme');
       addXP(difficulty.xp);
       xpAnim.setValue(0);
       Animated.spring(xpAnim, {
@@ -199,7 +199,7 @@ export default function MemoryGameScreen({ onBack }) {
     if (matchedSetRef.current.has(card.pairIndex)) return;
     if (flippedRef.current.some((f) => f.key === card.key)) return;
 
-    playSound('click');
+    playQuizSfx('cardFlip');
     setCards((prev) =>
       prev.map((c) => (c.key === card.key ? { ...c, faceUp: true } : c))
     );
@@ -213,7 +213,7 @@ export default function MemoryGameScreen({ onBack }) {
     setMoves((m) => m + 1);
 
     if (first.pairIndex === second.pairIndex) {
-      playQuizSfx('correct');
+      playQuizSfx('cardMatch');
       matchedSetRef.current.add(first.pairIndex);
       setCards((prev) =>
         prev.map((c) =>
