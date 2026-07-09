@@ -1223,13 +1223,13 @@
   },
   {
     "id": 107,
-    "difficulty": "easy",
-    "question": "Melyik dinoszaurusz neve utal közvetlenül Magyarországra?",
+    "difficulty": "hard",
+    "question": "Melyik dinoszaurusz nemzetségneve utal közvetlenül Magyarországra? (csak a faj nevet mutatjuk)",
     "options": [
-      "Magyarosaurus dacus",
-      "Rhabdodon priscus",
-      "Zalmoxes robustus",
-      "Liliensternus"
+      ".... dacus",
+      ".... priscus",
+      ".... robustus",
+      ".... macrothorax"
     ],
     "correctIndex": 0,
     "hint": "Erdélyben, a Hátszeg-medencében fedezte fel báró Nopcsa Ferenc húga."

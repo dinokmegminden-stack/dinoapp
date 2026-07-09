@@ -19,6 +19,12 @@ export const s = StyleSheet.create({
   primaryBtnText: { color: '#fff', fontSize: 14, fontWeight: '800' },
 
   packagesScroll: { paddingBottom: 60 },
+  packagesScrollFlex: { flex: 1 },
+
+  // "Vissza" / "Főmenü" gombok mindig a képernyő alján ülnek, nem a
+  // tetején — hogy ne vegyenek el helyet a tartalom fölött.
+  bottomBackLink: { alignItems: 'center', paddingVertical: 14 },
+  quizContentFlex: { flex: 1 },
   levelTitle: { color: COLORS.gold || '#DDA15E', fontSize: 12, fontWeight: '900', letterSpacing: 2, marginTop: 8 },
   levelSubtitle: { color: '#FEFAE0', fontSize: 24, fontWeight: '900', marginTop: 2 },
   levelDesc: { color: 'rgba(254,250,224,0.55)', fontSize: 12, lineHeight: 17, marginTop: 8, marginBottom: 18 },
@@ -32,7 +38,7 @@ export const s = StyleSheet.create({
   packageLockedHint: { color: '#BC6C25', fontSize: 10, marginTop: 4, fontWeight: '600' },
   packagePassedHint: { color: '#606C38', fontSize: 10, marginTop: 4, fontWeight: '700' },
 
-  browseHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, paddingHorizontal: 14 },
+  browseCounterRow: { alignItems: 'flex-end', marginBottom: 10, paddingHorizontal: 14 },
   browseCounter: { color: 'rgba(254,250,224,0.55)', fontSize: 12, fontWeight: '700' },
 
   browseMainRow: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 8 },

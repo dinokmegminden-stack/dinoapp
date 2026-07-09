@@ -12,6 +12,11 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
 
   const [currentScreen, setCurrentScreen] = useState('packages'); // 'packages' | 'browse' | 'quiz'
   const [selectedCsomag, setSelectedCsomag] = useState(null);
+  // A "quiz" screen mindig ugyanaz a currentScreen érték marad újrapróbálkozáskor,
+  // úgyhogy setCurrentScreen('quiz') önmagában nem re-renderelne (React bail-out
+  // azonos state-értéknél) — a quizAttempt key-kényszerített remountot ad helyette,
+  // ami friss belső state-et ÉS friss (újrakevert) kérdéssort is jelent.
+  const [quizAttempt, setQuizAttempt] = useState(0);
 
   if (loading) {
     return (
@@ -58,6 +63,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   if (currentScreen === 'quiz') {
     return (
       <PackageQuizScreen
+        key={quizAttempt}
         eduLevel={eduLevel}
         csomag={selectedCsomag}
         packages={packages}
@@ -66,7 +72,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
           onPassed(csomag, packId, score);
           setCurrentScreen('packages');
         }}
-        onRetry={() => setCurrentScreen('quiz')}
+        onRetry={() => setQuizAttempt((n) => n + 1)}
         onBack={() => setCurrentScreen('packages')}
       />
     );

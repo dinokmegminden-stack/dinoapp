@@ -10,11 +10,7 @@ export default function PackagesScreen({ eduLevel, progress, packages, onOpenPac
   return (
     <LevelShell>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
-      <ScrollView contentContainerStyle={s.packagesScroll}>
-        <TouchableOpacity onPress={onBack} style={s.backLink}>
-          <Text style={s.backLinkText}>← FŐMENÜ</Text>
-        </TouchableOpacity>
-
+      <ScrollView style={s.packagesScrollFlex} contentContainerStyle={s.packagesScroll}>
         <Text style={s.levelTitle}>FELFEDEZÉS</Text>
         <Text style={s.levelSubtitle}>{EDU_LABELS[eduLevel] || eduLevel}</Text>
         <Text style={s.levelDesc}>
@@ -52,6 +48,10 @@ export default function PackagesScreen({ eduLevel, progress, packages, onOpenPac
           );
         })}
       </ScrollView>
+
+      <TouchableOpacity onPress={onBack} style={s.bottomBackLink}>
+        <Text style={s.backLinkText}>← FŐMENÜ</Text>
+      </TouchableOpacity>
     </LevelShell>
   );
 }

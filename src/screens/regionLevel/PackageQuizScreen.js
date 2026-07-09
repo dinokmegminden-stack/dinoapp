@@ -80,33 +80,36 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
   return (
     <LevelShell>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
-      <View style={s.browseHeader}>
-        <TouchableOpacity onPress={onBack}>
-          <Text style={s.backLinkText}>← Vissza</Text>
-        </TouchableOpacity>
-        <Text style={s.browseCounter}>Kérdés {qIndex + 1} / {questions.length}</Text>
+      <View style={s.quizContentFlex}>
+        <View style={s.browseCounterRow}>
+          <Text style={s.browseCounter}>Kérdés {qIndex + 1} / {questions.length}</Text>
+        </View>
+
+        <View style={s.quizQuestionBox}>
+          <Text style={s.quizQuestionText}>{question.question}</Text>
+        </View>
+
+        <View style={{ gap: 9, marginTop: 10 }}>
+          {question.options.map((opt, idx) => {
+            let optStyle = [s.optionBtn];
+            if (revealed) {
+              if (idx === question.correctIndex) optStyle.push(s.optionBtnCorrect);
+              else if (idx === selected) optStyle.push(s.optionBtnIncorrect);
+            } else if (selected === idx) {
+              optStyle.push(s.optionBtnSelected);
+            }
+            return (
+              <TouchableOpacity key={idx} style={optStyle} disabled={revealed} onPress={() => handleSelect(idx)}>
+                <Text style={s.optionBtnText}>{['A', 'B', 'C', 'D'][idx]}: {opt}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
 
-      <View style={s.quizQuestionBox}>
-        <Text style={s.quizQuestionText}>{question.question}</Text>
-      </View>
-
-      <View style={{ gap: 9, marginTop: 10 }}>
-        {question.options.map((opt, idx) => {
-          let optStyle = [s.optionBtn];
-          if (revealed) {
-            if (idx === question.correctIndex) optStyle.push(s.optionBtnCorrect);
-            else if (idx === selected) optStyle.push(s.optionBtnIncorrect);
-          } else if (selected === idx) {
-            optStyle.push(s.optionBtnSelected);
-          }
-          return (
-            <TouchableOpacity key={idx} style={optStyle} disabled={revealed} onPress={() => handleSelect(idx)}>
-              <Text style={s.optionBtnText}>{['A', 'B', 'C', 'D'][idx]}: {opt}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+      <TouchableOpacity onPress={onBack} style={s.bottomBackLink}>
+        <Text style={s.backLinkText}>← Vissza</Text>
+      </TouchableOpacity>
     </LevelShell>
   );
 }

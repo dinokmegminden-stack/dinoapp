@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { IMAGE_MAP } from '../../constants/imageMap';
 import DinoCard from '../../components/DinoCard';
 import LevelShell from './LevelShell';
 import { s } from './RegionLevel.styles';
 
+// LevelShell (16px) + ez a ScrollView (14px) vízszintes paddingje eddig
+// összesen 30px rést hagyott mobilon a kártya és a telefon széle közt.
+// Mobilon ezt a rést kioltjuk negatív margóval, hogy a kártyalap a
+// képernyő széléig érjen — a számláló sor (s.browseCounterRow) saját
+// paddingja érintetlen marad, csak a kártyát tartalmazó ScrollView
+// bővül ki a LevelShell teljes szélességéig.
+const MOBILE_BREAKPOINT = 700;
+
 export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
   const pkg = packages.find((p) => p.csomag === csomag);
   const dinos = pkg?.dinos || [];
   const [index, setIndex] = useState(0);
+  const { width } = useWindowDimensions();
+  const isMobile = width < MOBILE_BREAKPOINT;
 
   const dino = dinos[index];
   const isLastDino = index === dinos.length - 1;
@@ -23,17 +33,21 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
 
   return (
     <LevelShell>
-      <View style={s.browseHeader}>
-        <TouchableOpacity onPress={onBack}>
-          <Text style={s.backText}>← Csomagok</Text>
-        </TouchableOpacity>
+      <View style={s.browseCounterRow}>
         <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
       </View>
 
       {/* A léptetés a DinoCard saját, képre helyezett nyilaival történik —
           nem oldalsó gombokkal, mert azok mobilon annyi szélességet
           vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki. */}
-      <ScrollView contentContainerStyle={{ padding: 14, flexGrow: 1 }}>
+      <ScrollView
+        style={isMobile && { marginHorizontal: -16 }}
+        contentContainerStyle={{
+          paddingVertical: 14,
+          paddingHorizontal: isMobile ? 0 : 14,
+          flexGrow: 1,
+        }}
+      >
         {dino && (
           <DinoCard
             dino={dino}
@@ -46,6 +60,10 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
           />
         )}
       </ScrollView>
+
+      <TouchableOpacity onPress={onBack} style={s.bottomBackLink}>
+        <Text style={s.backLinkText}>← Csomagok</Text>
+      </TouchableOpacity>
     </LevelShell>
   );
 }
