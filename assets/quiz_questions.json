@@ -330,7 +330,7 @@
     "question": "Melyik állatcsoport NEM tartozik a dinoszauruszok közé a klasszikus paleontológiai definíció szerint?",
     "options": [
       "Tyrannosaurus",
-      "Pteranodon (repülő hüllő)",
+      "Pteranodon",
       "Triceratops",
       "Diplodocus"
     ],
@@ -914,7 +914,7 @@
     "difficulty": "medium",
     "question": "Melyik kontinensről származik a legtöbb és legjobb állapotban megmaradt tollas dinoszaurusz fosszília (pl. a finom palaüledékekből)?",
     "options": [
-      "Ázsia (különösen Kína, Liaoning tartomány)",
+      "Ázsia",
       "Európa",
       "Afrika",
       "Ausztrália"
