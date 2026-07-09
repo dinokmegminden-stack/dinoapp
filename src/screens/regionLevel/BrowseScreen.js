@@ -11,6 +11,15 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
   const [index, setIndex] = useState(0);
 
   const dino = dinos[index];
+  const isLastDino = index === dinos.length - 1;
+
+  const handleNext = () => {
+    if (isLastDino) {
+      onStartQuiz();
+    } else {
+      setIndex((i) => Math.min(dinos.length - 1, i + 1));
+    }
+  };
 
   return (
     <LevelShell>
@@ -21,40 +30,22 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
         <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
       </View>
 
-      <View style={s.browseMainRow}>
-        <TouchableOpacity
-          style={[s.sideBtnLeft, index === 0 && s.sideBtnDisabled]}
-          onPress={() => setIndex((i) => Math.max(0, i - 1))}
-          disabled={index === 0}
-        >
-          <Text style={[s.sideBtnText, index === 0 && s.sideBtnDisabledText]}>←</Text>
-        </TouchableOpacity>
-
-        {/* Középső tartalom */}
-        <ScrollView contentContainerStyle={{ padding: 14, flexGrow: 1 }}>
-          {dino && (
-            <DinoCard
-              dino={dino}
-              imageSource={IMAGE_MAP[dino.name_hu] || null}
-            />
-          )}
-        </ScrollView>
-
-        <TouchableOpacity
-          style={[s.sideBtnRight, index === dinos.length - 1 && s.sideBtnPrimary]}
-          onPress={() => {
-            if (index === dinos.length - 1) {
-              onStartQuiz();
-            } else {
-              setIndex((i) => Math.min(dinos.length - 1, i + 1));
-            }
-          }}
-        >
-          <Text style={[s.sideBtnText, index === dinos.length - 1 && s.sideBtnPrimaryText]}>
-            {index === dinos.length - 1 ? '▶' : '→'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {/* A léptetés a DinoCard saját, képre helyezett nyilaival történik —
+          nem oldalsó gombokkal, mert azok mobilon annyi szélességet
+          vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki. */}
+      <ScrollView contentContainerStyle={{ padding: 14, flexGrow: 1 }}>
+        {dino && (
+          <DinoCard
+            dino={dino}
+            imageSource={IMAGE_MAP[dino.name_hu] || null}
+            onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
+            onNext={handleNext}
+            isFirstDino={index === 0}
+            isLastDino={false}
+            nextIcon={isLastDino ? '▶' : '›'}
+          />
+        )}
+      </ScrollView>
     </LevelShell>
   );
 }

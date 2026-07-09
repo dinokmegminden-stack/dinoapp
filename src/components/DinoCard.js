@@ -2,8 +2,11 @@
 // fejlécben két jelvény (ritkaság + étrend) a nagybetűs név köré, középen
 // nagy kép (kb. a kártya fele). Alul 2 oszlop: bal a teljes leírás (nem
 // vágva), jobb az infokártya-pillék (Kor, Felfedező, Hossz, Súly, Régió).
-// Fix 480px széles, 9:14 arányú kártya (francia kártyalap-arány) —
-// nyomtatva is játszható méret, ezért a kép szabadon vágódhat (cover).
+// Max 480px széles kártya — a magassága szándékosan NEM fix arányú, hanem
+// a tartalomhoz igazodik. Egy korábbi 9:14 arányú + fix képmagasságú verzió
+// valós telefonon garantáltan levágta a leírást és a statisztikákat
+// (overflow:hidden mögé), ezért a kép mostantól a kártya szélességéhez
+// arányosan (4:3) skálázódik, nem fix pixelben.
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -11,7 +14,6 @@ import { FONTS } from '../constants/fonts';
 import PressableButton from './PressableButton';
 
 const CARD_MAX_WIDTH = 480;
-const CARD_ASPECT_RATIO = 9 / 14;
 
 const DIET_ICON = {
   ragadozó: '🥩',
@@ -63,6 +65,7 @@ export default function DinoCard({
   onNext,
   isFirstDino,
   isLastDino,
+  nextIcon = '›',
   onDetails,
 }) {
   if (!dino) return null;
@@ -127,7 +130,7 @@ export default function DinoCard({
             onPress={onNext}
             disabled={isLastDino}
           >
-            <Text style={styles.navBtnText}>›</Text>
+            <Text style={styles.navBtnText}>{nextIcon}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -164,12 +167,10 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxWidth: CARD_MAX_WIDTH,
-    aspectRatio: CARD_ASPECT_RATIO,
     backgroundColor: COLORS.cream,
     borderRadius: RADIUS.cardLarge,
     borderWidth: 1,
     borderColor: 'rgba(40,54,24,0.15)',
-    overflow: 'hidden',
     alignSelf: 'center',
     marginVertical: 8,
   },
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
   imageFrame: {
     marginTop: 10,
     marginHorizontal: 14,
-    height: 350,
+    aspectRatio: 4 / 3,
     borderRadius: RADIUS.card,
     borderWidth: 1,
     borderColor: 'rgba(40,54,24,0.15)',
@@ -265,11 +266,11 @@ const styles = StyleSheet.create({
   },
 
   lowerRow: {
-    flex: 1,
     flexDirection: 'row',
     gap: 10,
     marginTop: 10,
     marginHorizontal: 14,
+    marginBottom: 14,
   },
   textCol: {
     flex: 1,
