@@ -1,8 +1,11 @@
 // PressableButton — a redesign "nyomott gomb" mintája: a gomb alatt 5px-es
 // sötét "talp" (borderBottom), lenyomáskor a gomb 3px-et süllyed rá.
 // Minden CTA-nak bg + hozzá tartozó sötétebb shadowColor párja van (theme.js).
-import React, { useRef } from 'react';
-import { Animated, Platform, Pressable } from 'react-native';
+// Weben hoverre egy finom fehér réteg világosítja a gombot — natívon
+// (onHoverIn/onHoverOut ott sosem tüzel) ez a viselkedés egyszerűen nem
+// aktiválódik, nincs platformágazás.
+import React, { useRef, useState } from 'react';
+import { Animated, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 // A web Animated modulja nem támogatja a native drivert, warningot dobna.
 const USE_NATIVE_DRIVER = Platform.OS !== 'web';
@@ -19,6 +22,7 @@ export default function PressableButton({
   ...pressableProps
 }) {
   const translateY = useRef(new Animated.Value(0)).current;
+  const [hovered, setHovered] = useState(false);
 
   const pressIn = () =>
     Animated.timing(translateY, {
@@ -39,6 +43,8 @@ export default function PressableButton({
       onPressIn={pressIn}
       onPressOut={pressOut}
       onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
       disabled={disabled}
       style={containerStyle}
       {...pressableProps}
@@ -47,12 +53,22 @@ export default function PressableButton({
         style={[
           { transform: [{ translateY }] },
           { borderBottomWidth: 5, borderBottomColor: shadowColor },
+          Platform.OS === 'web' && !disabled && { cursor: 'pointer' },
           disabled && { opacity: 0.5 },
           style,
         ]}
       >
         {children}
+        {hovered && !disabled && <View style={styles.hoverOverlay} pointerEvents="none" />}
       </Animated.View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  hoverOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#FFFFFF',
+    opacity: 0.12,
+  },
+});

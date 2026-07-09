@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
@@ -37,8 +38,22 @@ function XPPill() {
 }
 
 function RoundIconButton({ icon, onPress }) {
+  const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
+
   return (
-    <Pressable style={styles.roundBtn} onPress={onPress}>
+    <Pressable
+      style={[
+        styles.roundBtn,
+        hovered && styles.roundBtnHovered,
+        pressed && styles.roundBtnPressed,
+      ]}
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+    >
       <MaterialCommunityIcons name={icon} size={18} color={COLORS.cream} />
     </Pressable>
   );
@@ -157,6 +172,19 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bgMid,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      web: {
+        transitionProperty: 'background-color, transform',
+        transitionDuration: '120ms',
+        cursor: 'pointer',
+      },
+    }),
+  },
+  roundBtnHovered: {
+    backgroundColor: COLORS.bgMidLight,
+  },
+  roundBtnPressed: {
+    transform: [{ scale: 0.9 }],
   },
   roundBtnIcon: {
     fontSize: 18,
