@@ -8,12 +8,13 @@
 // (overflow:hidden mögé), ezért a kép mostantól a kártya szélességéhez
 // arányosan (4:3) skálázódik, nem fix pixelben.
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import PressableButton from './PressableButton';
 
-const CARD_MAX_WIDTH = 480;
+const CARD_MAX_WIDTH_MOBILE = 480;
+const CARD_MAX_WIDTH_DESKTOP = 600;
 
 const DIET_ICON = {
   ragadozó: '🥩',
@@ -58,6 +59,19 @@ function InfoPill({ label, value }) {
   );
 }
 
+function ProgressDots({ current, total }) {
+  if (!total || total <= 0) return null;
+  return (
+    <View style={styles.progressDots}>
+      {Array.from({ length: total }).map((_, i) => (
+        <Text key={i} style={[styles.progressDot, i < current && styles.progressDotActive]}>
+          ●
+        </Text>
+      ))}
+    </View>
+  );
+}
+
 export default function DinoCard({
   dino,
   imageSource,
@@ -67,7 +81,13 @@ export default function DinoCard({
   isLastDino,
   nextIcon = '›',
   onDetails,
+  currentIndex = null,
+  totalCount = null,
 }) {
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 700;
+  const cardMaxWidth = isDesktop ? CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_MOBILE;
+
   if (!dino) return null;
 
   const img = imageSource || null;
@@ -94,7 +114,10 @@ export default function DinoCard({
   ].filter(Boolean);
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { maxWidth: cardMaxWidth }]}>
+      {currentIndex != null && totalCount != null && (
+        <ProgressDots current={currentIndex} total={totalCount} />
+      )}
       {/* Fejléc: jelvény — név — jelvény, mint egy kvartett-lapon */}
       <View style={styles.header}>
         {!!dino.rarity ? <HeaderBadge icon="💎" colorStyle={rarityStyle} /> : <View style={styles.headerBadgeSpacer} />}
@@ -166,13 +189,29 @@ export default function DinoCard({
 const styles = StyleSheet.create({
   card: {
     width: '100%',
-    maxWidth: CARD_MAX_WIDTH,
     backgroundColor: COLORS.cream,
     borderRadius: RADIUS.cardLarge,
     borderWidth: 1,
     borderColor: 'rgba(40,54,24,0.15)',
     alignSelf: 'center',
     marginVertical: 8,
+  },
+
+  progressDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  progressDot: {
+    fontSize: 8,
+    color: 'rgba(40,54,24,0.3)',
+  },
+  progressDotActive: {
+    color: COLORS.accent,
+    fontSize: 10,
   },
 
   header: {

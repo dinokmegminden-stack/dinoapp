@@ -33,13 +33,10 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
 
   return (
     <LevelShell>
-      <View style={s.browseCounterRow}>
-        <Text style={s.browseCounter}>{index + 1} / {dinos.length}</Text>
-      </View>
-
       {/* A léptetés a DinoCard saját, képre helyezett nyilaival történik —
           nem oldalsó gombokkal, mert azok mobilon annyi szélességet
-          vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki. */}
+          vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki.
+          Progress a lebegő pontokkal jelenik meg a kártyán. */}
       <ScrollView
         style={isMobile && { marginHorizontal: -16 }}
         contentContainerStyle={{
@@ -57,6 +54,8 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
             isFirstDino={index === 0}
             isLastDino={false}
             nextIcon={isLastDino ? '▶' : '›'}
+            currentIndex={index + 1}
+            totalCount={dinos.length}
           />
         )}
       </ScrollView>
