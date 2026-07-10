@@ -38,6 +38,7 @@ export function adaptCreature(row) {
     taxonomy_category: safe(row.taxonomy_category),
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
+    discovered_country: safe(row.discovered_country),
     discovery_year: row.discovery_year != null ? Number(row.discovery_year) : null,
     weight_kg_min: row.weight_kg_min != null ? Number(row.weight_kg_min) : null,
     weight_kg_max: row.weight_kg_max != null ? Number(row.weight_kg_max) : null,
