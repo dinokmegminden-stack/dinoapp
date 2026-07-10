@@ -262,11 +262,12 @@ const styles = StyleSheet.create({
 
   imageFrame: {
     marginTop: 10,
-    marginHorizontal: 14,
+    marginLeft: 0,
+    marginRight: 0,
+    width: '100%',
     aspectRatio: 4 / 3,
-    borderRadius: RADIUS.card,
-    borderWidth: 1,
-    borderColor: 'rgba(40,54,24,0.15)',
+    borderRadius: 0,
+    borderWidth: 0,
     backgroundColor: COLORS.bgDark,
     position: 'relative',
     overflow: 'hidden',
