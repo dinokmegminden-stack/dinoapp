@@ -110,7 +110,7 @@ export default function DinoCard({
     },
     length && { label: 'Hossz', value: length },
     weight && { label: 'Súly', value: weight },
-    dino.region && { label: 'Régió', value: String(dino.region) },
+    dino.discovered_country && { label: 'Ország', value: String(dino.discovered_country) },
   ].filter(Boolean);
 
   return (
