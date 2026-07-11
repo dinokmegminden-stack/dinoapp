@@ -4,8 +4,6 @@
 // name_hu, name_latin, latin_name_ending, epoch, discoverer_name, discovery_year,
 // length_m_min/max, mya_min/max, edu.
 
-import { REGION_BUTTONS } from '../constants/regionButtons';
-
 function shuffle(arr) {
   return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
 }
@@ -116,20 +114,16 @@ function buildLatinNameQuestion(dino, pool, fullPool = null) {
   };
 }
 
-// A régiót az edu numerikus kulcsból vezetjük le (REGION_BUTTONS), nem szöveges mezőből.
-// A distraktorok itt kivételesen a többi régió neve, nem a (már egy régióra szűrt) pool-ból
-// jönnek — a kérdés lényege épp a régiók közti különbségtétel.
-function buildRegionQuestion(dino) {
-  const region = REGION_BUTTONS.find((r) => r.key === dino.edu);
-  if (!region) return null;
-  const distractorRegions = shuffle(REGION_BUTTONS.filter((r) => r.key !== dino.edu)).slice(0, 3);
-  if (distractorRegions.length < 3) return null;
-  const options = shuffle([region.label, ...distractorRegions.map((r) => r.label)]);
+function buildCountryQuestion(dino, pool, fullPool = null) {
+  if (!dino.discovered_country) return null;
+  const distractors = pickDistinctDistractors(dino.discovered_country, pool, 'discovered_country', 3, fullPool);
+  if (distractors.length < 3) return null;
+  const options = shuffle([dino.discovered_country, ...distractors]);
   return {
     type: 'fact',
-    question: `Melyik régióban élt a ${dino.name_hu}?`,
+    question: `Melyik országban fedezték fel a ${dino.name_hu}-t?`,
     options,
-    correctIndex: options.indexOf(region.label),
+    correctIndex: options.indexOf(dino.discovered_country),
   };
 }
 
@@ -138,7 +132,7 @@ const FACT_BUILDERS = [
   buildDiscovererQuestion,
   buildDiscoveryYearQuestion,
   buildLatinNameQuestion,
-  buildRegionQuestion,
+  buildCountryQuestion,
 ];
 
 // --- Összehasonlító kérdések (2 dínóról szólnak) ------------------------------
@@ -257,7 +251,7 @@ function selectByQuota(candidates, questionCount) {
 
 /**
  * Kérdésszám: minimum 5. Ha a csomagban 5-nél több dínó van, akkor dínószám + 1.
- * Ténykérdés-típusok: korszak, felfedező, felfedezés éve, teljes tudományos név, régió.
+ * Ténykérdés-típusok: korszak, felfedező, felfedezés éve, teljes tudományos név, ország.
  * Összehasonlító típusok: hossz, kor (mya).
  * Mindig 4 opció per kérdés. A rossz válaszok előbb az adott edu level (régió) pool-ból,
  * ha kevés, a fullPool-ból is szedünk (nem korlátozódunk az edu szintre).
