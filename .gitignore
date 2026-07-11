@@ -2,10 +2,9 @@
 
 # dependencies
 node_modules/
-Who-Wants-to-Be-a-Millionaire/
-Who-Wants-to-Be-a-Millionaire/.git/
 
-non_used/
+# obsolete/unused files kept on disk for reference, never committed
+git_not_commit/
 
 # Expo
 .expo/
