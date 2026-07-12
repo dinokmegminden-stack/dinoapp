@@ -66,7 +66,7 @@ function RoundIconButton({ icon, onPress }) {
   );
 }
 
-export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory }) {
+export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const [muted, setMuted] = useState(getSoundMuted());
   const { width, height } = useWindowDimensions();
   const isDesktop = width >= DESKTOP_BREAKPOINT;
@@ -102,6 +102,11 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
     onStartMemory?.();
   };
 
+  const handleStartWhoAmI = () => {
+    playSound('click');
+    onStartWhoAmI?.();
+  };
+
   return (
     <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
@@ -135,6 +140,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
               onLightningQuiz={handleStartLightningQuiz}
               onMillionaire={handleStartMillionaire}
               onMemory={handleStartMemory}
+              onWhoAmI={handleStartWhoAmI}
             />
           </View>
         </View>

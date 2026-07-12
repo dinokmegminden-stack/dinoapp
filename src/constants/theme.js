@@ -12,6 +12,8 @@ export const COLORS = {
   cardMuted: '#f0e9cf',   // metadata sor háttér a kártyákon
   parokBtn: '#a56a3f',    // Párok gomb (játékmód, nem régió)
   parokBtnShadow: '#6e4529',
+  whoAmIBtn: '#4a7a6e',   // Ki vagyok én? gomb (játékmód, nem régió)
+  whoAmIBtnShadow: '#2f5049',
 };
 
 export const RADIUS = { button: 14, card: 12, cardLarge: 18, pill: 999 };

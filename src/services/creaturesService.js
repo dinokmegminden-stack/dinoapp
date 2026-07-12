@@ -23,7 +23,10 @@ export function adaptCreature(row) {
     // valódi Supabase mezőnevek passthrough-ja (pl. quizGenerator.js ezeket várja):
     epoch: safe(row.epoch_hu),
     discoverer_name: safe(row.discoverer_name),
-    latin_name_ending: safe(row.latin_name_ending),
+    // FIGYELEM: a Supabase oszlop valódi neve `latin_name_end` (nem `latin_name_ending`) —
+    // korábban ez a mező mindig üres volt emiatt (érintette a quizGenerator.js
+    // buildLatinNameQuestion-jét is, ami emiatt sosem generált kérdést).
+    latin_name_ending: safe(row.latin_name_end),
     mya_min: row.mya_end != null ? Number(row.mya_end) : null,
     mya_max: row.mya_start != null ? Number(row.mya_start) : null,
     csomag: Number(row.pack_number || 1),
@@ -33,9 +36,11 @@ export function adaptCreature(row) {
     period: safe(row.period_hu),
     region: safe(row.region_hu),
     rarity: safe(row.rarity),
-    taxonomy_group: safe(row.taxonomy_group),
-    taxonomy_hu: safe(row.taxonomy_hu),
-    taxonomy_category: safe(row.taxonomy_category),
+    // A korábbi taxonomy_group/taxonomy_hu/taxonomy_category/pbdb_class_hu oszlopok
+    // megszűntek — a rend/alrend/csalad hármas váltotta fel őket (lásd whoAmIQuizGenerator.js).
+    rend: safe(row.rend),
+    alrend: safe(row.alrend),
+    csalad: safe(row.csalad),
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
     discovered_country: safe(row.discovered_country),
@@ -49,12 +54,14 @@ export function adaptCreature(row) {
   };
 }
 
-// Régió dínóinak lekérése edu alapján
+// Régió dínóinak lekérése edu alapján — a pack_number = 100 jelöli az "OUT OF GAME"
+// dínókat (még nincs végleges pakkba sorolva), ezeket egyelőre kizárjuk.
 export async function fetchCreaturesByEdu(eduLevel) {
   const { data, error } = await supabase
     .from('creatures')
     .select('*')
-    .eq('edu', eduLevel);
+    .eq('edu', eduLevel)
+    .neq('pack_number', 100);
 
   if (error) {
     console.warn('Supabase hiba:', error);

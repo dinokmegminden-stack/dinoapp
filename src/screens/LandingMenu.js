@@ -1,5 +1,6 @@
 // LandingMenu — a landing menü blokkjai a redesign spec 3. pontja szerint:
-// RÉGIÓK (2×3 grid, Gyűjteménnyel), JÁTÉKMÓDOK (Párok), fő CTA-k (Képkvíz, Milliomos).
+// RÉGIÓK (2×3 grid, Gyűjteménnyel), JÁTÉKMÓDOK (2 oszlopos grid, ugyanaz az elrendezés,
+// mint a régióknál: Párok, Ki vagyok én?, Képkvíz, Milliomos).
 // Ikonnevek MaterialCommunityIcons-ra ellenőrizve (a spec Tabler-nevei közül több
 // nem létezik ebben a libben, pl. "mountain" → "image-filter-hdr", "sun" → "weather-sunny").
 import React from 'react';
@@ -13,7 +14,15 @@ const REGIONS = [
   { edu: 2, label: 'Európa', icon: 'castle' },
   { edu: 3, label: 'Afrika', icon: 'weather-sunny' },
   { edu: 4, label: 'Ázsia', icon: 'yin-yang' },
-  { edu: 5, label: 'Amerika', icon: 'paw' },
+  { edu: 5, label: 'Dél-Amerika', icon: 'arrow-down-bold' },
+  { edu: 6, label: 'Észak-Amerika', icon: 'arrow-up-bold' },
+];
+
+const GAMES = [
+  { key: 'memory', label: 'PÁROK', icon: 'cards', bg: COLORS.parokBtn, shadow: COLORS.parokBtnShadow },
+  { key: 'whoami', label: 'KI VAGYOK ÉN?', icon: 'help-circle', bg: COLORS.whoAmIBtn, shadow: COLORS.whoAmIBtnShadow },
+  { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', bg: COLORS.accent, shadow: COLORS.accentDark, textColor: COLORS.bgDark },
+  { key: 'millionaire', label: 'XP MILLIOMOS', icon: 'trophy', bg: COLORS.accentDark, shadow: COLORS.parokBtnShadow },
 ];
 
 function SectionLabel({ children }) {
@@ -26,7 +35,15 @@ export default function LandingMenu({
   onLightningQuiz,
   onMillionaire,
   onMemory,
+  onWhoAmI,
 }) {
+  const gameHandlers = {
+    memory: onMemory,
+    whoami: onWhoAmI,
+    lightning: onLightningQuiz,
+    millionaire: onMillionaire,
+  };
+
   return (
     <View style={styles.menuContainer}>
       <SectionLabel>RÉGIÓK</SectionLabel>
@@ -55,32 +72,19 @@ export default function LandingMenu({
       </View>
 
       <SectionLabel>JÁTÉKMÓDOK</SectionLabel>
-      <PressableButton
-        onPress={onMemory}
-        style={[styles.fullBtn, { backgroundColor: COLORS.parokBtn }]}
-        shadowColor={COLORS.parokBtnShadow}
-      >
-        <MaterialCommunityIcons name="cards" size={22} color={COLORS.cream} />
-        <Text style={styles.fullBtnText}>PÁROK</Text>
-      </PressableButton>
-
-      <View style={styles.ctaBlock}>
-        <PressableButton
-          onPress={onLightningQuiz}
-          style={[styles.fullBtn, { backgroundColor: COLORS.accent }]}
-          shadowColor={COLORS.accentDark}
-        >
-          <MaterialCommunityIcons name="flash" size={22} color={COLORS.bgDark} />
-          <Text style={[styles.fullBtnText, { color: COLORS.bgDark }]}>5MP KÉPKVÍZ</Text>
-        </PressableButton>
-        <PressableButton
-          onPress={onMillionaire}
-          style={[styles.fullBtn, { backgroundColor: COLORS.accentDark }]}
-          shadowColor={COLORS.parokBtnShadow}
-        >
-          <MaterialCommunityIcons name="trophy" size={22} color={COLORS.cream} />
-          <Text style={styles.fullBtnText}>XP MILLIOMOS</Text>
-        </PressableButton>
+      <View style={styles.grid}>
+        {GAMES.map((game) => (
+          <PressableButton
+            key={game.key}
+            onPress={gameHandlers[game.key]}
+            containerStyle={styles.gridCell}
+            style={[styles.gridBtn, { backgroundColor: game.bg }]}
+            shadowColor={game.shadow}
+          >
+            <MaterialCommunityIcons name={game.icon} size={22} color={game.textColor || COLORS.cream} />
+            <Text style={[styles.gridBtnText, game.textColor && { color: game.textColor }]}>{game.label}</Text>
+          </PressableButton>
+        ))}
       </View>
     </View>
   );
@@ -124,26 +128,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     letterSpacing: 0.5,
     textAlign: 'center',
-  },
-  fullBtn: {
-    flexDirection: 'row',
-    width: '100%',
-    borderRadius: RADIUS.button,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  fullBtnText: {
-    color: COLORS.cream,
-    fontWeight: '900',
-    fontSize: 15,
-    letterSpacing: 1.5,
-    textAlign: 'center',
-  },
-  ctaBlock: {
-    marginTop: 20,
-    gap: 12,
   },
 });

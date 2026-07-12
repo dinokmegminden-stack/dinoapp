@@ -15,13 +15,16 @@ import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { playQuizSfx, playSound } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
+import { saveMemoryResult } from '../services/memoryResultsService';
 
 const MISMATCH_DELAY = 1000;
+const BOARD_HORIZONTAL_PADDING = 10; // egyeznie kell a boardWrapper paddingHorizontal értékével
 
+// level: 1/2/3 — ez kerül a memory_results táblába (lásd memoryResultsService.js).
 const DIFFICULTIES = [
-  { key: 'easy', label: '🐣 KEZDŐ', cols: 4, rows: 3, xp: 3 },
-  { key: 'medium', label: '🦕 HALADÓ', cols: 6, rows: 4, xp: 6 },
-  { key: 'hard', label: '🦖 PROFI', cols: 10, rows: 6, xp: 10 },
+  { key: 'easy', label: '🐣 KEZDŐ', cols: 4, rows: 3, xp: 3, level: 1 },
+  { key: 'medium', label: '🦕 HALADÓ', cols: 6, rows: 4, xp: 6, level: 2 },
+  { key: 'hard', label: '🦖 PROFI', cols: 10, rows: 6, xp: 10, level: 3 },
 ];
 
 const PAIR_EMOJIS = [
@@ -125,7 +128,7 @@ function MemoryCard({ card, width, height, left, top, onPress }) {
   );
 }
 
-export default function MemoryGameScreen({ onBack }) {
+export default function MemoryGameScreen({ nickname, onBack }) {
   const [imageKey, setImageKey] = useState(() => pickImageKey());
   const [difficulty, setDifficulty] = useState(null);
   const [cards, setCards] = useState([]);
@@ -133,9 +136,12 @@ export default function MemoryGameScreen({ onBack }) {
   const [matchedPairs, setMatchedPairs] = useState(0);
   const [won, setWon] = useState(false);
   const [boardWidth, setBoardWidth] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [finalSeconds, setFinalSeconds] = useState(0);
 
   const xpAnim = useRef(new Animated.Value(0)).current;
   const timeoutRef = useRef(null);
+  const startTimeRef = useRef(null);
   // A köröglogika ref-ekben él, mert gyors egymás utáni kattintásoknál a
   // state-closure elavult lenne, és a lapok felfordítva ragadnának.
   const flippedRef = useRef([]);
@@ -146,9 +152,20 @@ export default function MemoryGameScreen({ onBack }) {
 
   const pairCount = difficulty ? (difficulty.cols * difficulty.rows) / 2 : 0;
 
-  // Győzelem: XP jóváírása egyszer + "+XP" animáció
+  // Élő időszámláló — csak akkor fut, amíg tart a kör (nincs kész, van kiválasztott nehézség).
+  useEffect(() => {
+    if (!difficulty || won) return;
+    const interval = setInterval(() => {
+      setElapsedSeconds(Math.round((Date.now() - startTimeRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [difficulty, won]);
+
+  // Győzelem: XP jóváírása egyszer + "+XP" animáció + eredmény mentése (név, lépés, idő, szint)
   useEffect(() => {
     if (pairCount > 0 && matchedPairs === pairCount && !won) {
+      const seconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+      setFinalSeconds(seconds);
       setWon(true);
       playQuizSfx('winningTheme');
       addXP(difficulty.xp);
@@ -158,11 +175,21 @@ export default function MemoryGameScreen({ onBack }) {
         friction: 4,
         useNativeDriver: false,
       }).start();
+      if (nickname) {
+        saveMemoryResult({ nickname, moves, seconds, level: difficulty.level });
+      }
     }
   }, [matchedPairs]);
 
-  const boardHeight = boardWidth * (9 / 16);
-  const cardW = difficulty ? boardWidth / difficulty.cols : 0;
+  // boardWidth a boardWrapper teljes (paddinggel együtt mért) szélessége —
+  // a tábla tényleges helye a paddingHorizontal (10+10px) levonása után marad,
+  // különben a tábla szélesebb lenne, mint a rendelkezésre álló hely, ami
+  // (widen web nézeten, ahol a Shell "alignItems: center"-t használ) végtelen
+  // növekedési hurkot okozott: a túlcsorduló tábla miatt a wrapper is nőtt,
+  // ami egy újabb, nagyobb onLayout-ot váltott ki.
+  const availableWidth = Math.max(boardWidth - BOARD_HORIZONTAL_PADDING * 2, 0);
+  const boardHeight = availableWidth * (9 / 16);
+  const cardW = difficulty ? availableWidth / difficulty.cols : 0;
   const cardH = difficulty ? boardHeight / difficulty.rows : 0;
   const imageSource = IMAGE_MAP[imageKey];
 
@@ -176,10 +203,12 @@ export default function MemoryGameScreen({ onBack }) {
   const handleSelectDifficulty = (d) => {
     playSound('click');
     resetRefs();
+    startTimeRef.current = Date.now();
     setDifficulty(d);
     setCards(buildDeck((d.cols * d.rows) / 2));
     setMoves(0);
     setMatchedPairs(0);
+    setElapsedSeconds(0);
     setWon(false);
   };
 
@@ -237,10 +266,12 @@ export default function MemoryGameScreen({ onBack }) {
   const startNewGame = () => {
     playSound('click');
     resetRefs();
+    startTimeRef.current = Date.now();
     setImageKey((prev) => pickImageKey(prev));
     setCards(buildDeck(pairCount));
     setMoves(0);
     setMatchedPairs(0);
+    setElapsedSeconds(0);
     setWon(false);
   };
 
@@ -286,10 +317,11 @@ export default function MemoryGameScreen({ onBack }) {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
-        {/* Fejléc: párok + lépések */}
+        {/* Fejléc: párok + lépések + idő */}
         <View style={styles.header}>
           <Text style={styles.headerText}>🧩 {matchedPairs}/{pairCount} pár</Text>
           <Text style={styles.headerText}>👣 {moves} lépés</Text>
+          <Text style={styles.headerText}>⏱️ {won ? finalSeconds : elapsedSeconds}s</Text>
         </View>
 
         {/* 16:9 tábla — a kép alatta, a lapok rajta */}
@@ -297,11 +329,11 @@ export default function MemoryGameScreen({ onBack }) {
           style={styles.boardWrapper}
           onLayout={(e) => setBoardWidth(e.nativeEvent.layout.width)}
         >
-          {boardWidth > 0 && (
-            <View style={[styles.board, { width: boardWidth, height: boardHeight }]}>
+          {availableWidth > 0 && (
+            <View style={[styles.board, { width: availableWidth, height: boardHeight }]}>
               <Image
                 source={imageSource}
-                style={[StyleSheet.absoluteFill, { width: boardWidth, height: boardHeight }]}
+                style={[StyleSheet.absoluteFill, { width: availableWidth, height: boardHeight }]}
                 resizeMode="cover"
               />
               {cards.map((card, index) => {
@@ -336,7 +368,7 @@ export default function MemoryGameScreen({ onBack }) {
             >
               +{difficulty.xp} XP ⭐
             </Animated.Text>
-            <Text style={styles.victoryStats}>{moves} lépésből sikerült</Text>
+            <Text style={styles.victoryStats}>{moves} lépésből, {finalSeconds} másodperc alatt sikerült</Text>
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.nextBtn} onPress={startNewGame}>
                 <Text style={styles.nextBtnText}>🔄 KÖVETKEZŐ KÉP</Text>
@@ -374,6 +406,7 @@ export default function MemoryGameScreen({ onBack }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     backgroundColor: COLORS.bg || '#283618',
     paddingBottom: 20,
   },
@@ -390,7 +423,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   boardWrapper: {
-    paddingHorizontal: 10,
+    width: '100%',
+    paddingHorizontal: BOARD_HORIZONTAL_PADDING,
     alignItems: 'center',
   },
   board: {
