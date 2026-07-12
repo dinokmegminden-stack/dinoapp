@@ -36,10 +36,11 @@ export function adaptCreature(row) {
     period: safe(row.period_hu),
     region: safe(row.region_hu),
     rarity: safe(row.rarity),
-    taxonomy_group: safe(row.taxonomy_group),
-    taxonomy_hu: safe(row.taxonomy_hu),
-    taxonomy_category: safe(row.taxonomy_category),
-    pbdb_class_hu: safe(row.pbdb_class_hu),
+    // A korábbi taxonomy_group/taxonomy_hu/taxonomy_category/pbdb_class_hu oszlopok
+    // megszűntek — a rend/alrend/csalad hármas váltotta fel őket (lásd whoAmIQuizGenerator.js).
+    rend: safe(row.rend),
+    alrend: safe(row.alrend),
+    csalad: safe(row.csalad),
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
     discovered_country: safe(row.discovered_country),
@@ -53,12 +54,14 @@ export function adaptCreature(row) {
   };
 }
 
-// Régió dínóinak lekérése edu alapján
+// Régió dínóinak lekérése edu alapján — a pack_number = 100 jelöli az "OUT OF GAME"
+// dínókat (még nincs végleges pakkba sorolva), ezeket egyelőre kizárjuk.
 export async function fetchCreaturesByEdu(eduLevel) {
   const { data, error } = await supabase
     .from('creatures')
     .select('*')
-    .eq('edu', eduLevel);
+    .eq('edu', eduLevel)
+    .neq('pack_number', 100);
 
   if (error) {
     console.warn('Supabase hiba:', error);

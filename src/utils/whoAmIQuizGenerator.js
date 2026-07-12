@@ -1,20 +1,40 @@
 // src/utils/whoAmIQuizGenerator.js
 // "Ki vagyok én?" — a dínó elárul pár tényt magáról (felfedező, felfedezés éve,
-// ország, étrend, pbdb_class_hu szerinti család), a játékosnak 4 név közül kell kiválasztania,
+// ország, étrend, alrend szerinti család), a játékosnak 4 név közül kell kiválasztania,
 // melyik dínóról van szó. A 3 rossz válasz mindig a helyes dínóéval megegyező
-// pbdb_class_hu családból származik, hogy a család-tény ne árulja el a megoldást.
+// alrend-csoportból származik, hogy a család-tény ne árulja el a megoldást.
+//
+// A `creatures` tábla `csalad` mezője túl finom felbontású ehhez (47 egyedi érték,
+// a legtöbb 1-3 taggal, és a `creature_families_hu` fordítótábla még üres) —
+// az `alrend` (pl. Theropoda, Sauropodomorpha) jóval kevesebb, de annál népesebb
+// csoportot ad, és Hungarian fordítást lentebb, kézzel rögzítve kap.
 
 import { getCountryLocative, getYearLocative, getDiscovererVerb, lowercaseFirst } from './hungarianGrammar';
 
 const MIN_CLASS_SIZE = 4; // 1 helyes + 3 rossz válasz ugyanabból a családból
+
+// Az alrend értékek (csak 6 létezik, lásd getFamilyHu) kézzel fordítva —
+// a creature_families_hu tábla erre még nem használható, mert jelenleg üres.
+const ALREND_HU = {
+  Theropoda: 'ragadozó dinoszauruszok',
+  Sauropodomorpha: 'hosszúnyakú dinoszauruszok',
+  Thyreophora: 'páncélos dinoszauruszok',
+  Ornithopoda: 'madárlábú dinoszauruszok',
+  Marginocephalia: 'szarvas- és vastagfejű dinoszauruszok',
+  Pterodactyloidea: 'repülő hüllők',
+};
+
+function getFamilyHu(alrend) {
+  return ALREND_HU[alrend] || alrend;
+}
 
 function shuffle(arr) {
   return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
 }
 
 // Csak azok a dínók jöhetnek szóba (kérdésként és/vagy rossz válaszként), amelyeknél
-// megvan minden szükséges tény, és a családjuk ("ismeretlen" kivételével) legalább
-// MIN_CLASS_SIZE tagot számlál — enélkül nem lenne miből 3 rossz választ kiválogatni.
+// megvan minden szükséges tény, és a családjuk legalább MIN_CLASS_SIZE tagot
+// számlál — enélkül nem lenne miből 3 rossz választ kiválogatni.
 function eligibleDinosByClass(pool) {
   const withFacts = pool.filter(
     (d) =>
@@ -24,14 +44,13 @@ function eligibleDinosByClass(pool) {
       d.discovered_country &&
       d.diet_hu &&
       d.diet_hu !== 'ismeretlen' &&
-      d.pbdb_class_hu &&
-      d.pbdb_class_hu !== 'ismeretlen'
+      d.alrend
   );
 
   const byClass = new Map();
   for (const dino of withFacts) {
-    if (!byClass.has(dino.pbdb_class_hu)) byClass.set(dino.pbdb_class_hu, []);
-    byClass.get(dino.pbdb_class_hu).push(dino);
+    if (!byClass.has(dino.alrend)) byClass.set(dino.alrend, []);
+    byClass.get(dino.alrend).push(dino);
   }
 
   for (const [cls, dinos] of byClass) {
@@ -63,7 +82,7 @@ export function buildWhoAmIClueSegments(dino) {
     { text: 'Én egy ' },
     { text: dino.diet_hu, bold: true },
     { text: ', ' },
-    { text: lowercaseFirst(dino.pbdb_class_hu), bold: true },
+    { text: lowercaseFirst(getFamilyHu(dino.alrend)), bold: true },
     { text: ' közé tartozó dínó voltam, ' },
     { text: dino.discoverer_name, bold: true },
     { text: ` ${verb} ` },

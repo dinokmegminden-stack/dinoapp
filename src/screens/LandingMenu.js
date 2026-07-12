@@ -14,7 +14,8 @@ const REGIONS = [
   { edu: 2, label: 'Európa', icon: 'castle' },
   { edu: 3, label: 'Afrika', icon: 'weather-sunny' },
   { edu: 4, label: 'Ázsia', icon: 'yin-yang' },
-  { edu: 5, label: 'Amerika', icon: 'paw' },
+  { edu: 5, label: 'Dél-Amerika', icon: 'arrow-down-bold' },
+  { edu: 6, label: 'Észak-Amerika', icon: 'arrow-up-bold' },
 ];
 
 const GAMES = [

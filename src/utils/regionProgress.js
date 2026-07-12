@@ -3,7 +3,7 @@
 // AsyncStorage-alapú, nickname szerint particionált.
 //
 // HUB MODEL: a régiók egyenrangú választások, nincs lánc-feloldás köztük.
-// edu=5 megszűnt (Amerika Észak/Dél-re bontva: edu=6, edu=7).
+// Amerika Dél-re (edu=5) és Észak-ra (edu=6) bontva.
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,10 +15,11 @@ export const EDU_LABELS = {
   2: 'Európa',
   3: 'Afrika',
   4: 'Ázsia',
-  5: 'Amerika',
+  5: 'Dél-Amerika',
+  6: 'Észak-Amerika',
 };
 
-export const REGION_ORDER = [1, 2, 3, 4, 5];
+export const REGION_ORDER = [1, 2, 3, 4, 5, 6];
 export const STARTER_REGIONS = REGION_ORDER;
 
 export const REGION_PACKS = {
@@ -26,7 +27,8 @@ export const REGION_PACKS = {
   2: [1, 2, 3, 4, 5],
   3: [1, 2],
   4: [1, 2, 3, 4, 5],
-  5: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  5: [1, 2, 3, 4],
+  6: [1, 2, 3, 4, 5],
 };
 
 
@@ -37,8 +39,8 @@ export const REGION_TO_EDU = {
   europa: 2,
   afrika: 3,
   asia: 4,
+  del_amerika: 5,
   eszak_amerika: 6,
-  del_amerika: 7,
 };
 
 const STORAGE_PREFIX = 'dino_progress_v2_';

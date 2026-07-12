@@ -4,7 +4,7 @@
 // megfejtést egy 2x2-es gombrácsból. Minden helyes válasz +5 XP, 3 szív áll
 // rendelkezésre — a harmadik hibás válasznál vége a körnek.
 // A kérdéseket a whoAmIQuizGenerator állítja össze úgy, hogy a 3 rossz válasz
-// mindig ugyanabba a családba (pbdb_class_hu) tartozzon, mint a helyes.
+// mindig ugyanabba a családba (alrend) tartozzon, mint a helyes.
 
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
