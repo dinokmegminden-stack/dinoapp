@@ -2,28 +2,39 @@ console.log("APP STARTED");
 
 import { useEffect, useState } from 'react';
 import { View, StatusBar } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LandingPage from './src/screens/LandingPage';
+import NicknamePickerScreen, { NICKNAME_STORAGE_KEY } from './src/screens/NicknamePickerScreen';
 import RegionLevel from './src/screens/regionLevel/RegionLevel';
 import VillamkvizScreen from './src/screens/VillamkvizScreen';
 import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
+import WhoAmIScreen from './src/screens/WhoAmIScreen';
 import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
 import XPBar from './src/components/XPBar';
 import { loadProgress, recordPackQuizResult } from './src/utils/regionProgress';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
 
-const PLAYER_NICKNAME = 'player_default';
-
 export default function App() {
-  const [view, setView] = useState('landing');
+  const [view, setView] = useState('checking');
+  const [nickname, setNickname] = useState(null);
   const [eduLevel, setEduLevel] = useState(null);
   const [progress, setProgress] = useState({});
   const [regionDinos, setRegionDinos] = useState([]);
   const [allDinos, setAllDinos] = useState([]);
 
   useEffect(() => {
-    loadProgress(PLAYER_NICKNAME).then(setProgress);
+    AsyncStorage.getItem(NICKNAME_STORAGE_KEY).then((saved) => {
+      if (saved) {
+        setNickname(saved);
+        loadProgress(saved).then(setProgress);
+        setView('landing');
+      } else {
+        setView('nicknamePicker');
+      }
+    });
+
     // Preload all creatures for lightning quiz
     const preloadCreatures = async () => {
       const all = [];
@@ -35,6 +46,12 @@ export default function App() {
     };
     preloadCreatures().catch(console.warn);
   }, []);
+
+  const handleNicknameChosen = (chosenNickname) => {
+    setNickname(chosenNickname);
+    loadProgress(chosenNickname).then(setProgress);
+    setView('landing');
+  };
 
   const handleEnterRegion = (level) => {
     setEduLevel(level);
@@ -72,15 +89,23 @@ export default function App() {
     setView('memory');
   };
 
+  const handleStartWhoAmI = () => {
+    setView('whoami');
+  };
+
   const handlePassed = async (csomag, packId, score) => {
-    const updated = await recordPackQuizResult(PLAYER_NICKNAME, eduLevel, csomag, score);
+    const updated = await recordPackQuizResult(nickname, eduLevel, csomag, score);
     setProgress(updated);
   };
 
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
-      {view !== 'landing' && <XPBar />}
+      {view !== 'landing' && view !== 'checking' && view !== 'nicknamePicker' && <XPBar />}
+
+      {view === 'nicknamePicker' && (
+        <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} />
+      )}
 
       {view === 'landing' && (
         <LandingPage
@@ -89,6 +114,7 @@ export default function App() {
           onStartLightningQuiz={handleStartLightningQuiz}
           onStartMillionaire={handleStartMillionaire}
           onStartMemory={handleStartMemory}
+          onStartWhoAmI={handleStartWhoAmI}
         />
       )}
 
@@ -115,7 +141,11 @@ export default function App() {
       )}
 
       {view === 'memory' && (
-        <MemoryGameScreen onBack={() => setView('landing')} />
+        <MemoryGameScreen nickname={nickname} onBack={() => setView('landing')} />
+      )}
+
+      {view === 'whoami' && (
+        <WhoAmIScreen allDinos={allDinos} onBack={() => setView('landing')} />
       )}
 
       {view === 'collection' && (

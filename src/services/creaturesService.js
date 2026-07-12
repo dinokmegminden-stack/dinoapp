@@ -23,7 +23,10 @@ export function adaptCreature(row) {
     // valódi Supabase mezőnevek passthrough-ja (pl. quizGenerator.js ezeket várja):
     epoch: safe(row.epoch_hu),
     discoverer_name: safe(row.discoverer_name),
-    latin_name_ending: safe(row.latin_name_ending),
+    // FIGYELEM: a Supabase oszlop valódi neve `latin_name_end` (nem `latin_name_ending`) —
+    // korábban ez a mező mindig üres volt emiatt (érintette a quizGenerator.js
+    // buildLatinNameQuestion-jét is, ami emiatt sosem generált kérdést).
+    latin_name_ending: safe(row.latin_name_end),
     mya_min: row.mya_end != null ? Number(row.mya_end) : null,
     mya_max: row.mya_start != null ? Number(row.mya_start) : null,
     csomag: Number(row.pack_number || 1),
@@ -36,6 +39,7 @@ export function adaptCreature(row) {
     taxonomy_group: safe(row.taxonomy_group),
     taxonomy_hu: safe(row.taxonomy_hu),
     taxonomy_category: safe(row.taxonomy_category),
+    pbdb_class_hu: safe(row.pbdb_class_hu),
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
     discovered_country: safe(row.discovered_country),
