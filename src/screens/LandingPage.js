@@ -170,9 +170,8 @@ const styles = StyleSheet.create({
   bgDino: {
     position: 'fixed',
     top: -20,
-    left: '50%',
-    marginLeft: '-162.5%',
-    width: '325%',
+    left: 0,
+    width: '100%',
     opacity: 0.16,
     resizeMode: 'contain',
   },
