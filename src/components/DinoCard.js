@@ -102,15 +102,15 @@ export default function DinoCard({
 
   const statRows = [
     mya && { label: 'Kor', value: dino.epoch ? `${dino.epoch} · ${mya}` : mya },
+    length && { label: 'Hossz', value: length },
+    weight && { label: 'Súly', value: weight },
+    dino.discovered_country && { label: 'Ország', value: String(dino.discovered_country) },
     dino.discoverer_name && {
       label: 'Felfedező',
       value: dino.discovery_year
         ? `${dino.discoverer_name} (${dino.discovery_year})`
         : String(dino.discoverer_name),
     },
-    length && { label: 'Hossz', value: length },
-    weight && { label: 'Súly', value: weight },
-    dino.discovered_country && { label: 'Ország', value: String(dino.discovered_country) },
   ].filter(Boolean);
 
   return (
