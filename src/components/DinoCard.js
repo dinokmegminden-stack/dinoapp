@@ -6,7 +6,7 @@
 // a tartalomhoz igazodik. Egy korábbi 9:14 arányú + fix képmagasságú verzió
 // valós telefonon garantáltan levágta a leírást és a statisztikákat
 // (overflow:hidden mögé), ezért a kép mostantól a kártya szélességéhez
-// arányosan (4:3) skálázódik, nem fix pixelben.
+// arányosan (16:9) skálázódik, nem fix pixelben.
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -131,7 +131,7 @@ export default function DinoCard({
       {/* Kép — matricaszerűen középen, kb. a kártya fele */}
       <View style={styles.imageFrame}>
         {img ? (
-          <Image source={img} style={styles.image} resizeMode="cover" />
+          <Image source={img} style={styles.image} resizeMode="contain" />
         ) : (
           <View style={[styles.image, styles.imageFallback]}>
             <Text style={styles.imageFallbackText}>🦴</Text>
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: 0,
     width: '100%',
-    aspectRatio: 4 / 3,
+    aspectRatio: 16 / 9,
     borderRadius: 0,
     borderWidth: 0,
     backgroundColor: COLORS.bgDark,
