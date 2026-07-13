@@ -95,7 +95,7 @@ export default function DinoCard({
   const rarityStyle = RARITY_STYLES[rarityKey] || RARITY_STYLES.gyakori;
   const dietIcon = DIET_ICON[String(dino.diet_hu || '').toLowerCase()] || '❓';
 
-  const mya = formatRange(dino.mya_min, dino.mya_max, 'millió éve');
+  const mya = formatRange(dino.mya_max, dino.mya_min, 'millió éve');
   const length = formatRange(dino.length_m_min, dino.length_m_max, 'm');
   const weight = formatRange(dino.weight_kg_min, dino.weight_kg_max, 'kg');
   const latinFull = [dino.name_latin, dino.latin_name_ending].filter(Boolean).join(' ');
