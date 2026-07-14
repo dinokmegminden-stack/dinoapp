@@ -4,13 +4,11 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Image,
   StatusBar,
   StyleSheet,
   Pressable,
   ScrollView,
   Platform,
-  useWindowDimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
@@ -20,10 +18,9 @@ import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { COLORS, RADIUS } from '../constants/theme';
 
-// Kísérlet: háttér-illusztráció a menügombok mögött — kivehető, ha nem válik be.
-// Csak asztali nézetben jelenik meg, mobilon túl zsúfolt lenne.
-const bgDino = require('../../assets/images/bg.png');
-const DESKTOP_BREAKPOINT = 700;
+// Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
+// (lásd Shell.js backgroundImage prop), sötét overlay-jel a gombok olvashatóságáért.
+const landingBg = require('../../assets/images/new_bg.png');
 
 function XPPill() {
   const [xp, setXP] = useState(0);
@@ -68,8 +65,6 @@ function RoundIconButton({ icon, onPress }) {
 
 export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const [muted, setMuted] = useState(getSoundMuted());
-  const { width, height } = useWindowDimensions();
-  const isDesktop = width >= DESKTOP_BREAKPOINT;
 
   const toggleMute = () => {
     const next = !getSoundMuted();
@@ -108,7 +103,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
   };
 
   return (
-    <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]}>
+    <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]} backgroundImage={landingBg}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
         <View style={styles.column}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
@@ -125,15 +120,8 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
           {/* 2. Logó blokk (döntött cím, accent alcím) */}
           <HeroTop />
 
-          {/* 3–5. Menü szekciók — a háttérkép mögöttük ül, nem blokkolja a koppintást */}
+          {/* 3–5. Menü szekciók */}
           <View style={styles.menuWrapper}>
-            {isDesktop && (
-              <Image
-                source={bgDino}
-                style={[styles.bgDino, { height: height * 0.7 }]}
-                pointerEvents="none"
-              />
-            )}
             <LandingMenu
               onSelectRegion={handleSelectRegion}
               onOpenGallery={handleOpenGallery}
@@ -166,14 +154,6 @@ const styles = StyleSheet.create({
   },
   menuWrapper: {
     position: 'relative',
-  },
-  bgDino: {
-    position: 'fixed',
-    top: -20,
-    left: 0,
-    width: '100%',
-    opacity: 0.16,
-    resizeMode: 'contain',
   },
   headerBar: {
     flexDirection: 'row',
