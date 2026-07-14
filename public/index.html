@@ -4,8 +4,47 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Dínó Tudós</title>
-    
+    <title>Dínó Tudós – Dínók Meg Minden (DMM) | Dinoszaurusz kártyák és kvízek</title>
+    <meta name="description" content="A Dínók Meg Minden (DMM) csapat ingyenes dinoszaurusz-alkalmazása: gyűjtsd a dinoszaurusz-kártyákat, játssz kvízekkel, és tanulj játékosan a Föld őskori élővilágáról." />
+    <meta name="keywords" content="dinoszauruszok, dmm, dínók meg minden, dínó kvíz, dínó kártyák, dinoszaurusz app gyerekeknek" />
+    <link rel="canonical" href="https://dinotudos.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Dínók Meg Minden (DMM)" />
+    <meta property="og:title" content="Dínó Tudós – Dínók Meg Minden (DMM)" />
+    <meta property="og:description" content="Gyűjtsd a dinoszaurusz-kártyákat, játssz kvízekkel, és tanulj játékosan a dinoszauruszokról a Dínók Meg Minden (DMM) alkalmazásában." />
+    <meta property="og:url" content="https://dinotudos.vercel.app/" />
+    <meta property="og:image" content="https://dinotudos.vercel.app/og-image.png" />
+    <meta property="og:locale" content="hu_HU" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Dínó Tudós – Dínók Meg Minden (DMM)" />
+    <meta name="twitter:description" content="Gyűjtsd a dinoszaurusz-kártyákat, játssz kvízekkel, és tanulj játékosan a dinoszauruszokról." />
+    <meta name="twitter:image" content="https://dinotudos.vercel.app/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Dínó Tudós",
+        "alternateName": ["Dínók Meg Minden", "DMM"],
+        "url": "https://dinotudos.vercel.app/",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web, Android, iOS",
+        "description": "Dinoszaurusz-kártyák gyűjtése és kvízjátékok gyerekeknek a Dínók Meg Minden (DMM) csapattól.",
+        "inLanguage": "hu",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "HUF"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Dínók Meg Minden"
+        }
+      }
+    </script>
+
     <!-- Ez a stílusblokk takarítja ki a maradék CSS hibákat a képről -->
     <style>
       html, body {
@@ -13,6 +52,14 @@
         -webkit-text-size-adjust: 100% !important;
         user-select: auto !important;
         -webkit-user-select: auto !important;
+      }
+
+      /* Nélküle a #root nem tölti ki a viewportot, ha a tartalom rövidebb
+         nála, és fehér sáv látszik alatta a body alapértelmezett háttere miatt. */
+      html, body, #root {
+        height: 100%;
+        margin: 0;
+        background-color: #001219;
       }
     </style>
   </head>

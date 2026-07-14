@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   confirmBtnText: {
-    color: COLORS.bgDark,
+    color: '#001219',
     fontFamily: FONTS.bold,
     fontSize: 16,
     fontWeight: '900',

@@ -26,7 +26,7 @@ export default function Shell({ children, wide = false, gradientColors = null })
 }
 
 const s = StyleSheet.create({
-  outer: { flex: 1, width: '100%', backgroundColor: '#283618', alignItems: 'center', justifyContent: 'center' },
+  outer: { flex: 1, width: '100%', backgroundColor: '#001219', alignItems: 'center', justifyContent: 'center' },
   outerGradient: { flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' },
   inner: { flex: 1, width: '100%', maxWidth: 480 },
   innerWide: { maxWidth: 750, flexDirection: 'column', alignItems: 'center', paddingHorizontal: 28, paddingVertical: 20 },

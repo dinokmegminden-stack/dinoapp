@@ -9,6 +9,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PressableButton from '../components/PressableButton';
 import { COLORS, RADIUS } from '../constants/theme';
 
+// A régiógombok egységes bgMid színt kapnak (nem régiónként eltérőt) —
+// a korábbi, soronként más színű változat túl zsúfoltnak hatott.
+const INK = '#001219';
 const REGIONS = [
   { edu: 1, label: 'Kárpát-medence', icon: 'image-filter-hdr' },
   { edu: 2, label: 'Európa', icon: 'castle' },
@@ -21,7 +24,7 @@ const REGIONS = [
 const GAMES = [
   { key: 'memory', label: 'PÁROK', icon: 'cards', bg: COLORS.parokBtn, shadow: COLORS.parokBtnShadow },
   { key: 'whoami', label: 'KI VAGYOK ÉN?', icon: 'help-circle', bg: COLORS.whoAmIBtn, shadow: COLORS.whoAmIBtnShadow },
-  { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', bg: COLORS.accent, shadow: COLORS.accentDark, textColor: COLORS.bgDark },
+  { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', bg: COLORS.accent, shadow: COLORS.accentDark, textColor: INK },
   { key: 'millionaire', label: 'XP MILLIOMOS', icon: 'trophy', bg: COLORS.accentDark, shadow: COLORS.parokBtnShadow },
 ];
 
@@ -53,7 +56,7 @@ export default function LandingMenu({
             key={region.edu}
             onPress={() => onSelectRegion(region.edu)}
             containerStyle={styles.gridCell}
-            style={[styles.gridBtn, { backgroundColor: COLORS.bgMid }]}
+            style={[styles.gridBtn, { backgroundColor: 'rgba(0,95,115,0.45)' }]}
             shadowColor={COLORS.bgDark}
           >
             <MaterialCommunityIcons name={region.icon} size={22} color={COLORS.cream} />

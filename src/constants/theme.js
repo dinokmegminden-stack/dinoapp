@@ -3,17 +3,17 @@
 // (A régi colors.js a migráció végéig él, új kód már ezt használja.)
 
 export const COLORS = {
-  bgDark: '#283618',      // fő háttér, header szöveg árnyék
-  bgMid: '#606C38',       // régió gombok, borderek
-  bgMidLight: '#7d8a4a',  // másodlagos kategória (Gyűjtemény gomb)
-  accent: '#DDA15E',      // elsődleges CTA, XP badge, latin név
-  accentDark: '#BC6C25',  // másodlagos CTA, hover shadow
+  bgDark: '#001219',      // fő háttér, header szöveg árnyék
+  bgMid: '#005f73',       // régió gombok, borderek (egységesen, nem régiónként)
+  bgMidLight: '#0a9396',  // másodlagos kategória (Gyűjtemény gomb)
+  accent: '#ee9b00',      // elsődleges CTA, XP badge, latin név
+  accentDark: '#ca6702',  // másodlagos CTA, hover shadow
   cream: '#FEFAE0',       // kártya háttér, világos szöveg
   cardMuted: '#f0e9cf',   // metadata sor háttér a kártyákon
-  parokBtn: '#a56a3f',    // Párok gomb (játékmód, nem régió)
-  parokBtnShadow: '#6e4529',
-  whoAmIBtn: '#4a7a6e',   // Ki vagyok én? gomb (játékmód, nem régió)
-  whoAmIBtnShadow: '#2f5049',
+  parokBtn: '#ae2012',    // Párok gomb (játékmód, nem régió)
+  parokBtnShadow: '#9b2226',
+  whoAmIBtn: '#bb3e03',   // Ki vagyok én? gomb (játékmód, nem régió)
+  whoAmIBtnShadow: '#001219',
 };
 
 export const RADIUS = { button: 14, card: 12, cardLarge: 18, pill: 999 };
