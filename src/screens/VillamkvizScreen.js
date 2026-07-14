@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,8 @@ import { FONTS } from '../constants/fonts';
 import { playQuizSfx } from '../audio/audioSystem';
 import { generateLightningQuestion } from '../utils/lightningQuizGenerator';
 import { addXP } from '../components/XPBar';
+import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
+import Fireworks from '../components/Fireworks';
 
 const MAX_QUESTIONS = 10;
 const QUESTION_TIME = 5;
@@ -22,7 +24,7 @@ const MAX_LIVES = 3;
 const XP_PER_CORRECT = 5;
 const BONUS_XP = 10;
 
-export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
+export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBack }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 700;
   const [isLoading, setIsLoading] = useState(!regionDinos.length || !allDinos.length);
@@ -37,6 +39,14 @@ export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME);
   const [usedIds, setUsedIds] = useState(new Set());
+  const [celebration, setCelebration] = useState({ visible: false, message: '' });
+
+  const startTimeRef = useRef(null);
+  // A `perfect` paraméter itt csak azt jelenti, hogy a játékos elfogyás nélkül
+  // eljutott az utolsó kérdésig (bónusz XP-hez) — nem azonos a "hibátlan" (0
+  // rossz válasz) feltétellel, amit a ranglistához külön ref-ben követünk,
+  // hogy a setTimeout-os finishRound closure ne lásson elavult correctCount-ot.
+  const correctCountRef = useRef(0);
 
   // Generate first question on mount or when data is loaded
   useEffect(() => {
@@ -78,6 +88,11 @@ export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
   }, [timeLeft, status, question]);
 
   const nextQuestion = () => {
+    if (questionIndex === 0) {
+      startTimeRef.current = Date.now();
+      correctCountRef.current = 0;
+    }
+
     if (questionIndex >= MAX_QUESTIONS) {
       finishRound();
       return;
@@ -127,7 +142,8 @@ export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
       playQuizSfx('correct');
       const newXP = xpEarned + XP_PER_CORRECT;
       setXpEarned(newXP);
-      setCorrectCount((c) => c + 1);
+      correctCountRef.current += 1;
+      setCorrectCount(correctCountRef.current);
 
       setTimeout(() => {
         if (questionIndex >= MAX_QUESTIONS) {
@@ -160,6 +176,17 @@ export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
     // Save to localStorage
     await addXP(finalXP);
 
+    if (playerId && correctCountRef.current === MAX_QUESTIONS) {
+      submitLeaderboardEntry({
+        playerId,
+        levelType: 'lightning',
+        completionTimeMs: Date.now() - startTimeRef.current,
+      }).then((result) => {
+        const message = getCelebrationMessage(result);
+        if (message) setCelebration({ visible: true, message });
+      });
+    }
+
     // Brief delay to show finishing
     setTimeout(() => {
       setXpEarned(finalXP);
@@ -180,7 +207,10 @@ export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
     setQuestionIndex(0);
     setLives(MAX_LIVES);
     setCorrectCount(0);
+    correctCountRef.current = 0;
+    startTimeRef.current = Date.now();
     setXpEarned(0);
+    setCelebration({ visible: false, message: '' });
     setStatus('playing');
     setQuestion(null);
     setSelectedIndex(null);
@@ -199,6 +229,11 @@ export default function VillamkvizScreen({ regionDinos, allDinos, onBack }) {
       <Shell>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+          <Fireworks
+            visible={celebration.visible}
+            message={celebration.message}
+            onDone={() => setCelebration((c) => ({ ...c, visible: false }))}
+          />
           <View style={styles.finishedContent}>
             <Text style={styles.finishedTitle}>
               {isPerfect ? '🎉 TÖKÉLETES!' : '🏁 KÖR VÉGE'}

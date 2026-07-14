@@ -12,23 +12,29 @@ import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
 import WhoAmIScreen from './src/screens/WhoAmIScreen';
 import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
-import XPBar from './src/components/XPBar';
+import XPBar, { setActivePlayerId } from './src/components/XPBar';
+import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import { loadProgress, recordPackQuizResult } from './src/utils/regionProgress';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
+import { getPlayerIdByNickname } from './src/services/playersService';
+import { trackGameStart, trackGameComplete } from './src/services/gameEventsService';
 
 export default function App() {
   const [view, setView] = useState('checking');
   const [nickname, setNickname] = useState(null);
+  const [playerId, setPlayerId] = useState(null);
   const [eduLevel, setEduLevel] = useState(null);
   const [progress, setProgress] = useState({});
   const [regionDinos, setRegionDinos] = useState([]);
   const [allDinos, setAllDinos] = useState([]);
+  const [activeGameEventId, setActiveGameEventId] = useState(null);
 
   useEffect(() => {
     AsyncStorage.getItem(NICKNAME_STORAGE_KEY).then((saved) => {
       if (saved) {
         setNickname(saved);
         loadProgress(saved).then(setProgress);
+        getPlayerIdByNickname(saved).then(setPlayerId);
         setView('landing');
       } else {
         setView('nicknamePicker');
@@ -47,10 +53,33 @@ export default function App() {
     preloadCreatures().catch(console.warn);
   }, []);
 
-  const handleNicknameChosen = (chosenNickname) => {
+  // Az XPBar.js addXP()-je (sok képernyőről hívva) nem kap playerId-t
+  // paraméterként — ez az egyetlen hely, ahol a modul-szintű aktív
+  // játékos-azonosítót frissítjük, amint ismertté válik (lásd XPBar.js).
+  useEffect(() => {
+    setActivePlayerId(playerId);
+  }, [playerId]);
+
+  const handleNicknameChosen = (chosenNickname, chosenPlayerId) => {
     setNickname(chosenNickname);
+    setPlayerId(chosenPlayerId);
     loadProgress(chosenNickname).then(setProgress);
     setView('landing');
+  };
+
+  // Játékmód-indítás naplózása a game_events táblába — a visszaadott event id-t
+  // eltároljuk, hogy a képernyőről kilépéskor (endActiveGame) le tudjuk zárni,
+  // függetlenül attól, hogy a játékos végigjátszotta vagy félbehagyta.
+  const startGame = (gameType, viewName) => {
+    setView(viewName);
+    trackGameStart({ playerId, gameType }).then(setActiveGameEventId);
+  };
+
+  const endActiveGame = () => {
+    if (activeGameEventId) {
+      trackGameComplete(activeGameEventId);
+      setActiveGameEventId(null);
+    }
   };
 
   const handleEnterRegion = (level) => {
@@ -68,10 +97,11 @@ export default function App() {
     if (allDinos.length > 0) {
       setRegionDinos(allDinos);
     }
-    setView('lightning');
+    startGame('lightning', 'lightning');
   };
 
   const handleBackFromLightningQuiz = () => {
+    endActiveGame();
     setView('landing');
     setEduLevel(null);
     setRegionDinos([]);
@@ -81,16 +111,25 @@ export default function App() {
     setView('collection');
   };
 
+  const handleOpenLeaderboard = () => {
+    setView('leaderboard');
+  };
+
   const handleStartMillionaire = () => {
-    setView('millionaire');
+    startGame('millionaire', 'millionaire');
   };
 
   const handleStartMemory = () => {
-    setView('memory');
+    startGame('memory', 'memory');
   };
 
   const handleStartWhoAmI = () => {
-    setView('whoami');
+    startGame('whoami', 'whoami');
+  };
+
+  const handleBackFromGame = () => {
+    endActiveGame();
+    setView('landing');
   };
 
   const handlePassed = async (csomag, packId, score) => {
@@ -111,6 +150,7 @@ export default function App() {
         <LandingPage
           onEnterRegion={handleEnterRegion}
           onOpenGallery={handleOpenGallery}
+          onOpenLeaderboard={handleOpenLeaderboard}
           onStartLightningQuiz={handleStartLightningQuiz}
           onStartMillionaire={handleStartMillionaire}
           onStartMemory={handleStartMemory}
@@ -132,20 +172,21 @@ export default function App() {
         <VillamkvizScreen
           regionDinos={regionDinos}
           allDinos={allDinos}
+          playerId={playerId}
           onBack={handleBackFromLightningQuiz}
         />
       )}
 
       {view === 'millionaire' && (
-        <MillionaireQuizScreen onBack={() => setView('landing')} />
+        <MillionaireQuizScreen playerId={playerId} onBack={handleBackFromGame} />
       )}
 
       {view === 'memory' && (
-        <MemoryGameScreen nickname={nickname} onBack={() => setView('landing')} />
+        <MemoryGameScreen nickname={nickname} playerId={playerId} onBack={handleBackFromGame} />
       )}
 
       {view === 'whoami' && (
-        <WhoAmIScreen allDinos={allDinos} onBack={() => setView('landing')} />
+        <WhoAmIScreen allDinos={allDinos} playerId={playerId} onBack={handleBackFromGame} />
       )}
 
       {view === 'collection' && (
@@ -154,6 +195,10 @@ export default function App() {
           progress={progress}
           onBack={() => setView('landing')}
         />
+      )}
+
+      {view === 'leaderboard' && (
+        <LeaderboardScreen onBack={() => setView('landing')} />
       )}
     </View>
   );

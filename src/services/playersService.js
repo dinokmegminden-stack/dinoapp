@@ -23,6 +23,23 @@ export async function isNicknameTaken(nickname) {
   return !!data;
 }
 
+// Visszatérő játékosnál (nickname AsyncStorage-ból betöltve) csak a nickname áll
+// rendelkezésre — ez adja vissza a Supabase `players.id`-t a game_events FK-hoz.
+export async function getPlayerIdByNickname(nickname) {
+  const { data, error } = await supabase
+    .from('players')
+    .select('id')
+    .eq('nickname', nickname)
+    .maybeSingle();
+
+  if (error) {
+    console.warn('getPlayerIdByNickname hiba:', error);
+    return null;
+  }
+
+  return data?.id ?? null;
+}
+
 // Regisztráció — a `nickname` oszlop unique constraint-je véd a versenyhelyzet ellen
 // akkor is, ha két játékos majdnem egyszerre próbálja ugyanazt a kombinációt lefoglalni.
 // Visszatérés: { success, taken, error }.

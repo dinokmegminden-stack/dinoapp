@@ -8,6 +8,7 @@ import {
   StatusBar,
   Animated,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import Shell from '../components/Shell';
 import { IMAGE_MAP } from '../constants/imageMap';
@@ -16,6 +17,8 @@ import { FONTS } from '../constants/fonts';
 import { playQuizSfx, playSound } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
 import { saveMemoryResult } from '../services/memoryResultsService';
+import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
+import Fireworks from '../components/Fireworks';
 
 const MISMATCH_DELAY = 1000;
 const BOARD_HORIZONTAL_PADDING = 10; // egyeznie kell a boardWrapper paddingHorizontal értékével
@@ -128,16 +131,17 @@ function MemoryCard({ card, width, height, left, top, onPress }) {
   );
 }
 
-export default function MemoryGameScreen({ nickname, onBack }) {
+export default function MemoryGameScreen({ nickname, playerId, onBack }) {
+  const { width: winWidth } = useWindowDimensions();
   const [imageKey, setImageKey] = useState(() => pickImageKey());
   const [difficulty, setDifficulty] = useState(null);
   const [cards, setCards] = useState([]);
   const [moves, setMoves] = useState(0);
   const [matchedPairs, setMatchedPairs] = useState(0);
   const [won, setWon] = useState(false);
-  const [boardWidth, setBoardWidth] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [finalSeconds, setFinalSeconds] = useState(0);
+  const [celebration, setCelebration] = useState({ visible: false, message: '' });
 
   const xpAnim = useRef(new Animated.Value(0)).current;
   const timeoutRef = useRef(null);
@@ -178,16 +182,31 @@ export default function MemoryGameScreen({ nickname, onBack }) {
       if (nickname) {
         saveMemoryResult({ nickname, moves, seconds, level: difficulty.level });
       }
+      // Hibátlan kör = nulla elpazarolt lapfordítás (moves === pairCount) — csak
+      // ilyenkor kerül fel a ranglistára, lásd a felhasználói döntést a level_type-ról.
+      if (playerId && moves === pairCount) {
+        submitLeaderboardEntry({
+          playerId,
+          levelType: `memory_${difficulty.level}`,
+          completionTimeMs: seconds * 1000,
+        }).then((result) => {
+          const message = getCelebrationMessage(result);
+          if (message) setCelebration({ visible: true, message });
+        });
+      }
     }
   }, [matchedPairs]);
 
-  // boardWidth a boardWrapper teljes (paddinggel együtt mért) szélessége —
-  // a tábla tényleges helye a paddingHorizontal (10+10px) levonása után marad,
-  // különben a tábla szélesebb lenne, mint a rendelkezésre álló hely, ami
-  // (widen web nézeten, ahol a Shell "alignItems: center"-t használ) végtelen
-  // növekedési hurkot okozott: a túlcsorduló tábla miatt a wrapper is nőtt,
-  // ami egy újabb, nagyobb onLayout-ot váltott ki.
-  const availableWidth = Math.max(boardWidth - BOARD_HORIZONTAL_PADDING * 2, 0);
+  // RN Web-en a boardWrapper onLayout-ja megbízhatatlanul (soha nem) sül el —
+  // ugyanaz a jelenség, amit a CollectionTimeline.js-nél is megtaláltunk és
+  // kikerültünk: useWindowDimensions + a Shell.js ismert szélesség-szabályai
+  // (isWideWeb töréspont, innerWide/inner max-width, padding) alapján
+  // számoljuk ki a rendelkezésre álló szélességet, nem onLayout-tal mérve.
+  // A container/boardWrapper egyik oldalon sem ad hozzá extra paddingHorizontal-t
+  // a Shell tartalmi szélességéhez, csak a boardWrapper saját (10+10px) paddingje.
+  const isWideWeb = Platform.OS === 'web' && winWidth >= 700;
+  const shellContentWidth = isWideWeb ? Math.min(winWidth, 750) - 56 : Math.min(winWidth, 480);
+  const availableWidth = Math.max(shellContentWidth - BOARD_HORIZONTAL_PADDING * 2, 0);
   const boardHeight = availableWidth * (9 / 16);
   const cardW = difficulty ? availableWidth / difficulty.cols : 0;
   const cardH = difficulty ? boardHeight / difficulty.rows : 0;
@@ -198,6 +217,7 @@ export default function MemoryGameScreen({ nickname, onBack }) {
     flippedRef.current = [];
     lockedRef.current = false;
     matchedSetRef.current = new Set();
+    setCelebration({ visible: false, message: '' });
   };
 
   const handleSelectDifficulty = (d) => {
@@ -325,10 +345,7 @@ export default function MemoryGameScreen({ nickname, onBack }) {
         </View>
 
         {/* 16:9 tábla — a kép alatta, a lapok rajta */}
-        <View
-          style={styles.boardWrapper}
-          onLayout={(e) => setBoardWidth(e.nativeEvent.layout.width)}
-        >
+        <View style={styles.boardWrapper}>
           {availableWidth > 0 && (
             <View style={[styles.board, { width: availableWidth, height: boardHeight }]}>
               <Image
@@ -354,6 +371,12 @@ export default function MemoryGameScreen({ nickname, onBack }) {
             </View>
           )}
         </View>
+
+        <Fireworks
+          visible={celebration.visible}
+          message={celebration.message}
+          onDone={() => setCelebration((c) => ({ ...c, visible: false }))}
+        />
 
         {/* Győzelmi panel */}
         {won ? (

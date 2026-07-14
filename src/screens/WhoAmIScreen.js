@@ -6,7 +6,7 @@
 // A kérdéseket a whoAmIQuizGenerator állítja össze úgy, hogy a 3 rossz válasz
 // mindig ugyanabba a családba (alrend) tartozzon, mint a helyes.
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Shell from '../components/Shell';
 import { COLORS } from '../constants/colors';
@@ -14,13 +14,15 @@ import { FONTS } from '../constants/fonts';
 import { playQuizSfx } from '../audio/audioSystem';
 import { buildWhoAmIQuiz, buildWhoAmIClueSegments } from '../utils/whoAmIQuizGenerator';
 import { addXP } from '../components/XPBar';
+import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
+import Fireworks from '../components/Fireworks';
 
 const REVEAL_DELAY_MS = 1200;
 const QUESTION_COUNT = 10;
 const XP_PER_CORRECT = 5;
 const MAX_LIVES = 3;
 
-export default function WhoAmIScreen({ allDinos, onBack }) {
+export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'finished'
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -29,11 +31,21 @@ export default function WhoAmIScreen({ allDinos, onBack }) {
   const [lives, setLives] = useState(MAX_LIVES);
   const [selected, setSelected] = useState(null);
   const [revealed, setRevealed] = useState(false);
+  const [celebration, setCelebration] = useState({ visible: false, message: '' });
+
+  const startTimeRef = useRef(null);
+  // A setTimeout-on át hívott finishRun closure-je elavult `correctCount`-ot
+  // látna (a setCorrectCount még nem futott le, amikor finishRun ütemeződik) —
+  // ezért ref-ben tartjuk szinkronban a lapfordítás-logikához hasonlóan
+  // (lásd MemoryGameScreen.js hasonló kommentjét).
+  const correctCountRef = useRef(0);
 
   const startGame = () => {
     const quiz = buildWhoAmIQuiz(allDinos, QUESTION_COUNT);
     if (quiz.length === 0) return; // betöltési hiba — a gomb eleve le van tiltva
     playQuizSfx('letsPlay');
+    startTimeRef.current = Date.now();
+    correctCountRef.current = 0;
     setQuestions(quiz);
     setCurrentQuestionIndex(0);
     setXpEarned(0);
@@ -41,6 +53,7 @@ export default function WhoAmIScreen({ allDinos, onBack }) {
     setLives(MAX_LIVES);
     setSelected(null);
     setRevealed(false);
+    setCelebration({ visible: false, message: '' });
     setGameStatus('playing');
   };
 
@@ -48,6 +61,16 @@ export default function WhoAmIScreen({ allDinos, onBack }) {
     setGameStatus('finished');
     if (finalXP > 0) {
       await addXP(finalXP);
+    }
+    if (playerId && correctCountRef.current === QUESTION_COUNT) {
+      submitLeaderboardEntry({
+        playerId,
+        levelType: 'whoami',
+        completionTimeMs: Date.now() - startTimeRef.current,
+      }).then((result) => {
+        const message = getCelebrationMessage(result);
+        if (message) setCelebration({ visible: true, message });
+      });
     }
   };
 
@@ -63,7 +86,8 @@ export default function WhoAmIScreen({ allDinos, onBack }) {
       playQuizSfx('correct');
       const newXP = xpEarned + XP_PER_CORRECT;
       setXpEarned(newXP);
-      setCorrectCount((c) => c + 1);
+      correctCountRef.current += 1;
+      setCorrectCount(correctCountRef.current);
 
       setTimeout(() => {
         if (currentQuestionIndex + 1 < questions.length) {
@@ -145,6 +169,11 @@ export default function WhoAmIScreen({ allDinos, onBack }) {
       <Shell>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+          <Fireworks
+            visible={celebration.visible}
+            message={celebration.message}
+            onDone={() => setCelebration((c) => ({ ...c, visible: false }))}
+          />
           <View style={styles.centerContent}>
             <Text style={styles.badgeEmoji}>{correctCount === questions.length ? '🏆' : lives <= 0 ? '💔' : '🦴'}</Text>
             <Text style={styles.title}>{lives <= 0 ? 'Elfogytak a szíveid!' : 'Vége a körnek!'}</Text>

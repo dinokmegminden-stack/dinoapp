@@ -8,7 +8,7 @@
 // - győztes futás (15/15): 200 XP jóváírva
 // - megszakított futás (Kilépés játék közben): NINCS jóváírás
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Shell from '../components/Shell';
 import { COLORS } from '../constants/colors';
@@ -21,6 +21,8 @@ import {
   DIFFICULTY_LABELS,
 } from '../constants/millionaireXP';
 import { addXP } from '../components/XPBar';
+import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
+import Fireworks from '../components/Fireworks';
 
 const REVEAL_DELAY_MS = 1500;
 
@@ -30,23 +32,28 @@ const DIFFICULTY_COLORS = {
   hard: '#BC6C25',
 };
 
-export default function MillionaireQuizScreen({ onBack }) {
+export default function MillionaireQuizScreen({ playerId, onBack }) {
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'won' | 'lost'
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [earnedXP, setEarnedXP] = useState(0);
   const [selected, setSelected] = useState(null);
   const [revealed, setRevealed] = useState(false);
+  const [celebration, setCelebration] = useState({ visible: false, message: '' });
+
+  const startTimeRef = useRef(null);
 
   const startGame = () => {
     const quiz = buildMillionaireQuiz();
     if (quiz.length === 0) return; // betöltési hiba — a gomb eleve le van tiltva
     playQuizSfx('letsPlay');
+    startTimeRef.current = Date.now();
     setQuestions(quiz);
     setCurrentQuestionIndex(0);
     setEarnedXP(0);
     setSelected(null);
     setRevealed(false);
+    setCelebration({ visible: false, message: '' });
     setGameStatus('playing');
   };
 
@@ -54,6 +61,18 @@ export default function MillionaireQuizScreen({ onBack }) {
     setGameStatus(status);
     if (finalXP > 0) {
       await addXP(finalXP); // vesztes és győztes futásnál is jár az addigi XP
+    }
+    // "won" itt eleve csak hibátlanul érhető el (egy rossz válasz azonnal
+    // lezárja a játékot, lásd a fájl tetején lévő design doc kommentet).
+    if (playerId && status === 'won') {
+      submitLeaderboardEntry({
+        playerId,
+        levelType: 'millionaire',
+        completionTimeMs: Date.now() - startTimeRef.current,
+      }).then((result) => {
+        const message = getCelebrationMessage(result);
+        if (message) setCelebration({ visible: true, message });
+      });
     }
   };
 
@@ -151,6 +170,11 @@ export default function MillionaireQuizScreen({ onBack }) {
       <Shell>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+          <Fireworks
+            visible={celebration.visible}
+            message={celebration.message}
+            onDone={() => setCelebration((c) => ({ ...c, visible: false }))}
+          />
           <View style={styles.centerContent}>
             {isMillionaire ? (
               <>

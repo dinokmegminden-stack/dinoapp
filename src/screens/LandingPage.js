@@ -63,7 +63,7 @@ function RoundIconButton({ icon, onPress }) {
   );
 }
 
-export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
+export default function LandingPage({ onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const [muted, setMuted] = useState(getSoundMuted());
 
   const toggleMute = () => {
@@ -80,6 +80,11 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
   const handleOpenGallery = () => {
     playSound('click');
     onOpenGallery?.();
+  };
+
+  const handleOpenLeaderboard = () => {
+    playSound('click');
+    onOpenLeaderboard?.();
   };
 
   const handleStartLightningQuiz = () => {
@@ -112,6 +117,7 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onStartLight
           <View style={styles.headerBar}>
             <XPPill />
             <View style={styles.headerIcons}>
+              <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
               <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
               <RoundIconButton icon="account-circle" onPress={() => playSound('click')} />
             </View>

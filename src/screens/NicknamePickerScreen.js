@@ -68,7 +68,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
 
     await AsyncStorage.setItem(NICKNAME_STORAGE_KEY, nickname);
     setSubmitting(false);
-    onNicknameChosen(nickname);
+    onNicknameChosen(nickname, result.player.id);
   };
 
   return (
