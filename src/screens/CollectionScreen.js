@@ -3,7 +3,7 @@
 // kevesebb re-render buggal jár, mint a FlatList + manuális header-injektálás.
 // Zárolt (quiz még nem sikerült) csomagoknál placeholder slotok jelennek meg,
 // hogy a felhasználó lássa mennyi van még hátra — nem tűnnek el a listából.
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Shell from '../components/Shell';
+import CollectionTimeline from '../components/CollectionTimeline';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
@@ -71,6 +72,8 @@ function LockedSlot() {
 }
 
 export default function CollectionScreen({ allDinos, progress, onBack }) {
+  const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
+
   const { sections, collectedCount, totalCount } = useMemo(() => {
     let collected = 0;
     let total = 0;
@@ -115,34 +118,59 @@ export default function CollectionScreen({ allDinos, progress, onBack }) {
           {Math.round(PASS_THRESHOLD * 100)}%-ra teljesíted.
         </Text>
 
-        <SectionList
-          style={styles.list}
-          contentContainerStyle={styles.listContent}
-          sections={sections}
-          keyExtractor={(row) => row.map((d) => d.id).join('-')}
-          renderSectionHeader={({ section }) => (
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>{section.title}</Text>
-              {section.unlocked ? (
-                <Text style={styles.sectionBadgeUnlocked}>✓</Text>
-              ) : (
-                <Text style={styles.sectionBadgeLocked}>🔒</Text>
-              )}
-            </View>
-          )}
-          renderItem={({ item: row, section }) => (
-            <View style={styles.row}>
-              {row.map((dino) =>
-                section.unlocked ? (
-                  <MiniDinoCard key={dino.id} dino={dino} />
+        <View style={styles.viewToggle}>
+          <TouchableOpacity
+            style={[styles.viewToggleBtn, viewMode === 'csomagok' && styles.viewToggleBtnActive]}
+            onPress={() => setViewMode('csomagok')}
+          >
+            <Text style={[styles.viewToggleText, viewMode === 'csomagok' && styles.viewToggleTextActive]}>
+              Csomagok
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.viewToggleBtn, viewMode === 'idovonal' && styles.viewToggleBtnActive]}
+            onPress={() => setViewMode('idovonal')}
+          >
+            <Text style={[styles.viewToggleText, viewMode === 'idovonal' && styles.viewToggleTextActive]}>
+              Idővonal
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {viewMode === 'csomagok' ? (
+          <SectionList
+            style={styles.list}
+            contentContainerStyle={styles.listContent}
+            sections={sections}
+            keyExtractor={(row) => row.map((d) => d.id).join('-')}
+            renderSectionHeader={({ section }) => (
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+                {section.unlocked ? (
+                  <Text style={styles.sectionBadgeUnlocked}>✓</Text>
                 ) : (
-                  <LockedSlot key={dino.id} />
-                )
-              )}
-            </View>
-          )}
-          stickySectionHeadersEnabled={false}
-        />
+                  <Text style={styles.sectionBadgeLocked}>🔒</Text>
+                )}
+              </View>
+            )}
+            renderItem={({ item: row, section }) => (
+              <View style={styles.row}>
+                {row.map((dino) =>
+                  section.unlocked ? (
+                    <MiniDinoCard key={dino.id} dino={dino} />
+                  ) : (
+                    <LockedSlot key={dino.id} />
+                  )
+                )}
+              </View>
+            )}
+            stickySectionHeadersEnabled={false}
+          />
+        ) : (
+          <View style={styles.timelineWrapper}>
+            <CollectionTimeline allDinos={allDinos} progress={progress} />
+          </View>
+        )}
 
         <TouchableOpacity style={styles.backBtn} onPress={onBack}>
           <Text style={styles.backBtnText}>✕</Text>
@@ -155,6 +183,8 @@ export default function CollectionScreen({ allDinos, progress, onBack }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: 0,
+    width: '100%',
     backgroundColor: COLORS.bgDark,
   },
   header: {
@@ -190,6 +220,40 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     paddingHorizontal: 20,
     paddingTop: 6,
+  },
+  viewToggle: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 12,
+    backgroundColor: 'rgba(254,250,224,0.06)',
+    borderRadius: RADIUS.pill,
+    padding: 3,
+  },
+  viewToggleBtn: {
+    flex: 1,
+    paddingVertical: 7,
+    borderRadius: RADIUS.pill,
+    alignItems: 'center',
+  },
+  viewToggleBtnActive: {
+    backgroundColor: COLORS.bgMid,
+  },
+  viewToggleText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 12,
+    fontWeight: '700',
+    opacity: 0.6,
+  },
+  viewToggleTextActive: {
+    opacity: 1,
+  },
+  timelineWrapper: {
+    flex: 1,
+    minHeight: 0,
+    marginTop: 14,
+    paddingHorizontal: 16,
+    paddingBottom: 80,
   },
   list: {
     flex: 1,
