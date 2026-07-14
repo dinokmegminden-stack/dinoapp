@@ -69,7 +69,7 @@ export const IMAGE_MAP = {
   // 
   "Gallimimus": require('../../assets/images/gallimimus.jpg'),
   // "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
-  // "Albertosaurus": require('../../assets/images/albertosaurus.jpg'),
+  "Albertosaurus": require('../../assets/images/albertosaurus.jpg'),
   "Amargasaurus": require('../../assets/images/amargasaurus.jpg'),
   // 
   // "Brachiosaurus": require('../../assets/images/brachiosaurus.jpg'),
@@ -94,7 +94,7 @@ export const IMAGE_MAP = {
   // "Triceratops": require('../../assets/images/triceratops.jpg'),
   // "Parasaurolophus": require('../../assets/images/parasaurolophus.jpg'),
   // "Protoceratops": require('../../assets/images/protoceratops.jpg'),
-  // "Tyrannosaurus": require('../../assets/images/tyrannosaurus.jpg'),
+  "Tyrannosaurus": require('../../assets/images/tyrannosaurus.jpg'),
   // "Massospondylus": require('../../assets/images/massospondylus.jpg'),
   // "Gorgosaurus": require('../../assets/images/gorgosaurus.jpg'),
   // "Troodon": require('../../assets/images/troodon.jpg'),
@@ -108,13 +108,13 @@ export const IMAGE_MAP = {
   "Oviraptor": require('../../assets/images/oviraptor.jpg'),
   // "Styracosaurus": require('../../assets/images/styracosaurus.jpg'),
   // "Ornithomimus": require('../../assets/images/ornithomimus.jpg'),
-  // "Alioramus": require('../../assets/images/alioramus.jpg'),
+  "Alioramus": require('../../assets/images/alioramus.jpg'),
   // 
   // "Utahraptor": require('../../assets/images/utahraptor.jpg'),
   // "Pentaceratops": require('../../assets/images/pentaceratops.jpg'),
   // "Coelophysis": require('../../assets/images/coelophysis.jpg'),
   // "Chubutisaurus": require('../../assets/images/chubutisaurus.jpg'),
-  // "Velociraptor": require('../../assets/images/velociraptor.jpg'),
+  "Velociraptor": require('../../assets/images/velociraptor.jpg'),
   // "Nagatitan": require('../../assets/images/nagatitan.jpg'),
   // "Deinocheirus": require('../../assets/images/deinocheirus.jpg'),
   // "Australovenator": require('../../assets/images/australovenator.jpg'),
