@@ -14,6 +14,14 @@ export const COLORS = {
   parokBtnShadow: '#9b2226',
   whoAmIBtn: '#bb3e03',   // Ki vagyok én? gomb (játékmód, nem régió)
   whoAmIBtnShadow: '#001219',
+
+  // Earthy safari paletta (múzeumi tábla kártyák, régió-szintek) — korábban
+  // csak `COLORS.gold || '#DDA15E'` / `COLORS.action || '#BC6C25'` fallback-ként
+  // élt szét több fájlban, itt lett hivatalosan felvéve.
+  darkGreen: '#283618',
+  olive: '#606C38',
+  gold: '#DDA15E',
+  action: '#BC6C25',
 };
 
 export const RADIUS = { button: 14, card: 12, cardLarge: 18, pill: 999 };
