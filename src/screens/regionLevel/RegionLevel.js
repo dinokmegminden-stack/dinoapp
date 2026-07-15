@@ -18,7 +18,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
   // ami friss belső state-et ÉS friss (újrakevert) kérdéssort is jelent.
   const [quizAttempt, setQuizAttempt] = useState(0);
 
-  // A DinoCard böngészésekor (currentScreen === 'browse') az App.js elrejti az
+  // A TradingCard böngészésekor (currentScreen === 'browse') az App.js elrejti az
   // XP-sávot, hogy ne zavarja a kártya fejlécét — lásd App.js hideXPBar.
   // Unmountkor kötelező visszaállítani, különben más képernyőkre navigálva
   // (pl. vissza a főmenübe) is rejtve maradna.

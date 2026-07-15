@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { IMAGE_MAP } from '../../constants/imageMap';
-import DinoCard from '../../components/DinoCard';
+import TradingCard from '../../components/TradingCard';
 import LevelShell from './LevelShell';
 import { s } from './RegionLevel.styles';
 
@@ -33,7 +33,7 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
 
   return (
     <LevelShell>
-      {/* A léptetés a DinoCard saját, képre helyezett nyilaival történik —
+      {/* A léptetés a TradingCard saját, képre helyezett nyilaival történik —
           nem oldalsó gombokkal, mert azok mobilon annyi szélességet
           vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki.
           Progress a lebegő pontokkal jelenik meg a kártyán. */}
@@ -46,7 +46,7 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
         }}
       >
         {dino && (
-          <DinoCard
+          <TradingCard
             dino={dino}
             imageSource={IMAGE_MAP[dino.name_hu] || null}
             onPrevious={() => setIndex((i) => Math.max(0, i - 1))}

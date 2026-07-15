@@ -11,7 +11,7 @@ function safe(value) {
 export function adaptCreature(row) {
   return {
     id: row.id,
-    // DinoCard.js natívan ezeket várja:
+    // TradingCard.js natívan ezeket várja:
     name_hu: safe(row.common_name),
     name_latin: safe(row.scientific_name),
     // visszamenőleges kompatibilitás régi hívóknak (pl. BrowseScreen lista-nézet, ha még a régi kulcsokat használja):
