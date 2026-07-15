@@ -28,6 +28,7 @@ export default function App() {
   const [regionDinos, setRegionDinos] = useState([]);
   const [allDinos, setAllDinos] = useState([]);
   const [activeGameEventId, setActiveGameEventId] = useState(null);
+  const [hideXPBar, setHideXPBar] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem(NICKNAME_STORAGE_KEY).then((saved) => {
@@ -90,6 +91,7 @@ export default function App() {
   const handleBackToMenu = () => {
     setView('landing');
     setEduLevel(null);
+    setHideXPBar(false);
   };
 
   const handleStartLightningQuiz = () => {
@@ -140,7 +142,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
-      {view !== 'landing' && view !== 'checking' && view !== 'nicknamePicker' && <XPBar />}
+      {view !== 'landing' && view !== 'checking' && view !== 'nicknamePicker' && !hideXPBar && <XPBar />}
 
       {view === 'nicknamePicker' && (
         <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} />
@@ -165,6 +167,7 @@ export default function App() {
           progress={progress}
           onPassed={handlePassed}
           onStartLightningQuiz={handleStartLightningQuiz}
+          onBrowsingChange={setHideXPBar}
         />
       )}
 

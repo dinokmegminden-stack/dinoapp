@@ -182,9 +182,9 @@ export default function MemoryGameScreen({ nickname, playerId, onBack }) {
       if (nickname) {
         saveMemoryResult({ nickname, moves, seconds, level: difficulty.level });
       }
-      // Hibátlan kör = nulla elpazarolt lapfordítás (moves === pairCount) — csak
-      // ilyenkor kerül fel a ranglistára, lásd a felhasználói döntést a level_type-ról.
-      if (playerId && moves === pairCount) {
+      // A Párok ranglistája — a többi játékmóddal ellentétben — hibás lépéssel is
+      // felkerül, itt kizárólag az idő számít (felhasználói döntés).
+      if (playerId) {
         submitLeaderboardEntry({
           playerId,
           levelType: `memory_${difficulty.level}`,

@@ -98,7 +98,11 @@ export default function DinoCard({
   const mya = formatRange(dino.mya_max, dino.mya_min, 'millió éve');
   const length = formatRange(dino.length_m_min, dino.length_m_max, 'm');
   const weight = formatRange(dino.weight_kg_min, dino.weight_kg_max, 'kg');
-  const latinFull = [dino.name_latin, dino.latin_name_ending].filter(Boolean).join(' ');
+  const nameLatin = dino.name_latin || '';
+  const latinEnding = dino.latin_name_ending || '';
+  const latinFull = latinEnding && !nameLatin.toLowerCase().endsWith(latinEnding.toLowerCase())
+    ? [nameLatin, latinEnding].filter(Boolean).join(' ')
+    : nameLatin;
 
   const statRows = [
     mya && { label: 'Kor', value: dino.epoch ? `${dino.epoch} · ${mya}` : mya },
@@ -320,6 +324,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 15,
     fontFamily: FONTS.body,
+    fontWeight: '700',
   },
   statCol: {
     flex: 1,

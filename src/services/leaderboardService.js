@@ -1,9 +1,10 @@
 // src/services/leaderboardService.js
 // A négy játékmód (Párok/Ki vagyok én?/5mp Képkvíz/XP Milliomos) idő-alapú
 // ranglistái — a `leaderboard_entries` táblát használja (region nullable-re
-// állítva, mivel ezek a játékok nem régióhoz kötöttek). Csak hibátlan
-// (0 hibás lépés/válasz) futások kerülnek fel — ezt a hívó screen dönti el,
-// itt csak a mentés/lekérdezés történik.
+// állítva, mivel ezek a játékok nem régióhoz kötöttek). Ki vagyok én?/5mp
+// Képkvíz/XP Milliomos csak hibátlan (0 hibás válasz) futásnál küld be;
+// Párok esetén hibás lépéssel is felkerül, ott csak az idő számít. Ezt
+// a hívó screen dönti el, itt csak a mentés/lekérdezés történik.
 // A creaturesService.js mintáját követi: sosem dob, hiba esetén console.warn.
 //
 // level_type értékek: 'memory_1' | 'memory_2' | 'memory_3' | 'whoami' |

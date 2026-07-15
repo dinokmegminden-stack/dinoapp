@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { useRegionData } from '../../hooks/useRegionData';
 import LevelShell from './LevelShell';
@@ -7,7 +7,7 @@ import BrowseScreen from './BrowseScreen';
 import PackageQuizScreen from './PackageQuizScreen';
 import { s } from './RegionLevel.styles';
 
-export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
+export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBrowsingChange }) {
   const { packages, creatures, loading, error } = useRegionData(eduLevel);
 
   const [currentScreen, setCurrentScreen] = useState('packages'); // 'packages' | 'browse' | 'quiz'
@@ -17,6 +17,15 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack }) {
   // azonos state-értéknél) — a quizAttempt key-kényszerített remountot ad helyette,
   // ami friss belső state-et ÉS friss (újrakevert) kérdéssort is jelent.
   const [quizAttempt, setQuizAttempt] = useState(0);
+
+  // A DinoCard böngészésekor (currentScreen === 'browse') az App.js elrejti az
+  // XP-sávot, hogy ne zavarja a kártya fejlécét — lásd App.js hideXPBar.
+  // Unmountkor kötelező visszaállítani, különben más képernyőkre navigálva
+  // (pl. vissza a főmenübe) is rejtve maradna.
+  useEffect(() => {
+    onBrowsingChange?.(currentScreen === 'browse');
+    return () => onBrowsingChange?.(false);
+  }, [currentScreen, onBrowsingChange]);
 
   if (loading) {
     return (
