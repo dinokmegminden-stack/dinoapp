@@ -1,8 +1,15 @@
 // TradingCard — "múzeumi tábla" stílusú gyűjtői kártya (DinoCard szerepét is
 // átvéve: a névsor melletti nyilak lépegetnek a csomagon belül, BrowseScreen
 // ezen keresztül hajtja végre a navigációt).
-import React from 'react';
+//
+// Két elrendezés érhető el, a jobb felső sarokban lévő formátumválasztóval
+// váltva köztük: "classic" (eredeti, függőleges) és "alt" (kép+névsáv balra,
+// idővonal+statisztikák jobbra). A választás komponens-szintű state, ami a
+// csomagon belüli lapozás (Next/Prev) alatt megmarad, mert a BrowseScreen
+// ugyanazt a TradingCard-példányt tartja életben, csak a `dino` propot cseréli.
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   useFonts as useLuckiestGuy,
   LuckiestGuy_400Regular,
@@ -27,6 +34,13 @@ const RARITY_LABEL = {
   legendary: 'legendás',
 };
 
+// Az idővonal-sáv fix, Mesozoikum-alapú skálája (250-66 millió év). A gyűjtemény
+// néhány régiója (pl. Kárpát-medence jégkorszaki emlősei) ezen kívül eshet — ott a
+// marker rejtve marad, de maga a sáv továbbra is megjelenik kontextusként.
+const MYA_SCALE_START = 250;
+const MYA_SCALE_END = 66;
+const ERA_BOUNDS = { triassicEnd: 201, jurassicEnd: 145 };
+
 function capitalize(text) {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -47,6 +61,17 @@ function formatLengthRange(min, max) {
   return `${max ?? min}m`;
 }
 
+function formatDiscovery(name, year) {
+  if (name && year) return `${name} (${year})`;
+  if (name) return name;
+  if (year) return String(year);
+  return '—';
+}
+
+function pctForMya(m) {
+  return ((MYA_SCALE_START - m) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
+}
+
 function StatCell({ label, value, bodyFont, boldFont }) {
   return (
     <View style={s.statCell}>
@@ -56,8 +81,65 @@ function StatCell({ label, value, bodyFont, boldFont }) {
   );
 }
 
+function AltStatCell({ label, value, bodyFont, boldFont }) {
+  return (
+    <View style={s.altStatCell}>
+      <Text style={[s.altStatLabel, { fontFamily: bodyFont }]} numberOfLines={1}>{label}</Text>
+      <Text style={[s.altStatValue, { fontFamily: boldFont }]} numberOfLines={1}>{value}</Text>
+    </View>
+  );
+}
+
+// Vízszintes, skálázott idővonal a Mezozoikum korszakhatáraival és egy
+// jelölővel a dínó korára. A jelölő pozícióját százalékban számoljuk, hogy RN-ben
+// (ahol nincs CSS calc/vw) is egyszerűen abszolút pozicionálható legyen.
+function MesoTimeline({ myaMin, myaMax, boldFont }) {
+  const midAge = myaMin != null && myaMax != null
+    ? (myaMin + myaMax) / 2
+    : (myaMin ?? myaMax);
+  const rawPct = midAge != null ? pctForMya(midAge) : null;
+  const showMarker = rawPct != null && rawPct >= -3 && rawPct <= 103;
+  const markerPct = showMarker ? Math.max(0, Math.min(100, rawPct)) : null;
+
+  const triassicPct = ((MYA_SCALE_START - ERA_BOUNDS.triassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
+  const jurassicPct = ((MYA_SCALE_START - ERA_BOUNDS.jurassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
+
+  return (
+    <LinearGradient colors={[COLORS.action, COLORS.accentDark]} style={s.timeline}>
+      <View style={s.timelineLabelRow}>
+        <Text style={[s.timelineLabelText, { fontFamily: boldFont }]}>250M</Text>
+        <Text style={[s.timelineLabelText, { fontFamily: boldFont }]}>MEZOZOIKUM</Text>
+        <Text style={[s.timelineLabelText, { fontFamily: boldFont }]}>66M</Text>
+      </View>
+
+      <View style={s.timelineEras}>
+        <View style={[s.era, { flex: triassicPct, backgroundColor: '#8fb28a' }]} />
+        <View style={[s.era, { flex: jurassicPct - triassicPct, backgroundColor: '#7fa9c9' }]} />
+        <View style={[s.era, { flex: 100 - jurassicPct, backgroundColor: '#cf9a5c' }]} />
+      </View>
+
+      <View style={s.timelineTrack}>
+        <View style={s.timelineBaseline} />
+        {showMarker && (
+          <View style={[s.marker, { left: `${markerPct}%` }]}>
+            {(myaMin != null || myaMax != null) && (
+              <View style={s.markerFlag}>
+                <Text style={[s.markerFlagText, { fontFamily: boldFont }]}>
+                  {formatAgeRange(myaMax, myaMin)}
+                </Text>
+              </View>
+            )}
+            <View style={s.markerPin} />
+          </View>
+        )}
+      </View>
+    </LinearGradient>
+  );
+}
+
 // dino: adaptCreature() alakú objektum (name_hu, name_latin, latin_name_ending,
-// mya_min/max, length_m_min/max, region, rarity, diet_hu, description_hu).
+// mya_min/max, length_m_min/max, region, rarity, diet_hu, description_hu, csalad,
+// discoverer_name, discovery_year).
 export default function TradingCard({
   dino,
   imageSource,
@@ -72,6 +154,7 @@ export default function TradingCard({
   const { width } = useWindowDimensions();
   const isDesktop = width >= 700;
   const cardMaxWidth = isDesktop ? CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_MOBILE;
+  const [layout, setLayout] = useState('classic');
 
   const [luckiestLoaded] = useLuckiestGuy({ LuckiestGuy_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
@@ -90,13 +173,125 @@ export default function TradingCard({
 
   const age = formatAgeRange(dino.mya_min, dino.mya_max);
   const length = formatLengthRange(dino.length_m_min, dino.length_m_max);
+  const discovery = formatDiscovery(dino.discoverer_name, dino.discovery_year);
 
   // React Native fontSize csak számot fogad (nincs rem/vw/clamp()) — a
   // "viewport-alapú" nagyítást az isDesktop töréspont adja.
   const descriptionFontSize = isDesktop ? 16 : 15;
+  const altDescriptionFontSize = isDesktop ? 13.5 : 12;
+
+  const formatToggle = (
+    <View style={s.formatToggle}>
+      <TouchableOpacity
+        style={[s.formatToggleBtn, layout === 'classic' && s.formatToggleBtnActive]}
+        onPress={() => setLayout('classic')}
+      >
+        <Text style={s.formatToggleIcon}>▤</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[s.formatToggleBtn, layout === 'alt' && s.formatToggleBtnActive]}
+        onPress={() => setLayout('alt')}
+      >
+        <Text style={s.formatToggleIcon}>▥</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  if (layout === 'alt') {
+    return (
+      <View style={[s.card, { maxWidth: cardMaxWidth }]}>
+        {formatToggle}
+
+        <View style={s.altBody}>
+          <View style={s.altLeftCol}>
+            <View style={s.altImageWrap}>
+              {imageSource ? (
+                <Image source={imageSource} style={s.image} resizeMode="cover" />
+              ) : (
+                <View style={[s.image, s.imageFallback]}>
+                  <Text style={s.imageFallbackText}>🦴</Text>
+                </View>
+              )}
+            </View>
+
+            <View style={s.altNameBand}>
+              {onPrevious ? (
+                <TouchableOpacity
+                  style={[s.navBtn, isFirstDino && s.navBtnDisabled]}
+                  onPress={onPrevious}
+                  disabled={isFirstDino}
+                >
+                  <Text style={[s.navBtnText, { fontFamily: bodyFont }]}>‹</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={s.navBtnSpacer} />
+              )}
+
+              <View style={s.altNameBlock}>
+                <Text style={[s.altName, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
+                {!!latinFull && (
+                  <Text style={[s.altLatin, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
+                )}
+              </View>
+
+              {onNext ? (
+                <TouchableOpacity
+                  style={[s.navBtn, isLastDino && s.navBtnDisabled]}
+                  onPress={onNext}
+                  disabled={isLastDino}
+                >
+                  <Text style={[s.navBtnText, { fontFamily: bodyFont }]}>{nextIcon}</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={s.navBtnSpacer} />
+              )}
+            </View>
+          </View>
+
+          <View style={s.altDataCol}>
+            <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} />
+
+            <View style={s.altDataColBody}>
+              <View style={s.altStatGrid}>
+                <AltStatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} />
+                <AltStatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} />
+                <AltStatCell label="Dínócsalád" value={dino.csalad || '—'} bodyFont={bodyFont} boldFont={boldFont} />
+                <AltStatCell label="Felfedezés" value={discovery} bodyFont={bodyFont} boldFont={boldFont} />
+              </View>
+
+              {!!dino.description_hu && (
+                <Text
+                  style={[
+                    s.altDescription,
+                    { fontFamily: bodyFont, fontSize: altDescriptionFontSize, lineHeight: altDescriptionFontSize * 1.5 },
+                  ]}
+                  numberOfLines={isDesktop ? 8 : 6}
+                >
+                  {dino.description_hu}
+                </Text>
+              )}
+
+              <View style={s.altFindRow}>
+                {!!rarityLabel && (
+                  <Text style={[s.altRarityText, { fontFamily: boldFont }]}>{rarityLabel.toUpperCase()}</Text>
+                )}
+                {currentIndex != null && totalCount != null && (
+                  <Text style={[s.altCounterText, { fontFamily: bodyFont }]}>
+                    No. {String(currentIndex).padStart(3, '0')}/{totalCount}
+                  </Text>
+                )}
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[s.card, { maxWidth: cardMaxWidth }]}>
+      {formatToggle}
+
       {/* Hero kép */}
       <View style={s.imageFrame}>
         {imageSource ? (
@@ -301,5 +496,197 @@ const s = StyleSheet.create({
     color: COLORS.cream,
     opacity: 0.9,
     marginTop: 16,
+  },
+
+  // ---- formátumválasztó (jobb felső sarok, mindkét elrendezésen) ----
+  formatToggle: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    zIndex: 10,
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    borderRadius: RADIUS.pill,
+    padding: 3,
+    gap: 2,
+  },
+  formatToggleBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: RADIUS.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formatToggleBtnActive: {
+    backgroundColor: COLORS.gold,
+  },
+  formatToggleIcon: {
+    color: COLORS.cream,
+    fontSize: 15,
+  },
+
+  // ---- "alt" elrendezés: kép+névsáv balra, idővonal+adatok jobbra ----
+  altBody: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    backgroundColor: COLORS.darkGreen,
+  },
+  altLeftCol: {
+    flexBasis: '42%',
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+  altImageWrap: {
+    flex: 1,
+    minHeight: 200,
+    backgroundColor: COLORS.olive,
+  },
+  altNameBand: {
+    backgroundColor: COLORS.action,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  altNameBlock: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  altName: {
+    color: COLORS.cream,
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  altLatin: {
+    color: COLORS.darkGreen,
+    fontStyle: 'italic',
+    fontSize: 10,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+
+  altDataCol: {
+    flex: 1,
+    flexShrink: 1,
+  },
+  altDataColBody: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 12,
+  },
+
+  timeline: {
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  timelineLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  timelineLabelText: {
+    color: '#3c2c17',
+    fontSize: 7.5,
+    letterSpacing: 0.3,
+  },
+  timelineEras: {
+    flexDirection: 'row',
+    height: 5,
+    borderRadius: 3,
+    overflow: 'hidden',
+    marginBottom: 14,
+  },
+  era: { height: '100%' },
+  timelineTrack: {
+    height: 4,
+    justifyContent: 'center',
+  },
+  timelineBaseline: {
+    height: 1.5,
+    backgroundColor: 'rgba(60,44,23,0.35)',
+    borderRadius: 1,
+  },
+  marker: {
+    position: 'absolute',
+    top: -6,
+    width: 1,
+    marginLeft: 0,
+    alignItems: 'center',
+  },
+  markerFlag: {
+    position: 'absolute',
+    bottom: 10,
+    backgroundColor: '#9b2b20',
+    paddingVertical: 2,
+    paddingHorizontal: 5,
+    borderRadius: 4,
+    minWidth: 54,
+    alignItems: 'center',
+  },
+  markerFlagText: {
+    color: '#fdf3e7',
+    fontSize: 7.5,
+  },
+  markerPin: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#9b2b20',
+    borderWidth: 1.5,
+    borderColor: '#fdf3e7',
+  },
+
+  altStatGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 5,
+    marginBottom: 10,
+  },
+  altStatCell: {
+    flexBasis: '47%',
+    flexGrow: 1,
+    backgroundColor: COLORS.olive,
+    borderRadius: RADIUS.card,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+  },
+  altStatLabel: {
+    color: COLORS.cream,
+    opacity: 0.85,
+    fontSize: 8.5,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+  },
+  altStatValue: {
+    color: COLORS.gold,
+    fontSize: 11,
+    marginTop: 2,
+  },
+
+  altDescription: {
+    color: COLORS.cream,
+    opacity: 0.9,
+  },
+
+  altFindRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(254,250,224,0.15)',
+  },
+  altRarityText: {
+    color: COLORS.gold,
+    fontSize: 9,
+    letterSpacing: 0.5,
+  },
+  altCounterText: {
+    color: COLORS.cream,
+    opacity: 0.6,
+    fontSize: 9,
   },
 });
