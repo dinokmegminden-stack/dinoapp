@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     color: COLORS.accent,
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '800',
     letterSpacing: 2.5,
     textTransform: 'uppercase',
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   gridBtnText: {
     color: COLORS.cream,
     fontWeight: '800',
-    fontSize: 13,
+    fontSize: 15,
     letterSpacing: 0.5,
     textAlign: 'center',
   },

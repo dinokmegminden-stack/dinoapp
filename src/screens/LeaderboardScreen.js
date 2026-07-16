@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   periodBtnText: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     opacity: 0.6,
   },
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   tabBtnText: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     opacity: 0.7,
   },
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
     opacity: 0.7,
     marginTop: 40,
@@ -234,21 +234,21 @@ const styles = StyleSheet.create({
   rank: {
     color: COLORS.accent,
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
-    width: 28,
+    width: 32,
   },
   nickname: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
     flex: 1,
   },
   time: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 14,
+    fontSize: 15,
     opacity: 0.85,
   },
   backBtn: {

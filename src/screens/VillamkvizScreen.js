@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   noImageText: {
     color: '#999',
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 15,
   },
   optionsGrid: {
     flexDirection: 'row',
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
   },
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
   statLabel: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
   },
   statValue: {
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
   bonusLabel: {
     color: '#4CAF50',
     fontFamily: FONTS.body,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
   },
   bonusValue: {

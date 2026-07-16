@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: 'rgba(254,250,224,0.7)',
     fontFamily: FONTS.body,
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     color: 'rgba(254,250,224,0.62)',
     fontFamily: FONTS.body,
-    fontSize: 12,
+    fontSize: 15,
     marginBottom: 2,
   },
   fieldValue: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#F44336',
     fontFamily: FONTS.body,
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
     marginTop: 16,
   },

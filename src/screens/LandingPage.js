@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   xpPillText: {
     color: COLORS.bgDark,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
     letterSpacing: 0.5,
   },

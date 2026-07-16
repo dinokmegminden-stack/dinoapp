@@ -315,8 +315,8 @@ const styles = StyleSheet.create({
   ruleText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 21,
     flex: 1,
   },
   header: {
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   headerCounter: {
     color: '#FEFAE0',
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
   },
   headerLives: {
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   headerXP: {
     color: '#DDA15E',
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
   },
   clueBox: {
@@ -410,8 +410,8 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 21,
     textAlign: 'center',
   },
   badgeEmoji: {
@@ -499,6 +499,6 @@ const styles = StyleSheet.create({
   backLinkText: {
     color: 'rgba(254,250,224,0.6)',
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
   },
 });

@@ -55,7 +55,7 @@ function MiniDinoCard({ dino }) {
           </View>
         )}
       </View>
-      <Text style={styles.cardName} numberOfLines={1}>{dino.name_hu}</Text>
+      <Text style={styles.cardName} numberOfLines={2}>{dino.name_hu}</Text>
     </View>
   );
 }
@@ -210,13 +210,13 @@ const styles = StyleSheet.create({
   progressPillText: {
     color: COLORS.bgDark,
     fontFamily: FONTS.bold,
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '800',
   },
   headerHint: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 12,
+    fontSize: 15,
     opacity: 0.75,
     paddingHorizontal: 20,
     paddingTop: 6,
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   viewToggleText: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     opacity: 0.6,
   },
@@ -277,17 +277,17 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: COLORS.accent,
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
     letterSpacing: 0.3,
   },
   sectionBadgeUnlocked: {
     color: '#8DA34D',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '900',
   },
   sectionBadgeLocked: {
-    fontSize: 13,
+    fontSize: 15,
     opacity: 0.7,
   },
   row: {
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   cardName: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 11,
+    fontSize: 15,
     fontWeight: '700',
     paddingHorizontal: 6,
     paddingTop: 5,
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   lockedText: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 10,
+    fontSize: 15,
     opacity: 0.5,
     textAlign: 'center',
     paddingTop: 5,

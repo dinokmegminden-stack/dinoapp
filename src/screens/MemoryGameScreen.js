@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
   hintText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
     textAlign: 'center',
     opacity: 0.85,
   },
@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
   resetBtnText: {
     color: '#FEFAE0',
     fontFamily: FONTS.bold,
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '700',
     letterSpacing: 0.5,
   },
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
   diffBtnSub: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 12,
+    fontSize: 15,
     opacity: 0.8,
     marginTop: 4,
   },
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
   victoryStats: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
     opacity: 0.8,
     marginBottom: 16,
   },

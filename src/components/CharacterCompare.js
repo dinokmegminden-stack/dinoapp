@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLORS.textPrimary,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
     marginBottom: 10,
   },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   noData: {
     color: COLORS.textMuted,
-    fontSize: 13,
+    fontSize: 15,
     textAlign: 'center',
     paddingVertical: 40,
   },
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   thumbName: {
     color: COLORS.textMuted,
-    fontSize: 9,
+    fontSize: 15,
     marginTop: 2,
   },
 });

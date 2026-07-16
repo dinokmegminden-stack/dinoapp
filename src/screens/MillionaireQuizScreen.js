@@ -316,8 +316,8 @@ const styles = StyleSheet.create({
   ruleText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 21,
     flex: 1,
   },
   ladderBox: {
@@ -338,18 +338,18 @@ const styles = StyleSheet.create({
   ladderQuestion: {
     color: '#FEFAE0',
     fontFamily: FONTS.bold,
-    fontSize: 13,
-    width: 28,
+    fontSize: 15,
+    width: 32,
   },
   ladderDifficulty: {
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
     flex: 1,
   },
   ladderXP: {
     color: '#DDA15E',
     fontFamily: FONTS.bold,
-    fontSize: 13,
+    fontSize: 15,
   },
   header: {
     flexDirection: 'row',
@@ -362,18 +362,18 @@ const styles = StyleSheet.create({
   headerCounter: {
     color: '#FEFAE0',
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
   },
   headerDifficulty: {
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
   },
   headerXP: {
     color: '#DDA15E',
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
   },
   questionBox: {
@@ -418,8 +418,8 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#FEFAE0',
     fontFamily: FONTS.body,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 21,
   },
   badgeEmoji: {
     fontSize: 64,
@@ -506,6 +506,6 @@ const styles = StyleSheet.create({
   backLinkText: {
     color: 'rgba(254,250,224,0.6)',
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
   },
 });

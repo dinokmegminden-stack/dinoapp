@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   hint: {
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
     color: COLORS.textSecondary,
     textAlign: 'center',
     marginTop: 24,

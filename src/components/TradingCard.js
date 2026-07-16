@@ -91,6 +91,10 @@ export default function TradingCard({
   const age = formatAgeRange(dino.mya_min, dino.mya_max);
   const length = formatLengthRange(dino.length_m_min, dino.length_m_max);
 
+  // React Native fontSize csak számot fogad (nincs rem/vw/clamp()) — a
+  // "viewport-alapú" nagyítást az isDesktop töréspont adja.
+  const descriptionFontSize = isDesktop ? 16 : 15;
+
   return (
     <View style={[s.card, { maxWidth: cardMaxWidth }]}>
       {/* Hero kép */}
@@ -148,7 +152,14 @@ export default function TradingCard({
         </View>
 
         {!!dino.description_hu && (
-          <Text style={[s.description, { fontFamily: bodyFont }]}>{dino.description_hu}</Text>
+          <Text
+            style={[
+              s.description,
+              { fontFamily: bodyFont, fontSize: descriptionFontSize, lineHeight: descriptionFontSize * 1.6 },
+            ]}
+          >
+            {dino.description_hu}
+          </Text>
         )}
 
         <View style={s.divider} />
@@ -207,7 +218,7 @@ const s = StyleSheet.create({
   latin: {
     color: COLORS.darkGreen,
     fontStyle: 'italic',
-    fontSize: 12,
+    fontSize: 15,
     textAlign: 'center',
     marginTop: 4,
   },
@@ -244,13 +255,13 @@ const s = StyleSheet.create({
   },
   rarityText: {
     color: COLORS.gold,
-    fontSize: 14,
+    fontSize: 15,
     letterSpacing: 1,
   },
   counterText: {
     color: COLORS.cream,
     opacity: 0.6,
-    fontSize: 13,
+    fontSize: 15,
   },
 
   divider: {
@@ -276,7 +287,7 @@ const s = StyleSheet.create({
   statLabel: {
     color: COLORS.cream,
     opacity: 0.85,
-    fontSize: 10,
+    fontSize: 15,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },
@@ -289,8 +300,6 @@ const s = StyleSheet.create({
   description: {
     color: COLORS.cream,
     opacity: 0.9,
-    fontSize: 13,
-    lineHeight: 21,
     marginTop: 16,
   },
 });
