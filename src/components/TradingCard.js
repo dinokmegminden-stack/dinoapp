@@ -95,7 +95,9 @@ function AltStatCell({ label, value, bodyFont, boldFont, large }) {
   return (
     <View style={[s.altStatCell, large && s.altStatCellLarge]}>
       <Text style={[s.altStatLabel, large && s.altStatLabelLarge, { fontFamily: bodyFont }]} numberOfLines={1}>{label}</Text>
-      <Text style={[s.altStatValue, large && s.altStatValueLarge, { fontFamily: boldFont }]} numberOfLines={1}>{value}</Text>
+      {/* A felfedező neve gyakran hosszú (több szerző + évszám) — ne vágódjon
+          le egy sorba kényszerítve, hanem törjön szükség szerint. */}
+      <Text style={[s.altStatValue, large && s.altStatValueLarge, { fontFamily: boldFont }]}>{value}</Text>
     </View>
   );
 }
@@ -238,7 +240,8 @@ export default function TradingCard({
   // React Native fontSize csak számot fogad (nincs rem/vw/clamp()) — a
   // "viewport-alapú" nagyítást az isDesktop töréspont adja.
   const descriptionFontSize = isDesktop ? 16 : 15;
-  const altDescriptionFontSize = isBigCard ? 17 : (isDesktop ? 13.5 : 12);
+  // Fekvő nézetben a betűméret max 10px lehet (a dínó nevét kivéve).
+  const altDescriptionFontSize = 10;
 
   const formatToggle = (
     <View style={s.formatToggle}>
@@ -709,7 +712,7 @@ const s = StyleSheet.create({
     marginTop: 2,
   },
   altLatinLarge: {
-    fontSize: 15,
+    fontSize: 10,
     marginTop: 4,
   },
 
@@ -752,7 +755,7 @@ const s = StyleSheet.create({
     letterSpacing: 0.3,
   },
   timelineLabelTextLarge: {
-    fontSize: 12,
+    fontSize: 10,
   },
   timelineEras: {
     flexDirection: 'row',
@@ -827,7 +830,7 @@ const s = StyleSheet.create({
     fontSize: 7.5,
   },
   markerFlagTextLarge: {
-    fontSize: 12,
+    fontSize: 10,
   },
 
   altStatGrid: {
@@ -845,30 +848,30 @@ const s = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: COLORS.olive,
     borderRadius: RADIUS.card,
-    paddingVertical: 5,
-    paddingHorizontal: 5,
+    paddingVertical: 6,
+    paddingHorizontal: 6,
   },
   altStatCellLarge: {
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
   },
   altStatLabel: {
     color: COLORS.cream,
     opacity: 0.85,
-    fontSize: 8.5,
+    fontSize: 10.2,
     textTransform: 'uppercase',
     letterSpacing: 0.3,
   },
   altStatLabelLarge: {
-    fontSize: 13,
+    fontSize: 12,
   },
   altStatValue: {
     color: COLORS.gold,
-    fontSize: 11,
+    fontSize: 12,
     marginTop: 2,
   },
   altStatValueLarge: {
-    fontSize: 18,
+    fontSize: 12,
     marginTop: 4,
   },
 
@@ -892,7 +895,7 @@ const s = StyleSheet.create({
     letterSpacing: 0.5,
   },
   altRarityTextLarge: {
-    fontSize: 13,
+    fontSize: 10,
   },
   altCounterText: {
     color: COLORS.cream,
@@ -900,6 +903,6 @@ const s = StyleSheet.create({
     fontSize: 9,
   },
   altCounterTextLarge: {
-    fontSize: 13,
+    fontSize: 10,
   },
 });
