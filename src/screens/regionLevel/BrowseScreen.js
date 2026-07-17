@@ -4,6 +4,7 @@ import { IMAGE_MAP } from '../../constants/imageMap';
 import TradingCard from '../../components/TradingCard';
 import LevelShell from './LevelShell';
 import { s } from './RegionLevel.styles';
+import { useFavorites } from '../../hooks/useFavorites';
 
 // LevelShell (16px) + ez a ScrollView (14px) vízszintes paddingje eddig
 // összesen 30px rést hagyott mobilon a kártya és a telefon széle közt.
@@ -13,12 +14,13 @@ import { s } from './RegionLevel.styles';
 // bővül ki a LevelShell teljes szélességéig.
 const MOBILE_BREAKPOINT = 700;
 
-export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) {
+export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack, playerId }) {
   const pkg = packages.find((p) => p.csomag === csomag);
   const dinos = pkg?.dinos || [];
   const [index, setIndex] = useState(0);
   const { width } = useWindowDimensions();
   const isMobile = width < MOBILE_BREAKPOINT;
+  const { isFavorite, toggleFavorite } = useFavorites(playerId);
 
   const dino = dinos[index];
   const isLastDino = index === dinos.length - 1;
@@ -56,6 +58,8 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
             nextIcon={isLastDino ? '▶' : '›'}
             currentIndex={index + 1}
             totalCount={dinos.length}
+            isFavorite={isFavorite(dino.id)}
+            onToggleFavorite={() => toggleFavorite(dino.id)}
           />
         )}
       </ScrollView>

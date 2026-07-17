@@ -20,6 +20,7 @@ import {
   Fredoka_600SemiBold,
 } from '@expo-google-fonts/fredoka';
 import { COLORS, RADIUS } from '../constants/theme';
+import { MAX_FAVORITES } from '../hooks/useFavorites';
 
 const CARD_MAX_WIDTH_MOBILE = 480;
 const CARD_MAX_WIDTH_DESKTOP = 600;
@@ -159,9 +160,38 @@ export default function TradingCard({
   nextIcon = '›',
   currentIndex = null,
   totalCount = null,
+  isFavorite = false,
+  onToggleFavorite = null,
 }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 700;
+  // Ha a kedvenc-keret (10) betelt, a szívecske megnyomása nem jelöl be újat —
+  // ilyenkor egy pár másodperces figyelmeztető buborékot mutatunk helyette.
+  const [showFavoriteLimitHint, setShowFavoriteLimitHint] = useState(false);
+  const handleHeartPress = () => {
+    if (!onToggleFavorite) return;
+    const ok = onToggleFavorite();
+    if (!ok) {
+      setShowFavoriteLimitHint(true);
+      setTimeout(() => setShowFavoriteLimitHint(false), 2200);
+    }
+  };
+  const heartButton = onToggleFavorite ? (
+    <View style={s.heartWrap}>
+      <TouchableOpacity
+        onPress={handleHeartPress}
+        style={s.heartBtn}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      >
+        <Text style={[s.heartIcon, isFavorite && s.heartIconActive]}>{isFavorite ? '♥' : '♡'}</Text>
+      </TouchableOpacity>
+      {showFavoriteLimitHint && (
+        <View style={s.heartHintBubble}>
+          <Text style={s.heartHintText}>Max {MAX_FAVORITES} kedvenc</Text>
+        </View>
+      )}
+    </View>
+  ) : null;
   // A fix méretű "nagy blokk" elrendezés csak elég széles ablaknál fér el
   // torzulás/levágás nélkül — ez alatt az "alt" nézet visszaesik a rugalmas,
   // százalékos oszlopszélességre (ugyanaz, mint desktopon kívül).
@@ -243,10 +273,15 @@ export default function TradingCard({
               )}
 
               <View style={s.altNameBlock}>
-                <Text style={[s.altName, isBigCard && s.altNameLarge, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
-                {!!latinFull && (
-                  <Text style={[s.altLatin, isBigCard && s.altLatinLarge, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
-                )}
+                <View style={s.nameRow}>
+                  <View style={s.nameTextCol}>
+                    <Text style={[s.altName, isBigCard && s.altNameLarge, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
+                    {!!latinFull && (
+                      <Text style={[s.altLatin, isBigCard && s.altLatinLarge, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
+                    )}
+                  </View>
+                  {heartButton}
+                </View>
               </View>
 
               {onNext ? (
@@ -352,10 +387,15 @@ export default function TradingCard({
         )}
 
         <View style={s.nameBlock}>
-          <Text style={[s.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
-          {!!latinFull && (
-            <Text style={[s.latin, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
-          )}
+          <View style={s.nameRow}>
+            <View style={s.nameTextCol}>
+              <Text style={[s.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
+              {!!latinFull && (
+                <Text style={[s.latin, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
+              )}
+            </View>
+            {heartButton}
+          </View>
         </View>
 
         {onNext ? (
@@ -438,6 +478,48 @@ const s = StyleSheet.create({
   nameBlock: {
     flex: 1,
     alignItems: 'center',
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  nameTextCol: {
+    alignItems: 'center',
+  },
+  heartWrap: {
+    position: 'relative',
+  },
+  heartBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heartIcon: {
+    fontSize: 20,
+    color: COLORS.cream,
+    opacity: 0.7,
+  },
+  heartIconActive: {
+    color: '#e5484d',
+    opacity: 1,
+  },
+  heartHintBubble: {
+    position: 'absolute',
+    top: 26,
+    left: '50%',
+    transform: [{ translateX: -60 }],
+    width: 120,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    borderRadius: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    zIndex: 20,
+  },
+  heartHintText: {
+    color: COLORS.cream,
+    fontSize: 11,
+    textAlign: 'center',
   },
   name: {
     color: COLORS.cream,
@@ -532,11 +614,12 @@ const s = StyleSheet.create({
     marginTop: 16,
   },
 
-  // ---- formátumválasztó (jobb felső sarok, mindkét elrendezésen) ----
+  // ---- formátumválasztó (bal felső sarok, mindkét elrendezésen) — a jobb
+  // felső sarok "alt" nézetben átfedésben volt az idővonal "66M" feliratával.
   formatToggle: {
     position: 'absolute',
     top: 8,
-    right: 8,
+    left: 8,
     zIndex: 10,
     flexDirection: 'row',
     backgroundColor: 'rgba(0,0,0,0.35)',

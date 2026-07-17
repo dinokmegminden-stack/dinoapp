@@ -168,6 +168,7 @@ export default function App() {
           onPassed={handlePassed}
           onStartLightningQuiz={handleStartLightningQuiz}
           onBrowsingChange={setHideXPBar}
+          playerId={playerId}
         />
       )}
 
