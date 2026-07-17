@@ -241,7 +241,7 @@ export default function TradingCard({
   // "viewport-alapú" nagyítást az isDesktop töréspont adja.
   const descriptionFontSize = isDesktop ? 16 : 15;
   // Fekvő nézetben a betűméret max 10px lehet (a dínó nevét kivéve).
-  const altDescriptionFontSize = 10;
+  const altDescriptionFontSize = 12;
 
   const formatToggle = (
     <View style={s.formatToggle}>
