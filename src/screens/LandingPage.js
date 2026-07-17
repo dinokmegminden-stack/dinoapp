@@ -20,7 +20,7 @@ import { COLORS, RADIUS } from '../constants/theme';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
 // (lásd Shell.js backgroundImage prop), sötét overlay-jel a gombok olvashatóságáért.
-const landingBg = require('../../assets/images/new_bg.png');
+const landingBg = require('../../assets/images/new_bg.jpg');
 
 function XPPill() {
   const [xp, setXP] = useState(0);

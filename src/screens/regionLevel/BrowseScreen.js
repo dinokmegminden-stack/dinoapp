@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
-import { IMAGE_MAP } from '../../constants/imageMap';
+import { IMAGE_MAP, MISSING_IMAGE } from '../../constants/imageMap';
 import TradingCard from '../../components/TradingCard';
 import LevelShell from './LevelShell';
 import { s } from './RegionLevel.styles';
@@ -50,7 +50,7 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack, pl
         {dino && (
           <TradingCard
             dino={dino}
-            imageSource={IMAGE_MAP[dino.name_hu] || null}
+            imageSource={IMAGE_MAP[dino.name_hu] || MISSING_IMAGE}
             onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
             onNext={handleNext}
             isFirstDino={index === 0}

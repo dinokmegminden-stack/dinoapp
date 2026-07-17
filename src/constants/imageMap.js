@@ -1,3 +1,7 @@
+// Kikommentelt IMAGE_MAP-bejegyzésű (még nincs kép) dínóknál ezt mutatjuk
+// a hiányzó fotó helyett, a `IMAGE_MAP[name] || MISSING_IMAGE` mintával.
+export const MISSING_IMAGE = require('../../assets/images/dino_missing.jpg');
+
 export const IMAGE_MAP = {
   // --- Megerősített, létező képfájlok ---
   "Iguanodon": require('../../assets/images/iguanodon.jpg'),

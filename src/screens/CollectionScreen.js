@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import Shell from '../components/Shell';
 import CollectionTimeline from '../components/CollectionTimeline';
-import { IMAGE_MAP } from '../constants/imageMap';
+import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { REGION_ORDER, REGION_PACKS, EDU_LABELS, PASS_THRESHOLD } from '../utils/regionProgress';
@@ -36,7 +36,7 @@ function chunk(list, size) {
 }
 
 function MiniDinoCard({ dino }) {
-  const imageSource = IMAGE_MAP[dino.name_hu] || null;
+  const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const rarityColor = RARITY_COLOR[String(dino.rarity || '').toLowerCase()];
 
   return (

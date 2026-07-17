@@ -9,7 +9,7 @@
 // legyen, melyik családhoz tartozik).
 import React, { useMemo, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Platform, Pressable, useWindowDimensions } from 'react-native';
-import { IMAGE_MAP } from '../constants/imageMap';
+import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { TIMELINE_BRANCHES, getTimelineBranchKey } from '../utils/dinoTaxonomy';
@@ -57,7 +57,7 @@ function packColumn(items, capSubCols) {
 
 function TimelineMarker({ dino, unlocked, color, yPx, subCol }) {
   const [hovered, setHovered] = useState(false);
-  const imageSource = IMAGE_MAP[dino.name_hu] || null;
+  const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const left = subCol * SUB_COL_WIDTH + (SUB_COL_WIDTH - DOT_SIZE) / 2;
   const showTooltip = unlocked && hovered;
 
