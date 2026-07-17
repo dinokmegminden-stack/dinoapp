@@ -32,7 +32,7 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack }) 
   };
 
   return (
-    <LevelShell>
+    <LevelShell extraWide>
       {/* A léptetés a TradingCard saját, képre helyezett nyilaival történik —
           nem oldalsó gombokkal, mert azok mobilon annyi szélességet
           vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki.

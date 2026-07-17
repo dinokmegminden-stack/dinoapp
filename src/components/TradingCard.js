@@ -23,6 +23,15 @@ import { COLORS, RADIUS } from '../constants/theme';
 
 const CARD_MAX_WIDTH_MOBILE = 480;
 const CARD_MAX_WIDTH_DESKTOP = 600;
+// A jobb oldali adatoszlop természetes (tartalom által diktált) szélessége
+// nagy kártyánál — ebből számoljuk vissza a képoszlop szélességét úgy, hogy a
+// kép a saját 16:9 arányában pontosan kitöltse a magasságát, "letterbox" sáv
+// (üres olív csík a kép fölött/alatt) nélkül.
+const ALT_DATA_COL_WIDTH_DESKTOP = 380;
+const ALT_CARD_HEIGHT_DESKTOP = 563;
+const ALT_NAME_BAND_HEIGHT_DESKTOP = 85;
+const ALT_IMAGE_WIDTH_DESKTOP = Math.round((ALT_CARD_HEIGHT_DESKTOP - ALT_NAME_BAND_HEIGHT_DESKTOP) * (16 / 9));
+const ALT_CARD_MAX_WIDTH_DESKTOP = ALT_IMAGE_WIDTH_DESKTOP + ALT_DATA_COL_WIDTH_DESKTOP;
 const CARD_RADIUS = 14;
 
 // A `creatures.rarity` oszlop angol értékeket tárol (common/rare/epic/legendary),
@@ -81,11 +90,11 @@ function StatCell({ label, value, bodyFont, boldFont }) {
   );
 }
 
-function AltStatCell({ label, value, bodyFont, boldFont }) {
+function AltStatCell({ label, value, bodyFont, boldFont, large }) {
   return (
-    <View style={s.altStatCell}>
-      <Text style={[s.altStatLabel, { fontFamily: bodyFont }]} numberOfLines={1}>{label}</Text>
-      <Text style={[s.altStatValue, { fontFamily: boldFont }]} numberOfLines={1}>{value}</Text>
+    <View style={[s.altStatCell, large && s.altStatCellLarge]}>
+      <Text style={[s.altStatLabel, large && s.altStatLabelLarge, { fontFamily: bodyFont }]} numberOfLines={1}>{label}</Text>
+      <Text style={[s.altStatValue, large && s.altStatValueLarge, { fontFamily: boldFont }]} numberOfLines={1}>{value}</Text>
     </View>
   );
 }
@@ -93,7 +102,7 @@ function AltStatCell({ label, value, bodyFont, boldFont }) {
 // Vízszintes, skálázott idővonal a Mezozoikum korszakhatáraival és egy
 // jelölővel a dínó korára. A jelölő pozícióját százalékban számoljuk, hogy RN-ben
 // (ahol nincs CSS calc/vw) is egyszerűen abszolút pozicionálható legyen.
-function MesoTimeline({ myaMin, myaMax, boldFont }) {
+function MesoTimeline({ myaMin, myaMax, boldFont, large }) {
   const midAge = myaMin != null && myaMax != null
     ? (myaMin + myaMax) / 2
     : (myaMin ?? myaMax);
@@ -105,11 +114,11 @@ function MesoTimeline({ myaMin, myaMax, boldFont }) {
   const jurassicPct = ((MYA_SCALE_START - ERA_BOUNDS.jurassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
 
   return (
-    <LinearGradient colors={[COLORS.action, COLORS.accentDark]} style={s.timeline}>
+    <LinearGradient colors={[COLORS.action, COLORS.accentDark]} style={[s.timeline, large && s.timelineLarge]}>
       <View style={s.timelineLabelRow}>
-        <Text style={[s.timelineLabelText, { fontFamily: boldFont }]}>250M</Text>
-        <Text style={[s.timelineLabelText, { fontFamily: boldFont }]}>MEZOZOIKUM</Text>
-        <Text style={[s.timelineLabelText, { fontFamily: boldFont }]}>66M</Text>
+        <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>250M</Text>
+        <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>MEZOZOIKUM</Text>
+        <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>66M</Text>
       </View>
 
       <View style={s.timelineEras}>
@@ -123,8 +132,8 @@ function MesoTimeline({ myaMin, myaMax, boldFont }) {
         {showMarker && (
           <View style={[s.marker, { left: `${markerPct}%` }]}>
             {(myaMin != null || myaMax != null) && (
-              <View style={s.markerFlag}>
-                <Text style={[s.markerFlagText, { fontFamily: boldFont }]}>
+              <View style={[s.markerFlag, large && s.markerFlagLarge]}>
+                <Text style={[s.markerFlagText, large && s.markerFlagTextLarge, { fontFamily: boldFont }]}>
                   {formatAgeRange(myaMax, myaMin)}
                 </Text>
               </View>
@@ -153,8 +162,14 @@ export default function TradingCard({
 }) {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 700;
-  const cardMaxWidth = isDesktop ? CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_MOBILE;
+  // A fix méretű "nagy blokk" elrendezés csak elég széles ablaknál fér el
+  // torzulás/levágás nélkül — ez alatt az "alt" nézet visszaesik a rugalmas,
+  // százalékos oszlopszélességre (ugyanaz, mint desktopon kívül).
+  const isBigCard = width >= 1300;
   const [layout, setLayout] = useState('classic');
+  const cardMaxWidth = isDesktop
+    ? (layout === 'alt' ? (isBigCard ? ALT_CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_DESKTOP) : CARD_MAX_WIDTH_DESKTOP)
+    : CARD_MAX_WIDTH_MOBILE;
 
   const [luckiestLoaded] = useLuckiestGuy({ LuckiestGuy_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
@@ -178,7 +193,7 @@ export default function TradingCard({
   // React Native fontSize csak számot fogad (nincs rem/vw/clamp()) — a
   // "viewport-alapú" nagyítást az isDesktop töréspont adja.
   const descriptionFontSize = isDesktop ? 16 : 15;
-  const altDescriptionFontSize = isDesktop ? 13.5 : 12;
+  const altDescriptionFontSize = isBigCard ? 17 : (isDesktop ? 13.5 : 12);
 
   const formatToggle = (
     <View style={s.formatToggle}>
@@ -199,14 +214,14 @@ export default function TradingCard({
 
   if (layout === 'alt') {
     return (
-      <View style={[s.card, { maxWidth: cardMaxWidth }]}>
+      <View style={[s.card, { maxWidth: cardMaxWidth }, isBigCard && { height: ALT_CARD_HEIGHT_DESKTOP }]}>
         {formatToggle}
 
-        <View style={s.altBody}>
-          <View style={s.altLeftCol}>
+        <View style={[s.altBody, isBigCard && s.altBodyLarge]}>
+          <View style={[s.altLeftCol, isBigCard && { flexBasis: ALT_IMAGE_WIDTH_DESKTOP }]}>
             <View style={s.altImageWrap}>
               {imageSource ? (
-                <Image source={imageSource} style={s.image} resizeMode="cover" />
+                <Image source={imageSource} style={s.image} resizeMode="contain" />
               ) : (
                 <View style={[s.image, s.imageFallback]}>
                   <Text style={s.imageFallbackText}>🦴</Text>
@@ -214,7 +229,7 @@ export default function TradingCard({
               )}
             </View>
 
-            <View style={s.altNameBand}>
+            <View style={[s.altNameBand, isBigCard && s.altNameBandLarge]}>
               {onPrevious ? (
                 <TouchableOpacity
                   style={[s.navBtn, isFirstDino && s.navBtnDisabled]}
@@ -228,9 +243,9 @@ export default function TradingCard({
               )}
 
               <View style={s.altNameBlock}>
-                <Text style={[s.altName, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
+                <Text style={[s.altName, isBigCard && s.altNameLarge, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
                 {!!latinFull && (
-                  <Text style={[s.altLatin, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
+                  <Text style={[s.altLatin, isBigCard && s.altLatinLarge, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
                 )}
               </View>
 
@@ -249,14 +264,14 @@ export default function TradingCard({
           </View>
 
           <View style={s.altDataCol}>
-            <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} />
+            <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} large={isBigCard} />
 
-            <View style={s.altDataColBody}>
-              <View style={s.altStatGrid}>
-                <AltStatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} />
-                <AltStatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} />
-                <AltStatCell label="Dínócsalád" value={dino.csalad || '—'} bodyFont={bodyFont} boldFont={boldFont} />
-                <AltStatCell label="Felfedezés" value={discovery} bodyFont={bodyFont} boldFont={boldFont} />
+            <View style={[s.altDataColBody, isBigCard && s.altDataColBodyLarge]}>
+              <View style={[s.altStatGrid, isBigCard && s.altStatGridLarge]}>
+                <AltStatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                <AltStatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                <AltStatCell label="Dínócsalád" value={dino.csalad || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                <AltStatCell label="Felfedezés" value={discovery} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
               </View>
 
               {!!dino.description_hu && (
@@ -265,7 +280,7 @@ export default function TradingCard({
                     s.altDescription,
                     { fontFamily: bodyFont, fontSize: altDescriptionFontSize, lineHeight: altDescriptionFontSize * 1.5 },
                   ]}
-                  numberOfLines={isDesktop ? 8 : 6}
+                  numberOfLines={isBigCard ? 10 : (isDesktop ? 8 : 6)}
                 >
                   {dino.description_hu}
                 </Text>
@@ -273,10 +288,10 @@ export default function TradingCard({
 
               <View style={s.altFindRow}>
                 {!!rarityLabel && (
-                  <Text style={[s.altRarityText, { fontFamily: boldFont }]}>{rarityLabel.toUpperCase()}</Text>
+                  <Text style={[s.altRarityText, isBigCard && s.altRarityTextLarge, { fontFamily: boldFont }]}>{rarityLabel.toUpperCase()}</Text>
                 )}
                 {currentIndex != null && totalCount != null && (
-                  <Text style={[s.altCounterText, { fontFamily: bodyFont }]}>
+                  <Text style={[s.altCounterText, isBigCard && s.altCounterTextLarge, { fontFamily: bodyFont }]}>
                     No. {String(currentIndex).padStart(3, '0')}/{totalCount}
                   </Text>
                 )}
@@ -531,8 +546,11 @@ const s = StyleSheet.create({
     alignItems: 'stretch',
     backgroundColor: COLORS.darkGreen,
   },
+  altBodyLarge: {
+    flex: 1,
+  },
   altLeftCol: {
-    flexBasis: '42%',
+    flexBasis: '52%',
     flexGrow: 0,
     flexShrink: 0,
   },
@@ -549,6 +567,11 @@ const s = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 8,
   },
+  altNameBandLarge: {
+    height: ALT_NAME_BAND_HEIGHT_DESKTOP,
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+  },
   altNameBlock: {
     flex: 1,
     alignItems: 'center',
@@ -558,12 +581,19 @@ const s = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
   },
+  altNameLarge: {
+    fontSize: 24,
+  },
   altLatin: {
     color: COLORS.darkGreen,
     fontStyle: 'italic',
     fontSize: 10,
     textAlign: 'center',
     marginTop: 2,
+  },
+  altLatinLarge: {
+    fontSize: 15,
+    marginTop: 4,
   },
 
   altDataCol: {
@@ -575,11 +605,21 @@ const s = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 12,
   },
+  altDataColBodyLarge: {
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    paddingBottom: 20,
+  },
 
   timeline: {
     paddingHorizontal: 10,
     paddingTop: 8,
     paddingBottom: 8,
+  },
+  timelineLarge: {
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 14,
   },
   timelineLabelRow: {
     flexDirection: 'row',
@@ -590,6 +630,9 @@ const s = StyleSheet.create({
     color: '#3c2c17',
     fontSize: 7.5,
     letterSpacing: 0.3,
+  },
+  timelineLabelTextLarge: {
+    fontSize: 12,
   },
   timelineEras: {
     flexDirection: 'row',
@@ -625,9 +668,17 @@ const s = StyleSheet.create({
     minWidth: 54,
     alignItems: 'center',
   },
+  markerFlagLarge: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    minWidth: 76,
+  },
   markerFlagText: {
     color: '#fdf3e7',
     fontSize: 7.5,
+  },
+  markerFlagTextLarge: {
+    fontSize: 12,
   },
   markerPin: {
     width: 8,
@@ -644,6 +695,10 @@ const s = StyleSheet.create({
     gap: 5,
     marginBottom: 10,
   },
+  altStatGridLarge: {
+    gap: 10,
+    marginBottom: 18,
+  },
   altStatCell: {
     flexBasis: '47%',
     flexGrow: 1,
@@ -652,6 +707,10 @@ const s = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
   },
+  altStatCellLarge: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
   altStatLabel: {
     color: COLORS.cream,
     opacity: 0.85,
@@ -659,10 +718,17 @@ const s = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.3,
   },
+  altStatLabelLarge: {
+    fontSize: 13,
+  },
   altStatValue: {
     color: COLORS.gold,
     fontSize: 11,
     marginTop: 2,
+  },
+  altStatValueLarge: {
+    fontSize: 18,
+    marginTop: 4,
   },
 
   altDescription: {
@@ -684,9 +750,15 @@ const s = StyleSheet.create({
     fontSize: 9,
     letterSpacing: 0.5,
   },
+  altRarityTextLarge: {
+    fontSize: 13,
+  },
   altCounterText: {
     color: COLORS.cream,
     opacity: 0.6,
     fontSize: 9,
+  },
+  altCounterTextLarge: {
+    fontSize: 13,
   },
 });

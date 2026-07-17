@@ -9,6 +9,7 @@ export const s = StyleSheet.create({
   outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center' },
   inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
   innerWide: { maxWidth: 900 },
+  innerExtraWide: { maxWidth: 1360 },
   loadingText: { color: '#FEFAE0', fontSize: 16, textAlign: 'center', marginTop: 40 },
   errorText: { color: '#BC6C25', fontSize: 16, textAlign: 'center', marginTop: 40 },
 
