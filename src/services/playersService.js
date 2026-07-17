@@ -42,12 +42,15 @@ export async function getPlayerIdByNickname(nickname) {
 
 // Regisztráció — a `nickname` oszlop unique constraint-je véd a versenyhelyzet ellen
 // akkor is, ha két játékos majdnem egyszerre próbálja ugyanazt a kombinációt lefoglalni.
+// A `pin`-t a hívó generálja (lásd nicknameParts.js generatePin) — az oszlop
+// select-joga anon-tól el van véve, ezért explicit oszloplistával kérünk vissza
+// mindent RAJTA KÍVÜL, nem `.select()`-tel (az a `pin`-t is visszakérné, ami hibázna).
 // Visszatérés: { success, taken, error }.
-export async function registerPlayer(nickname) {
+export async function registerPlayer(nickname, pin) {
   const { data, error } = await supabase
     .from('players')
-    .insert({ nickname })
-    .select()
+    .insert({ nickname, pin })
+    .select('id, nickname, created_at')
     .single();
 
   if (error) {
@@ -59,4 +62,22 @@ export async function registerPlayer(nickname) {
   }
 
   return { success: true, taken: false, error: null, player: data };
+}
+
+// Eszközváltás után a játékos a becenevével + PIN-jével "folytathatja" a régi
+// profilját — a players.pin oszlopot közvetlenül nem lehet kiolvasni (lásd
+// Supabase revoke), ezért egy security definer RPC végzi az összevetést, és
+// csak találat esetén adja vissza a player_id-t.
+export async function resumePlayerWithPin(nickname, pin) {
+  const { data, error } = await supabase.rpc('verify_player_pin', {
+    p_nickname: nickname,
+    p_pin: pin,
+  });
+
+  if (error) {
+    console.warn('resumePlayerWithPin hiba:', error);
+    return null;
+  }
+
+  return data ?? null;
 }

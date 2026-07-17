@@ -62,3 +62,10 @@ export function buildNickname(dino, genus, number) {
 export function randomFrom(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
+
+// 6 jegyű PIN — eszközváltás után ezzel + a becenévvel lehet visszaszerezni
+// a profilt (lásd verify_player_pin Supabase függvény). Csak regisztrációkor
+// jön létre és jelenik meg egyszer, utána nem olvasható vissza.
+export function generatePin() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
