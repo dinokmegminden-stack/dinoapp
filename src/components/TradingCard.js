@@ -323,10 +323,12 @@ export default function TradingCard({
               const dataBody = (
                 <>
                   <View style={[s.altStatGrid, isBigCard && s.altStatGridLarge]}>
+                    <AltStatCell label="Korszak" value={dino.epoch || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
                     <AltStatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
                     <AltStatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
                     <AltStatCell label="Dínócsalád" value={dino.csalad || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
                     <AltStatCell label="Felfedezés" value={discovery} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                    <AltStatCell label="Ország" value={dino.discovered_country || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
                   </View>
 
                   {!!dino.description_hu && (
@@ -433,8 +435,9 @@ export default function TradingCard({
       <View style={s.body}>
         <View style={s.statRow}>
           <StatCell label="Kor" value={age} bodyFont={bodyFont} boldFont={boldFont} />
+          <StatCell label="Korszak" value={dino.epoch || '—'} bodyFont={bodyFont} boldFont={boldFont} />
           <StatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} />
-          <StatCell label="Ország" value={dino.region || '—'} bodyFont={bodyFont} boldFont={boldFont} />
+          <StatCell label="Ország" value={dino.discovered_country || '—'} bodyFont={bodyFont} boldFont={boldFont} />
           <StatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} />
         </View>
 
@@ -707,12 +710,12 @@ const s = StyleSheet.create({
   altLatin: {
     color: COLORS.darkGreen,
     fontStyle: 'italic',
-    fontSize: 10,
+    fontSize: 12,
     textAlign: 'center',
     marginTop: 2,
   },
   altLatinLarge: {
-    fontSize: 10,
+    fontSize: 12,
     marginTop: 4,
   },
 
