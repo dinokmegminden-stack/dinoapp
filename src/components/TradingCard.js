@@ -8,7 +8,7 @@
 // csomagon belüli lapozás (Next/Prev) alatt megmarad, mert a BrowseScreen
 // ugyanazt a TradingCard-példányt tartja életben, csak a `dino` propot cseréli.
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   useFonts as useLuckiestGuy,
@@ -266,37 +266,56 @@ export default function TradingCard({
           <View style={s.altDataCol}>
             <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} large={isBigCard} />
 
-            <View style={[s.altDataColBody, isBigCard && s.altDataColBodyLarge]}>
-              <View style={[s.altStatGrid, isBigCard && s.altStatGridLarge]}>
-                <AltStatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
-                <AltStatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
-                <AltStatCell label="Dínócsalád" value={dino.csalad || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
-                <AltStatCell label="Felfedezés" value={discovery} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
-              </View>
+            {(() => {
+              const dataBody = (
+                <>
+                  <View style={[s.altStatGrid, isBigCard && s.altStatGridLarge]}>
+                    <AltStatCell label="Hossz" value={length} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                    <AltStatCell label="Étrend" value={capitalize(dino.diet_hu) || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                    <AltStatCell label="Dínócsalád" value={dino.csalad || '—'} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                    <AltStatCell label="Felfedezés" value={discovery} bodyFont={bodyFont} boldFont={boldFont} large={isBigCard} />
+                  </View>
 
-              {!!dino.description_hu && (
-                <Text
-                  style={[
-                    s.altDescription,
-                    { fontFamily: bodyFont, fontSize: altDescriptionFontSize, lineHeight: altDescriptionFontSize * 1.5 },
-                  ]}
-                  numberOfLines={isBigCard ? 10 : (isDesktop ? 8 : 6)}
+                  {!!dino.description_hu && (
+                    <Text
+                      style={[
+                        s.altDescription,
+                        { fontFamily: bodyFont, fontSize: altDescriptionFontSize, lineHeight: altDescriptionFontSize * 1.5 },
+                      ]}
+                      // Nagy kártyánál a doboz görgethető, így a leírás sosem vágódik
+                      // le — kisebb (nem fix magasságú) nézetben a numberOfLines vet
+                      // véget neki, mert ott nincs scroll, ami a túlfolyást kezelné.
+                      numberOfLines={isBigCard ? undefined : (isDesktop ? 8 : 6)}
+                    >
+                      {dino.description_hu}
+                    </Text>
+                  )}
+
+                  <View style={s.altFindRow}>
+                    {!!rarityLabel && (
+                      <Text style={[s.altRarityText, isBigCard && s.altRarityTextLarge, { fontFamily: boldFont }]}>{rarityLabel.toUpperCase()}</Text>
+                    )}
+                    {currentIndex != null && totalCount != null && (
+                      <Text style={[s.altCounterText, isBigCard && s.altCounterTextLarge, { fontFamily: bodyFont }]}>
+                        No. {String(currentIndex).padStart(3, '0')}/{totalCount}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              );
+
+              return isBigCard ? (
+                <ScrollView
+                  style={s.altDataColScroll}
+                  contentContainerStyle={s.altDataColBodyLarge}
+                  showsVerticalScrollIndicator
                 >
-                  {dino.description_hu}
-                </Text>
-              )}
-
-              <View style={s.altFindRow}>
-                {!!rarityLabel && (
-                  <Text style={[s.altRarityText, isBigCard && s.altRarityTextLarge, { fontFamily: boldFont }]}>{rarityLabel.toUpperCase()}</Text>
-                )}
-                {currentIndex != null && totalCount != null && (
-                  <Text style={[s.altCounterText, isBigCard && s.altCounterTextLarge, { fontFamily: bodyFont }]}>
-                    No. {String(currentIndex).padStart(3, '0')}/{totalCount}
-                  </Text>
-                )}
-              </View>
-            </View>
+                  {dataBody}
+                </ScrollView>
+              ) : (
+                <View style={s.altDataColBody}>{dataBody}</View>
+              );
+            })()}
           </View>
         </View>
       </View>
@@ -609,6 +628,9 @@ const s = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 18,
     paddingBottom: 20,
+  },
+  altDataColScroll: {
+    flex: 1,
   },
 
   timeline: {
