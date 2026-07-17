@@ -211,7 +211,7 @@ export default function TradingCard({
   // torzulás/levágás nélkül — ez alatt az "alt" nézet visszaesik a rugalmas,
   // százalékos oszlopszélességre (ugyanaz, mint desktopon kívül).
   const isBigCard = width >= 1300;
-  const [layout, setLayout] = useState('classic');
+  const [layout, setLayout] = useState('alt');
   const cardMaxWidth = isDesktop
     ? (layout === 'alt' ? (isBigCard ? ALT_CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_DESKTOP) : CARD_MAX_WIDTH_DESKTOP)
     : CARD_MAX_WIDTH_MOBILE;
