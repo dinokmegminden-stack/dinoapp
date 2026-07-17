@@ -122,7 +122,7 @@ export const IMAGE_MAP = {
   // "Nagatitan": require('../../assets/images/nagatitan.jpg'),
   // "Deinocheirus": require('../../assets/images/deinocheirus.jpg'),
   "Australovenator": require('../../assets/images/australovenator.jpg'),
-  // "Deinonychus": require('../../assets/images/deinonychus.jpg'),
+  "Deinonychus": require('../../assets/images/deinonychus.jpg'),
   // 
   // "Psittacosaurus": require('../../assets/images/psittacosaurus.jpg'),
   "Buitreraptor": require('../../assets/images/buitreraptor.jpg'),

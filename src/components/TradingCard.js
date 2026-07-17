@@ -28,7 +28,7 @@ const CARD_MAX_WIDTH_DESKTOP = 600;
 // nagy kártyánál — ebből számoljuk vissza a képoszlop szélességét úgy, hogy a
 // kép a saját 16:9 arányában pontosan kitöltse a magasságát, "letterbox" sáv
 // (üres olív csík a kép fölött/alatt) nélkül.
-const ALT_DATA_COL_WIDTH_DESKTOP = 380;
+const ALT_DATA_COL_WIDTH_DESKTOP = Math.round(380 * 1.1);
 const ALT_CARD_HEIGHT_DESKTOP = 563;
 const ALT_NAME_BAND_HEIGHT_DESKTOP = 85;
 const ALT_IMAGE_WIDTH_DESKTOP = Math.round((ALT_CARD_HEIGHT_DESKTOP - ALT_NAME_BAND_HEIGHT_DESKTOP) * (16 / 9));
@@ -101,15 +101,22 @@ function AltStatCell({ label, value, bodyFont, boldFont, large }) {
 }
 
 // Vízszintes, skálázott idővonal a Mezozoikum korszakhatáraival és egy
-// jelölővel a dínó korára. A jelölő pozícióját százalékban számoljuk, hogy RN-ben
-// (ahol nincs CSS calc/vw) is egyszerűen abszolút pozicionálható legyen.
+// vastag csíkkal a dínó élt-idejére (nem egyetlen pötty, hanem a teljes
+// mya_min–mya_max tartomány) — a pozíciókat százalékban számoljuk, hogy
+// RN-ben (ahol nincs CSS calc/vw) egyszerűen abszolút pozicionálható legyen.
 function MesoTimeline({ myaMin, myaMax, boldFont, large }) {
-  const midAge = myaMin != null && myaMax != null
-    ? (myaMin + myaMax) / 2
-    : (myaMin ?? myaMax);
-  const rawPct = midAge != null ? pctForMya(midAge) : null;
-  const showMarker = rawPct != null && rawPct >= -3 && rawPct <= 103;
-  const markerPct = showMarker ? Math.max(0, Math.min(100, rawPct)) : null;
+  const pctMin = myaMin != null ? pctForMya(myaMin) : null;
+  const pctMax = myaMax != null ? pctForMya(myaMax) : null;
+  const rangePcts = [pctMin, pctMax].filter((p) => p != null);
+
+  const rawLeftPct = rangePcts.length ? Math.min(...rangePcts) : null;
+  const rawRightPct = rangePcts.length ? Math.max(...rangePcts) : null;
+  const rawMidPct = rangePcts.length ? (rawLeftPct + rawRightPct) / 2 : null;
+
+  const showRange = rawMidPct != null && rawMidPct >= -3 && rawMidPct <= 103;
+  const leftPct = showRange ? Math.max(0, Math.min(100, rawLeftPct)) : null;
+  const rightPct = showRange ? Math.max(0, Math.min(100, rawRightPct)) : null;
+  const midPct = showRange ? Math.max(0, Math.min(100, rawMidPct)) : null;
 
   const triassicPct = ((MYA_SCALE_START - ERA_BOUNDS.triassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
   const jurassicPct = ((MYA_SCALE_START - ERA_BOUNDS.jurassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
@@ -130,16 +137,24 @@ function MesoTimeline({ myaMin, myaMax, boldFont, large }) {
 
       <View style={s.timelineTrack}>
         <View style={s.timelineBaseline} />
-        {showMarker && (
-          <View style={[s.marker, { left: `${markerPct}%` }]}>
-            {(myaMin != null || myaMax != null) && (
-              <View style={[s.markerFlag, large && s.markerFlagLarge]}>
-                <Text style={[s.markerFlagText, large && s.markerFlagTextLarge, { fontFamily: boldFont }]}>
-                  {formatAgeRange(myaMax, myaMin)}
-                </Text>
-              </View>
-            )}
-            <View style={s.markerPin} />
+        <View style={[s.eraBoundaryTick, large && s.eraBoundaryTickLarge, { left: `${triassicPct}%` }]} />
+        <View style={[s.eraBoundaryTick, large && s.eraBoundaryTickLarge, { left: `${jurassicPct}%` }]} />
+        {showRange && (
+          <View
+            style={[
+              s.rangeBar,
+              large && s.rangeBarLarge,
+              { left: `${leftPct}%`, width: `${rightPct - leftPct}%` },
+            ]}
+          />
+        )}
+        {showRange && (myaMin != null || myaMax != null) && (
+          <View style={[s.marker, { left: `${midPct}%` }]}>
+            <View style={[s.markerFlag, large && s.markerFlagLarge]}>
+              <Text style={[s.markerFlagText, large && s.markerFlagTextLarge, { fontFamily: boldFont }]}>
+                {formatAgeRange(myaMax, myaMin)}
+              </Text>
+            </View>
           </View>
         )}
       </View>
@@ -756,6 +771,35 @@ const s = StyleSheet.create({
     backgroundColor: 'rgba(60,44,23,0.35)',
     borderRadius: 1,
   },
+  rangeBar: {
+    position: 'absolute',
+    top: '50%',
+    height: 6,
+    minWidth: 6,
+    marginTop: -3,
+    borderRadius: 3,
+    backgroundColor: '#9b2b20',
+    borderWidth: 1,
+    borderColor: 'rgba(253,243,231,0.7)',
+  },
+  rangeBarLarge: {
+    height: 9,
+    marginTop: -4.5,
+    borderRadius: 4.5,
+  },
+  // Apró vonás a jura és a kréta kezdeténél (triassicPct/jurassicPct), hogy a
+  // korszakhatár a csík alatt is jól látszódjon, ne csak az era-sáv színváltásán.
+  eraBoundaryTick: {
+    position: 'absolute',
+    top: -4,
+    width: 1,
+    height: 10,
+    backgroundColor: 'rgba(60,44,23,0.55)',
+  },
+  eraBoundaryTickLarge: {
+    top: -6,
+    height: 15,
+  },
   marker: {
     position: 'absolute',
     top: -6,
@@ -766,7 +810,7 @@ const s = StyleSheet.create({
   markerFlag: {
     position: 'absolute',
     bottom: 10,
-    backgroundColor: '#9b2b20',
+    backgroundColor: 'rgba(155,43,32,0.55)',
     paddingVertical: 2,
     paddingHorizontal: 5,
     borderRadius: 4,
@@ -784,14 +828,6 @@ const s = StyleSheet.create({
   },
   markerFlagTextLarge: {
     fontSize: 12,
-  },
-  markerPin: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#9b2b20',
-    borderWidth: 1.5,
-    borderColor: '#fdf3e7',
   },
 
   altStatGrid: {
