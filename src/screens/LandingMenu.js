@@ -4,7 +4,7 @@
 // Ikonnevek MaterialCommunityIcons-ra ellenőrizve (a spec Tabler-nevei közül több
 // nem létezik ebben a libben, pl. "mountain" → "image-filter-hdr", "sun" → "weather-sunny").
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PressableButton from '../components/PressableButton';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -12,13 +12,28 @@ import { COLORS, RADIUS } from '../constants/theme';
 // A régiógombok egységes bgMid színt kapnak (nem régiónként eltérőt) —
 // a korábbi, soronként más színű változat túl zsúfoltnak hatott.
 const INK = '#001219';
+
+// Dedikált régió-ikonok a MaterialCommunityIcons helyett — a korábbi
+// Dél-/Észak-Amerika 'arrow-down-bold'/'arrow-up-bold' irányított nyilak
+// félrevezetőek voltak, nem régió-jelentésűek. Dél- és Észak-Amerikának
+// egyelőre nincs külön ikonfájlja, ezért ideiglenesen közösen az
+// icon_amerika.png-t használják (jobb, mint a nyíl).
+const REGION_ICONS = {
+  1: require('../../assets/icons/icon_karpat.png'),
+  2: require('../../assets/icons/icon_europa.png'),
+  3: require('../../assets/icons/icon_afrika.png'),
+  4: require('../../assets/icons/icon_azsia.png'),
+  5: require('../../assets/icons/icon_amerika.png'),
+  6: require('../../assets/icons/icon_amerika.png'),
+};
+
 const REGIONS = [
-  { edu: 1, label: 'Kárpát-medence', icon: 'image-filter-hdr' },
-  { edu: 2, label: 'Európa', icon: 'castle' },
-  { edu: 3, label: 'Afrika', icon: 'weather-sunny' },
-  { edu: 4, label: 'Ázsia', icon: 'yin-yang' },
-  { edu: 5, label: 'Dél-Amerika', icon: 'arrow-down-bold' },
-  { edu: 6, label: 'Észak-Amerika', icon: 'arrow-up-bold' },
+  { edu: 1, label: 'Kárpát-medence' },
+  { edu: 2, label: 'Európa' },
+  { edu: 3, label: 'Afrika' },
+  { edu: 4, label: 'Ázsia' },
+  { edu: 5, label: 'Dél-Amerika' },
+  { edu: 6, label: 'Észak-Amerika' },
 ];
 
 const GAMES = [
@@ -39,6 +54,7 @@ export default function LandingMenu({
   onMillionaire,
   onMemory,
   onWhoAmI,
+  collectionRatio = 0,
 }) {
   const gameHandlers = {
     memory: onMemory,
@@ -59,20 +75,27 @@ export default function LandingMenu({
             style={[styles.gridBtn, { backgroundColor: 'rgba(0,95,115,0.45)' }]}
             shadowColor={COLORS.bgDark}
           >
-            <MaterialCommunityIcons name={region.icon} size={22} color={COLORS.cream} />
+            <Image source={REGION_ICONS[region.edu]} style={styles.regionIcon} resizeMode="contain" />
             <Text style={styles.gridBtnText}>{region.label}</Text>
           </PressableButton>
         ))}
-        <PressableButton
-          onPress={onOpenGallery}
-          containerStyle={styles.gridCell}
-          style={[styles.gridBtn, { backgroundColor: COLORS.bgMidLight }]}
-          shadowColor={COLORS.bgMid}
-        >
-          <MaterialCommunityIcons name="image" size={22} color={COLORS.cream} />
-          <Text style={styles.gridBtnText}>Gyűjtemény</Text>
-        </PressableButton>
       </View>
+
+      <PressableButton
+        onPress={onOpenGallery}
+        containerStyle={styles.collectionCell}
+        style={[styles.gridBtn, styles.collectionBtn, { backgroundColor: COLORS.bgMidLight }]}
+        shadowColor={COLORS.bgMid}
+      >
+        <View style={styles.collectionRow}>
+          <MaterialCommunityIcons name="image-multiple" size={22} color={COLORS.cream} />
+          <Text style={styles.gridBtnText}>Gyűjtemény</Text>
+        </View>
+        <Text style={styles.collectionCount}>{Math.round(collectionRatio * 100)}% kész</Text>
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${Math.round(collectionRatio * 100)}%` }]} />
+        </View>
+      </PressableButton>
 
       <SectionLabel>JÁTÉKMÓDOK</SectionLabel>
       <View style={styles.grid}>
@@ -131,5 +154,43 @@ const styles = StyleSheet.create({
     fontSize: 15,
     letterSpacing: 0.5,
     textAlign: 'center',
+  },
+  regionIcon: {
+    width: 22,
+    height: 22,
+  },
+  collectionCell: {
+    width: '100%',
+    marginTop: 10,
+  },
+  collectionBtn: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: 8,
+    paddingVertical: 14,
+  },
+  collectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  collectionCount: {
+    color: COLORS.cream,
+    opacity: 0.85,
+    fontSize: 12,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  progressTrack: {
+    height: 8,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(0,18,25,0.35)',
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.accent,
   },
 });

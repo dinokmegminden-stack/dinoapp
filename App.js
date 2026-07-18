@@ -151,6 +151,8 @@ export default function App() {
       {view === 'landing' && (
         <LandingPage
           nickname={nickname}
+          progress={progress}
+          allDinos={allDinos}
           onEnterRegion={handleEnterRegion}
           onOpenGallery={handleOpenGallery}
           onOpenLeaderboard={handleOpenLeaderboard}

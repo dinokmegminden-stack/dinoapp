@@ -14,10 +14,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import PrimaryCTA from '../components/PrimaryCTA';
+import DailyDinoCard from '../components/DailyDinoCard';
 import LandingMenu from './LandingMenu';
 import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
-import { loadProgress, findNextPack } from '../utils/regionProgress';
+import { findNextPack, overallCompletionRatio } from '../utils/regionProgress';
 import { COLORS, RADIUS } from '../constants/theme';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
@@ -65,7 +66,7 @@ function RoundIconButton({ icon, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
+export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const [muted, setMuted] = useState(getSoundMuted());
 
   const toggleMute = () => {
@@ -109,16 +110,18 @@ export default function LandingPage({ nickname, onEnterRegion, onOpenGallery, on
     onStartWhoAmI?.();
   };
 
-  const handleStartAdventure = async () => {
+  const handleStartAdventure = () => {
     playSound('click');
-    try {
-      const progress = await loadProgress(nickname);
-      const next = findNextPack(progress);
-      onEnterRegion(next ? next.eduLevel : 1);
-    } catch {
-      onEnterRegion(1);
-    }
+    const next = findNextPack(progress || {});
+    onEnterRegion(next ? next.eduLevel : 1);
   };
+
+  const handleDailyDinoPress = (dino) => {
+    playSound('click');
+    onEnterRegion(dino?.edu || 1);
+  };
+
+  const collectionRatio = overallCompletionRatio(progress || {});
 
   return (
     <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]} backgroundImage={landingBg}>
@@ -142,6 +145,9 @@ export default function LandingPage({ nickname, onEnterRegion, onOpenGallery, on
           {/* 2b. Elsődleges CTA */}
           <PrimaryCTA onPress={handleStartAdventure} />
 
+          {/* 2c. Napi Dínó flip-kártya */}
+          <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} />
+
           {/* 3–5. Menü szekciók */}
           <View style={styles.menuWrapper}>
             <LandingMenu
@@ -151,6 +157,7 @@ export default function LandingPage({ nickname, onEnterRegion, onOpenGallery, on
               onMillionaire={handleStartMillionaire}
               onMemory={handleStartMemory}
               onWhoAmI={handleStartWhoAmI}
+              collectionRatio={collectionRatio}
             />
           </View>
         </View>
