@@ -13,9 +13,11 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
+import PrimaryCTA from '../components/PrimaryCTA';
 import LandingMenu from './LandingMenu';
 import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
+import { loadProgress, findNextPack } from '../utils/regionProgress';
 import { COLORS, RADIUS } from '../constants/theme';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
@@ -63,7 +65,7 @@ function RoundIconButton({ icon, onPress }) {
   );
 }
 
-export default function LandingPage({ onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
+export default function LandingPage({ nickname, onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const [muted, setMuted] = useState(getSoundMuted());
 
   const toggleMute = () => {
@@ -107,6 +109,17 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onOpenLeader
     onStartWhoAmI?.();
   };
 
+  const handleStartAdventure = async () => {
+    playSound('click');
+    try {
+      const progress = await loadProgress(nickname);
+      const next = findNextPack(progress);
+      onEnterRegion(next ? next.eduLevel : 1);
+    } catch {
+      onEnterRegion(1);
+    }
+  };
+
   return (
     <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]} backgroundImage={landingBg}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
@@ -125,6 +138,9 @@ export default function LandingPage({ onEnterRegion, onOpenGallery, onOpenLeader
 
           {/* 2. Logó blokk (döntött cím, accent alcím) */}
           <HeroTop />
+
+          {/* 2b. Elsődleges CTA */}
+          <PrimaryCTA onPress={handleStartAdventure} />
 
           {/* 3–5. Menü szekciók */}
           <View style={styles.menuWrapper}>
