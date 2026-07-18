@@ -78,10 +78,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
         csomag={selectedCsomag}
         packages={packages}
         creatures={creatures}
-        onPassed={(csomag, packId, score) => {
-          onPassed(csomag, packId, score);
-          setCurrentScreen('packages');
-        }}
+        onPassed={onPassed}
         onRetry={() => setQuizAttempt((n) => n + 1)}
         onBack={() => setCurrentScreen('packages')}
       />

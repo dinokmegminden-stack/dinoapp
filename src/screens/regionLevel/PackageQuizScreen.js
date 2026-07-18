@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import { COLORS } from '../../constants/colors';
 import { playQuizSfx } from '../../audio/audioSystem';
@@ -19,6 +19,18 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
   const [finished, setFinished] = useState(false);
 
   const question = questions[qIndex];
+  const passed = finished && questions.length > 0 && correctCount / questions.length >= PASS_THRESHOLD;
+
+  // A sikeres eredményt azonnal mentjük, amint kiderül — nem várhatunk egy
+  // konkrét gombra kattintásra, mert a "Vissza" link is kilépési útvonal
+  // erről a képernyőről, és korábban csak a "Tovább" gomb mentette el a
+  // próbálkozást, így a vissza-linkkel kilépve a sikeres eredmény is elveszett.
+  useEffect(() => {
+    if (passed) {
+      onPassed(csomag, csomagToPackId(eduLevel, csomag), correctCount / questions.length);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passed]);
 
   const handleSelect = (idx) => {
     if (revealed) return;
@@ -45,7 +57,6 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
   };
 
   if (finished) {
-    const passed = questions.length > 0 && correctCount / questions.length >= PASS_THRESHOLD;
     return (
       <LevelShell>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
@@ -58,10 +69,7 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
               : `A csomag kinyitásához legalább ${Math.round(PASS_THRESHOLD * 100)}% helyes válasz szükséges. Próbáld újra!`}
           </Text>
           {passed ? (
-            <TouchableOpacity
-              style={s.primaryBtn}
-              onPress={() => onPassed(csomag, csomagToPackId(eduLevel, csomag), correctCount / questions.length)}
-            >
+            <TouchableOpacity style={s.primaryBtn} onPress={onBack}>
               <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
             </TouchableOpacity>
           ) : (
