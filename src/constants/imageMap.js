@@ -72,12 +72,12 @@ export const IMAGE_MAP = {
   // 
   // 
   "Gallimimus": require('../../assets/images/gallimimus.jpg'),
-  // "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
+  "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
   "Albertosaurus": require('../../assets/images/albertosaurus.jpg'),
   "Amargasaurus": require('../../assets/images/amargasaurus.jpg'),
-  // 
+  //
   "Brachiosaurus": require('../../assets/images/brachiosaurus.jpg'),
-  // "Masiakasaurus": require('../../assets/images/masiakasaurus.jpg'),
+  "Masiakasaurus": require('../../assets/images/masiakasaurus.jpg'),
   "Qantassaurus": require('../../assets/images/qantassaurus.jpg'),
   // "Neuquenosaurus": require('../../assets/images/neuquenosaurus.jpg'),
   // "Giganotosaurus": require('../../assets/images/giganotosaurus.jpg'),
