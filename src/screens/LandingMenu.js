@@ -22,9 +22,9 @@ const REGIONS = [
   { edu: 1, label: 'Kárpát-medence', icon: 'image-filter-hdr' },
   { edu: 2, label: 'Európa', icon: 'castle' },
   { edu: 3, label: 'Afrika', icon: 'elephant' },
-  { edu: 4, label: 'Ázsia', icon: 'panda' },
+  { edu: 4, label: 'Ázsia', icon: 'noodles' },
   { edu: 5, label: 'Dél-Amerika', icon: 'pine-tree' },
-  { edu: 6, label: 'Észak-Amerika', icon: 'terrain' },
+  { edu: 6, label: 'Észak-Amerika', icon: 'cactus' },
 ];
 
 const GAMES = [
