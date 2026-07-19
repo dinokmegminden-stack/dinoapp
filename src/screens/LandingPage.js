@@ -69,7 +69,7 @@ function RoundIconButton({ icon, onPress }) {
 
 // A gyűjtemény korábban egy külön, teljes szélességű sávban élt a menüben —
 // most a fejlécben, a ranglista-ikon mellett kapott helyet, a már kinyitott
-// kártyák arányával a pici ikon fölött, hogy állandóan látszódjon.
+// kártyák arányával egy jelvényként az ikon elülső (bal felső) sarkán, rajta.
 function CollectionIconButton({ ratio, onPress }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
@@ -77,7 +77,6 @@ function CollectionIconButton({ ratio, onPress }) {
 
   return (
     <View style={styles.collectionIconWrap}>
-      <Text style={styles.collectionIconPct}>{pct}%</Text>
       <Pressable
         style={[
           styles.roundBtn,
@@ -92,6 +91,9 @@ function CollectionIconButton({ ratio, onPress }) {
       >
         <MaterialCommunityIcons name="image-multiple" size={18} color={COLORS.cream} />
       </Pressable>
+      <View style={styles.collectionBadge} pointerEvents="none">
+        <Text style={styles.collectionBadgeText}>{pct}%</Text>
+      </View>
     </View>
   );
 }
@@ -286,13 +288,25 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   collectionIconWrap: {
-    alignItems: 'center',
+    position: 'relative',
   },
-  collectionIconPct: {
-    color: COLORS.accent,
-    fontSize: 10,
+  collectionBadge: {
+    position: 'absolute',
+    top: -6,
+    left: -8,
+    minWidth: 20,
+    alignItems: 'center',
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    borderWidth: 1.5,
+    borderColor: COLORS.bgDark,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+  },
+  collectionBadgeText: {
+    color: COLORS.bgDark,
+    fontSize: 9,
     fontWeight: '800',
-    marginBottom: 2,
   },
   roundBtn: {
     width: 40,
