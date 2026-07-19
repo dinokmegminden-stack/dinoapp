@@ -222,14 +222,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   leftColWide: {
-    flex: 1,
+    flex: 2,
   },
   rightCol: {
     width: '100%',
     position: 'relative',
   },
   rightColWide: {
-    flex: 2,
+    flex: 3,
   },
   headerBar: {
     flexDirection: 'row',
