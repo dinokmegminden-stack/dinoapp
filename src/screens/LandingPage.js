@@ -1,6 +1,6 @@
 // LandingPage — redesign spec 3. pont: header sáv (XP pill + ikon gombok),
 // döntött logó blokk, majd a LandingMenu szekciói egyetlen oszlopban.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -126,6 +126,17 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
 
   const collectionRatio = overallCompletionRatio(progress || {});
 
+  // Régiónkénti fajszám az allDinos (App.js már betölti mind a 6 edu-t egyszer)
+  // csoportosításából — így az összeg mindig pontosan egyezik a hero-ban írt
+  // összlény-számmal, nem kell külön Supabase-lekérdezés.
+  const regionCounts = useMemo(() => {
+    const counts = {};
+    (allDinos || []).forEach((d) => {
+      counts[d.edu] = (counts[d.edu] || 0) + 1;
+    });
+    return counts;
+  }, [allDinos]);
+
   return (
     <Shell
       gradientColors={[COLORS.bgDark, COLORS.bgMid]}
@@ -151,7 +162,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
           <View style={[styles.mainArea, isWide && styles.mainAreaWide]}>
             <View style={[styles.leftCol, isWide && styles.leftColWide]}>
               {/* 2. Logó blokk (döntött cím, accent alcím) */}
-              <HeroTop isWide={isWide} />
+              <HeroTop isWide={isWide} totalCreatures={allDinos?.length} />
 
               {/* 2b. Elsődleges CTA */}
               <PrimaryCTA onPress={handleStartAdventure} />
@@ -170,6 +181,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
                 onMemory={handleStartMemory}
                 onWhoAmI={handleStartWhoAmI}
                 collectionRatio={collectionRatio}
+                regionCounts={regionCounts}
               />
             </View>
           </View>

@@ -46,6 +46,7 @@ export default function LandingMenu({
   onMemory,
   onWhoAmI,
   collectionRatio = 0,
+  regionCounts,
 }) {
   const gameHandlers = {
     memory: onMemory,
@@ -53,6 +54,11 @@ export default function LandingMenu({
     lightning: onLightningQuiz,
     millionaire: onMillionaire,
   };
+
+  // Amíg az allDinos (App.js) még nem töltött be, regionCounts üres objektum —
+  // ilyenkor "…"-t írunk 0 helyett, hogy ne tűnjön úgy, mintha egy régióban
+  // nem lenne dínó.
+  const countsLoading = !regionCounts || Object.keys(regionCounts).length === 0;
 
   return (
     <View style={styles.menuContainer}>
@@ -67,7 +73,12 @@ export default function LandingMenu({
             shadowColor={COLORS.bgDark}
           >
             <MaterialCommunityIcons name={region.icon} size={22} color={COLORS.cream} />
-            <Text style={styles.gridBtnText}>{region.label}</Text>
+            <View style={styles.gridBtnTextCol}>
+              <Text style={styles.gridBtnText}>{region.label}</Text>
+              <Text style={styles.gridBtnSubtext}>
+                {countsLoading ? '…' : `${regionCounts[region.edu] || 0} faj`}
+              </Text>
+            </View>
           </PressableButton>
         ))}
       </View>
@@ -144,6 +155,16 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: 15,
     letterSpacing: 0.5,
+    textAlign: 'center',
+  },
+  gridBtnTextCol: {
+    alignItems: 'center',
+  },
+  gridBtnSubtext: {
+    color: COLORS.cream,
+    opacity: 0.7,
+    fontSize: 11,
+    marginTop: 2,
     textAlign: 'center',
   },
   collectionCell: {

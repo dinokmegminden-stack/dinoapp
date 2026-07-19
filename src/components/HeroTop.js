@@ -12,7 +12,12 @@ import {
 } from '@expo-google-fonts/fredoka';
 import { COLORS } from '../constants/theme';
 
-export default function HeroTop({ isWide = false }) {
+// Amíg az allDinos még nem töltött be (App.js preloadCreatures), ezt írjuk ki
+// helyette — a `creatures` tábla jelenlegi tartalma szerinti tényleges szám
+// (lásd data/111 db.csv). Ha allDinos betöltött, a valós hossza felülírja.
+const TOTAL_CREATURES_FALLBACK = 111;
+
+export default function HeroTop({ isWide = false, totalCreatures }) {
   const { width } = useWindowDimensions();
 
   const [luckiestLoaded] = useLuckiest({ LuckiestGuy_400Regular });
@@ -20,6 +25,7 @@ export default function HeroTop({ isWide = false }) {
 
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
   const titleSize = width < 768 ? 32 : 40;
+  const creatureCount = totalCreatures || TOTAL_CREATURES_FALLBACK;
 
   return (
     <View style={[styles.container, isWide && styles.containerWide]}>
@@ -47,6 +53,15 @@ export default function HeroTop({ isWide = false }) {
             ]}
           >
             Gyűjts, tanulj, játssz!
+          </Text>
+          <Text
+            style={[
+              styles.valueProp,
+              isWide && styles.valuePropWide,
+              { fontFamily: fontsLoaded ? 'Fredoka_400Regular' : 'System' },
+            ]}
+          >
+            Fedezz fel {creatureCount} őslényt 6 kontinensről — gyűjtsd, tanuld meg, játssz velük!
           </Text>
         </View>
       </View>
@@ -109,6 +124,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   subtitleWide: {
+    textAlign: 'left',
+  },
+  valueProp: {
+    color: COLORS.cream,
+    opacity: 0.85,
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 4,
+  },
+  valuePropWide: {
     textAlign: 'left',
   },
 });
