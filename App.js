@@ -12,6 +12,7 @@ import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
 import WhoAmIScreen from './src/screens/WhoAmIScreen';
 import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
+import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import { loadProgress, recordPackQuizResult } from './src/utils/regionProgress';
@@ -117,6 +118,10 @@ export default function App() {
     setView('leaderboard');
   };
 
+  const handleOpenDashboard = () => {
+    setView('dashboard');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -156,6 +161,7 @@ export default function App() {
           onEnterRegion={handleEnterRegion}
           onOpenGallery={handleOpenGallery}
           onOpenLeaderboard={handleOpenLeaderboard}
+          onOpenDashboard={handleOpenDashboard}
           onStartLightningQuiz={handleStartLightningQuiz}
           onStartMillionaire={handleStartMillionaire}
           onStartMemory={handleStartMemory}
@@ -206,6 +212,16 @@ export default function App() {
 
       {view === 'leaderboard' && (
         <LeaderboardScreen onBack={() => setView('landing')} />
+      )}
+
+      {view === 'dashboard' && (
+        <PlayerDashboardScreen
+          nickname={nickname}
+          playerId={playerId}
+          allDinos={allDinos}
+          progress={progress}
+          onBack={() => setView('landing')}
+        />
       )}
     </View>
   );

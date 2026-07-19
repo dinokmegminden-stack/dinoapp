@@ -165,6 +165,19 @@ export function overallCompletionRatio(progress) {
   return total === 0 ? 0 : passed / total;
 }
 
+// Lény-alapú (nem csomag-alapú) gyűjtési statisztika — pl. "83 / 111 dínó".
+// overallCompletionRatio() ehhez képest csomagok arányát adja (pl. 15/20 pakk),
+// ami eltérő számot adna, mert a pakkok nem egyenlő méretűek.
+export function creatureCollectionStats(allDinos, progress) {
+  let collected = 0;
+  let total = 0;
+  (allDinos || []).forEach((dino) => {
+    total += 1;
+    if (progress?.[dino.edu]?.[dino.csomag]?.quizPassed === true) collected += 1;
+  });
+  return { collected, total };
+}
+
 export function findNextPack(progress) {
   for (const edu of REGION_ORDER) {
     if (!isRegionUnlocked(edu, progress)) continue;

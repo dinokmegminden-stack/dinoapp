@@ -107,7 +107,7 @@ function CollectionIconButton({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
+export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   const [muted, setMuted] = useState(getSoundMuted());
@@ -131,6 +131,11 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
   const handleOpenLeaderboard = () => {
     playSound('click');
     onOpenLeaderboard?.();
+  };
+
+  const handleOpenDashboard = () => {
+    playSound('click');
+    onOpenDashboard?.();
   };
 
   const handleStartLightningQuiz = () => {
@@ -194,7 +199,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
               <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
               <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
               <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
-              <RoundIconButton icon="account-circle" onPress={() => playSound('click')} tooltip={nickname} />
+              <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
             </View>
           </View>
 
