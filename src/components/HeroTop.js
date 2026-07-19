@@ -12,7 +12,7 @@ import {
 } from '@expo-google-fonts/fredoka';
 import { COLORS } from '../constants/theme';
 
-export default function HeroTop() {
+export default function HeroTop({ isWide = false }) {
   const { width } = useWindowDimensions();
 
   const [luckiestLoaded] = useLuckiest({ LuckiestGuy_400Regular });
@@ -22,13 +22,14 @@ export default function HeroTop() {
   const titleSize = width < 768 ? 38 : 50;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.heroCard}>
-        <View style={styles.titleBlock}>
+    <View style={[styles.container, isWide && styles.containerWide]}>
+      <View style={[styles.heroCard, isWide && styles.heroCardWide]}>
+        <View style={[styles.titleBlock, isWide && styles.titleBlockWide]}>
           <View style={styles.titleRow}>
             <Text
               style={[
                 styles.mainTitle,
+                isWide && styles.mainTitleWide,
                 {
                   fontSize: titleSize,
                   fontFamily: fontsLoaded ? 'LuckiestGuy_400Regular' : 'System',
@@ -41,6 +42,7 @@ export default function HeroTop() {
           <Text
             style={[
               styles.subtitle,
+              isWide && styles.subtitleWide,
               { fontFamily: fontsLoaded ? 'Fredoka_400Regular' : 'System' },
             ]}
           >
@@ -59,6 +61,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
   },
+  containerWide: {
+    paddingHorizontal: 0,
+    alignItems: 'flex-start',
+  },
   heroCard: {
     width: '100%',
     maxWidth: 420,
@@ -67,9 +73,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingVertical: 8,
   },
+  heroCardWide: {
+    maxWidth: '100%',
+    alignItems: 'flex-start',
+  },
   titleBlock: {
     alignItems: 'center',
     transform: [{ rotate: '-3deg' }],
+  },
+  titleBlockWide: {
+    alignItems: 'flex-start',
   },
   titleRow: {
     flexDirection: 'row',
@@ -85,11 +98,17 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 3, height: 5 },
     textShadowRadius: 1,
   },
+  mainTitleWide: {
+    textAlign: 'left',
+  },
   subtitle: {
     color: COLORS.accent,
     fontSize: 18,
     letterSpacing: 1,
     textAlign: 'center',
     marginTop: 6,
+  },
+  subtitleWide: {
+    textAlign: 'left',
   },
 });

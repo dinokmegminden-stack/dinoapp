@@ -9,6 +9,7 @@ import {
   Pressable,
   ScrollView,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
@@ -67,6 +68,8 @@ function RoundIconButton({ icon, onPress }) {
 }
 
 export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
+  const { width } = useWindowDimensions();
+  const isWide = width >= 1024;
   const [muted, setMuted] = useState(getSoundMuted());
 
   const toggleMute = () => {
@@ -124,9 +127,13 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
   const collectionRatio = overallCompletionRatio(progress || {});
 
   return (
-    <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]} backgroundImage={landingBg}>
+    <Shell
+      gradientColors={[COLORS.bgDark, COLORS.bgMid]}
+      backgroundImage={landingBg}
+      contentMaxWidth={isWide ? 1120 : undefined}
+    >
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.column}>
+        <View style={[styles.column, isWide && styles.columnWide]}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
           {/* 1. Header sáv: XP pill balra, ikon gombok jobbra */}
@@ -139,26 +146,32 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
             </View>
           </View>
 
-          {/* 2. Logó blokk (döntött cím, accent alcím) */}
-          <HeroTop />
+          {/* Desktopon (>=1024px) két oszlop: bal = logó/CTA/napi dínó, jobb = menü.
+              Mobilon/tableten marad az eredeti, egy-oszlopos sorrend. */}
+          <View style={[styles.mainArea, isWide && styles.mainAreaWide]}>
+            <View style={[styles.leftCol, isWide && styles.leftColWide]}>
+              {/* 2. Logó blokk (döntött cím, accent alcím) */}
+              <HeroTop isWide={isWide} />
 
-          {/* 2b. Elsődleges CTA */}
-          <PrimaryCTA onPress={handleStartAdventure} />
+              {/* 2b. Elsődleges CTA */}
+              <PrimaryCTA onPress={handleStartAdventure} />
 
-          {/* 2c. Napi Dínó flip-kártya */}
-          <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} />
+              {/* 2c. Napi Dínó flip-kártya */}
+              <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} />
+            </View>
 
-          {/* 3–5. Menü szekciók */}
-          <View style={styles.menuWrapper}>
-            <LandingMenu
-              onSelectRegion={handleSelectRegion}
-              onOpenGallery={handleOpenGallery}
-              onLightningQuiz={handleStartLightningQuiz}
-              onMillionaire={handleStartMillionaire}
-              onMemory={handleStartMemory}
-              onWhoAmI={handleStartWhoAmI}
-              collectionRatio={collectionRatio}
-            />
+            {/* 3–5. Menü szekciók */}
+            <View style={[styles.rightCol, isWide && styles.rightColWide]}>
+              <LandingMenu
+                onSelectRegion={handleSelectRegion}
+                onOpenGallery={handleOpenGallery}
+                onLightningQuiz={handleStartLightningQuiz}
+                onMillionaire={handleStartMillionaire}
+                onMemory={handleStartMemory}
+                onWhoAmI={handleStartWhoAmI}
+                collectionRatio={collectionRatio}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -181,8 +194,30 @@ const styles = StyleSheet.create({
     maxWidth: 520,
     paddingHorizontal: 20,
   },
-  menuWrapper: {
+  columnWide: {
+    maxWidth: 1120,
+    paddingHorizontal: 32,
+  },
+  mainArea: {
+    width: '100%',
+  },
+  mainAreaWide: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 32,
+  },
+  leftCol: {
+    width: '100%',
+  },
+  leftColWide: {
+    flex: 1,
+  },
+  rightCol: {
+    width: '100%',
     position: 'relative',
+  },
+  rightColWide: {
+    flex: 1,
   },
   headerBar: {
     flexDirection: 'row',

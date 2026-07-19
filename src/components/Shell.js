@@ -6,13 +6,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 // háttere ez a (függőleges) átmenet lesz az egyszínű #283618 helyett.
 // backgroundImage: opcionális kép — csak asztali (web, >=700px) nézetben jelenik
 // meg teljes méretben a teljes oldal mögött, sötét overlay-jel a szöveg olvashatóságáért.
-export default function Shell({ children, wide = false, gradientColors = null, backgroundImage = null }) {
+// contentMaxWidth: opcionális felülírás a belső tartalom max-szélességére
+// (pl. a landing 1024px fölött 1120px-es két-oszlopos elrendezéshez) — a
+// Shell külső (teljes szélességű) háttere és a többi képernyő 750px-es
+// alap-korlátja ettől függetlenül változatlan marad.
+export default function Shell({ children, wide = false, gradientColors = null, backgroundImage = null, contentMaxWidth = null }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
   const showBackgroundImage = backgroundImage && isWideWeb;
 
   const inner = (
-    <View style={[s.inner, (wide || isWideWeb) && s.innerWide]}>
+    <View style={[s.inner, (wide || isWideWeb) && s.innerWide, contentMaxWidth != null && { maxWidth: contentMaxWidth }]}>
       {children}
     </View>
   );
