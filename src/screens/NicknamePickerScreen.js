@@ -5,9 +5,10 @@
 // beírni. A nickname a `players` táblában regisztrálva (unique constraint)
 // lesz a játékos jövőbeli ranglista-azonosítója.
 //
-// Eszközváltás után a régi profil a becenévvel + egy regisztrációkor kapott
-// PIN-nel szerezhető vissza (lásd "Folytatás" mód) — a PIN csak egyszer, a
-// regisztráció után jelenik meg, utána a szerver oldalon nem olvasható vissza.
+// Eszközváltás után a régi profil a becenévvel + egy saját maga választotta
+// 4 jegyű PIN-nel szerezhető vissza (lásd "Folytatás" mód) — a PIN-t a
+// játékos adja meg regisztrációkor, nem a rendszer generálja, hogy könnyű
+// legyen megjegyezni.
 import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,8 +16,10 @@ import Shell from '../components/Shell';
 import OptionPicker from '../components/OptionPicker';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
-import { NICKNAME_DINOS, getGenusOptions, generateNicknameNumber, generatePin, randomFrom, buildNickname } from '../constants/nicknameParts';
+import { NICKNAME_DINOS, getGenusOptions, generateNicknameNumber, randomFrom, buildNickname } from '../constants/nicknameParts';
 import { isNicknameTaken, registerPlayer, resumePlayerWithPin } from '../services/playersService';
+
+const PIN_LENGTH = 4;
 
 export const NICKNAME_STORAGE_KEY = 'dino_player_nickname';
 
@@ -28,13 +31,9 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
   const [dino, setDino] = useState(() => randomFrom(NICKNAME_DINOS));
   const [genus, setGenus] = useState('');
   const [number, setNumber] = useState(() => generateNicknameNumber());
+  const [pin, setPin] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // Regisztráció után ide kerül a friss { nickname, pin, playerId } — amíg ez
-  // be van állítva, a PIN-megjelenítő nézet látszik a form helyett, mert a
-  // PIN-t csak most, egyszer tudjuk megmutatni.
-  const [pinReveal, setPinReveal] = useState(null);
 
   const [resumeNickname, setResumeNickname] = useState('');
   const [resumePin, setResumePin] = useState('');
@@ -58,6 +57,11 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
   };
 
   const handleConfirm = async () => {
+    if (pin.length !== PIN_LENGTH) {
+      setErrorMessage(`A PIN-kód pontosan ${PIN_LENGTH} számjegyből álljon!`);
+      return;
+    }
+
     setSubmitting(true);
     setErrorMessage('');
 
@@ -69,7 +73,6 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
       return;
     }
 
-    const pin = generatePin();
     const result = await registerPlayer(nickname, pin);
     if (result.taken) {
       setErrorMessage('Ez a név már foglalt — próbálj másik számot!');
@@ -84,12 +87,8 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
     }
 
     setSubmitting(false);
-    setPinReveal({ nickname, pin, playerId: result.player.id });
-  };
-
-  const handlePinAcknowledged = async () => {
-    await AsyncStorage.setItem(NICKNAME_STORAGE_KEY, pinReveal.nickname);
-    onNicknameChosen(pinReveal.nickname, pinReveal.playerId);
+    await AsyncStorage.setItem(NICKNAME_STORAGE_KEY, nickname);
+    onNicknameChosen(nickname, result.player.id);
   };
 
   const handleResume = async () => {
@@ -115,30 +114,6 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
     onNicknameChosen(cleanNickname, playerId);
   };
 
-  if (pinReveal) {
-    return (
-      <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]}>
-        <ScrollView contentContainerStyle={styles.centerContent}>
-          <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-          <Text style={styles.title}>🔑 Jegyezd meg a PIN-kódod!</Text>
-          <Text style={styles.subtitle}>
-            Ha máshonnan (pl. másik telefonról) folytatnád, erre a PIN-re lesz szükséged a
-            becenevedhez — később nem tudjuk újra megmutatni.
-          </Text>
-
-          <View style={styles.pinBox}>
-            <Text style={styles.pinBoxLabel}>PIN-kódod</Text>
-            <Text style={styles.pinBoxValue}>{pinReveal.pin}</Text>
-          </View>
-
-          <TouchableOpacity style={styles.confirmBtn} onPress={handlePinAcknowledged}>
-            <Text style={styles.confirmBtnText}>✔ MEGJEGYEZTEM</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </Shell>
-    );
-  }
-
   return (
     <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]}>
       <ScrollView contentContainerStyle={styles.centerContent}>
@@ -147,7 +122,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
         <Text style={styles.subtitle}>
           {mode === 'new'
             ? 'Ez a neved jelenik majd meg a ranglistákon.'
-            : 'Add meg a becenevedet és a regisztrációkor kapott PIN-t.'}
+            : 'Add meg a becenevedet és a regisztrációkor választott PIN-t.'}
         </Text>
 
         <View style={styles.modeToggle}>
@@ -184,14 +159,30 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
                 </View>
                 <Text style={styles.rerollIcon}>🎲</Text>
               </TouchableOpacity>
+
+              <View style={styles.inputField}>
+                <Text style={styles.fieldLabel}>PIN-kód (4 számjegy)</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={pin}
+                  onChangeText={(text) => setPin(text.replace(/[^0-9]/g, '').slice(0, PIN_LENGTH))}
+                  placeholder="pl. 1234"
+                  placeholderTextColor="rgba(254,250,224,0.35)"
+                  keyboardType="number-pad"
+                  maxLength={PIN_LENGTH}
+                />
+              </View>
+              <Text style={styles.pinHint}>
+                Ezt a PIN-t jegyezd meg — ezzel + a beceneveddel tudod majd más eszközön is folytatni a profilod.
+              </Text>
             </View>
 
             {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
             <TouchableOpacity
-              style={[styles.confirmBtn, (submitting || !isReady) && styles.confirmBtnDisabled]}
+              style={[styles.confirmBtn, (submitting || !isReady || pin.length !== PIN_LENGTH) && styles.confirmBtnDisabled]}
               onPress={handleConfirm}
-              disabled={submitting || !isReady}
+              disabled={submitting || !isReady || pin.length !== PIN_LENGTH}
             >
               <Text style={styles.confirmBtnText}>
                 {submitting ? 'Egy pillanat…' : '✔ MEGERŐSÍTÉS'}
@@ -218,11 +209,11 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
                 <TextInput
                   style={styles.textInput}
                   value={resumePin}
-                  onChangeText={setResumePin}
-                  placeholder="6 jegyű kód"
+                  onChangeText={(text) => setResumePin(text.replace(/[^0-9]/g, '').slice(0, PIN_LENGTH))}
+                  placeholder="4 jegyű PIN"
                   placeholderTextColor="rgba(254,250,224,0.35)"
                   keyboardType="number-pad"
-                  maxLength={6}
+                  maxLength={PIN_LENGTH}
                   secureTextEntry
                 />
               </View>
@@ -394,29 +385,10 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: 1,
   },
-  pinBox: {
-    backgroundColor: 'rgba(221,161,94,0.12)',
-    borderWidth: 2,
-    borderColor: COLORS.accent,
-    borderRadius: RADIUS.cardLarge,
-    paddingVertical: 22,
-    paddingHorizontal: 20,
-    marginBottom: 24,
-    width: '100%',
-    maxWidth: 420,
-    alignItems: 'center',
-  },
-  pinBoxLabel: {
-    color: 'rgba(254,250,224,0.62)',
+  pinHint: {
+    color: 'rgba(254,250,224,0.55)',
     fontFamily: FONTS.body,
-    fontSize: 15,
-    marginBottom: 8,
-  },
-  pinBoxValue: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 34,
-    fontWeight: '900',
-    letterSpacing: 6,
+    fontSize: 12,
+    lineHeight: 16,
   },
 });
