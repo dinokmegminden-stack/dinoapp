@@ -28,11 +28,16 @@ const REGIONS = [
   { edu: 6, label: 'Észak-Amerika', icon: 'cactus' },
 ];
 
+// Az átlátszóság mértéke (2 jegyű hex-alfa a szín végén, lásd pl.
+// CollectionTimeline.js "${color}33" mintáját) — magasabb, mint a régiógombok
+// rgba(...,0.45)-je, hogy a játékmódok jobban kiüssenek a régiók mellett.
+const GAME_BG_ALPHA = 'A6'; // ~65%
+
 const GAMES = [
-  { key: 'memory', label: 'PÁROK', icon: 'cards', bg: COLORS.parokBtn, shadow: COLORS.parokBtnShadow },
-  { key: 'whoami', label: 'KI VAGYOK ÉN?', icon: 'help-circle', bg: COLORS.whoAmIBtn, shadow: COLORS.whoAmIBtnShadow },
-  { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', bg: COLORS.accent, shadow: COLORS.accentDark, textColor: INK },
-  { key: 'millionaire', label: 'XP MILLIOMOS', icon: 'trophy', bg: COLORS.accentDark, shadow: COLORS.parokBtnShadow },
+  { key: 'memory', label: 'PÁROK', icon: 'cards', bg: `${COLORS.parokBtn}${GAME_BG_ALPHA}`, shadow: COLORS.parokBtnShadow },
+  { key: 'whoami', label: 'KI VAGYOK ÉN?', icon: 'help-circle', bg: `${COLORS.whoAmIBtn}${GAME_BG_ALPHA}`, shadow: COLORS.whoAmIBtnShadow },
+  { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', bg: `${COLORS.accent}${GAME_BG_ALPHA}`, shadow: COLORS.accentDark, textColor: INK },
+  { key: 'millionaire', label: 'XP MILLIOMOS', icon: 'trophy', bg: `${COLORS.accentDark}${GAME_BG_ALPHA}`, shadow: COLORS.parokBtnShadow },
 ];
 
 function SectionLabel({ children }) {
