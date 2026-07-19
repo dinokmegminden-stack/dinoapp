@@ -1,6 +1,7 @@
 // LandingMenu — a landing menü blokkjai a redesign spec 3. pontja szerint:
-// RÉGIÓK (2×3 grid, Gyűjteménnyel), JÁTÉKMÓDOK (2 oszlopos grid, ugyanaz az elrendezés,
-// mint a régióknál: Párok, Ki vagyok én?, Képkvíz, Milliomos).
+// RÉGIÓK (2×3 grid), JÁTÉKMÓDOK (2 oszlopos grid, ugyanaz az elrendezés,
+// mint a régióknál: Párok, Ki vagyok én?, Képkvíz, Milliomos). A Gyűjtemény
+// a fejlécben, a ranglista-ikon mellett él (lásd LandingPage.js CollectionIconButton).
 // Ikonnevek MaterialCommunityIcons-ra ellenőrizve (a spec Tabler-nevei közül több
 // nem létezik ebben a libben, pl. "mountain" → "image-filter-hdr", "sun" → "weather-sunny").
 import React from 'react';
@@ -40,12 +41,10 @@ function SectionLabel({ children }) {
 
 export default function LandingMenu({
   onSelectRegion,
-  onOpenGallery,
   onLightningQuiz,
   onMillionaire,
   onMemory,
   onWhoAmI,
-  collectionRatio = 0,
   regionCounts,
 }) {
   const gameHandlers = {
@@ -82,22 +81,6 @@ export default function LandingMenu({
           </PressableButton>
         ))}
       </View>
-
-      <PressableButton
-        onPress={onOpenGallery}
-        containerStyle={styles.collectionCell}
-        style={[styles.gridBtn, styles.collectionBtn, { backgroundColor: 'rgba(10,147,150,0.45)' }]}
-        shadowColor={COLORS.bgMid}
-      >
-        <View style={styles.collectionRow}>
-          <MaterialCommunityIcons name="image-multiple" size={22} color={COLORS.cream} />
-          <Text style={styles.gridBtnText}>Gyűjtemény</Text>
-        </View>
-        <Text style={styles.collectionCount}>{Math.round(collectionRatio * 100)}% kész</Text>
-        <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${Math.round(collectionRatio * 100)}%` }]} />
-        </View>
-      </PressableButton>
 
       <SectionLabel>JÁTÉKMÓDOK</SectionLabel>
       <View style={styles.grid}>
@@ -166,39 +149,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     marginTop: 2,
     textAlign: 'center',
-  },
-  collectionCell: {
-    width: '100%',
-    marginTop: 10,
-  },
-  collectionBtn: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    gap: 8,
-    paddingVertical: 12,
-  },
-  collectionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  collectionCount: {
-    color: COLORS.cream,
-    opacity: 0.85,
-    fontSize: 12,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  progressTrack: {
-    height: 8,
-    borderRadius: RADIUS.pill,
-    backgroundColor: 'rgba(0,18,25,0.35)',
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: RADIUS.pill,
-    backgroundColor: COLORS.accent,
   },
 });

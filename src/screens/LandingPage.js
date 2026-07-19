@@ -67,6 +67,35 @@ function RoundIconButton({ icon, onPress }) {
   );
 }
 
+// A gyűjtemény korábban egy külön, teljes szélességű sávban élt a menüben —
+// most a fejlécben, a ranglista-ikon mellett kapott helyet, a már kinyitott
+// kártyák arányával a pici ikon fölött, hogy állandóan látszódjon.
+function CollectionIconButton({ ratio, onPress }) {
+  const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const pct = Math.round((ratio || 0) * 100);
+
+  return (
+    <View style={styles.collectionIconWrap}>
+      <Text style={styles.collectionIconPct}>{pct}%</Text>
+      <Pressable
+        style={[
+          styles.roundBtn,
+          hovered && styles.roundBtnHovered,
+          pressed && styles.roundBtnPressed,
+        ]}
+        onPress={onPress}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+      >
+        <MaterialCommunityIcons name="image-multiple" size={18} color={COLORS.cream} />
+      </Pressable>
+    </View>
+  );
+}
+
 export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
@@ -152,6 +181,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
             <XPPill />
             <View style={styles.headerIcons}>
               <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
+              <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
               <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
               <RoundIconButton icon="account-circle" onPress={() => playSound('click')} />
             </View>
@@ -175,12 +205,10 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
             <View style={[styles.rightCol, isWide && styles.rightColWide]}>
               <LandingMenu
                 onSelectRegion={handleSelectRegion}
-                onOpenGallery={handleOpenGallery}
                 onLightningQuiz={handleStartLightningQuiz}
                 onMillionaire={handleStartMillionaire}
                 onMemory={handleStartMemory}
                 onWhoAmI={handleStartWhoAmI}
-                collectionRatio={collectionRatio}
                 regionCounts={regionCounts}
               />
             </View>
@@ -254,7 +282,17 @@ const styles = StyleSheet.create({
   },
   headerIcons: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
+  },
+  collectionIconWrap: {
+    alignItems: 'center',
+  },
+  collectionIconPct: {
+    color: COLORS.accent,
+    fontSize: 10,
+    fontWeight: '800',
+    marginBottom: 2,
   },
   roundBtn: {
     width: 40,
