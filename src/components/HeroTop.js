@@ -47,21 +47,12 @@ export default function HeroTop({ isWide = false, totalCreatures }) {
           </View>
           <Text
             style={[
-              styles.subtitle,
-              isWide && styles.subtitleWide,
-              { fontFamily: fontsLoaded ? 'Fredoka_400Regular' : 'System' },
-            ]}
-          >
-            Gyűjts, tanulj, játssz!
-          </Text>
-          <Text
-            style={[
               styles.valueProp,
               isWide && styles.valuePropWide,
               { fontFamily: fontsLoaded ? 'Fredoka_400Regular' : 'System' },
             ]}
           >
-            Fedezz fel {creatureCount} őslényt 6 kontinensről — gyűjtsd, tanuld meg, játssz velük!
+            Fedezz fel {creatureCount} őslényt 6 kontinensről
           </Text>
         </View>
       </View>
@@ -114,16 +105,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,
   },
   mainTitleWide: {
-    textAlign: 'left',
-  },
-  subtitle: {
-    color: COLORS.accent,
-    fontSize: 16,
-    letterSpacing: 1,
-    textAlign: 'center',
-    marginTop: 4,
-  },
-  subtitleWide: {
     textAlign: 'left',
   },
   valueProp: {
