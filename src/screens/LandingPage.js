@@ -45,25 +45,34 @@ function XPPill() {
   );
 }
 
-function RoundIconButton({ icon, onPress }) {
+// tooltip: opcionális — ha van, hoverre egy kis buborékban megjelenik alatta
+// (pl. a fiók-ikonnál a játékos neve, aminek eddig nem volt semmi funkciója).
+function RoundIconButton({ icon, onPress, tooltip }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
   return (
-    <Pressable
-      style={[
-        styles.roundBtn,
-        hovered && styles.roundBtnHovered,
-        pressed && styles.roundBtnPressed,
-      ]}
-      onPress={onPress}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
-    >
-      <MaterialCommunityIcons name={icon} size={18} color={COLORS.cream} />
-    </Pressable>
+    <View style={styles.roundBtnWrap}>
+      <Pressable
+        style={[
+          styles.roundBtn,
+          hovered && styles.roundBtnHovered,
+          pressed && styles.roundBtnPressed,
+        ]}
+        onPress={onPress}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+      >
+        <MaterialCommunityIcons name={icon} size={18} color={COLORS.cream} />
+      </Pressable>
+      {!!tooltip && hovered && (
+        <View style={styles.accountTooltip} pointerEvents="none">
+          <Text style={styles.accountTooltipText} numberOfLines={1}>{tooltip}</Text>
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -185,7 +194,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
               <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
               <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
               <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
-              <RoundIconButton icon="account-circle" onPress={() => playSound('click')} />
+              <RoundIconButton icon="account-circle" onPress={() => playSound('click')} tooltip={nickname} />
             </View>
           </View>
 
@@ -307,6 +316,25 @@ const styles = StyleSheet.create({
     color: COLORS.bgDark,
     fontSize: 9,
     fontWeight: '800',
+  },
+  roundBtnWrap: {
+    position: 'relative',
+  },
+  accountTooltip: {
+    position: 'absolute',
+    top: 48,
+    right: 0,
+    zIndex: 20,
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    ...Platform.select({ web: { whiteSpace: 'nowrap' } }),
+  },
+  accountTooltipText: {
+    color: COLORS.bgDark,
+    fontSize: 13,
+    fontWeight: '700',
   },
   roundBtn: {
     width: 40,
