@@ -23,6 +23,11 @@ export default function HeroTop({ isWide = false, totalCreatures }) {
   const [luckiestLoaded] = useLuckiest({ LuckiestGuy_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular });
 
+  // A címnek csak a Luckiest Guy-ra van szüksége — a Fredoka-tól való korábbi
+  // függés miatt a cím néha rendszerbetűtípusra esett vissza, miközben a
+  // Napi Dínó kártyán és a dínócard-on (lásd DailyDinoCard.js/TradingCard.js
+  // titleFont) a név már a Luckiest Guy-jal jelent meg — most ugyanaz a logika.
+  const titleFont = luckiestLoaded ? 'LuckiestGuy_400Regular' : 'System';
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
   const titleSize = width < 768 ? 32 : 40;
   const creatureCount = totalCreatures || TOTAL_CREATURES_FALLBACK;
@@ -38,7 +43,7 @@ export default function HeroTop({ isWide = false, totalCreatures }) {
                 isWide && styles.mainTitleWide,
                 {
                   fontSize: titleSize,
-                  fontFamily: fontsLoaded ? 'LuckiestGuy_400Regular' : 'System',
+                  fontFamily: titleFont,
                 },
               ]}
             >
