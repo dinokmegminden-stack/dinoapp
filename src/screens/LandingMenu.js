@@ -75,7 +75,7 @@ export default function LandingMenu({
       <PressableButton
         onPress={onOpenGallery}
         containerStyle={styles.collectionCell}
-        style={[styles.gridBtn, styles.collectionBtn, { backgroundColor: COLORS.bgMidLight }]}
+        style={[styles.gridBtn, styles.collectionBtn, { backgroundColor: 'rgba(10,147,150,0.45)' }]}
         shadowColor={COLORS.bgMid}
       >
         <View style={styles.collectionRow}>
