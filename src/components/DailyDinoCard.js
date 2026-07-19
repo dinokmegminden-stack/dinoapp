@@ -66,7 +66,7 @@ export default function DailyDinoCard({ allDinos, onPress }) {
         {/* ELŐLAP */}
         <Animated.View style={[styles.card, styles.front, { transform: [{ perspective: 1000 }, { rotateY: frontRotate }] }]}>
           <View style={styles.imgWrap}>
-            <Image source={imgSource} style={styles.img} resizeMode="cover" />
+            <Image source={imgSource} style={styles.img} resizeMode="contain" />
           </View>
           <View style={styles.nameBand}>
             <Text style={[styles.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
@@ -91,7 +91,7 @@ export default function DailyDinoCard({ allDinos, onPress }) {
   );
 }
 
-const CARD_H = 220;
+const CARD_H = 270;
 const styles = StyleSheet.create({
   wrap: { width: '100%', marginTop: 4, marginBottom: 8 },
   eyebrow: { color: COLORS.accent, fontSize: 13, letterSpacing: 2, marginBottom: 8, opacity: 0.9 },
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  imgWrap: { flex: 1, backgroundColor: COLORS.olive },
+  imgWrap: { flex: 1, backgroundColor: COLORS.darkGreen },
   img: { width: '100%', height: '100%' },
   nameBand: { backgroundColor: COLORS.action, paddingVertical: 8, paddingHorizontal: 12 },
   name: { color: COLORS.cream, fontSize: 22, letterSpacing: 1 },
