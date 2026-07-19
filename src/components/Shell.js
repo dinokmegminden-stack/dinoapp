@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, Platform } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import AnimatedLandingBg from './AnimatedLandingBg';
 
 // gradientColors: opcionális színlista — ha meg van adva, a teljes oldal
 // háttere ez a (függőleges) átmenet lesz az egyszínű #283618 helyett.
@@ -24,7 +25,7 @@ export default function Shell({ children, wide = false, gradientColors = null, b
   if (showBackgroundImage) {
     return (
       <View style={s.outer}>
-        <Image source={backgroundImage} style={s.bgImage} />
+        <AnimatedLandingBg source={backgroundImage} />
         <LinearGradient
           colors={['rgba(0,18,25,0.55)', 'rgba(0,18,25,0.25)', 'rgba(0,18,25,0.8)']}
           style={s.bgOverlay}
@@ -54,7 +55,6 @@ const webFullHeight = Platform.select({ web: { minHeight: '100vh' }, default: {}
 const s = StyleSheet.create({
   outer: { flex: 1, width: '100%', backgroundColor: '#001219', alignItems: 'center', justifyContent: 'center', ...webFullHeight },
   outerGradient: { flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center', ...webFullHeight },
-  bgImage: { ...StyleSheet.absoluteFillObject, width: '100%', height: '100%', resizeMode: 'cover' },
   bgOverlay: { ...StyleSheet.absoluteFillObject },
   inner: { flex: 1, width: '100%', maxWidth: 480 },
   innerWide: { maxWidth: 750, flexDirection: 'column', alignItems: 'center', paddingHorizontal: 28, paddingVertical: 20 },
