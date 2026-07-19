@@ -19,7 +19,7 @@ export default function HeroTop({ isWide = false }) {
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular });
 
   const fontsLoaded = luckiestLoaded && fredokaLoaded;
-  const titleSize = width < 768 ? 38 : 50;
+  const titleSize = width < 768 ? 32 : 40;
 
   return (
     <View style={[styles.container, isWide && styles.containerWide]}>
@@ -57,7 +57,7 @@ export default function HeroTop({ isWide = false }) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingVertical: 4,
+    paddingVertical: 2,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     overflow: 'hidden',
-    paddingVertical: 8,
+    paddingVertical: 4,
   },
   heroCardWide: {
     maxWidth: '100%',
@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: COLORS.accent,
-    fontSize: 18,
+    fontSize: 16,
     letterSpacing: 1,
     textAlign: 'center',
-    marginTop: 6,
+    marginTop: 4,
   },
   subtitleWide: {
     textAlign: 'left',

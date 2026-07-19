@@ -91,10 +91,10 @@ export default function DailyDinoCard({ allDinos, onPress }) {
   );
 }
 
-const CARD_H = 270;
+const CARD_H = 160;
 const styles = StyleSheet.create({
-  wrap: { width: '100%', marginTop: 4, marginBottom: 8 },
-  eyebrow: { color: COLORS.accent, fontSize: 13, letterSpacing: 2, marginBottom: 8, opacity: 0.9 },
+  wrap: { width: '100%', marginTop: 2, marginBottom: 4 },
+  eyebrow: { color: COLORS.accent, fontSize: 12, letterSpacing: 2, marginBottom: 4, opacity: 0.9 },
   stage: { width: '100%', height: CARD_H },
   card: {
     ...StyleSheet.absoluteFillObject,
@@ -109,18 +109,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bgMid,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 12,
   },
   imgWrap: { flex: 1, backgroundColor: COLORS.darkGreen },
   img: { width: '100%', height: '100%' },
-  nameBand: { backgroundColor: COLORS.action, paddingVertical: 8, paddingHorizontal: 12 },
-  name: { color: COLORS.cream, fontSize: 22, letterSpacing: 1 },
-  latin: { color: COLORS.darkGreen, fontStyle: 'italic', fontSize: 13, marginTop: 2 },
+  nameBand: { backgroundColor: COLORS.action, paddingVertical: 6, paddingHorizontal: 12 },
+  name: { color: COLORS.cream, fontSize: 20, letterSpacing: 1 },
+  latin: { color: COLORS.darkGreen, fontStyle: 'italic', fontSize: 12, marginTop: 2 },
   tapHint: { position: 'absolute', bottom: 6, right: 10, color: COLORS.cream, opacity: 0.6, fontSize: 11 },
-  factLabel: { color: COLORS.accent, fontSize: 14, letterSpacing: 2, marginBottom: 10 },
-  fact: { color: COLORS.cream, fontSize: 16, lineHeight: 24, textAlign: 'center' },
-  moreBtn: { marginTop: 16, backgroundColor: COLORS.accent, borderRadius: RADIUS.pill, paddingVertical: 8, paddingHorizontal: 18 },
-  moreBtnText: { color: COLORS.bgDark, fontSize: 14 },
+  factLabel: { color: COLORS.accent, fontSize: 13, letterSpacing: 2, marginBottom: 6 },
+  fact: { color: COLORS.cream, fontSize: 14, lineHeight: 18, textAlign: 'center' },
+  moreBtn: { marginTop: 8, backgroundColor: COLORS.accent, borderRadius: RADIUS.pill, paddingVertical: 6, paddingHorizontal: 16 },
+  moreBtnText: { color: COLORS.bgDark, fontSize: 13 },
   loading: { position: 'relative', height: CARD_H, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.darkGreen, borderRadius: RADIUS.cardLarge },
   loadingText: { color: COLORS.cream, opacity: 0.7 },
 });

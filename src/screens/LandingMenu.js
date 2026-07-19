@@ -4,7 +4,7 @@
 // Ikonnevek MaterialCommunityIcons-ra ellenőrizve (a spec Tabler-nevei közül több
 // nem létezik ebben a libben, pl. "mountain" → "image-filter-hdr", "sun" → "weather-sunny").
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PressableButton from '../components/PressableButton';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -13,27 +13,18 @@ import { COLORS, RADIUS } from '../constants/theme';
 // a korábbi, soronként más színű változat túl zsúfoltnak hatott.
 const INK = '#001219';
 
-// Dedikált régió-ikonok a MaterialCommunityIcons helyett — a korábbi
-// Dél-/Észak-Amerika 'arrow-down-bold'/'arrow-up-bold' irányított nyilak
-// félrevezetőek voltak, nem régió-jelentésűek. Dél- és Észak-Amerikának
-// egyelőre nincs külön ikonfájlja, ezért ideiglenesen közösen az
-// icon_amerika.png-t használják (jobb, mint a nyíl).
-const REGION_ICONS = {
-  1: require('../../assets/icons/icon_karpat.png'),
-  2: require('../../assets/icons/icon_europa.png'),
-  3: require('../../assets/icons/icon_afrika.png'),
-  4: require('../../assets/icons/icon_azsia.png'),
-  5: require('../../assets/icons/icon_amerika.png'),
-  6: require('../../assets/icons/icon_amerika.png'),
-};
-
+// A dedikált PNG régió-ikonok (icon_karpat.png stb.) sötét/átlátszó rajzok,
+// a sötét teal gombháttéren gyakorlatilag láthatatlanok voltak — cream színű
+// MaterialCommunityIcons-ra váltva, ami garantáltan kontrasztos. Minden
+// névnek megvan a megfelelője a bundle-ben (ellenőrizve a glyphmap ellen);
+// Észak-Amerikának nincs "bison", a "terrain" a legközelebbi régió-semleges.
 const REGIONS = [
-  { edu: 1, label: 'Kárpát-medence' },
-  { edu: 2, label: 'Európa' },
-  { edu: 3, label: 'Afrika' },
-  { edu: 4, label: 'Ázsia' },
-  { edu: 5, label: 'Dél-Amerika' },
-  { edu: 6, label: 'Észak-Amerika' },
+  { edu: 1, label: 'Kárpát-medence', icon: 'image-filter-hdr' },
+  { edu: 2, label: 'Európa', icon: 'castle' },
+  { edu: 3, label: 'Afrika', icon: 'elephant' },
+  { edu: 4, label: 'Ázsia', icon: 'panda' },
+  { edu: 5, label: 'Dél-Amerika', icon: 'pine-tree' },
+  { edu: 6, label: 'Észak-Amerika', icon: 'terrain' },
 ];
 
 const GAMES = [
@@ -75,7 +66,7 @@ export default function LandingMenu({
             style={[styles.gridBtn, { backgroundColor: 'rgba(0,95,115,0.45)' }]}
             shadowColor={COLORS.bgDark}
           >
-            <Image source={REGION_ICONS[region.edu]} style={styles.regionIcon} resizeMode="contain" />
+            <MaterialCommunityIcons name={region.icon} size={22} color={COLORS.cream} />
             <Text style={styles.gridBtnText}>{region.label}</Text>
           </PressableButton>
         ))}
@@ -126,8 +117,8 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 2.5,
     textTransform: 'uppercase',
-    marginBottom: 10,
-    marginTop: 20,
+    marginBottom: 8,
+    marginTop: 12,
     opacity: 0.9,
   },
   grid: {
@@ -142,7 +133,7 @@ const styles = StyleSheet.create({
   gridBtn: {
     flexDirection: 'row',
     borderRadius: RADIUS.button,
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -155,10 +146,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     textAlign: 'center',
   },
-  regionIcon: {
-    width: 22,
-    height: 22,
-  },
   collectionCell: {
     width: '100%',
     marginTop: 10,
@@ -167,7 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: 8,
-    paddingVertical: 14,
+    paddingVertical: 12,
   },
   collectionRow: {
     flexDirection: 'row',

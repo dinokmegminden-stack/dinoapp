@@ -87,8 +87,8 @@ export default function PrimaryCTA({ onPress, label = 'Kezdd a felfedezést!' })
 const styles = StyleSheet.create({
   wrap: {
     width: '100%',
-    marginTop: 8,
-    marginBottom: 6,
+    marginTop: 6,
+    marginBottom: 4,
     alignItems: 'stretch',
   },
   glow: {
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: COLORS.accent,
     borderRadius: RADIUS.button,
-    paddingVertical: 20,
+    paddingVertical: 16,
     paddingHorizontal: 20,
   },
   label: {
