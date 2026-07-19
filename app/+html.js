@@ -7,7 +7,7 @@ export default function Html({ children }) {
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>Dínó Tudós</title>
+        <title>DínóPark</title>
         <ScrollViewStyleReset />
         
         {/* Ez a stílusblokk takarítja ki a maradék CSS hibákat a képről */}

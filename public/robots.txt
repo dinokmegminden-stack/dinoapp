@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dinotudos.vercel.app/sitemap.xml
+Sitemap: https://dinopark.vercel.app/sitemap.xml
