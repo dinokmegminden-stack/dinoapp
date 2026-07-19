@@ -27,6 +27,20 @@ const HEADER_HEIGHT = 40;
 
 const AXIS_TICKS = [220, 200, 180, 160, 140, 120, 100, 80];
 
+// Geológiai korszakok finomabb felosztása (ICS-határok, millió évben) — a
+// domain teteje (237) épp a közép-/késő-triász határ, alja (66) a
+// kréta-paleogén határ, így minden szegmens a domain-en belül marad.
+const EPOCH_COL_WIDTH = 16;
+const EPOCHS = [
+  { label: 'Késő-triász', start: 237, end: 201.4 },
+  { label: 'Kora-jura', start: 201.4, end: 174.7 },
+  { label: 'Közép-jura', start: 174.7, end: 163.5 },
+  { label: 'Késő-jura', start: 163.5, end: 145 },
+  { label: 'Kora-kréta', start: 145, end: 100.5 },
+  { label: 'Késő-kréta', start: 100.5, end: 66 },
+];
+const EPOCH_BOUNDARIES = EPOCHS.slice(1).map((e) => e.start);
+
 const stickyHeaderStyle = Platform.select({
   web: { position: 'sticky', top: 0, zIndex: 5 },
   default: {},
@@ -106,7 +120,7 @@ export default function CollectionTimeline({ allDinos, progress }) {
 
   // Kis biztonsági margó (kerekítési hibák a 8 oszlopra osztásnál), hogy a
   // pontok soha ne lógjanak ki a rácsból — nincs vízszintes scroll, ami elfedné.
-  const columnWidth = gridWidth > 0 ? Math.floor((gridWidth - RULER_WIDTH - 6) / TIMELINE_BRANCHES.length) : 0;
+  const columnWidth = gridWidth > 0 ? Math.floor((gridWidth - RULER_WIDTH - EPOCH_COL_WIDTH - 6) / TIMELINE_BRANCHES.length) : 0;
   const capSubCols = columnWidth > 0 ? Math.max(1, Math.floor((columnWidth - 4) / SUB_COL_WIDTH)) : 1;
 
   const { lanes, collectedCount, totalCount } = useMemo(() => {
@@ -148,7 +162,7 @@ export default function CollectionTimeline({ allDinos, progress }) {
 
       <ScrollView style={styles.verticalScroll}>
         <View style={[styles.columnsHeader, stickyHeaderStyle]}>
-          <View style={{ width: RULER_WIDTH }} />
+          <View style={{ width: RULER_WIDTH + EPOCH_COL_WIDTH }} />
           {lanes.map((lane) => (
             <View key={lane.key} style={[styles.columnHeaderCell, { width: columnWidth }]}>
               <View style={[styles.columnHeaderDot, { backgroundColor: lane.color }]} />
@@ -158,12 +172,32 @@ export default function CollectionTimeline({ allDinos, progress }) {
         </View>
 
         <View style={styles.body}>
+          {EPOCH_BOUNDARIES.map((boundary) => (
+            <View key={boundary} style={[styles.epochLine, { top: mToY(boundary) }]} />
+          ))}
+
           <View style={[styles.ruler, { height: TOTAL_HEIGHT }]}>
             {AXIS_TICKS.map((tick) => (
               <View key={tick} style={[styles.rulerTick, { top: mToY(tick) }]}>
                 <Text style={styles.rulerTickText}>{tick}</Text>
               </View>
             ))}
+          </View>
+
+          <View style={[styles.epochColumn, { width: EPOCH_COL_WIDTH, height: TOTAL_HEIGHT }]}>
+            {EPOCHS.map((epoch) => {
+              const bandHeight = mToY(epoch.end) - mToY(epoch.start);
+              return (
+                <View
+                  key={epoch.label}
+                  style={[styles.epochLabelWrap, { top: mToY(epoch.start), height: bandHeight, width: EPOCH_COL_WIDTH }]}
+                >
+                  <Text style={[styles.epochLabelText, { width: bandHeight }]} numberOfLines={1}>
+                    {epoch.label}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
 
           {lanes.map((lane) => (
@@ -239,7 +273,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     opacity: 0.85,
   },
-  body: { flexDirection: 'row' },
+  body: { flexDirection: 'row', position: 'relative' },
   ruler: { width: RULER_WIDTH, position: 'relative' },
   rulerTick: { position: 'absolute', left: 0, right: 0, transform: [{ translateY: -6 }] },
   rulerTickText: {
@@ -249,6 +283,28 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     textAlign: 'right',
     paddingRight: 4,
+  },
+  epochLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 0,
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: 'rgba(254,250,224,0.18)',
+    zIndex: 0,
+  },
+  epochColumn: { position: 'relative' },
+  epochLabelWrap: { position: 'absolute', left: 0, alignItems: 'center', justifyContent: 'center' },
+  epochLabelText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 7,
+    fontWeight: '600',
+    opacity: 0.5,
+    letterSpacing: 0.2,
+    textAlign: 'center',
+    transform: [{ rotate: '-90deg' }],
   },
   laneColumn: { position: 'relative' },
   marker: {

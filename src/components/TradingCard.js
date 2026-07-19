@@ -51,6 +51,22 @@ const MYA_SCALE_START = 250;
 const MYA_SCALE_END = 66;
 const ERA_BOUNDS = { triassicEnd: 201, jurassicEnd: 145 };
 
+// Finomabb korszak-felosztás (ICS-határok, millió évben) a MEZOZOIKUM
+// egyetlen felirat helyett — a kora-triász sáv a skála elején (250M) csonka,
+// ezért csak vékony vonal jelzi, apró felirat nem fér el rajta olvashatóan.
+const EPOCH_STAGES = [
+  { label: 'Kora-triász', start: 250, end: 247.2 },
+  { label: 'Közép-triász', start: 247.2, end: 237 },
+  { label: 'Késő-triász', start: 237, end: 201.4 },
+  { label: 'Kora-jura', start: 201.4, end: 174.1 },
+  { label: 'Közép-jura', start: 174.1, end: 163.5 },
+  { label: 'Késő-jura', start: 163.5, end: 145 },
+  { label: 'Kora-kréta', start: 145, end: 100.5 },
+  { label: 'Késő-kréta', start: 100.5, end: 66 },
+];
+const EPOCH_INTERIOR_BOUNDARIES = EPOCH_STAGES.slice(1).map((e) => e.start);
+const EPOCH_MIN_LABEL_PCT = 5;
+
 function capitalize(text) {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -106,7 +122,7 @@ function AltStatCell({ label, value, bodyFont, boldFont, large }) {
 // vastag csíkkal a dínó élt-idejére (nem egyetlen pötty, hanem a teljes
 // mya_min–mya_max tartomány) — a pozíciókat százalékban számoljuk, hogy
 // RN-ben (ahol nincs CSS calc/vw) egyszerűen abszolút pozicionálható legyen.
-function MesoTimeline({ myaMin, myaMax, boldFont, large }) {
+function MesoTimeline({ myaMin, myaMax, boldFont, bodyFont, large }) {
   const pctMin = myaMin != null ? pctForMya(myaMin) : null;
   const pctMax = myaMax != null ? pctForMya(myaMax) : null;
   const rangePcts = [pctMin, pctMax].filter((p) => p != null);
@@ -127,7 +143,6 @@ function MesoTimeline({ myaMin, myaMax, boldFont, large }) {
     <LinearGradient colors={[COLORS.action, COLORS.accentDark]} style={[s.timeline, large && s.timelineLarge]}>
       <View style={s.timelineLabelRow}>
         <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>250M</Text>
-        <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>MEZOZOIKUM</Text>
         <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>66M</Text>
       </View>
 
@@ -137,10 +152,29 @@ function MesoTimeline({ myaMin, myaMax, boldFont, large }) {
         <View style={[s.era, { flex: 100 - jurassicPct, backgroundColor: '#cf9a5c' }]} />
       </View>
 
+      <View style={s.epochLabelRow}>
+        {EPOCH_STAGES.map((epoch) => {
+          const leftPct = pctForMya(epoch.start);
+          const widthPct = pctForMya(epoch.end) - leftPct;
+          if (widthPct < EPOCH_MIN_LABEL_PCT) return null;
+          return (
+            <View key={epoch.label} style={[s.epochLabelWrap, { left: `${leftPct}%`, width: `${widthPct}%` }]}>
+              <Text
+                style={[s.epochLabelText, large && s.epochLabelTextLarge, { fontFamily: bodyFont }]}
+                numberOfLines={1}
+              >
+                {epoch.label}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+
       <View style={s.timelineTrack}>
         <View style={s.timelineBaseline} />
-        <View style={[s.eraBoundaryTick, large && s.eraBoundaryTickLarge, { left: `${triassicPct}%` }]} />
-        <View style={[s.eraBoundaryTick, large && s.eraBoundaryTickLarge, { left: `${jurassicPct}%` }]} />
+        {EPOCH_INTERIOR_BOUNDARIES.map((boundary) => (
+          <View key={boundary} style={[s.eraBoundaryTick, large && s.eraBoundaryTickLarge, { left: `${pctForMya(boundary)}%` }]} />
+        ))}
         {showRange && (
           <View
             style={[
@@ -317,7 +351,7 @@ export default function TradingCard({
           </View>
 
           <View style={s.altDataCol}>
-            <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} large={isBigCard} />
+            <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} bodyFont={bodyFont} large={isBigCard} />
 
             {(() => {
               const dataBody = (
@@ -765,9 +799,30 @@ const s = StyleSheet.create({
     height: 5,
     borderRadius: 3,
     overflow: 'hidden',
-    marginBottom: 14,
+    marginBottom: 3,
   },
   era: { height: '100%' },
+  epochLabelRow: {
+    height: 9,
+    marginBottom: 8,
+    position: 'relative',
+  },
+  epochLabelWrap: {
+    position: 'absolute',
+    top: 0,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  epochLabelText: {
+    color: 'rgba(60,44,23,0.75)',
+    fontSize: 5.5,
+    letterSpacing: 0.1,
+  },
+  epochLabelTextLarge: {
+    fontSize: 7,
+  },
   timelineTrack: {
     height: 4,
     justifyContent: 'center',
