@@ -167,8 +167,8 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
               {/* 2b. Elsődleges CTA */}
               <PrimaryCTA onPress={handleStartAdventure} />
 
-              {/* 2c. Napi Dínó flip-kártya */}
-              <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} />
+              {/* 2c. Napi Dínó flip-kártya — wide nézetben nyúljon le a jobb oszlop aljáig */}
+              <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} isWide={isWide} />
             </View>
 
             {/* 3–5. Menü szekciók */}
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   mainAreaWide: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
     gap: 32,
   },
   leftCol: {
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   rightColWide: {
-    flex: 1,
+    flex: 2,
   },
   headerBar: {
     flexDirection: 'row',
