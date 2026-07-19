@@ -1,5 +1,5 @@
 // src/components/HeroTop.js — redesign: nincs külön ikon/érme a cím fölött,
-// csak a "DÍNÓPARK" felirat.
+// csak a "DÍNÓ TUDÓS" felirat.
 import React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import {
@@ -42,7 +42,7 @@ export default function HeroTop({ isWide = false, totalCreatures }) {
                 },
               ]}
             >
-              DÍNÓPARK
+              DÍNÓ TUDÓS
             </Text>
           </View>
           <Text
