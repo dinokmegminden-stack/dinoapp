@@ -20,6 +20,11 @@ import { saveMemoryResult } from '../services/memoryResultsService';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
+// Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
+// asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
+// éles kontrasztban sima sötét háttérre navigáláskor.
+const landingBg = require('../../assets/images/new_bg.jpg');
+
 const MISMATCH_DELAY = 1000;
 const BOARD_HORIZONTAL_PADDING = 10; // egyeznie kell a boardWrapper paddingHorizontal értékével
 
@@ -303,7 +308,7 @@ export default function MemoryGameScreen({ nickname, playerId, onBack }) {
   // Nehézségválasztó a játék indítása előtt
   if (!difficulty) {
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <View style={styles.selectContent}>
@@ -333,7 +338,7 @@ export default function MemoryGameScreen({ nickname, playerId, onBack }) {
   }
 
   return (
-    <Shell>
+    <Shell backgroundImage={landingBg}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
@@ -430,7 +435,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: COLORS.bg || '#283618',
     paddingBottom: 20,
   },
   header: {

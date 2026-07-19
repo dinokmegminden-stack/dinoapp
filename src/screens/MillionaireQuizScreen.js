@@ -24,6 +24,11 @@ import { addXP } from '../components/XPBar';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
+// Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
+// asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
+// éles kontrasztban sima sötét háttérre navigáláskor.
+const landingBg = require('../../assets/images/new_bg.jpg');
+
 const REVEAL_DELAY_MS = 1500;
 
 const DIFFICULTY_COLORS = {
@@ -117,7 +122,7 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
   if (gameStatus === 'idle') {
     const quizAvailable = buildMillionaireQuiz().length > 0;
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <ScrollView contentContainerStyle={styles.centerContent}>
@@ -167,7 +172,7 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
     const isMillionaire = gameStatus === 'won';
     const reachedQuestion = isMillionaire ? MILLIONAIRE_XP_TABLE.length : currentQuestionIndex + 1;
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <Fireworks
@@ -217,7 +222,7 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
   const difficultyColor = DIFFICULTY_COLORS[tableRow.difficulty];
 
   return (
-    <Shell>
+    <Shell backgroundImage={landingBg}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
@@ -273,7 +278,6 @@ function RuleRow({ text }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg || '#283618',
     paddingBottom: 20,
   },
   centerContent: {

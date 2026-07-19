@@ -17,6 +17,11 @@ import { addXP } from '../components/XPBar';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
+// Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
+// asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
+// éles kontrasztban sima sötét háttérre navigáláskor.
+const landingBg = require('../../assets/images/new_bg.jpg');
+
 const REVEAL_DELAY_MS = 1200;
 const QUESTION_COUNT = 10;
 const XP_PER_CORRECT = 5;
@@ -129,7 +134,7 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   if (gameStatus === 'idle') {
     const quizAvailable = buildWhoAmIQuiz(allDinos, QUESTION_COUNT).length > 0;
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
           <ScrollView contentContainerStyle={styles.centerContent}>
@@ -166,7 +171,7 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   // --- Eredmény képernyő ----------------------------------------------------
   if (gameStatus === 'finished') {
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
           <Fireworks
@@ -206,7 +211,7 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   const question = questions[currentQuestionIndex];
 
   return (
-    <Shell>
+    <Shell backgroundImage={landingBg}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
 
@@ -272,7 +277,6 @@ function RuleRow({ text }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg,
     paddingBottom: 20,
   },
   centerContent: {

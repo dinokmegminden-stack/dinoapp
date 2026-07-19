@@ -18,6 +18,11 @@ import { addXP } from '../components/XPBar';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
+// Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
+// asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
+// éles kontrasztban sima sötét háttérre navigáláskor.
+const landingBg = require('../../assets/images/new_bg.jpg');
+
 const MAX_QUESTIONS = 10;
 const QUESTION_TIME = 5;
 const MAX_LIVES = 3;
@@ -226,7 +231,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   if (status === 'finished') {
     const isPerfect = correctCount === MAX_QUESTIONS;
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <Fireworks
@@ -273,7 +278,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   // Render loading screen
   if (isLoading) {
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <Text style={styles.loadingText}>Dínók betöltése...</Text>
         </View>
@@ -284,7 +289,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   // Render playing screen
   if (!question) {
     return (
-      <Shell>
+      <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <Text style={styles.loadingText}>Kérdés generálása...</Text>
         </View>
@@ -300,7 +305,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   const timeColor = timeLeft <= 2 ? '#FF6B6B' : '#DDA15E';
 
   return (
-    <Shell>
+    <Shell backgroundImage={landingBg}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
@@ -396,7 +401,6 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg || '#283618',
     paddingBottom: 20,
   },
   livesBar: {
