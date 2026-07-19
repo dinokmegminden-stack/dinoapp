@@ -33,7 +33,7 @@ export const IMAGE_MAP = {
   "Ajkaceratops": require('../../assets/images/ajkaceratops.jpg'),
   "Pneumatoraptor": require('../../assets/images/pneumatoraptor_fodori.jpg'),
   "Mochlodon": require('../../assets/images/mochlodon_vorosi.jpg'),
-  "Telmatosaurus": require('../../assets/images/telmatosaurus_43.jpg'),
+  "Telmatosaurus": require('../../assets/images/telmatosaurus.jpg'),
   "Struthiosaurus": require('../../assets/images/struthiosaurus.jpg'),
   "Petrustitan": require('../../assets/images/petrustitan.jpg'),
   "Uriash": require('../../assets/images/uriash_kadici.jpg'),
