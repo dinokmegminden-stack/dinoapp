@@ -11,6 +11,7 @@ import VillamkvizScreen from './src/screens/VillamkvizScreen';
 import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
 import WhoAmIScreen from './src/screens/WhoAmIScreen';
 import MemoryGameScreen from './src/screens/MemoryGameScreen';
+import RunnerGameScreen from './src/screens/RunnerGameScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
 import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
@@ -134,6 +135,10 @@ export default function App() {
     startGame('whoami', 'whoami');
   };
 
+  const handleStartRunner = () => {
+    startGame('runner', 'runner');
+  };
+
   const handleBackFromGame = () => {
     endActiveGame();
     setView('landing');
@@ -166,6 +171,7 @@ export default function App() {
           onStartMillionaire={handleStartMillionaire}
           onStartMemory={handleStartMemory}
           onStartWhoAmI={handleStartWhoAmI}
+          onStartRunner={handleStartRunner}
         />
       )}
 
@@ -200,6 +206,10 @@ export default function App() {
 
       {view === 'whoami' && (
         <WhoAmIScreen allDinos={allDinos} playerId={playerId} onBack={handleBackFromGame} />
+      )}
+
+      {view === 'runner' && (
+        <RunnerGameScreen playerId={playerId} onBack={handleBackFromGame} />
       )}
 
       {view === 'collection' && (

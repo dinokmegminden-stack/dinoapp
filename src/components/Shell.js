@@ -57,5 +57,5 @@ const s = StyleSheet.create({
   outerGradient: { flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center', ...webFullHeight },
   bgOverlay: { ...StyleSheet.absoluteFillObject },
   inner: { flex: 1, width: '100%', maxWidth: 480 },
-  innerWide: { maxWidth: 750, flexDirection: 'column', alignItems: 'center', paddingHorizontal: 28, paddingVertical: 20 },
+  innerWide: { maxWidth: 1100, flexDirection: 'column', alignItems: 'center', paddingHorizontal: 40, paddingVertical: 20 },
 });

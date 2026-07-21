@@ -107,7 +107,7 @@ function CollectionIconButton({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI }) {
+export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI, onStartRunner }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   const [muted, setMuted] = useState(getSoundMuted());
@@ -156,6 +156,11 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
   const handleStartWhoAmI = () => {
     playSound('click');
     onStartWhoAmI?.();
+  };
+
+  const handleStartRunner = () => {
+    playSound('click');
+    onStartRunner?.();
   };
 
   const handleStartAdventure = () => {
@@ -225,6 +230,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
                 onMillionaire={handleStartMillionaire}
                 onMemory={handleStartMemory}
                 onWhoAmI={handleStartWhoAmI}
+                onRunner={handleStartRunner}
                 regionCounts={regionCounts}
               />
             </View>

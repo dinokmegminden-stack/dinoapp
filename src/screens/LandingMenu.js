@@ -38,6 +38,7 @@ const GAMES = [
   { key: 'whoami', label: 'KI VAGYOK ÉN?', icon: 'help-circle', bg: `${COLORS.whoAmIBtn}${GAME_BG_ALPHA}`, shadow: COLORS.whoAmIBtnShadow },
   { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', bg: `${COLORS.accent}${GAME_BG_ALPHA}`, shadow: COLORS.accentDark, textColor: INK },
   { key: 'millionaire', label: 'XP MILLIOMOS', icon: 'trophy', bg: `${COLORS.accentDark}${GAME_BG_ALPHA}`, shadow: COLORS.parokBtnShadow },
+  { key: 'runner', label: 'DÍNÓFUTAM', icon: 'run-fast', bg: `${COLORS.runnerBtn}${GAME_BG_ALPHA}`, shadow: COLORS.runnerBtnShadow },
 ];
 
 function SectionLabel({ children }) {
@@ -50,6 +51,7 @@ export default function LandingMenu({
   onMillionaire,
   onMemory,
   onWhoAmI,
+  onRunner,
   regionCounts,
 }) {
   const gameHandlers = {
@@ -57,6 +59,7 @@ export default function LandingMenu({
     whoami: onWhoAmI,
     lightning: onLightningQuiz,
     millionaire: onMillionaire,
+    runner: onRunner,
   };
 
   // Amíg az allDinos (App.js) még nem töltött be, regionCounts üres objektum —
