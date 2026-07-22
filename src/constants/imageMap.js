@@ -72,7 +72,7 @@ export const IMAGE_MAP = {
   // 
   // 
   "Gallimimus": require('../../assets/images/gallimimus.jpg'),
-  "Kentrosaurus": require('../../assets/images/kentrosaurus2.jpg'),
+  "Kentrosaurus": require('../../assets/images/kentrosaurus.jpg'),
   "Albertosaurus": require('../../assets/images/albertosaurus.jpg'),
   "Amargasaurus": require('../../assets/images/amargasaurus.jpg'),
   //
