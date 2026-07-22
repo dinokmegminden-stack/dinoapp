@@ -12,6 +12,7 @@ import MillionaireQuizScreen from './src/screens/MillionaireQuizScreen';
 import WhoAmIScreen from './src/screens/WhoAmIScreen';
 import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import RunnerGameScreen from './src/screens/RunnerGameScreen';
+import HangmanScreen from './src/screens/HangmanScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
 import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
@@ -139,6 +140,10 @@ export default function App() {
     startGame('runner', 'runner');
   };
 
+  const handleStartHangman = () => {
+    startGame('hangman', 'hangman');
+  };
+
   const handleBackFromGame = () => {
     endActiveGame();
     setView('landing');
@@ -172,6 +177,7 @@ export default function App() {
           onStartMemory={handleStartMemory}
           onStartWhoAmI={handleStartWhoAmI}
           onStartRunner={handleStartRunner}
+          onStartHangman={handleStartHangman}
         />
       )}
 
@@ -210,6 +216,10 @@ export default function App() {
 
       {view === 'runner' && (
         <RunnerGameScreen playerId={playerId} onBack={handleBackFromGame} />
+      )}
+
+      {view === 'hangman' && (
+        <HangmanScreen allDinos={allDinos} onBack={handleBackFromGame} />
       )}
 
       {view === 'collection' && (

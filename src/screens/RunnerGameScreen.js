@@ -69,7 +69,7 @@ function pickItemType() {
 // nincs ütközés velük, a dínó sosem mehet ide, csak a 3 középső sávon.
 const TERRAIN_EMOJIS = ['🌵', '🐢', '🐍', '⛰️', '☁️'];
 const TERRAIN_SPAWN_MS = 2200;
-const TERRAIN_SPEED_FACTOR = 0.55; // lassabb, mint a játéktér — parallax-érzet
+const TERRAIN_SPEED_FACTOR = 1; // a díszsáv ugyanolyan gyorsan mozog, mint az akadályok/húsdarabok
 
 let nextItemId = 1;
 let nextTerrainId = 1;

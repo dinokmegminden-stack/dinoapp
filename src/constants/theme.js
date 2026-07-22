@@ -16,6 +16,8 @@ export const COLORS = {
   whoAmIBtnShadow: '#001219',
   runnerBtn: '#606c38',   // Dínófutam gomb (játékmód, nem régió)
   runnerBtnShadow: '#283618',
+  hangmanBtn: '#6b4226',  // Akasztófa gomb (játékmód, nem régió)
+  hangmanBtnShadow: '#3e2416',
 
   // Earthy safari paletta (múzeumi tábla kártyák, régió-szintek) — korábban
   // csak `COLORS.gold || '#DDA15E'` / `COLORS.action || '#BC6C25'` fallback-ként

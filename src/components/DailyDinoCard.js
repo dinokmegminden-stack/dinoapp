@@ -6,8 +6,8 @@ import {
   View, Text, Image, StyleSheet, Pressable, Animated, Platform,
 } from 'react-native';
 import {
-  useFonts as useLuckiestGuy, LuckiestGuy_400Regular,
-} from '@expo-google-fonts/luckiest-guy';
+  useFonts as useCaprasimo, Caprasimo_400Regular,
+} from '@expo-google-fonts/caprasimo';
 import {
   useFonts as useFredoka, Fredoka_400Regular, Fredoka_600SemiBold,
 } from '@expo-google-fonts/fredoka';
@@ -27,9 +27,9 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
   const [flipped, setFlipped] = useState(false);
   const rot = useRef(new Animated.Value(0)).current;
 
-  const [luckiestLoaded] = useLuckiestGuy({ LuckiestGuy_400Regular });
+  const [caprasimoLoaded] = useCaprasimo({ Caprasimo_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
-  const titleFont = luckiestLoaded ? 'LuckiestGuy_400Regular' : 'System';
+  const titleFont = caprasimoLoaded ? 'Caprasimo_400Regular' : 'System';
   const bodyFont = fredokaLoaded ? 'Fredoka_400Regular' : 'System';
   const boldFont = fredokaLoaded ? 'Fredoka_600SemiBold' : 'System';
 

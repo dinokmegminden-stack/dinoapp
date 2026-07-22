@@ -143,7 +143,6 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
             <View style={styles.rulesBox}>
               <RuleRow text="A dínó elárul pár tényt magáról" />
               <RuleRow text="4 név közül kell kitalálnod, kiről van szó" />
-              <RuleRow text="A 3 rossz válasz mindig ugyanabba a családba tartozik" />
               <RuleRow text={`Helyes válaszonként +${XP_PER_CORRECT} XP`} />
               <RuleRow text={`${MAX_LIVES} szív — ennyit hibázhatsz`} />
               <RuleRow text={`${QUESTION_COUNT} kérdés kör`} />

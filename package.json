@@ -11,7 +11,9 @@
     "sync-images": "node scripts/sync-image-map.js"
   },
   "dependencies": {
+    "@expo-google-fonts/caprasimo": "^0.4.0",
     "@expo-google-fonts/cinzel": "^0.4.2",
+    "@expo-google-fonts/figtree": "^0.4.1",
     "@expo-google-fonts/fredoka": "^0.4.1",
     "@expo-google-fonts/luckiest-guy": "^0.4.1",
     "@expo-google-fonts/roboto": "^0.4.3",

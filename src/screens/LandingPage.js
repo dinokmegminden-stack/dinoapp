@@ -107,7 +107,7 @@ function CollectionIconButton({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI, onStartRunner }) {
+export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI, onStartRunner, onStartHangman }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   const [muted, setMuted] = useState(getSoundMuted());
@@ -163,6 +163,11 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
     onStartRunner?.();
   };
 
+  const handleStartHangman = () => {
+    playSound('click');
+    onStartHangman?.();
+  };
+
   const handleStartAdventure = () => {
     playSound('click');
     const next = findNextPack(progress || {});
@@ -191,7 +196,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
     <Shell
       gradientColors={[COLORS.bgDark, COLORS.bgMid]}
       backgroundImage={landingBg}
-      contentMaxWidth={isWide ? 1120 : undefined}
+      contentMaxWidth={isWide ? 1280 : undefined}
     >
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
         <View style={[styles.column, isWide && styles.columnWide]}>
@@ -231,6 +236,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
                 onMemory={handleStartMemory}
                 onWhoAmI={handleStartWhoAmI}
                 onRunner={handleStartRunner}
+                onHangman={handleStartHangman}
                 regionCounts={regionCounts}
               />
             </View>
@@ -257,7 +263,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   columnWide: {
-    maxWidth: 1120,
+    maxWidth: 1280,
     paddingHorizontal: 32,
   },
   mainArea: {
@@ -272,14 +278,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   leftColWide: {
-    flex: 2,
+    // 2:3 helyett 11:14 — a bal oszlop részesedése 40%-ról 44%-ra nő
+    // (pontosan 10%-os relatív növekedés), a jobb oszlop 56%-ra csökken.
+    flex: 11,
   },
   rightCol: {
     width: '100%',
     position: 'relative',
   },
   rightColWide: {
-    flex: 3,
+    flex: 14,
   },
   headerBar: {
     flexDirection: 'row',

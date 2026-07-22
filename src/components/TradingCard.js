@@ -11,9 +11,9 @@ import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
-  useFonts as useLuckiestGuy,
-  LuckiestGuy_400Regular,
-} from '@expo-google-fonts/luckiest-guy';
+  useFonts as useCaprasimo,
+  Caprasimo_400Regular,
+} from '@expo-google-fonts/caprasimo';
 import {
   useFonts as useFredoka,
   Fredoka_400Regular,
@@ -252,9 +252,9 @@ export default function TradingCard({
     ? (layout === 'alt' ? (isBigCard ? ALT_CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_DESKTOP) : CARD_MAX_WIDTH_DESKTOP)
     : CARD_MAX_WIDTH_MOBILE;
 
-  const [luckiestLoaded] = useLuckiestGuy({ LuckiestGuy_400Regular });
+  const [caprasimoLoaded] = useCaprasimo({ Caprasimo_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
-  const titleFont = luckiestLoaded ? 'LuckiestGuy_400Regular' : 'System';
+  const titleFont = caprasimoLoaded ? 'Caprasimo_400Regular' : 'System';
   const bodyFont = fredokaLoaded ? 'Fredoka_400Regular' : 'System';
   const boldFont = fredokaLoaded ? 'Fredoka_600SemiBold' : 'System';
 
