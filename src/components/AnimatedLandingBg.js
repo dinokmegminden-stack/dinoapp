@@ -1,11 +1,14 @@
 // AnimatedLandingBg — a Shell statikus háttérkép+overlay párosát váltja ki a
 // landing oldalon: lassú Ken Burns közelítés a képen, izzó tábortűz-fény
 // pulzálás, felfelé szálló parázsszikrák és szentjánosbogarak vászon-alapú
-// részecskeszimulációval, ködréteg-sodródás, és egérmozgásra reagáló enyhe
-// parallax. Kizárólag asztali weben fut (lásd Shell.js showBackgroundImage
-// feltétele), ezért itt nyers DOM elemeket (div/canvas/style) és a böngésző
-// requestAnimationFrame/Canvas2D API-ját használjuk CSS-keyframe-ekkel — RN
-// StyleSheet nem támogat kulcskocka-animációt vagy vászon-rajzolást.
+// részecskeszimulációval, ködréteg-sodródás. Kizárólag asztali weben fut
+// (lásd Shell.js showBackgroundImage feltétele), ezért itt nyers DOM elemeket
+// (div/canvas/style) és a böngésző requestAnimationFrame/Canvas2D API-ját
+// használjuk CSS-keyframe-ekkel — RN StyleSheet nem támogat kulcskocka-
+// animációt vagy vászon-rajzolást.
+// Szándékosan nincs egérmozgásra reagáló parallax — mivel ez a komponens
+// mostantól minden Shell-képernyőn fut (nem csak a landingen), az egérkövetés
+// felesleges költség lett volna a legtöbb (statikus tartalmú) képernyőn.
 import React, { useEffect, useRef } from 'react';
 import { Platform, Image as RNImage } from 'react-native';
 
@@ -77,14 +80,6 @@ export default function AnimatedLandingBg({ source }) {
     window.addEventListener('resize', resize);
     resize();
 
-    const handleMouseMove = (e) => {
-      const mx = (e.clientX / window.innerWidth - 0.5) * 2;
-      const my = (e.clientY / window.innerHeight - 0.5) * 2;
-      scene.style.setProperty('--mx', mx.toFixed(3));
-      scene.style.setProperty('--my', my.toFixed(3));
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-
     let t = 0;
     const seed = rand(0, 100);
     let cancelled = false;
@@ -143,7 +138,6 @@ export default function AnimatedLandingBg({ source }) {
       cancelled = true;
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
@@ -173,15 +167,13 @@ const styles = {
   },
   pan: {
     position: 'absolute', inset: '-4%',
-    transform: 'translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 7px))',
-    transition: 'transform .25s ease-out', willChange: 'transform',
   },
   imgWrap: { position: 'absolute', inset: 0 },
   imgFill: { width: '100%', height: '100%' },
   glow: {
     position: 'absolute', left: '53%', top: '49%', width: '46%', height: '52%',
-    transform: 'translate(-50%,-50%) translate(calc(var(--mx, 0) * 16px), calc(var(--my, 0) * 10px))',
-    transition: 'transform .25s ease-out', mixBlendMode: 'screen', opacity: 0.6, pointerEvents: 'none',
+    transform: 'translate(-50%,-50%)',
+    mixBlendMode: 'screen', opacity: 0.6, pointerEvents: 'none',
     background: 'radial-gradient(ellipse 55% 60% at 50% 45%, rgba(255,150,40,.85) 0%, rgba(255,110,20,.45) 32%, rgba(200,60,10,.14) 60%, rgba(0,0,0,0) 78%)',
   },
   fog: { position: 'absolute', left: '-10%', right: '-10%', mixBlendMode: 'screen', pointerEvents: 'none' },

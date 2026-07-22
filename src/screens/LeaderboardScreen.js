@@ -130,7 +130,7 @@ export default function LeaderboardScreen({ onBack }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bgDark },
+  container: { flex: 1 },
   header: {
     paddingHorizontal: 20,
     paddingTop: 14,

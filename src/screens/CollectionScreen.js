@@ -185,7 +185,6 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 0,
     width: '100%',
-    backgroundColor: COLORS.bgDark,
   },
   header: {
     flexDirection: 'row',
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.bgDark,
+    backgroundColor: 'rgba(0,18,25,0.5)',
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(221,161,94,0.35)',
     paddingBottom: 6,

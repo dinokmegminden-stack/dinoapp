@@ -16,8 +16,8 @@ export const s = StyleSheet.create({
   backLink: { paddingVertical: 8, marginBottom: 4 },
   backLinkText: { color: COLORS.gold || '#DDA15E', ...Platform.select({ web: { cursor: 'pointer' } }), fontSize: 15, fontWeight: '800' },
 
-  primaryBtn: { backgroundColor: COLORS.action || '#BC6C25', borderRadius: 24, paddingVertical: 14, paddingHorizontal: 28, alignItems: 'center', width: '100%' },
-  primaryBtnText: { color: '#fff', fontSize: 15, fontWeight: '800' },
+  primaryBtn: { backgroundColor: 'rgba(221,161,94,0.16)', borderWidth: 2, borderColor: COLORS.gold || '#DDA15E', borderRadius: 24, paddingVertical: 14, paddingHorizontal: 28, alignItems: 'center', width: '100%' },
+  primaryBtnText: { color: COLORS.gold || '#DDA15E', fontSize: 15, fontWeight: '800' },
 
   packagesScroll: { paddingBottom: 60 },
   packagesScrollFlex: { flex: 1 },

@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 0,
     width: '100%',
-    backgroundColor: COLORS.bgDark,
   },
   header: {
     flexDirection: 'row',
@@ -202,7 +201,9 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: COLORS.bgMid,
+    backgroundColor: 'rgba(0,95,115,0.4)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.16)',
     borderRadius: RADIUS.cardLarge,
     paddingVertical: 16,
     alignItems: 'center',
@@ -238,7 +239,9 @@ const styles = StyleSheet.create({
   },
   calendarCard: {
     marginTop: 20,
-    backgroundColor: COLORS.bgMid,
+    backgroundColor: 'rgba(0,95,115,0.4)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.16)',
     borderRadius: RADIUS.cardLarge,
     padding: 16,
   },

@@ -202,10 +202,10 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
         <View style={[styles.column, isWide && styles.columnWide]}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
-          {/* 1. Header sáv: XP pill balra, ikon gombok jobbra */}
+          {/* 1. Header sáv: XP pill + ikon gombok, mind jobbra rendezve */}
           <View style={styles.headerBar}>
-            <XPPill />
             <View style={styles.headerIcons}>
+              <XPPill />
               <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
               <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
               <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   headerBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingTop: 16,
   },

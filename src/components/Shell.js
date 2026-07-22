@@ -3,6 +3,13 @@ import { View, StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AnimatedLandingBg from './AnimatedLandingBg';
 
+// Alapértelmezett háttérkép — a landing hero mögötti kép, hogy MINDEN Shell-t
+// használó képernyő (region-csomagok, kvízek, gyűjtemény, stb.) ugyanazt a
+// hátteret kapja meg automatikusan, anélkül hogy minden hívóhelyen külön meg
+// kellene adni. Explicit backgroundImage propgal felülírható; backgroundImage={null}
+// paranccsal kikapcsolható, ha valamelyik képernyőnek mégsem kellene.
+const DEFAULT_BACKGROUND = require('../../assets/images/new_bg.jpg');
+
 // gradientColors: opcionális színlista — ha meg van adva, a teljes oldal
 // háttere ez a (függőleges) átmenet lesz az egyszínű #283618 helyett.
 // backgroundImage: opcionális kép — csak asztali (web, >=700px) nézetben jelenik
@@ -11,7 +18,7 @@ import AnimatedLandingBg from './AnimatedLandingBg';
 // (pl. a landing 1024px fölött 1120px-es két-oszlopos elrendezéshez) — a
 // Shell külső (teljes szélességű) háttere és a többi képernyő 750px-es
 // alap-korlátja ettől függetlenül változatlan marad.
-export default function Shell({ children, wide = false, gradientColors = null, backgroundImage = null, contentMaxWidth = null }) {
+export default function Shell({ children, wide = false, gradientColors = null, backgroundImage = DEFAULT_BACKGROUND, contentMaxWidth = null }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
   const showBackgroundImage = backgroundImage && isWideWeb;
