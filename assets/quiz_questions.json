@@ -1928,7 +1928,6 @@
     "difficulty": "hard",
     "question": "Mi a neve annak a hatalmas mexikói becsapódási kráternek, amely bizonyítottan a kréta végi tömeges fajpusztulásért felelős aszteroida ütközési helye?",
     "options": [
-      
       "Barringer-kráter",
       "Vredefort-kráter",
       "Chicxulub-kráter",
@@ -1936,5 +1935,905 @@
     ],
     "correctIndex": 2,
     "hint": "A Yucatán-félszigeten található, nagyrészt a tengerpart és üledék alá temetve."
+  },
+  {
+    "id": 171,
+    "difficulty": "easy",
+    "question": "Hány szarv díszítette a Triceratops arcát?",
+    "options": [
+      "Egy",
+      "Kettő",
+      "Három",
+      "Négy"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 172,
+    "difficulty": "easy",
+    "question": "Melyik híres ragadozó hátán volt hatalmas csonttüskék által tartott bőr-vitorla?",
+    "options": [
+      "Tyrannosaurus",
+      "Spinosaurus",
+      "Allosaurus",
+      "Velociraptor"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 173,
+    "difficulty": "easy",
+    "question": "Mivel táplálkozott leginkább a hatalmas Brachiosaurus?",
+    "options": [
+      "Hússal",
+      "Halakkal",
+      "Növényekkel",
+      "Rovarokkal"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 174,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusznak volt a farka végén egy nehéz, csontos buzogány?",
+    "options": [
+      "Ankylosaurus",
+      "Diplodocus",
+      "Iguanodon",
+      "Stegosaurus"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 175,
+    "difficulty": "easy",
+    "question": "Hová tartoztak a Stegosaurus jellegzetes csontlemezei?",
+    "options": [
+      "A hasára",
+      "A hátára",
+      "A lábaira",
+      "A fejére"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 176,
+    "difficulty": "easy",
+    "question": "Mekkora volt a kicsi Compsognathus?",
+    "options": [
+      "Ház méretű",
+      "Busz méretű",
+      "Körülbelül tyúk méretű",
+      "Mint egy elefánt"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 177,
+    "difficulty": "easy",
+    "question": "Mit jelent a Tyrannosaurus rex neve?",
+    "options": [
+      "Hajnaltolvaj",
+      "Zarnokgyík király",
+      "Háromszarvú arc",
+      "Nagy gyík"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 178,
+    "difficulty": "easy",
+    "question": "Melyik állatcsoportra hasonlított leginkább az Archaeopteryx?",
+    "options": [
+      "Madarakra",
+      "Emlősökre",
+      "Krokodilokra",
+      "Halakra"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 179,
+    "difficulty": "easy",
+    "question": "Mivel táplálkozott a Baryonyx a maradványai alapján?",
+    "options": [
+      "Fűvel",
+      "Halakkal",
+      "Gyümölcsökkel",
+      "Tojásokkal"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 180,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz hüvelykujján volt egy nagy védelmi tüske?",
+    "options": [
+      "Plateosaurus",
+      "Iguanodon",
+      "Diplodocus",
+      "T. rex"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 181,
+    "difficulty": "easy",
+    "question": "Melyik növényevőnek volt ostorszerű, rendkívül hosszú farka?",
+    "options": [
+      "Diplodocus",
+      "Triceratops",
+      "Iguanodon",
+      "Euoplocephalus"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 182,
+    "difficulty": "easy",
+    "question": "Hogyan mozgott leggyakrabban a Tyrannosaurus?",
+    "options": [
+      "Négy lábon",
+      "Két lábon",
+      "Repülve",
+      "Úszva"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 183,
+    "difficulty": "easy",
+    "question": "Milyen különleges fegyvere volt a Carnotaurusnak a fején?",
+    "options": [
+      "Buzogány",
+      "Két tülökszerű szarv",
+      "Hosszú csőr",
+      "Mérgező tüske"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 184,
+    "difficulty": "easy",
+    "question": "Mit jelent az Eoraptor neve?",
+    "options": [
+      "Hajnaltolvaj",
+      "Gyors lábú",
+      "Tüskés gyík",
+      "Nagy rabló"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 185,
+    "difficulty": "easy",
+    "question": "Milyen különleges tulajdonságáról ismert a Therizinosaurus?",
+    "options": [
+      "Hatalmas páncélzatáról",
+      "Hosszú, sarló alakú karmairól",
+      "Kicsi fejéről",
+      "Vitorlájáról"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 186,
+    "difficulty": "easy",
+    "question": "Mit jelent a Mussaurus neve?",
+    "options": [
+      "Egérgyík",
+      "Nagy gyík",
+      "Páncélos gyík",
+      "Gyors gyík"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 187,
+    "difficulty": "easy",
+    "question": "A testének melyik részén viselt tüskéket a Kentrosaurus?",
+    "options": [
+      "A hasán",
+      "A hátán és a farkán",
+      "A torkán",
+      "A lábfején"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 188,
+    "difficulty": "easy",
+    "question": "A Leaellynasaura agyát vizsgálva mire következtetnek a tudósok?",
+    "options": [
+      "Tudott úszni",
+      "Látott a sötétben",
+      "Nagyokat ugrott",
+      "Csak nappal vadászott"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 189,
+    "difficulty": "easy",
+    "question": "Melyik dinoszauruszcsoporthoz tartozott a hatalmas Argentinosaurus?",
+    "options": [
+      "Sauropodák",
+      "Theropodák",
+      "Ankylosauridák",
+      "Ceratopsiák"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 190,
+    "difficulty": "easy",
+    "question": "Mit evett a hatalmas, kacsacsőrű Edmontosaurus?",
+    "options": [
+      "Húst",
+      "Növényeket",
+      "Halakat",
+      "Tojásokat"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 191,
+    "difficulty": "easy",
+    "question": "Mi jellemezte az Oviraptor fészkeit a leletek alapján?",
+    "options": [
+      "A homokba ásta el őket",
+      "Gondosan elrendezett tojások voltak benne",
+      "Soha nem vigyázott rájuk",
+      "Fák tetejére építette"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 192,
+    "difficulty": "easy",
+    "question": "Hogyan védekezett az Ankylosaurus a ragadozók ellen?",
+    "options": [
+      "Gyorsan elfutott",
+      "Páncélozott testével és buzogányos farkával",
+      "Felrepült egy fára",
+      "Mérget köpött"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 193,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusznak volt üreges a csontozata, amire a neve is utal?",
+    "options": [
+      "Coelophysis",
+      "Diplodocus",
+      "Iguanodon",
+      "Triceratops"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 194,
+    "difficulty": "easy",
+    "question": "A Deinonychus melyik testrésze volt a legveszélyesebb fegyvere?",
+    "options": [
+      "A feje",
+      "A lábán lévő hatalmas, sarló alakú karom",
+      "A hosszú nyaka",
+      "A tompa orra"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 195,
+    "difficulty": "easy",
+    "question": "Miről kapták a nevüket a kacsacsőrű dinoszauruszok, mint az Edmontosaurus?",
+    "options": [
+      "Tudtak hápogni",
+      "A pofájuk eleje lapos csőrben végződött",
+      "Szerettek úszni",
+      "Tollas volt a szárnyuk"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 196,
+    "difficulty": "medium",
+    "question": "Melyik földtörténeti időszakban élt a félelmetes Tyrannosaurus rex?",
+    "options": [
+      "Triász",
+      "Jura",
+      "Kréta",
+      "Perm"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 197,
+    "difficulty": "medium",
+    "question": "Melyik időszakban uralta az erdőket a Stegosaurus?",
+    "options": [
+      "Kora triász",
+      "Késő jura",
+      "Késő kréta",
+      "Közép triász"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 198,
+    "difficulty": "medium",
+    "question": "Milyen csoportba soroljuk a két lábon járó húsevő dinoszauruszokat?",
+    "options": [
+      "Sauropodák",
+      "Theropodák",
+      "Ankylosauridák",
+      "Ceratopsiák"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 199,
+    "difficulty": "medium",
+    "question": "Melyik dinoszauruszra volt jellemző a 'hüllőmedencéjű' felépítés az alábbiak közül?",
+    "options": [
+      "Triceratops",
+      "Stegosaurus",
+      "Tyrannosaurus",
+      "Ankylosaurus"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 200,
+    "difficulty": "medium",
+    "question": "Milyen különleges feladatot láthattak el a Spinosaurus hátán lévő vitorla erei?",
+    "options": [
+      "Segítettek a repülésben",
+      "A testhőmérséklet szabályozásában segítettek",
+      "Mérget termeltek",
+      "Vizet tároltak"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 201,
+    "difficulty": "medium",
+    "question": "Melyik dinoszauruszt tartják az egyik legintelligensebbnek a nagy agymérete miatt?",
+    "options": [
+      "Troodon",
+      "Stegosaurus",
+      "Diplodocus",
+      "Ankylosaurus"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 202,
+    "difficulty": "medium",
+    "question": "Milyen testfelépítése volt a Brachiosaurusnak a többi sauropodához képest?",
+    "options": [
+      "A hátsó lábai voltak hosszabbak",
+      "A mellső lábai voltak hosszabbak",
+      "Nem volt nyaka",
+      "Csak két lábon járt"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 203,
+    "difficulty": "medium",
+    "question": "Mit jelent a Carnotaurus neve?",
+    "options": [
+      "Hajnaltolvaj",
+      "Húsevő bika",
+      "Tüskés gyík",
+      "Háromszarvú arc"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 204,
+    "difficulty": "medium",
+    "question": "Milyen különleges fogai voltak a Hypsilophodonnak?",
+    "options": [
+      "Csak egy foga volt",
+      "Önélező rágófogai voltak",
+      "Nem voltak fogai",
+      "Mérgező agyarai voltak"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 205,
+    "difficulty": "medium",
+    "question": "Melyik nemzetség volt a kréta időszaki mocsarak egyik legnagyobb ragadozója Afrikában?",
+    "options": [
+      "Allosaurus",
+      "Spinosaurus",
+      "Plateosaurus",
+      "Coelophysis"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 206,
+    "difficulty": "medium",
+    "question": "Mire szolgáltak a Triceratops hatalmas nyakfodrai a modern elméletek szerint?",
+    "options": [
+      "Repülésre",
+      "Védekezésre és párválasztási mutogatásra",
+      "Hallásra",
+      "Úszásra"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 207,
+    "difficulty": "medium",
+    "question": "Hány ujja volt a Tyrannosaurus rex mellső végtagjain?",
+    "options": [
+      "Egy",
+      "Kettő teljes és egy csökevényes",
+      "Öt",
+      "Négy"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 208,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz tartozott a korai, triász időszaki növényevők közé?",
+    "options": [
+      "Triceratops",
+      "Plateosaurus",
+      "Stegosaurus",
+      "T. rex"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 209,
+    "difficulty": "medium",
+    "question": "Miről ismerhető fel az Euoplocephalus páncélzata?",
+    "options": [
+      "Vékony bőr borította",
+      "Csontos övek és tüskék védték",
+      "Tollas volt",
+      "Csak a hasán volt páncél"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 210,
+    "difficulty": "medium",
+    "question": "A leletek szerint mi volt a Compsognathus utolsó vacsorája?",
+    "options": [
+      "Egy másik dinoszaurusz",
+      "Egy apró gyík",
+      "Sok-sok páfrány",
+      "Egy nagy hal"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 211,
+    "difficulty": "medium",
+    "question": "Hogyan védekezett a növényevő Kentrosaurus?",
+    "options": [
+      "Beásta magát a földbe",
+      "A farkán lévő hosszú tüskékkel",
+      "Mérget fújt",
+      "Gyorsan elúszott"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 212,
+    "difficulty": "medium",
+    "question": "A mai madarak melyik dinoszaurusz-rendből származnak?",
+    "options": [
+      "Madármedencéjűek",
+      "Hüllőmedencéjűek (Theropodák)",
+      "Páncélos dinoszauruszok",
+      "Sauropodák"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 213,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusznak volt jellegzetes 'kacsacsőre'?",
+    "options": [
+      "Edmontosaurus",
+      "Tyrannosaurus",
+      "Triceratops",
+      "Stegosaurus"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 214,
+    "difficulty": "medium",
+    "question": "Milyen csoportba tartozik az Iguanodon?",
+    "options": [
+      "Theropoda",
+      "Ornithopoda",
+      "Sauropoda",
+      "Marginocephalia"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 215,
+    "difficulty": "medium",
+    "question": "Mit jelent a Megalosaurus neve?",
+    "options": [
+      "Kis gyík",
+      "Nagy gyík",
+      "Gyors rabló",
+      "Tüskés hátú"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 216,
+    "difficulty": "medium",
+    "question": "Melyik területen élt a Magyarosaurus a késő kréta idején?",
+    "options": [
+      "Észak-Amerika",
+      "A mai Románia területe (Hatszeg-sziget)",
+      "Ausztrália",
+      "Dél-Amerika"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 217,
+    "difficulty": "medium",
+    "question": "Miről kapta a nevét az Ouranosaurus?",
+    "options": [
+      "A szarvairól",
+      "A bátorságáról ('Bátor gyík')",
+      "A sebességéről",
+      "A méretéről"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 218,
+    "difficulty": "medium",
+    "question": "A Microraptor tollai mire utalnak a tudósok szerint?",
+    "options": [
+      "Tudott futni a vízen",
+      "Képes volt siklórepülésre a fák között",
+      "Csak dísznek kellettek",
+      "Segítettek neki úszni"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 219,
+    "difficulty": "medium",
+    "question": "Mi jellemezte az Allosaurus fogait?",
+    "options": [
+      "Laposak és őrlésre alkalmasak voltak",
+      "Fűrészes szélűek és hátrafelé hajlók voltak",
+      "Nem voltak fogai",
+      "Csak két nagy agyara volt"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 220,
+    "difficulty": "medium",
+    "question": "Milyen volt a Massospondylus keze a leletek alapján?",
+    "options": [
+      "Csak úszásra volt jó",
+      "Alkalmas volt táplálék megfogására és járásra is",
+      "Nem volt keze",
+      "Hatalmas karmok voltak rajta"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 221,
+    "difficulty": "hard",
+    "question": "Mennyit nyomott körülbelül egy kifejlett Tyrannosaurus rex?",
+    "options": [
+      "1-2 tonnát",
+      "Körülbelül 9 tonnát",
+      "20 tonnát",
+      "500 kilogrammot"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 222,
+    "difficulty": "hard",
+    "question": "Milyen hosszúra nőhettek meg a Therizinosaurus legnagyobb karmai?",
+    "options": [
+      "10 centiméter",
+      "50 centiméter",
+      "Akár 1 méter",
+      "2 méter"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 223,
+    "difficulty": "hard",
+    "question": "Körülbelül hány foga lehetett összesen egy Triceratopsnak az élete során?",
+    "options": [
+      "Csak 20",
+      "Körülbelül 60",
+      "Akár 400-800",
+      "Több mint 2000"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 224,
+    "difficulty": "hard",
+    "question": "Mennyi növényi táplálékot fogyaszthatott el egy Brachiosaurus naponta?",
+    "options": [
+      "10 kilogrammot",
+      "50 kilogrammot",
+      "Körülbelül 200 kilogrammot",
+      "1000 kilogrammot"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 225,
+    "difficulty": "hard",
+    "question": "Mekkora volt a Spinosaurus becsült maximális hossza?",
+    "options": [
+      "10 méter",
+      "12 méter",
+      "Akár 18 méter",
+      "25 méter"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 226,
+    "difficulty": "hard",
+    "question": "Milyen gyorsan tudott futni a Carnotaurus a becslések szerint?",
+    "options": [
+      "10 km/h",
+      "20 km/h",
+      "40 km/h",
+      "100 km/h"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 227,
+    "difficulty": "hard",
+    "question": "Hány csigolya alkotta összesen a Diplodocus nyakát és farkát?",
+    "options": [
+      "Kb. 20",
+      "Kb. 50",
+      "Kb. 100",
+      "Kb. 200"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 228,
+    "difficulty": "hard",
+    "question": "Mekkora súlyt érhetett el az Argentinosaurus?",
+    "options": [
+      "10 tonna",
+      "30 tonna",
+      "Körülbelül 100 tonna",
+      "200 tonna"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 229,
+    "difficulty": "hard",
+    "question": "Hány foga volt a Tyrannosaurus rexnek összesen a szájában?",
+    "options": [
+      "20",
+      "40",
+      "60",
+      "100"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 230,
+    "difficulty": "hard",
+    "question": "Milyen hosszúra nőhettek meg az Allosaurus legnagyobb fogai?",
+    "options": [
+      "2 centiméter",
+      "10-20 centiméter",
+      "30 centiméter",
+      "50 centiméter"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 231,
+    "difficulty": "hard",
+    "question": "Mennyit nyomott egy felnőtt Herrerasaurus?",
+    "options": [
+      "10-20 kg",
+      "50-80 kg",
+      "100-400 kg",
+      "1000 kg"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 232,
+    "difficulty": "hard",
+    "question": "Milyen hosszú volt a Microraptor az orrától a farka végéig?",
+    "options": [
+      "30 cm",
+      "77 cm",
+      "150 cm",
+      "2 méter"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 233,
+    "difficulty": "hard",
+    "question": "Hány tonna lehetett a Paralititan becsült tömege?",
+    "options": [
+      "10-20 tonna",
+      "40-50 tonna",
+      "75-80 tonna",
+      "120 tonna"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 234,
+    "difficulty": "hard",
+    "question": "Milyen gyorsan tudott futni az Iguanodon a becslések szerint?",
+    "options": [
+      "5 km/h",
+      "20 km/h",
+      "50 km/h",
+      "70 km/h"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 235,
+    "difficulty": "hard",
+    "question": "Mekkora volt a Stegosaurus agya a testméretéhez képest?",
+    "options": [
+      "Mint egy emberé",
+      "Mint egy kutyaé",
+      "Körülbelül mint egy dió",
+      "Mint egy görögdinnye"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 236,
+    "difficulty": "hard",
+    "question": "Mennyi idő alatt volt képes a Diplodocus új fogat növeszteni az elveszett helyett?",
+    "options": [
+      "7 nap",
+      "35 nap",
+      "100 nap",
+      "1 év"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 237,
+    "difficulty": "hard",
+    "question": "Milyen hosszúra nőtt meg a kacsacsőrű Edmontosaurus?",
+    "options": [
+      "5 méter",
+      "9 méter",
+      "13 méter",
+      "20 méter"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 238,
+    "difficulty": "hard",
+    "question": "Milyen magasra nőtt meg a Carnotaurus?",
+    "options": [
+      "1 méter",
+      "2 méter",
+      "4 méter",
+      "8 méter"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 239,
+    "difficulty": "hard",
+    "question": "Hány ujjat és karmot viselt a mellső végtagjain a Baryonyx?",
+    "options": [
+      "Egyet",
+      "Hármat",
+      "Ötöt",
+      "Kettőt"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 240,
+    "difficulty": "hard",
+    "question": "Mekkora volt az Allosaurus karma?",
+    "options": [
+      "5 cm",
+      "10 cm",
+      "20 cm",
+      "40 cm"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 241,
+    "difficulty": "hard",
+    "question": "Hány éves lehetett egy Tyrannosaurus rex, amikor elérte a kifejlett méretét?",
+    "options": [
+      "10 éves",
+      "Kb. 20 éves",
+      "50 éves",
+      "100 éves"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "id": 242,
+    "difficulty": "hard",
+    "question": "Mekkora volt a Triceratops koponyájának hossza?",
+    "options": [
+      "50 cm",
+      "1 méter",
+      "Több mint 2 méter",
+      "4 méter"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 243,
+    "difficulty": "hard",
+    "question": "Milyen magas volt a Spinosaurus hátán lévő vitorla?",
+    "options": [
+      "50 cm",
+      "1 méter",
+      "Akár 1,5-1,8 méter",
+      "3 méter"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 244,
+    "difficulty": "hard",
+    "question": "Hány csigolyája volt a Brachiosaurus nyakának?",
+    "options": [
+      "Hét",
+      "Tíz",
+      "Tizenkettő",
+      "Tizenhárom"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "id": 245,
+    "difficulty": "hard",
+    "question": "Mekkora volt az Albertosaurus súlya a becslések szerint?",
+    "options": [
+      "500 kg",
+      "Körülbelül 1,1 tonna",
+      "5 tonna",
+      "10 tonna"
+    ],
+    "correctIndex": 1
   }
 ]

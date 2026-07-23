@@ -91,7 +91,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
   );
 }
 
-const CARD_H = 160;
+const CARD_H = 240;
 const styles = StyleSheet.create({
   wrapBase: { width: '100%', marginTop: 2, marginBottom: 4 },
   wrapWide: { flex: 1 },
