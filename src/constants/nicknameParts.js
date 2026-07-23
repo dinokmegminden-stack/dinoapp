@@ -1,62 +1,47 @@
 // src/constants/nicknameParts.js
-// A nickname-generátor 3 építőeleme: híres dínó + genus-szó (a `creatures` tábla
-// latin_name_ending mezőjének valós, betöltött értékeiből, lásd getGenusOptions)
-// + véletlen 3 jegyű szám.
+// A nickname-generátor 3 építőeleme: egy jelző (lentebb rögzített lista) +
+// a `creatures` tábla magyar köznapi nevének (common_name / name_hu) egyedi
+// értékei + egy "00"-tól "99"-ig szabadon választható szám.
 
-export const NICKNAME_DINOS = [
-  'T-Rex',
-  'Velociraptor',
-  'Triceratops',
-  'Stegosaurus',
-  'Brachiosaurus',
-  'Spinosaurus',
-  'Ankylosaurus',
-  'Diplodocus',
-  'Pteranodon',
-  'Allosaurus',
-  'Parasaurolophus',
-  'Iguanodon',
-  'Compsognathus',
-  'Deinonychus',
-  'Carnotaurus',
-  'Gallimimus',
-  'Pachycephalosaurus',
-  'Dilophosaurus',
-  'Archaeopteryx',
-  'Therizinosaurus',
-  'Styracosaurus',
-  'Maiasaura',
-  'Oviraptor',
-  'Baryonyx',
-  'Kentrosaurus',
-  'Giganotosaurus',
-  'Segnosaurus',
-  'Corythosaurus',
-  'Euoplocephalus',
-  'Protoceratops',
+export const NICKNAME_ADJECTIVES = [
+  'Őskövület',
+  'Rövidkarú',
+  'Vastagbőrű',
+  'Tüskés',
+  'Fogatlan',
+  'Ragadozó',
+  'Kipusztult',
+  'Sárkány',
+  'Falánk',
+  'Agyatlan',
+  'Páncélos',
+  'Vega',
+  'Vérszomjas',
+  'Nehézsúlyú',
+  'Daliás',
+  'Üvöltő',
+  'Fenevad',
+  'Bestia',
+  'Huncut',
+  'Szörnyeteg',
 ];
 
-// A `creatures` tábla `latin_name_ending` mezőjének (fajnév-végződés, pl. "rex",
-// "bataar", "horridus") egyedi, nem üres értékei — ezekből választ a játékos
-// "genus" néven a nickname 2. tagjaként.
-export function getGenusOptions(allDinos) {
+// A `creatures` tábla magyar köznapi nevének (common_name / name_hu) egyedi,
+// nem üres értékei — ezekből választ a játékos a nickname 2. tagjaként.
+export function getCommonNameOptions(allDinos) {
   const values = (allDinos || [])
-    .map((d) => d.latin_name_ending)
-    .filter((v) => v && v.trim() !== '');
+    .map((d) => String(d.name_hu || '').trim())
+    .filter((v) => v !== '');
   return [...new Set(values)].sort();
 }
 
-const NICKNAME_NUMBER_MIN = 10;
-const NICKNAME_NUMBER_MAX = 99;
-
-export function generateNicknameNumber() {
-  return NICKNAME_NUMBER_MIN + Math.floor(Math.random() * (NICKNAME_NUMBER_MAX - NICKNAME_NUMBER_MIN + 1));
-}
+// A nickname 3. tagja: a játékos maga választja a pickerből, "00"-tól "99"-ig.
+export const NICKNAME_NUMBER_OPTIONS = Array.from({ length: 100 }, (_, i) => String(i).padStart(2, '0'));
 
 // A végleges nickname formátuma: kisbetűs, aláhúzással elválasztott
-// (pl. "tyrannosaurus_eger_188"), nem a pickerben megjelenő szép alak.
-export function buildNickname(dino, genus, number) {
-  return `${dino}_${genus}_${number}`.toLowerCase();
+// (pl. "ragadozó_tirannoszaurusz_18").
+export function buildNickname(adjective, commonName, number) {
+  return `${adjective}_${commonName}_${number}`.toLowerCase();
 }
 
 export function randomFrom(list) {

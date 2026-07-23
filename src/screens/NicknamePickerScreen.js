@@ -1,9 +1,9 @@
 // src/screens/NicknamePickerScreen.js
-// Onboarding: a játékos 3 elemből (híres dínó, genus-szó a `creatures` tábla
-// latin_name_ending mezőjéből, véletlen 3 jegyű szám) állítja össze az egyedi
-// nicknamejét — nincs szabad szöveges bevitel, így nem lehet obszcén nevet
-// beírni. A nickname a `players` táblában regisztrálva (unique constraint)
-// lesz a játékos jövőbeli ranglista-azonosítója.
+// Onboarding: a játékos 3 elemből (egy jelző a rögzített listából, a `creatures`
+// tábla magyar köznapi neve — common_name/name_hu —, és egy "00"-tól "99"-ig
+// választható szám) állítja össze az egyedi nicknamejét — nincs szabad szöveges
+// bevitel, így nem lehet obszcén nevet beírni. A nickname a `players` táblában
+// regisztrálva (unique constraint) lesz a játékos jövőbeli ranglista-azonosítója.
 //
 // Eszközváltás után a régi profil a becenévvel + egy saját maga választotta
 // 4 jegyű PIN-nel szerezhető vissza (lásd "Folytatás" mód) — a PIN-t a
@@ -16,7 +16,7 @@ import Shell from '../components/Shell';
 import OptionPicker from '../components/OptionPicker';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
-import { NICKNAME_DINOS, getGenusOptions, generateNicknameNumber, randomFrom, buildNickname } from '../constants/nicknameParts';
+import { NICKNAME_ADJECTIVES, getCommonNameOptions, NICKNAME_NUMBER_OPTIONS, randomFrom, buildNickname } from '../constants/nicknameParts';
 import { isNicknameTaken, registerPlayer, resumePlayerWithPin } from '../services/playersService';
 
 const PIN_LENGTH = 4;
@@ -24,13 +24,13 @@ const PIN_LENGTH = 4;
 export const NICKNAME_STORAGE_KEY = 'dino_player_nickname';
 
 export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
-  const genusOptions = useMemo(() => getGenusOptions(allDinos), [allDinos]);
+  const commonNameOptions = useMemo(() => getCommonNameOptions(allDinos), [allDinos]);
 
   const [mode, setMode] = useState('new'); // 'new' | 'resume'
 
-  const [dino, setDino] = useState(() => randomFrom(NICKNAME_DINOS));
-  const [genus, setGenus] = useState('');
-  const [number, setNumber] = useState(() => generateNicknameNumber());
+  const [adjective, setAdjective] = useState(() => randomFrom(NICKNAME_ADJECTIVES));
+  const [commonName, setCommonName] = useState('');
+  const [number, setNumber] = useState(() => randomFrom(NICKNAME_NUMBER_OPTIONS));
   const [pin, setPin] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -40,21 +40,16 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
   const [resumeSubmitting, setResumeSubmitting] = useState(false);
   const [resumeError, setResumeError] = useState('');
 
-  // A genus-lista a `creatures` betöltésétől függ (App.js preload) — amint
+  // A névlista a `creatures` betöltésétől függ (App.js preload) — amint
   // megérkezik, kisorsolunk belőle egy kezdőértéket.
   useEffect(() => {
-    if (!genus && genusOptions.length > 0) {
-      setGenus(randomFrom(genusOptions));
+    if (!commonName && commonNameOptions.length > 0) {
+      setCommonName(randomFrom(commonNameOptions));
     }
-  }, [genusOptions, genus]);
+  }, [commonNameOptions, commonName]);
 
-  const isReady = genus !== '';
-  const nickname = isReady ? buildNickname(dino, genus, number) : '';
-
-  const handleReroll = () => {
-    setNumber(generateNicknameNumber());
-    setErrorMessage('');
-  };
+  const isReady = commonName !== '';
+  const nickname = isReady ? buildNickname(adjective, commonName, number) : '';
 
   const handleConfirm = async () => {
     if (pin.length !== PIN_LENGTH) {
@@ -68,7 +63,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
     const taken = await isNicknameTaken(nickname);
     if (taken) {
       setErrorMessage('Ez a név már foglalt — próbálj másik számot!');
-      setNumber(generateNicknameNumber());
+      setNumber(randomFrom(NICKNAME_NUMBER_OPTIONS));
       setSubmitting(false);
       return;
     }
@@ -76,7 +71,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
     const result = await registerPlayer(nickname, pin);
     if (result.taken) {
       setErrorMessage('Ez a név már foglalt — próbálj másik számot!');
-      setNumber(generateNicknameNumber());
+      setNumber(randomFrom(NICKNAME_NUMBER_OPTIONS));
       setSubmitting(false);
       return;
     }
@@ -147,18 +142,12 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
             </View>
 
             <View style={styles.pickerGroup}>
-              <OptionPicker label="Dínó" value={dino} options={NICKNAME_DINOS} onSelect={setDino} />
+              <OptionPicker label="Jelző" value={adjective} options={NICKNAME_ADJECTIVES} onSelect={setAdjective} />
               {isReady && (
-                <OptionPicker label="Genus" value={genus} options={genusOptions} onSelect={setGenus} />
+                <OptionPicker label="Dínó" value={commonName} options={commonNameOptions} onSelect={setCommonName} />
               )}
 
-              <TouchableOpacity style={styles.rerollField} onPress={handleReroll}>
-                <View style={styles.fieldContent}>
-                  <Text style={styles.fieldLabel}>Szám</Text>
-                  <Text style={styles.fieldValue}>{number}</Text>
-                </View>
-                <Text style={styles.rerollIcon}>🎲</Text>
-              </TouchableOpacity>
+              <OptionPicker label="Szám" value={number} options={NICKNAME_NUMBER_OPTIONS} onSelect={setNumber} />
 
               <View style={styles.inputField}>
                 <Text style={styles.fieldLabel}>PIN-kód (4 számjegy)</Text>
@@ -312,32 +301,11 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 8,
   },
-  rerollField: {
-    flexDirection: 'row',
-    borderRadius: RADIUS.button,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.bgMid,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  fieldContent: {
-    flex: 1,
-  },
   fieldLabel: {
     color: 'rgba(254,250,224,0.62)',
     fontFamily: FONTS.body,
     fontSize: 15,
     marginBottom: 2,
-  },
-  fieldValue: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  rerollIcon: {
-    fontSize: 20,
   },
   resumeForm: {
     width: '100%',

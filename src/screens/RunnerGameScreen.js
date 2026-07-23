@@ -460,13 +460,14 @@ const styles = StyleSheet.create({
   levelText: { color: '#90e0ef', fontFamily: FONTS.bold, fontSize: 15, fontWeight: '700' },
   playArea: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
-    gap: 18,
+    gap: 14,
   },
   trackWrap: {
-    width: '100%',
+    flex: 1,
     position: 'relative',
   },
   track: {
@@ -524,8 +525,8 @@ const styles = StyleSheet.create({
   },
   playerImage: { width: PLAYER_SIZE, height: PLAYER_SIZE },
   controls: {
-    flexDirection: 'row',
-    gap: 20,
+    flexDirection: 'column',
+    gap: 16,
   },
   laneBtn: {
     width: 56,
