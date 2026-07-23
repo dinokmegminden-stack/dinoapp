@@ -104,7 +104,7 @@ export const IMAGE_MAP = {
   "Massospondylus": require('../../assets/images/massospondylus.jpg'),
   "Gorgosaurus": require('../../assets/images/gorgosaurus.jpg'),
   "Troodon": require('../../assets/images/troodon.jpg'),
-  // "Sinosauropteryx": require('../../assets/images/sinosauropteryx.jpg'),
+  "Sinosauropteryx": require('../../assets/images/sinosauropteryx.jpg'),
   // "Noasaurus": require('../../assets/images/noasaurus.jpg'),
   "Alvarezsaurus": require('../../assets/images/alvarezsaurus.jpg'),
   // "Ligabuesaurus": require('../../assets/images/ligabuesaurus.jpg'),
@@ -118,7 +118,7 @@ export const IMAGE_MAP = {
   // 
   // "Utahraptor": require('../../assets/images/utahraptor.jpg'),
   // "Pentaceratops": require('../../assets/images/pentaceratops.jpg'),
-  // "Coelophysis": require('../../assets/images/coelophysis.jpg'),
+  "Coelophysis": require('../../assets/images/coelophysis.jpg'),
   // "Chubutisaurus": require('../../assets/images/chubutisaurus.jpg'),
   "Velociraptor": require('../../assets/images/velociraptor.jpg'),
   // "Nagatitan": require('../../assets/images/nagatitan.jpg'),

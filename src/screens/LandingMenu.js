@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.button,
     paddingVertical: 14,
     paddingHorizontal: 12,
+    minHeight: 96,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
