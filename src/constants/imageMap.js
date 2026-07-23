@@ -108,7 +108,7 @@ export const IMAGE_MAP = {
   // "Noasaurus": require('../../assets/images/noasaurus.jpg'),
   "Alvarezsaurus": require('../../assets/images/alvarezsaurus.jpg'),
   // "Ligabuesaurus": require('../../assets/images/ligabuesaurus.jpg'),
-  // "Irritator": require('../../assets/images/irritator.jpg'),
+  "Irritator": require('../../assets/images/irritator.jpg'),
   "Australotitan": require('../../assets/images/australotitan.jpeg'),
   // "Muttaburrasaurus": require('../../assets/images/muttaburrasaurus.jpg'),
   "Oviraptor": require('../../assets/images/oviraptor.jpg'),

@@ -19,7 +19,7 @@
     "production": {
       "android": {
         "serviceAccountKeyPath": "./git_not_commit/google-play-service-account.json",
-        "track": "internal"
+        "track": "alpha"
       }
     }
   }
