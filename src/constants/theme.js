@@ -18,6 +18,8 @@ export const COLORS = {
   runnerBtnShadow: '#283618',
   hangmanBtn: '#6b4226',  // Akasztófa gomb (játékmód, nem régió)
   hangmanBtnShadow: '#3e2416',
+  heroYellow: '#ffce1f',      // HeroTop "DÍNÓ EXPEDÍCIÓ" cím és sáv színe
+  heroYellowDark: '#b8860b',  // hozzá tartozó sötétebb shadow/talp szín
 
   // Earthy safari paletta (múzeumi tábla kártyák, régió-szintek) — korábban
   // csak `COLORS.gold || '#DDA15E'` / `COLORS.action || '#BC6C25'` fallback-ként

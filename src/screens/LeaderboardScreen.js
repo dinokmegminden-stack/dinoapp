@@ -7,7 +7,7 @@ import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Activi
 import Shell from '../components/Shell';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
-import { getLeaderboard } from '../services/leaderboardService';
+import { getLeaderboard, getRunnerLeaderboard } from '../services/leaderboardService';
 import { getXPMilestoneLeaderboard } from '../services/xpMilestonesService';
 
 const XP_MILESTONE = 1000;
@@ -19,6 +19,7 @@ const TABS = [
   { key: 'whoami', label: 'Ki vagyok én?' },
   { key: 'lightning', label: '5mp Képkvíz' },
   { key: 'millionaire', label: 'XP Milliomos' },
+  { key: 'runner', label: 'Dínófutam' },
   { key: 'xp1000', label: `${XP_MILESTONE} XP elérése` },
 ];
 
@@ -48,7 +49,9 @@ export default function LeaderboardScreen({ onBack }) {
     setLoading(true);
     const rows = tabKey === 'xp1000'
       ? await getXPMilestoneLeaderboard(XP_MILESTONE, { period: periodKey })
-      : await getLeaderboard(tabKey, { period: periodKey });
+      : tabKey === 'runner'
+        ? await getRunnerLeaderboard({ period: periodKey })
+        : await getLeaderboard(tabKey, { period: periodKey });
     setEntries(rows);
     setLoading(false);
   }, []);
@@ -104,7 +107,9 @@ export default function LeaderboardScreen({ onBack }) {
             <ActivityIndicator color={COLORS.accent} style={styles.loading} />
           ) : entries.length === 0 ? (
             <Text style={styles.emptyText}>
-              Még senki nem került fel ide — legyél te az első hibátlan játékos!
+              {activeTab === 'runner'
+                ? 'Még senki nem futott ide fel — legyél te az első!'
+                : 'Még senki nem került fel ide — legyél te az első hibátlan játékos!'}
             </Text>
           ) : (
             <ScrollView contentContainerStyle={styles.listContent}>
@@ -113,7 +118,11 @@ export default function LeaderboardScreen({ onBack }) {
                   <Text style={styles.rank}>{idx + 1}.</Text>
                   <Text style={styles.nickname} numberOfLines={1}>{entry.nickname}</Text>
                   <Text style={styles.time}>
-                    {activeTab === 'xp1000' ? formatDuration(entry.elapsedMs) : formatMinSec(entry.completionTimeMs)}
+                    {activeTab === 'xp1000'
+                      ? formatDuration(entry.elapsedMs)
+                      : activeTab === 'runner'
+                        ? `${entry.score} XP`
+                        : formatMinSec(entry.completionTimeMs)}
                   </Text>
                 </View>
               ))}

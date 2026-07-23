@@ -75,7 +75,7 @@ export default function PrimaryCTA({ onPress, label = 'Kezdd a felfedezést!' })
         onPress={onPress}
         containerStyle={styles.container}
         style={styles.btn}
-        shadowColor={COLORS.accentDark}
+        shadowColor={COLORS.heroYellowDark}
       >
         <MaterialCommunityIcons name="play" size={26} color={COLORS.bgDark} />
         <Text style={styles.label}>{label}</Text>
@@ -94,13 +94,13 @@ const styles = StyleSheet.create({
   glow: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: RADIUS.button + 6,
-    backgroundColor: COLORS.accent,
+    backgroundColor: COLORS.heroYellow,
     ...Platform.select({
       web: {
         filter: 'blur(18px)',
       },
       default: {
-        shadowColor: COLORS.accent,
+        shadowColor: COLORS.heroYellow,
         shadowOpacity: 0.9,
         shadowRadius: 18,
         shadowOffset: { width: 0, height: 0 },
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: COLORS.accent,
+    backgroundColor: COLORS.heroYellow,
     borderRadius: RADIUS.button,
     paddingVertical: 16,
     paddingHorizontal: 20,

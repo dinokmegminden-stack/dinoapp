@@ -14,13 +14,14 @@ import {
   useFonts as useFigtree,
   Figtree_600SemiBold,
 } from '@expo-google-fonts/figtree';
+import { COLORS } from '../constants/theme';
 
 // Amíg az allDinos még nem töltött be (App.js preloadCreatures), ezt írjuk ki
 // helyette — a `creatures` tábla jelenlegi tartalma szerinti tényleges szám
 // (lásd data/111 db.csv). Ha allDinos betöltött, a valós hossza felülírja.
 const TOTAL_CREATURES_FALLBACK = 111;
 
-const YELLOW = '#ffce1f';
+const YELLOW = COLORS.heroYellow;
 
 export default function HeroTop({ isWide = false, totalCreatures }) {
   const { width } = useWindowDimensions();

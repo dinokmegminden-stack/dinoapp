@@ -9,6 +9,7 @@ import {
   Pressable,
   ScrollView,
   Platform,
+  Linking,
   useWindowDimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,6 +17,7 @@ import Shell from '../components/Shell';
 import HeroTop from '../components/HeroTop';
 import PrimaryCTA from '../components/PrimaryCTA';
 import DailyDinoCard from '../components/DailyDinoCard';
+import AppInfoModal from '../components/AppInfoModal';
 import LandingMenu from './LandingMenu';
 import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
@@ -25,6 +27,8 @@ import { COLORS, RADIUS } from '../constants/theme';
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
 // (lásd Shell.js backgroundImage prop), sötét overlay-jel a gombok olvashatóságáért.
 const landingBg = require('../../assets/images/new_bg.jpg');
+
+const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
 
 function XPPill() {
   const [xp, setXP] = useState(0);
@@ -111,11 +115,22 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   const [muted, setMuted] = useState(getSoundMuted());
+  const [infoOpen, setInfoOpen] = useState(false);
 
   const toggleMute = () => {
     const next = !getSoundMuted();
     setSoundMuted(next);
     setMuted(next);
+  };
+
+  const handleOpenYoutube = () => {
+    playSound('click');
+    Linking.openURL(YOUTUBE_URL);
+  };
+
+  const handleOpenInfo = () => {
+    playSound('click');
+    setInfoOpen(true);
   };
 
   const handleSelectRegion = (eduLevel) => {
@@ -210,8 +225,12 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
               <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
               <RoundIconButton icon={muted ? 'volume-off' : 'volume-high'} onPress={toggleMute} />
               <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
+              <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
+              <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Mi ez az app?" />
             </View>
           </View>
+
+          <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
 
           {/* Desktopon (>=1024px) két oszlop: bal = logó/CTA/napi dínó, jobb = menü.
               Mobilon/tableten marad az eredeti, egy-oszlopos sorrend. */}

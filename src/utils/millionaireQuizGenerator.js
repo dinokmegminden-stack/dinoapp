@@ -2,6 +2,7 @@
 // "Legyen Ön is XP Milliomos" kérdésválogatás.
 // Forrás: assets/quiz_questions.json — tényleges mezőnevek (ellenőrizve):
 // { id, difficulty: 'easy'|'medium'|'hard', question, options: [4], correctIndex, hint }
+// (a `hint` a JSON-ban megvan, de a képernyő nem használja — nincs segítség/joker ebben a módban)
 
 import { MILLIONAIRE_DIFFICULTY_COUNTS, MILLIONAIRE_XP_TABLE } from '../constants/millionaireXP';
 

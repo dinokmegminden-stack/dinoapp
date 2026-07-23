@@ -66,7 +66,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
         {/* ELŐLAP */}
         <Animated.View style={[styles.card, styles.front, { transform: [{ perspective: 1000 }, { rotateY: frontRotate }] }]}>
           <View style={styles.imgWrap}>
-            <Image source={imgSource} style={styles.img} resizeMode="contain" />
+            <Image source={imgSource} style={styles.img} resizeMode="cover" />
           </View>
           <View style={styles.nameBand}>
             <Text style={[styles.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>

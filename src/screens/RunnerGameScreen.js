@@ -16,6 +16,8 @@ import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { playSound, playQuizSfx } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
+import { submitRunnerScore, getCelebrationMessage } from '../services/leaderboardService';
+import Fireworks from '../components/Fireworks';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
@@ -81,6 +83,7 @@ export default function RunnerGameScreen({ playerId, onBack }) {
   const [score, setScore] = useState(0);
   const [runFrame, setRunFrame] = useState(0);
   const [level, setLevel] = useState(1);
+  const [celebration, setCelebration] = useState({ visible: false, message: '' });
 
   const laneRef = useRef(1);
   const itemsRef = useRef([]);
@@ -108,8 +111,16 @@ export default function RunnerGameScreen({ playerId, onBack }) {
     stopLoop();
     setGameStatus('over');
     playQuizSfx('wrong');
-    if (finalScore > 0) addXP(finalScore);
-  }, [stopLoop]);
+    if (finalScore > 0) {
+      addXP(finalScore);
+      if (playerId) {
+        submitRunnerScore({ playerId, score: finalScore }).then((result) => {
+          const message = getCelebrationMessage(result);
+          if (message) setCelebration({ visible: true, message });
+        });
+      }
+    }
+  }, [stopLoop, playerId]);
 
   const changeLane = useCallback((delta) => {
     if (gameStatus !== 'playing') return;
@@ -133,6 +144,7 @@ export default function RunnerGameScreen({ playerId, onBack }) {
     setScore(0);
     levelRef.current = 1;
     setLevel(1);
+    setCelebration({ visible: false, message: '' });
     setRenderTick((t) => t + 1);
     setGameStatus('playing');
     playSound('click');
@@ -286,6 +298,11 @@ export default function RunnerGameScreen({ playerId, onBack }) {
       <Shell backgroundImage={landingBg}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+          <Fireworks
+            visible={celebration.visible}
+            message={celebration.message}
+            onDone={() => setCelebration((c) => ({ ...c, visible: false }))}
+          />
           <View style={styles.centerContent}>
             <Text style={styles.badgeEmoji}>💥</Text>
             <Text style={styles.title}>Ütköztél!</Text>
