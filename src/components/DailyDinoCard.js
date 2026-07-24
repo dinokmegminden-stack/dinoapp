@@ -11,6 +11,9 @@ import {
 import {
   useFonts as useFredoka, Fredoka_400Regular, Fredoka_600SemiBold,
 } from '@expo-google-fonts/fredoka';
+import {
+  useFonts as useCinzel, Cinzel_700Bold,
+} from '@expo-google-fonts/cinzel';
 import { COLORS, RADIUS } from '../constants/theme';
 import { pickDailyDino } from '../utils/dailyDino';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
@@ -29,9 +32,12 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
 
   const [caprasimoLoaded] = useCaprasimo({ Caprasimo_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
+  const [cinzelLoaded] = useCinzel({ Cinzel_700Bold });
   const titleFont = caprasimoLoaded ? 'Caprasimo_400Regular' : 'System';
   const bodyFont = fredokaLoaded ? 'Fredoka_400Regular' : 'System';
   const boldFont = fredokaLoaded ? 'Fredoka_600SemiBold' : 'System';
+  // Tudományos (latin) név — kizárólag Cinzel (lásd CLAUDE.md betűtípus-szabály).
+  const latinFont = cinzelLoaded ? 'Cinzel_700Bold' : 'serif';
 
   const dino = pickDailyDino(allDinos);
 
@@ -72,7 +78,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
           </View>
           <View style={styles.nameBand}>
             <Text style={[styles.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
-            {!!latinFull && <Text style={[styles.latin, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>}
+            {!!latinFull && <Text style={[styles.latin, { fontFamily: latinFont }]} numberOfLines={1}>{latinFull}</Text>}
           </View>
           <Text style={[styles.tapHint, { fontFamily: bodyFont }]}>Koppints a tényért ↻</Text>
         </Animated.View>

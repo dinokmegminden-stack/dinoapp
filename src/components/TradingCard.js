@@ -18,6 +18,10 @@ import {
   Fredoka_400Regular,
   Fredoka_600SemiBold,
 } from '@expo-google-fonts/fredoka';
+import {
+  useFonts as useCinzel,
+  Cinzel_700Bold,
+} from '@expo-google-fonts/cinzel';
 import { COLORS, RADIUS } from '../constants/theme';
 import { MAX_FAVORITES } from '../hooks/useFavorites';
 import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES } from './EraTimeline';
@@ -147,9 +151,12 @@ export default function TradingCard({
 
   const [caprasimoLoaded] = useCaprasimo({ Caprasimo_400Regular });
   const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
+  const [cinzelLoaded] = useCinzel({ Cinzel_700Bold });
   const titleFont = caprasimoLoaded ? 'Caprasimo_400Regular' : 'System';
   const bodyFont = fredokaLoaded ? 'Fredoka_400Regular' : 'System';
   const boldFont = fredokaLoaded ? 'Fredoka_600SemiBold' : 'System';
+  // Tudományos (latin) név — kizárólag Cinzel (lásd CLAUDE.md betűtípus-szabály).
+  const latinFont = cinzelLoaded ? 'Cinzel_700Bold' : 'serif';
 
   if (!dino) return null;
 
@@ -222,7 +229,7 @@ export default function TradingCard({
                   <View style={s.nameTextCol}>
                     <Text style={[s.altName, isBigCard && s.altNameLarge, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
                     {!!latinFull && (
-                      <Text style={[s.altLatin, isBigCard && s.altLatinLarge, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
+                      <Text style={[s.altLatin, isBigCard && s.altLatinLarge, { fontFamily: latinFont }]} numberOfLines={1}>{latinFull}</Text>
                     )}
                   </View>
                   {heartButton}
@@ -350,7 +357,7 @@ export default function TradingCard({
             <View style={s.nameTextCol}>
               <Text style={[s.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
               {!!latinFull && (
-                <Text style={[s.latin, { fontFamily: boldFont }]} numberOfLines={1}>{latinFull}</Text>
+                <Text style={[s.latin, { fontFamily: latinFont }]} numberOfLines={1}>{latinFull}</Text>
               )}
             </View>
             {heartButton}

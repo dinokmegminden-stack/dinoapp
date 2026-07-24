@@ -20,7 +20,7 @@ import DailyDinoCard from '../components/DailyDinoCard';
 import AppInfoModal from '../components/AppInfoModal';
 import CreatureMarquee from '../components/CreatureMarquee';
 import LandingMenu from './LandingMenu';
-import { playSound } from '../audio/audioSystem';
+import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { findNextPack, overallCompletionRatio } from '../utils/regionProgress';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -115,6 +115,31 @@ function RoundIconButton({ icon, onPress, tooltip, secondary }) {
   );
 }
 
+// Hang némítása a landing fejlécből. A MuteButton komponens abszolút
+// pozícionált overlay (játék-képernyőkre tervezve), ami itt a fejléc gombjaira
+// csúszna — ezért a landingen a többi fejléc-ikonnal egyező RoundIconButton
+// stílust használjuk, ugyanazt a globális isSoundMuted állapotot billentve.
+function MuteIconButton() {
+  const [muted, setMuted] = useState(getSoundMuted());
+
+  const toggle = () => {
+    const next = !getSoundMuted();
+    setSoundMuted(next);
+    setMuted(next);
+    // A visszakapcsolást hallhatóvá tesszük; némításkor nincs mit lejátszani.
+    if (!next) playSound('click');
+  };
+
+  return (
+    <RoundIconButton
+      icon={muted ? 'volume-off' : 'volume-high'}
+      onPress={toggle}
+      tooltip={muted ? 'Hang be' : 'Hang ki'}
+      secondary
+    />
+  );
+}
+
 // A gyűjtemény korábban egy külön, teljes szélességű sávban élt a menüben —
 // most a fejlécben, a ranglista-ikon mellett kapott helyet, a már kinyitott
 // kártyák arányával egy jelvényként az ikon elülső (bal felső) sarkán, rajta.
@@ -150,7 +175,7 @@ function CollectionIconButton({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming }) {
+export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   // 700–1023px: még egy oszlopos elrendezés, de a tartalom ne ragadjon a
@@ -239,6 +264,7 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
               </View>
               <View style={styles.headerDivider} />
               <View style={styles.headerIconGroup}>
+                <MuteIconButton />
                 <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" secondary />
                 <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Mi ez az app?" secondary />
               </View>
@@ -246,6 +272,27 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
           </View>
 
           <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
+
+          {/* Hálózati hiba a lények betöltésekor — korábban néma volt, és a
+              felület örökre "betöltés" állapotban maradt. */}
+          {dinosError && (
+            <View style={styles.errorBanner}>
+              <MaterialCommunityIcons name="wifi-off" size={16} color={COLORS.cream} />
+              <Text style={styles.errorBannerText}>
+                Nem sikerült betölteni a lényeket. Ellenőrizd az internetkapcsolatot.
+              </Text>
+              <Pressable
+                style={styles.errorRetryBtn}
+                onPress={() => onRetryLoadDinos?.()}
+                disabled={dinosLoading}
+                accessibilityRole="button"
+              >
+                <Text style={styles.errorRetryText}>
+                  {dinosLoading ? 'Töltés…' : 'Újra'}
+                </Text>
+              </Pressable>
+            </View>
+          )}
 
           {/* Desktopon (>=1024px) két oszlop: bal = logó/CTA/napi dínó, jobb = menü.
               Mobilon/tableten marad az eredeti, egy-oszlopos sorrend. */}
@@ -331,6 +378,33 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingTop: 16,
+  },
+  errorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: RADIUS.card,
+    backgroundColor: COLORS.parokBtn,
+  },
+  errorBannerText: {
+    flex: 1,
+    color: COLORS.cream,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  errorRetryBtn: {
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.button,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+  },
+  errorRetryText: {
+    color: COLORS.bgDark,
+    fontSize: 13,
+    fontWeight: '800',
   },
   xpPill: {
     flexDirection: 'row',

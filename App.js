@@ -32,8 +32,34 @@ export default function App() {
   const [progress, setProgress] = useState({});
   const [regionDinos, setRegionDinos] = useState([]);
   const [allDinos, setAllDinos] = useState([]);
+  // A lény-előtöltés hálózati hibája korábban csak a konzolra ment, így a
+  // felület örökre "betöltés" állapotban ragadt (üres allDinos, néma hiba).
+  // Ezt az állapotot most felszínre hozzuk, és újrapróbálható.
+  const [dinosError, setDinosError] = useState(false);
+  const [dinosLoading, setDinosLoading] = useState(true);
   const [activeGameEventId, setActiveGameEventId] = useState(null);
   const [hideXPBar, setHideXPBar] = useState(false);
+
+  // Minden régió lényeit egyszer töltjük be (villámkvíz, napi dínó, régió-számok).
+  const preloadCreatures = async () => {
+    setDinosLoading(true);
+    setDinosError(false);
+    try {
+      const all = [];
+      for (let edu = 1; edu <= 6; edu++) {
+        const dinos = await fetchCreaturesByEdu(edu);
+        all.push(...dinos);
+      }
+      setAllDinos(all);
+      return true;
+    } catch (err) {
+      console.warn('preloadCreatures failed:', err);
+      setDinosError(true);
+      return false;
+    } finally {
+      setDinosLoading(false);
+    }
+  };
 
   useEffect(() => {
     AsyncStorage.getItem(NICKNAME_STORAGE_KEY).then((saved) => {
@@ -47,16 +73,7 @@ export default function App() {
       }
     });
 
-    // Preload all creatures for lightning quiz
-    const preloadCreatures = async () => {
-      const all = [];
-      for (let edu = 1; edu <= 6; edu++) {
-        const dinos = await fetchCreaturesByEdu(edu);
-        all.push(...dinos);
-      }
-      setAllDinos(all);
-    };
-    preloadCreatures().catch(console.warn);
+    preloadCreatures();
   }, []);
 
   // Az XPBar.js addXP()-je (sok képernyőről hívva) nem kap playerId-t
@@ -188,6 +205,9 @@ export default function App() {
           nickname={nickname}
           progress={progress}
           allDinos={allDinos}
+          dinosError={dinosError}
+          dinosLoading={dinosLoading}
+          onRetryLoadDinos={preloadCreatures}
           onEnterRegion={handleEnterRegion}
           onOpenGallery={handleOpenGallery}
           onOpenLeaderboard={handleOpenLeaderboard}
