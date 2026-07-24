@@ -36,7 +36,7 @@ export const IMAGE_MAP = {
   "Telmatosaurus": require('../../assets/images/telmatosaurus.jpg'),
   "Struthiosaurus": require('../../assets/images/struthiosaurus.jpg'),
   "Petrustitan": require('../../assets/images/petrustitan.jpg'),
-  "Uriash": require('../../assets/images/uriash_kadici.jpg'),
+  "Uriash": require('../../assets/images/uriash.jpg'),
   "Komlosaurus": require('../../assets/images/komlosaurus.jpg'),
   "Hylaeosaurus": require('../../assets/images/hylaeosaurus.jpg'),
   "Spinosaurus": require('../../assets/images/spinosaurus.jpg'),
