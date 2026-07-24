@@ -12,6 +12,12 @@ import { getXPMilestoneLeaderboard } from '../services/xpMilestonesService';
 
 const XP_MILESTONE = 1000;
 
+const MEDAL_STYLES = {
+  1: { fill: COLORS.accent, text: COLORS.bgDark, rowTint: 'rgba(238,155,0,0.12)' },
+  2: { fill: '#B8B2A0', text: COLORS.bgDark, rowTint: 'rgba(184,178,160,0.10)' },
+  3: { fill: COLORS.gold, text: COLORS.bgDark, rowTint: 'rgba(221,161,94,0.10)' },
+};
+
 const TABS = [
   { key: 'memory_1', label: 'Párok · Kezdő' },
   { key: 'memory_2', label: 'Párok · Haladó' },
@@ -67,6 +73,9 @@ export default function LeaderboardScreen({ onBack }) {
 
         <View style={styles.header}>
           <Text style={styles.title}>🏆 RANGLISTA</Text>
+          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+            <Text style={styles.backBtnText}>✕</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.periodToggle}>
@@ -88,19 +97,19 @@ export default function LeaderboardScreen({ onBack }) {
           </TouchableOpacity>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabScroll} contentContainerStyle={styles.tabRow}>
+        <View style={styles.tabRow}>
           {TABS.map((tab) => (
             <TouchableOpacity
               key={tab.key}
               style={[styles.tabBtn, activeTab === tab.key && styles.tabBtnActive]}
               onPress={() => setActiveTab(tab.key)}
             >
-              <Text style={[styles.tabBtnText, activeTab === tab.key && styles.tabBtnTextActive]}>
+              <Text style={[styles.tabBtnText, activeTab === tab.key && styles.tabBtnTextActive]} numberOfLines={1}>
                 {tab.label}
               </Text>
             </TouchableOpacity>
           ))}
-        </ScrollView>
+        </View>
 
         <View style={styles.listWrapper}>
           {loading ? (
@@ -113,26 +122,29 @@ export default function LeaderboardScreen({ onBack }) {
             </Text>
           ) : (
             <ScrollView contentContainerStyle={styles.listContent}>
-              {entries.map((entry, idx) => (
-                <View key={entry.id} style={styles.row}>
-                  <Text style={styles.rank}>{idx + 1}.</Text>
-                  <Text style={styles.nickname} numberOfLines={1}>{entry.nickname}</Text>
-                  <Text style={styles.time}>
-                    {activeTab === 'xp1000'
-                      ? formatDuration(entry.elapsedMs)
-                      : activeTab === 'runner'
-                        ? `${entry.score} XP`
-                        : formatMinSec(entry.completionTimeMs)}
-                  </Text>
-                </View>
-              ))}
+              {entries.map((entry, idx) => {
+                const rank = idx + 1;
+                const medalStyle = MEDAL_STYLES[rank];
+                return (
+                  <View key={entry.id} style={[styles.row, medalStyle && { backgroundColor: medalStyle.rowTint }]}>
+                    <View style={[styles.rankBadge, medalStyle && { backgroundColor: medalStyle.fill }]}>
+                      <Text style={[styles.rank, medalStyle && { color: medalStyle.text }]}>{rank}</Text>
+                    </View>
+                    <Text style={styles.nickname} numberOfLines={1}>{entry.nickname}</Text>
+                    <Text style={styles.time}>
+                      {activeTab === 'xp1000'
+                        ? formatDuration(entry.elapsedMs)
+                        : activeTab === 'runner'
+                          ? `${entry.score} XP`
+                          : formatMinSec(entry.completionTimeMs)}
+                    </Text>
+                  </View>
+                );
+              })}
             </ScrollView>
           )}
         </View>
 
-        <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-          <Text style={styles.backBtnText}>✕</Text>
-        </TouchableOpacity>
       </View>
     </Shell>
   );
@@ -141,6 +153,9 @@ export default function LeaderboardScreen({ onBack }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 14,
   },
@@ -178,21 +193,23 @@ const styles = StyleSheet.create({
   periodBtnTextActive: {
     opacity: 1,
   },
-  tabScroll: {
-    marginTop: 10,
-    flexGrow: 0,
-  },
   tabRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
     paddingHorizontal: 16,
     gap: 8,
   },
   tabBtn: {
+    flexBasis: '23%',
+    flexGrow: 1,
     paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingHorizontal: 10,
     borderRadius: RADIUS.pill,
     backgroundColor: 'rgba(254,250,224,0.06)',
     borderWidth: 1,
     borderColor: 'rgba(254,250,224,0.15)',
+    alignItems: 'center',
   },
   tabBtnActive: {
     backgroundColor: COLORS.bgMid,
@@ -201,9 +218,10 @@ const styles = StyleSheet.create({
   tabBtnText: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '700',
     opacity: 0.7,
+    textAlign: 'center',
   },
   tabBtnTextActive: {
     opacity: 1,
@@ -231,21 +249,27 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 13,
     paddingHorizontal: 14,
     borderRadius: RADIUS.card,
-    backgroundColor: 'rgba(254,250,224,0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(254,250,224,0.1)',
-    marginBottom: 8,
-    gap: 10,
+    backgroundColor: 'rgba(254,250,224,0.04)',
+    marginBottom: 10,
+    gap: 12,
+  },
+  rankBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   rank: {
-    color: COLORS.accent,
+    color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '800',
-    width: 32,
+    opacity: 0.6,
+    fontVariant: ['tabular-nums'],
   },
   nickname: {
     color: COLORS.cream,
@@ -259,22 +283,20 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontSize: 15,
     opacity: 0.85,
+    fontVariant: ['tabular-nums'],
   },
   backBtn: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: 'rgba(244,67,54,0.6)',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 999,
   },
   backBtnText: {
-    color: '#FFF',
-    fontSize: 24,
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });
