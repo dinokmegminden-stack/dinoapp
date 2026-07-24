@@ -44,7 +44,7 @@ const MARKERS = [
 // van), a kontinens belseje átlátszó marad, csak a partvonal kap narancs vonalat.
 const OUTLINE_COLOR = COLORS.accent; // #ee9b00
 const OUTLINE_RADIUS = 2; // a körvonal vastagsága a SVG koordinátáiban
-const CLOSE_RADIUS = 4; // morfológiai "zárás" — ekkora rést tömünk be az országok között
+const CLOSE_RADIUS = 1.2; // morfológiai "zárás" — ekkora rést tömünk be az országok között
 // A szűrő két lépésben dolgozik:
 // 1) ZÁRÁS (dilate → erode ugyanakkora sugárral): betömi az ország-path-ok közti
 //    apró réseket, hogy egy kontinens egyetlen, lyukmentes sziluett legyen — így
@@ -69,13 +69,6 @@ const STYLED_SVG = WORLD_MAP_SVG
   .replace('id="world-map">', 'id="world-map" preserveAspectRatio="none">' + OUTLINE_FILTER)
   // a szűrő rákötése a legfelső (bare) <g>-re, ami az összes országot tartalmazza
   .replace('<g>', '<g filter="url(#continentOutline)">');
-
-// A térkép enyhén megdöntve.
-const TILT = '-4deg';
-// A számok/tooltipek a megdöntött térkép GYEREKEI, ezért a térkép dőlésével
-// együtt dőlnének — a szövegeket viszont vízszintesen akarjuk, ezért ellen-
-// forgatjuk őket (a TILT ellentettjével), miközben a térkép rajza döntött marad.
-const COUNTER_TILT = '4deg';
 
 export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
   // Amíg az allDinos (App.js) még nem töltött be, regionCounts üres — ilyenkor
@@ -142,8 +135,6 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: ASPECT,
     position: 'relative',
-    transform: [{ rotate: TILT }],
-    // kis függőleges levegő, hogy a megdöntött sarkok ne érjenek a szomszéd blokkokba
     marginVertical: 6,
   },
   contrastBacking: {
@@ -160,8 +151,6 @@ const styles = StyleSheet.create({
     marginTop: -MARKER_H / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    // ellen-forgatás, hogy a szám a döntött térkép fölött is vízszintes legyen
-    transform: [{ rotate: COUNTER_TILT }],
   },
   markerText: {
     color: COLORS.accent,
