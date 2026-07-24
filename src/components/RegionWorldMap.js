@@ -82,10 +82,6 @@ export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
 
   return (
     <View style={styles.wrap}>
-      {/* Halvány sötét alátét a háttérkép (T-rex fej, dzsungel) fölött, hogy a
-          narancs kontinens-körvonalak ne vesszenek el a mögöttes kép zsúfoltabb
-          részein (pl. az arc/fogak vonalai a térkép vonalaival keverednének). */}
-      <View style={styles.contrastBacking} pointerEvents="none" />
       <SvgXml xml={STYLED_SVG} width="100%" height="100%" />
 
       {MARKERS.map((m) => {
@@ -136,11 +132,6 @@ const styles = StyleSheet.create({
     aspectRatio: ASPECT,
     position: 'relative',
     marginVertical: 6,
-  },
-  contrastBacking: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,18,25,0.4)',
-    borderRadius: 12,
   },
   marker: {
     position: 'absolute',

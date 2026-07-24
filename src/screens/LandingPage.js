@@ -18,6 +18,7 @@ import HeroTop from '../components/HeroTop';
 import PrimaryCTA from '../components/PrimaryCTA';
 import DailyDinoCard from '../components/DailyDinoCard';
 import AppInfoModal from '../components/AppInfoModal';
+import CreatureMarquee from '../components/CreatureMarquee';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
@@ -269,6 +270,9 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
             </View>
           </View>
         </View>
+
+        {/* Alsó futósáv: lény-nevek véletlen sorrendben, jobbról balra görögve */}
+        <CreatureMarquee allDinos={allDinos} />
       </ScrollView>
     </Shell>
   );
