@@ -203,6 +203,7 @@ export default function App() {
       {view === 'landing' && (
         <LandingPage
           nickname={nickname}
+          playerId={playerId}
           progress={progress}
           allDinos={allDinos}
           dinosError={dinosError}
