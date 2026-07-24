@@ -14,6 +14,7 @@ import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import RunnerGameScreen from './src/screens/RunnerGameScreen';
 import HangmanScreen from './src/screens/HangmanScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
+import GamingScreen from './src/screens/GamingScreen';
 import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
@@ -139,6 +140,10 @@ export default function App() {
     setView('dashboard');
   };
 
+  const handleOpenGaming = () => {
+    setView('gaming');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -172,7 +177,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
-      {view !== 'landing' && view !== 'checking' && view !== 'nicknamePicker' && !hideXPBar && <XPBar />}
+      {view !== 'landing' && view !== 'checking' && view !== 'nicknamePicker' && view !== 'dashboard' && !hideXPBar && <XPBar />}
 
       {view === 'nicknamePicker' && (
         <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} />
@@ -187,12 +192,19 @@ export default function App() {
           onOpenGallery={handleOpenGallery}
           onOpenLeaderboard={handleOpenLeaderboard}
           onOpenDashboard={handleOpenDashboard}
-          onStartLightningQuiz={handleStartLightningQuiz}
-          onStartMillionaire={handleStartMillionaire}
-          onStartMemory={handleStartMemory}
-          onStartWhoAmI={handleStartWhoAmI}
-          onStartRunner={handleStartRunner}
-          onStartHangman={handleStartHangman}
+          onOpenGaming={handleOpenGaming}
+        />
+      )}
+
+      {view === 'gaming' && (
+        <GamingScreen
+          onLightningQuiz={handleStartLightningQuiz}
+          onMillionaire={handleStartMillionaire}
+          onMemory={handleStartMemory}
+          onWhoAmI={handleStartWhoAmI}
+          onRunner={handleStartRunner}
+          onHangman={handleStartHangman}
+          onBack={() => setView('landing')}
         />
       )}
 

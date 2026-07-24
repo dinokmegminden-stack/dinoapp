@@ -109,8 +109,13 @@ export default function CollectionScreen({ allDinos, progress, onBack }) {
 
         <View style={styles.header}>
           <Text style={styles.title}>🗂️ GYŰJTEMÉNY</Text>
-          <View style={styles.progressPill}>
-            <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
+          <View style={styles.headerRight}>
+            <View style={styles.progressPill}>
+              <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
+            </View>
+            <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+              <Text style={styles.backBtnText}>✕</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <Text style={styles.headerHint}>
@@ -171,10 +176,6 @@ export default function CollectionScreen({ allDinos, progress, onBack }) {
             <CollectionTimeline allDinos={allDinos} progress={progress} />
           </View>
         )}
-
-        <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-          <Text style={styles.backBtnText}>✕</Text>
-        </TouchableOpacity>
       </View>
     </Shell>
   );
@@ -199,6 +200,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     letterSpacing: 1,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   progressPill: {
     backgroundColor: COLORS.cream,
@@ -367,20 +373,17 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   backBtn: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: 'rgba(244,67,54,0.6)',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 999,
   },
   backBtnText: {
-    color: '#FFF',
-    fontSize: 24,
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });

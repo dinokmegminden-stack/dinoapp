@@ -5,7 +5,7 @@
 // számokként rétegezzük fölé. A számok pontosan ugyanazt az onSelectRegion(edu)
 // eseményt hívják, mint a régi régiógombok.
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { WORLD_MAP_SVG } from '../constants/worldMapSvg';
 import { COLORS } from '../constants/theme';
@@ -70,13 +70,12 @@ const STYLED_SVG = WORLD_MAP_SVG
   // a szűrő rákötése a legfelső (bare) <g>-re, ami az összes országot tartalmazza
   .replace('<g>', '<g filter="url(#continentOutline)">');
 
-// A térkép enyhén megdöntve, és 20%-kal alacsonyabb.
+// A térkép enyhén megdöntve.
 const TILT = '-4deg';
 // A számok/tooltipek a megdöntött térkép GYEREKEI, ezért a térkép dőlésével
 // együtt dőlnének — a szövegeket viszont vízszintesen akarjuk, ezért ellen-
 // forgatjuk őket (a TILT ellentettjével), miközben a térkép rajza döntött marad.
 const COUNTER_TILT = '4deg';
-const HEIGHT_SCALE = 0.8; // 20%-kal alacsonyabb térkép
 
 export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
   // Amíg az allDinos (App.js) még nem töltött be, regionCounts üres — ilyenkor
@@ -85,32 +84,46 @@ export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
 
   // Hover-állapot (csak weben van értelme): melyik régió számán áll az egér.
   const [hoveredEdu, setHoveredEdu] = useState(null);
+  // Fókusz-állapot (Tab-bal navigálva) — webes billentyűzet-fókusz gyűrűhöz.
+  const [focusedEdu, setFocusedEdu] = useState(null);
 
   return (
     <View style={styles.wrap}>
+      {/* Halvány sötét alátét a háttérkép (T-rex fej, dzsungel) fölött, hogy a
+          narancs kontinens-körvonalak ne vesszenek el a mögöttes kép zsúfoltabb
+          részein (pl. az arc/fogak vonalai a térkép vonalaival keverednének). */}
+      <View style={styles.contrastBacking} pointerEvents="none" />
       <SvgXml xml={STYLED_SVG} width="100%" height="100%" />
 
       {MARKERS.map((m) => {
         const isHovered = hoveredEdu === m.edu;
+        const isFocused = focusedEdu === m.edu;
         return (
           <Pressable
             key={m.edu}
             onPress={() => onSelectRegion(m.edu)}
             onHoverIn={() => setHoveredEdu(m.edu)}
             onHoverOut={() => setHoveredEdu((prev) => (prev === m.edu ? null : prev))}
+            onFocus={() => setFocusedEdu(m.edu)}
+            onBlur={() => setFocusedEdu((prev) => (prev === m.edu ? null : prev))}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             accessibilityRole="button"
             accessibilityLabel={`${m.label} régió`}
-            style={[styles.marker, { left: m.left, top: m.top }, isHovered && styles.markerHover]}
+            style={[
+              styles.marker,
+              { left: m.left, top: m.top },
+              (isHovered || isFocused) && styles.markerHover,
+              isFocused && styles.markerFocused,
+            ]}
           >
-            {isHovered && (
+            {(isHovered || isFocused) && (
               <View style={styles.tooltip} pointerEvents="none">
                 <Text style={styles.tooltipText} numberOfLines={1}>
                   {m.label}
                 </Text>
               </View>
             )}
-            <Text style={[styles.markerText, isHovered && styles.markerTextHover]}>
+            <Text style={[styles.markerText, (isHovered || isFocused) && styles.markerTextHover]}>
               {countsLoading ? '…' : regionCounts[m.edu] || 0}
             </Text>
           </Pressable>
@@ -127,12 +140,16 @@ const TOOLTIP_W = 130; // a hover-tooltip fix szélessége (a marker fölött k�
 const styles = StyleSheet.create({
   wrap: {
     width: '100%',
-    // 20%-kal alacsonyabb: a magasság = szélesség / (ASPECT / HEIGHT_SCALE)
-    aspectRatio: ASPECT / HEIGHT_SCALE,
+    aspectRatio: ASPECT,
     position: 'relative',
     transform: [{ rotate: TILT }],
     // kis függőleges levegő, hogy a megdöntött sarkok ne érjenek a szomszéd blokkokba
     marginVertical: 6,
+  },
+  contrastBacking: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,18,25,0.4)',
+    borderRadius: 12,
   },
   marker: {
     position: 'absolute',
@@ -159,6 +176,18 @@ const styles = StyleSheet.create({
   // Hover: a megcélzott marker a többi fölé kerüljön (tooltip + nagyítás miatt).
   markerHover: {
     zIndex: 10,
+  },
+  // Billentyűzetes navigációhoz (Tab) látható fókusz-gyűrű webes nézetben.
+  markerFocused: {
+    ...Platform.select({
+      web: {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: COLORS.cream,
+        outlineOffset: 3,
+        borderRadius: 4,
+      },
+    }),
   },
   markerTextHover: {
     // Kiemelkedik: nagyobb, világosabb, narancs ragyogással.

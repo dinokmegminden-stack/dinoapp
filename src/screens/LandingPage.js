@@ -49,27 +49,61 @@ function XPPill() {
   );
 }
 
-// tooltip: opcionális — ha van, hoverre egy kis buborékban megjelenik alatta
-// (pl. a fiók-ikonnál a játékos neve, aminek eddig nem volt semmi funkciója).
-function RoundIconButton({ icon, onPress, tooltip }) {
+// Az XP mellett élő, egyetlen belépési pont az összes játékmódhoz — a korábbi
+// 6 külön landing-gomb helyett a GamingScreen-t nyitja meg (lásd App.js).
+function GamingButton({ onPress }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
+  const [focused, setFocused] = useState(false);
+
+  return (
+    <Pressable
+      style={[
+        styles.gamingBtn,
+        hovered && styles.gamingBtnHovered,
+        pressed && styles.roundBtnPressed,
+        focused && styles.roundBtnFocused,
+      ]}
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+    >
+      <MaterialCommunityIcons name="gamepad-variant" size={16} color={COLORS.bgDark} />
+      <Text style={styles.gamingBtnText}>Játékok</Text>
+    </Pressable>
+  );
+}
+
+// tooltip: opcionális — ha van, hoverre egy kis buborékban megjelenik alatta
+// (pl. a fiók-ikonnál a játékos neve, aminek eddig nem volt semmi funkciója).
+function RoundIconButton({ icon, onPress, tooltip, secondary }) {
+  const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   return (
     <View style={styles.roundBtnWrap}>
       <Pressable
         style={[
           styles.roundBtn,
+          secondary && styles.roundBtnSecondary,
           hovered && styles.roundBtnHovered,
           pressed && styles.roundBtnPressed,
+          focused && styles.roundBtnFocused,
         ]}
         onPress={onPress}
         onHoverIn={() => setHovered(true)}
         onHoverOut={() => setHovered(false)}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
       >
-        <MaterialCommunityIcons name={icon} size={18} color={COLORS.cream} />
+        <MaterialCommunityIcons name={icon} size={secondary ? 15 : 18} color={COLORS.cream} style={secondary && styles.roundBtnIconSecondary} />
       </Pressable>
       {!!tooltip && hovered && (
         <View style={styles.accountTooltip} pointerEvents="none">
@@ -86,6 +120,7 @@ function RoundIconButton({ icon, onPress, tooltip }) {
 function CollectionIconButton({ ratio, onPress }) {
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
+  const [focused, setFocused] = useState(false);
   const pct = Math.round((ratio || 0) * 100);
 
   return (
@@ -95,12 +130,15 @@ function CollectionIconButton({ ratio, onPress }) {
           styles.roundBtn,
           hovered && styles.roundBtnHovered,
           pressed && styles.roundBtnPressed,
+          focused && styles.roundBtnFocused,
         ]}
         onPress={onPress}
         onHoverIn={() => setHovered(true)}
         onHoverOut={() => setHovered(false)}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
       >
         <MaterialCommunityIcons name="image-multiple" size={18} color={COLORS.cream} />
       </Pressable>
@@ -111,9 +149,12 @@ function CollectionIconButton({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onStartLightningQuiz, onStartMillionaire, onStartMemory, onStartWhoAmI, onStartRunner, onStartHangman }) {
+export default function LandingPage({ nickname, progress, allDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
+  // 700–1023px: még egy oszlopos elrendezés, de a tartalom ne ragadjon a
+  // mobilra szabott 520px-es korlátnál — levegősebb, tablet-méretű teret kap.
+  const isTablet = width >= 700 && width < 1024;
   const [infoOpen, setInfoOpen] = useState(false);
 
   const handleOpenYoutube = () => {
@@ -146,34 +187,9 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
     onOpenDashboard?.();
   };
 
-  const handleStartLightningQuiz = () => {
+  const handleOpenGaming = () => {
     playSound('click');
-    onStartLightningQuiz?.();
-  };
-
-  const handleStartMillionaire = () => {
-    playSound('click');
-    onStartMillionaire?.();
-  };
-
-  const handleStartMemory = () => {
-    playSound('click');
-    onStartMemory?.();
-  };
-
-  const handleStartWhoAmI = () => {
-    playSound('click');
-    onStartWhoAmI?.();
-  };
-
-  const handleStartRunner = () => {
-    playSound('click');
-    onStartRunner?.();
-  };
-
-  const handleStartHangman = () => {
-    playSound('click');
-    onStartHangman?.();
+    onOpenGaming?.();
   };
 
   const handleStartAdventure = () => {
@@ -207,18 +223,24 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
       contentMaxWidth={isWide ? 1280 : undefined}
     >
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-        <View style={[styles.column, isWide && styles.columnWide]}>
+        <View style={[styles.column, isTablet && styles.columnTablet, isWide && styles.columnWide]}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
           {/* 1. Header sáv: XP pill + ikon gombok, mind jobbra rendezve */}
           <View style={styles.headerBar}>
             <View style={styles.headerIcons}>
               <XPPill />
-              <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
-              <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
-              <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
-              <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
-              <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Mi ez az app?" />
+              <GamingButton onPress={handleOpenGaming} />
+              <View style={styles.headerIconGroup}>
+                <RoundIconButton icon="trophy" onPress={handleOpenLeaderboard} />
+                <CollectionIconButton ratio={collectionRatio} onPress={handleOpenGallery} />
+                <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
+              </View>
+              <View style={styles.headerDivider} />
+              <View style={styles.headerIconGroup}>
+                <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" secondary />
+                <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Mi ez az app?" secondary />
+              </View>
             </View>
           </View>
 
@@ -242,12 +264,6 @@ export default function LandingPage({ nickname, progress, allDinos, onEnterRegio
             <View style={[styles.rightCol, isWide && styles.rightColWide]}>
               <LandingMenu
                 onSelectRegion={handleSelectRegion}
-                onLightningQuiz={handleStartLightningQuiz}
-                onMillionaire={handleStartMillionaire}
-                onMemory={handleStartMemory}
-                onWhoAmI={handleStartWhoAmI}
-                onRunner={handleStartRunner}
-                onHangman={handleStartHangman}
                 regionCounts={regionCounts}
               />
             </View>
@@ -272,6 +288,12 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 520,
     paddingHorizontal: 20,
+  },
+  // 700–1023px: se a mobil 520px-es korlát, se a desktop kétoszlopos 1280px —
+  // egy oszlop marad, de a tartalom (térkép, kártyák) számára levegősebb teret ad.
+  columnTablet: {
+    maxWidth: 680,
+    paddingHorizontal: 28,
   },
   columnWide: {
     maxWidth: 1280,
@@ -321,10 +343,46 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.5,
   },
+  gamingBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    ...Platform.select({
+      web: {
+        transitionProperty: 'background-color, transform',
+        transitionDuration: '120ms',
+        cursor: 'pointer',
+      },
+    }),
+  },
+  gamingBtnHovered: {
+    backgroundColor: COLORS.accentDark,
+  },
+  gamingBtnText: {
+    color: COLORS.bgDark,
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  headerIconGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  headerDivider: {
+    width: 1,
+    height: 22,
+    backgroundColor: 'rgba(254,250,224,0.18)',
+    marginHorizontal: 2,
   },
   collectionIconWrap: {
     position: 'relative',
@@ -387,7 +445,30 @@ const styles = StyleSheet.create({
   roundBtnPressed: {
     transform: [{ scale: 0.9 }],
   },
+  // Billentyűzetes navigációhoz (Tab) látható fókusz-gyűrű webes nézetben.
+  roundBtnFocused: {
+    ...Platform.select({
+      web: {
+        outlineStyle: 'solid',
+        outlineWidth: 2,
+        outlineColor: COLORS.accent,
+        outlineOffset: 2,
+      },
+    }),
+  },
   roundBtnIcon: {
     fontSize: 18,
+  },
+  // Másodlagos (nem-fő navigációs) fejléc-gombok — YouTube, Info — kisebbek és
+  // halványabbak, hogy vizuálisan alárendeltek legyenek a fő navigációnak
+  // (Ranglista/Gyűjtemény/Profil).
+  roundBtnSecondary: {
+    width: 32,
+    height: 32,
+    backgroundColor: 'transparent',
+    opacity: 0.65,
+  },
+  roundBtnIconSecondary: {
+    opacity: 0.9,
   },
 });

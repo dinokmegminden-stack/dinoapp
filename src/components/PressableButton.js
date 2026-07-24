@@ -6,6 +6,7 @@
 // aktiválódik, nincs platformágazás.
 import React, { useRef, useState } from 'react';
 import { Animated, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { COLORS } from '../constants/theme';
 
 // A web Animated modulja nem támogatja a native drivert, warningot dobna.
 const USE_NATIVE_DRIVER = Platform.OS !== 'web';
@@ -23,6 +24,7 @@ export default function PressableButton({
 }) {
   const translateY = useRef(new Animated.Value(0)).current;
   const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   const pressIn = () =>
     Animated.timing(translateY, {
@@ -45,8 +47,17 @@ export default function PressableButton({
       onPress={onPress}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       disabled={disabled}
-      style={containerStyle}
+      style={[
+        containerStyle,
+        // A böngésző alapértelmezett fókusz-gyűrűje a Pressable által renderelt
+        // DOM-elemre kerülne (nem a belső Animated.View-ra, amin a saját
+        // gyűrűnket állítjuk) — itt tiltjuk le, hogy ne dupláződjon.
+        Platform.OS === 'web' && { outlineStyle: 'none' },
+        Platform.OS === 'web' && focused && !disabled && styles.focusRing,
+      ]}
       {...pressableProps}
     >
       <Animated.View
@@ -70,5 +81,13 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#FFFFFF',
     opacity: 0.12,
+  },
+  // Billentyűzetes navigációhoz (Tab) látható fókusz-gyűrű webes nézetben —
+  // natívon (mobil) sosem aktiválódik, ott nincs Tab-navigáció.
+  focusRing: {
+    outlineStyle: 'solid',
+    outlineWidth: 2,
+    outlineColor: COLORS.accent,
+    outlineOffset: 2,
   },
 });

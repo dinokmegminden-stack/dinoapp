@@ -7,12 +7,20 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import Shell from '../components/Shell';
 import Fireworks from '../components/Fireworks';
+import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES, CENOZOIC_ERAS, CENOZOIC_EPOCH_STAGES } from '../components/EraTimeline';
+import { getTotalXP } from '../components/XPBar';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { getVisitDates } from '../services/gameEventsService';
 import { toDateKey, computeStreak } from '../utils/visitStats';
 import { creatureCollectionStats, unlockAllProgress } from '../utils/regionProgress';
 import { redeemUnlockCode } from '../services/unlockCodesService';
+
+// Az irányítópult idővonala a dínókártyán látott sávot folytatja a kréta
+// végétől (66M) egészen máig (0M), hogy a jégkorszaki emlősök (pl. Kárpát-medence
+// régió) is kontextusba kerüljenek, nem csak a Mezozoikum.
+const FULL_TIMELINE_ERAS = [...MESOZOIC_ERAS, ...CENOZOIC_ERAS];
+const FULL_TIMELINE_EPOCHS = [...MESOZOIC_EPOCH_STAGES, ...CENOZOIC_EPOCH_STAGES];
 
 const WEEKDAY_LABELS = ['H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'];
 const MONTH_LABELS = [
@@ -42,6 +50,15 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
   const [loading, setLoading] = useState(true);
   const [visitDateKeys, setVisitDateKeys] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = jelen hónap, -1 = előző, stb.
+  const [xp, setXP] = useState(0);
+
+  useEffect(() => {
+    getTotalXP().then(setXP);
+    const interval = setInterval(() => {
+      getTotalXP().then(setXP);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
 
   const [redeemCode, setRedeemCode] = useState('');
   const [redeeming, setRedeeming] = useState(false);
@@ -109,8 +126,15 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
         />
 
         <View style={styles.header}>
-          <Text style={styles.title}>🧭 IRÁNYÍTÓPULT</Text>
-          <Text style={styles.nickname} numberOfLines={1}>{nickname}</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title} numberOfLines={1}>🧭 {nickname}</Text>
+            <View style={styles.xpPill}>
+              <Text style={styles.xpPillText}>⭐ {xp} XP</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+            <Text style={styles.backBtnText}>✕</Text>
+          </TouchableOpacity>
         </View>
 
         {loading ? (
@@ -134,6 +158,21 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
 
             <View style={styles.progressTrack}>
               <View style={[styles.progressFill, { width: `${collectionPct}%` }]} />
+            </View>
+
+            <View style={styles.timelineWrapper}>
+              <EraTimeline
+                scaleStart={250}
+                scaleEnd={0}
+                eras={FULL_TIMELINE_ERAS}
+                epochStages={FULL_TIMELINE_EPOCHS}
+                startLabel="250M"
+                endLabel="Ma"
+                boldFont={FONTS.bold}
+                bodyFont={FONTS.body}
+                showRange={false}
+                xlarge
+              />
             </View>
 
             <View style={styles.calendarCard}>
@@ -210,10 +249,6 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
             </View>
           </ScrollView>
         )}
-
-        <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-          <Text style={styles.backBtnText}>✕</Text>
-        </TouchableOpacity>
       </View>
     </Shell>
   );
@@ -232,19 +267,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 14,
   },
+  titleRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginRight: 12,
+  },
   title: {
+    flexShrink: 1,
     color: COLORS.accent,
     fontFamily: FONTS.bold,
     fontSize: 20,
     fontWeight: '700',
     letterSpacing: 1,
   },
-  nickname: {
-    color: COLORS.cream,
-    fontFamily: FONTS.body,
+  xpPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+  },
+  xpPillText: {
+    color: COLORS.bgDark,
+    fontFamily: FONTS.bold,
     fontSize: 13,
-    opacity: 0.65,
-    maxWidth: 160,
+    fontWeight: '800',
   },
   loadingBox: {
     flex: 1,
@@ -298,7 +348,16 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.pill,
     backgroundColor: COLORS.accent,
   },
+  timelineWrapper: {
+    width: '100%',
+    marginTop: 20,
+    borderRadius: RADIUS.cardLarge,
+    overflow: 'hidden',
+  },
   calendarCard: {
+    width: '100%',
+    maxWidth: 340,
+    alignSelf: 'center',
     marginTop: 20,
     backgroundColor: 'rgba(0,95,115,0.4)',
     borderWidth: 1,
@@ -350,16 +409,14 @@ const styles = StyleSheet.create({
   },
   dayCell: {
     width: `${100 / 7}%`,
-    aspectRatio: 1,
+    height: 28,
     alignItems: 'center',
     justifyContent: 'center',
   },
   dayCircle: {
-    width: '76%',
-    height: '76%',
-    maxWidth: 32,
-    maxHeight: 32,
-    borderRadius: 16,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -373,7 +430,7 @@ const styles = StyleSheet.create({
   dayText: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 12,
+    fontSize: 11,
     opacity: 0.7,
   },
   dayTextVisited: {
@@ -452,20 +509,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   backBtn: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: 'rgba(0,0,0,0.5)',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 999,
   },
   backBtnText: {
-    color: '#FFF',
-    fontSize: 24,
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });

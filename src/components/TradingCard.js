@@ -9,7 +9,6 @@
 // ugyanazt a TradingCard-példányt tartja életben, csak a `dino` propot cseréli.
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import {
   useFonts as useCaprasimo,
   Caprasimo_400Regular,
@@ -21,6 +20,7 @@ import {
 } from '@expo-google-fonts/fredoka';
 import { COLORS, RADIUS } from '../constants/theme';
 import { MAX_FAVORITES } from '../hooks/useFavorites';
+import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES } from './EraTimeline';
 
 const CARD_MAX_WIDTH_MOBILE = 480;
 const CARD_MAX_WIDTH_DESKTOP = 600;
@@ -43,29 +43,6 @@ const RARITY_LABEL = {
   epic: 'epikus',
   legendary: 'legendás',
 };
-
-// Az idővonal-sáv fix, Mesozoikum-alapú skálája (250-66 millió év). A gyűjtemény
-// néhány régiója (pl. Kárpát-medence jégkorszaki emlősei) ezen kívül eshet — ott a
-// marker rejtve marad, de maga a sáv továbbra is megjelenik kontextusként.
-const MYA_SCALE_START = 250;
-const MYA_SCALE_END = 66;
-const ERA_BOUNDS = { triassicEnd: 201, jurassicEnd: 145 };
-
-// Finomabb korszak-felosztás (ICS-határok, millió évben) a MEZOZOIKUM
-// egyetlen felirat helyett — a kora-triász sáv a skála elején (250M) csonka,
-// ezért csak vékony vonal jelzi, apró felirat nem fér el rajta olvashatóan.
-const EPOCH_STAGES = [
-  { label: 'Kora-triász', start: 250, end: 247.2 },
-  { label: 'Közép-triász', start: 247.2, end: 237 },
-  { label: 'Késő-triász', start: 237, end: 201.4 },
-  { label: 'Kora-jura', start: 201.4, end: 174.1 },
-  { label: 'Közép-jura', start: 174.1, end: 163.5 },
-  { label: 'Késő-jura', start: 163.5, end: 145 },
-  { label: 'Kora-kréta', start: 145, end: 100.5 },
-  { label: 'Késő-kréta', start: 100.5, end: 66 },
-];
-const EPOCH_INTERIOR_BOUNDARIES = EPOCH_STAGES.slice(1).map((e) => e.start);
-const EPOCH_MIN_LABEL_PCT = 5;
 
 function capitalize(text) {
   if (!text) return '';
@@ -94,10 +71,6 @@ function formatDiscovery(name, year) {
   return '—';
 }
 
-function pctForMya(m) {
-  return ((MYA_SCALE_START - m) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
-}
-
 function StatCell({ label, value, bodyFont, boldFont }) {
   return (
     <View style={s.statCell}>
@@ -115,86 +88,6 @@ function AltStatCell({ label, value, bodyFont, boldFont, large }) {
           le egy sorba kényszerítve, hanem törjön szükség szerint. */}
       <Text style={[s.altStatValue, large && s.altStatValueLarge, { fontFamily: boldFont }]}>{value}</Text>
     </View>
-  );
-}
-
-// Vízszintes, skálázott idővonal a Mezozoikum korszakhatáraival és egy
-// vastag csíkkal a dínó élt-idejére (nem egyetlen pötty, hanem a teljes
-// mya_min–mya_max tartomány) — a pozíciókat százalékban számoljuk, hogy
-// RN-ben (ahol nincs CSS calc/vw) egyszerűen abszolút pozicionálható legyen.
-function MesoTimeline({ myaMin, myaMax, boldFont, bodyFont, large }) {
-  const pctMin = myaMin != null ? pctForMya(myaMin) : null;
-  const pctMax = myaMax != null ? pctForMya(myaMax) : null;
-  const rangePcts = [pctMin, pctMax].filter((p) => p != null);
-
-  const rawLeftPct = rangePcts.length ? Math.min(...rangePcts) : null;
-  const rawRightPct = rangePcts.length ? Math.max(...rangePcts) : null;
-  const rawMidPct = rangePcts.length ? (rawLeftPct + rawRightPct) / 2 : null;
-
-  const showRange = rawMidPct != null && rawMidPct >= -3 && rawMidPct <= 103;
-  const leftPct = showRange ? Math.max(0, Math.min(100, rawLeftPct)) : null;
-  const rightPct = showRange ? Math.max(0, Math.min(100, rawRightPct)) : null;
-  const midPct = showRange ? Math.max(0, Math.min(100, rawMidPct)) : null;
-
-  const triassicPct = ((MYA_SCALE_START - ERA_BOUNDS.triassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
-  const jurassicPct = ((MYA_SCALE_START - ERA_BOUNDS.jurassicEnd) / (MYA_SCALE_START - MYA_SCALE_END)) * 100;
-
-  return (
-    <LinearGradient colors={[COLORS.action, COLORS.accentDark]} style={[s.timeline, large && s.timelineLarge]}>
-      <View style={s.timelineLabelRow}>
-        <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>250M</Text>
-        <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, { fontFamily: boldFont }]}>66M</Text>
-      </View>
-
-      <View style={s.timelineEras}>
-        <View style={[s.era, { flex: triassicPct, backgroundColor: '#8fb28a' }]} />
-        <View style={[s.era, { flex: jurassicPct - triassicPct, backgroundColor: '#7fa9c9' }]} />
-        <View style={[s.era, { flex: 100 - jurassicPct, backgroundColor: '#cf9a5c' }]} />
-      </View>
-
-      <View style={s.epochLabelRow}>
-        {EPOCH_STAGES.map((epoch) => {
-          const leftPct = pctForMya(epoch.start);
-          const widthPct = pctForMya(epoch.end) - leftPct;
-          if (widthPct < EPOCH_MIN_LABEL_PCT) return null;
-          return (
-            <View key={epoch.label} style={[s.epochLabelWrap, { left: `${leftPct}%`, width: `${widthPct}%` }]}>
-              <Text
-                style={[s.epochLabelText, large && s.epochLabelTextLarge, { fontFamily: bodyFont }]}
-                numberOfLines={1}
-              >
-                {epoch.label}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
-
-      <View style={s.timelineTrack}>
-        <View style={s.timelineBaseline} />
-        {EPOCH_INTERIOR_BOUNDARIES.map((boundary) => (
-          <View key={boundary} style={[s.eraBoundaryTick, large && s.eraBoundaryTickLarge, { left: `${pctForMya(boundary)}%` }]} />
-        ))}
-        {showRange && (
-          <View
-            style={[
-              s.rangeBar,
-              large && s.rangeBarLarge,
-              { left: `${leftPct}%`, width: `${rightPct - leftPct}%` },
-            ]}
-          />
-        )}
-        {showRange && (myaMin != null || myaMax != null) && (
-          <View style={[s.marker, { left: `${midPct}%` }]}>
-            <View style={[s.markerFlag, large && s.markerFlagLarge]}>
-              <Text style={[s.markerFlagText, large && s.markerFlagTextLarge, { fontFamily: boldFont }]}>
-                {formatAgeRange(myaMax, myaMin)}
-              </Text>
-            </View>
-          </View>
-        )}
-      </View>
-    </LinearGradient>
   );
 }
 
@@ -351,7 +244,19 @@ export default function TradingCard({
           </View>
 
           <View style={s.altDataCol}>
-            <MesoTimeline myaMin={dino.mya_min} myaMax={dino.mya_max} boldFont={boldFont} bodyFont={bodyFont} large={isBigCard} />
+            <EraTimeline
+              scaleStart={250}
+              scaleEnd={66}
+              eras={MESOZOIC_ERAS}
+              epochStages={MESOZOIC_EPOCH_STAGES}
+              startLabel="250M"
+              endLabel="66M"
+              myaMin={dino.mya_min}
+              myaMax={dino.mya_max}
+              boldFont={boldFont}
+              bodyFont={bodyFont}
+              large={isBigCard}
+            />
 
             {(() => {
               const dataBody = (
@@ -769,126 +674,6 @@ const s = StyleSheet.create({
   },
   altDataColScroll: {
     flex: 1,
-  },
-
-  timeline: {
-    paddingHorizontal: 10,
-    paddingTop: 8,
-    paddingBottom: 8,
-  },
-  timelineLarge: {
-    paddingHorizontal: 20,
-    paddingTop: 14,
-    paddingBottom: 14,
-  },
-  timelineLabelRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  timelineLabelText: {
-    color: '#3c2c17',
-    fontSize: 7.5,
-    letterSpacing: 0.3,
-  },
-  timelineLabelTextLarge: {
-    fontSize: 10,
-  },
-  timelineEras: {
-    flexDirection: 'row',
-    height: 5,
-    borderRadius: 3,
-    overflow: 'hidden',
-    marginBottom: 3,
-  },
-  era: { height: '100%' },
-  epochLabelRow: {
-    height: 9,
-    marginBottom: 8,
-    position: 'relative',
-  },
-  epochLabelWrap: {
-    position: 'absolute',
-    top: 0,
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  epochLabelText: {
-    color: 'rgba(60,44,23,0.75)',
-    fontSize: 5.5,
-    letterSpacing: 0.1,
-  },
-  epochLabelTextLarge: {
-    fontSize: 7,
-  },
-  timelineTrack: {
-    height: 4,
-    justifyContent: 'center',
-  },
-  timelineBaseline: {
-    height: 1.5,
-    backgroundColor: 'rgba(60,44,23,0.35)',
-    borderRadius: 1,
-  },
-  rangeBar: {
-    position: 'absolute',
-    top: '50%',
-    height: 6,
-    minWidth: 6,
-    marginTop: -3,
-    borderRadius: 3,
-    backgroundColor: '#9b2b20',
-    borderWidth: 1,
-    borderColor: 'rgba(253,243,231,0.7)',
-  },
-  rangeBarLarge: {
-    height: 9,
-    marginTop: -4.5,
-    borderRadius: 4.5,
-  },
-  // Apró vonás a jura és a kréta kezdeténél (triassicPct/jurassicPct), hogy a
-  // korszakhatár a csík alatt is jól látszódjon, ne csak az era-sáv színváltásán.
-  eraBoundaryTick: {
-    position: 'absolute',
-    top: -4,
-    width: 1,
-    height: 10,
-    backgroundColor: 'rgba(60,44,23,0.55)',
-  },
-  eraBoundaryTickLarge: {
-    top: -6,
-    height: 15,
-  },
-  marker: {
-    position: 'absolute',
-    top: -6,
-    width: 1,
-    marginLeft: 0,
-    alignItems: 'center',
-  },
-  markerFlag: {
-    position: 'absolute',
-    bottom: 10,
-    backgroundColor: 'rgba(155,43,32,0.55)',
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    borderRadius: 4,
-    minWidth: 54,
-    alignItems: 'center',
-  },
-  markerFlagLarge: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    minWidth: 76,
-  },
-  markerFlagText: {
-    color: '#fdf3e7',
-    fontSize: 7.5,
-  },
-  markerFlagTextLarge: {
-    fontSize: 10,
   },
 
   altStatGrid: {

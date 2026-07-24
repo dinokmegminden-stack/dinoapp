@@ -53,7 +53,7 @@ export default function HeroTop({ isWide = false, totalCreatures }) {
                 { fontSize: titleSize, lineHeight: titleSize * 0.9, fontFamily: titleFont },
               ]}
             >
-              DMM-{'\n'}DINO
+              DÍNÓ{'\n'}LEXIKON
             </Text>
             {hovered && (
               <View style={styles.valuePropOverlay} pointerEvents="none">

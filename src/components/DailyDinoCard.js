@@ -46,8 +46,10 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
 
   if (!dino) {
     return (
-      <View style={[styles.card, isWide ? styles.loadingWide : styles.loading]}>
-        <Text style={[styles.loadingText, { fontFamily: bodyFont }]}>Napi dínó betöltése…</Text>
+      <View style={[styles.wrapBase, isWide && styles.wrapWide]}>
+        <View style={styles.loading}>
+          <Text style={[styles.loadingText, { fontFamily: bodyFont }]}>Napi dínó betöltése…</Text>
+        </View>
       </View>
     );
   }
@@ -62,7 +64,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
   return (
     <View style={[styles.wrapBase, isWide && styles.wrapWide]}>
       <Text style={[styles.eyebrow, { fontFamily: boldFont }]}>🦕 NAPI DÍNÓ</Text>
-      <Pressable onPress={flip} style={[styles.stageBase, isWide ? styles.stageWide : styles.stageFixed]}>
+      <Pressable onPress={flip} style={styles.stageBase}>
         {/* ELŐLAP */}
         <Animated.View style={[styles.card, styles.front, { transform: [{ perspective: 1000 }, { rotateY: frontRotate }] }]}>
           <View style={styles.imgWrap}>
@@ -91,14 +93,13 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
   );
 }
 
-const CARD_H = 240;
 const styles = StyleSheet.create({
   wrapBase: { width: '100%', marginTop: 2, marginBottom: 4 },
   wrapWide: { flex: 1 },
   eyebrow: { color: COLORS.accent, fontSize: 12, letterSpacing: 2, marginBottom: 4, opacity: 0.9 },
-  stageBase: { width: '100%' },
-  stageFixed: { height: CARD_H },
-  stageWide: { flex: 1 },
+  // A Napi Dínó kártya mindig 16:9 arányú — szélesség szerint méreteződik,
+  // mobilon és desktopon egyaránt (nem nyúlik le a jobb oszlop aljáig).
+  stageBase: { width: '100%', aspectRatio: 16 / 9 },
   card: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: RADIUS.cardLarge,
@@ -124,7 +125,6 @@ const styles = StyleSheet.create({
   fact: { color: COLORS.cream, fontSize: 14, lineHeight: 18, textAlign: 'center' },
   moreBtn: { marginTop: 8, backgroundColor: COLORS.accent, borderRadius: RADIUS.pill, paddingVertical: 6, paddingHorizontal: 16 },
   moreBtnText: { color: COLORS.bgDark, fontSize: 13 },
-  loading: { position: 'relative', height: CARD_H, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.darkGreen, borderRadius: RADIUS.cardLarge },
-  loadingWide: { position: 'relative', flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.darkGreen, borderRadius: RADIUS.cardLarge },
+  loading: { width: '100%', aspectRatio: 16 / 9, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.darkGreen, borderRadius: RADIUS.cardLarge },
   loadingText: { color: COLORS.cream, opacity: 0.7 },
 });
