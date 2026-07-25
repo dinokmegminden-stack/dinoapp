@@ -23,8 +23,12 @@ import { fetchCreaturesByEdu } from './src/services/creaturesService';
 import { getPlayerIdByNickname } from './src/services/playersService';
 import { hasFullUnlock } from './src/services/unlockCodesService';
 import { trackGameStart, trackGameComplete } from './src/services/gameEventsService';
+import useAppFonts from './src/hooks/useAppFonts';
 
 export default function App() {
+  // Rokkitt + Inter központi betöltése — a család-nevek (theme FONTS) minden
+  // képernyőn elérhetők, betöltésig a komponensek a rendszer-fontra esnek vissza.
+  useAppFonts();
   const [view, setView] = useState('checking');
   const [nickname, setNickname] = useState(null);
   const [playerId, setPlayerId] = useState(null);
@@ -194,7 +198,8 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
-      {view !== 'landing' && view !== 'checking' && view !== 'nicknamePicker' && view !== 'dashboard' && !hideXPBar && <XPBar />}
+      {/* A képernyő tetején nem jelenítünk meg XP-sávot (egy képernyőn/játéknál
+          sem) — az XP-követés a háttérben (XPBar.js addXP/AsyncStorage) marad. */}
 
       {view === 'nicknamePicker' && (
         <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} />

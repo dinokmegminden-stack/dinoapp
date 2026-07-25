@@ -41,6 +41,7 @@ export function adaptCreature(row) {
     rend: safe(row.rend),
     alrend: safe(row.alrend),
     csalad: safe(row.csalad),
+    csalad_hu: safe(row.csalad_hu),
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
     discovered_country: safe(row.discovered_country),

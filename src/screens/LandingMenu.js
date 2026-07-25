@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RegionWorldMap from '../components/RegionWorldMap';
-import { COLORS } from '../constants/theme';
+import { COLORS, FONTS } from '../constants/theme';
 
 function SectionLabel({ children }) {
   return <Text style={styles.sectionLabel}>{children}</Text>;
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   sectionLabel: {
     color: COLORS.accent,
     fontSize: 15,
-    fontWeight: '800',
+    fontFamily: FONTS.heading,
     letterSpacing: 2.5,
     textTransform: 'uppercase',
     marginBottom: 8,

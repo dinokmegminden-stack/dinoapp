@@ -32,6 +32,19 @@ export const COLORS = {
 
 export const RADIUS = { button: 14, card: 12, cardLarge: 18, pill: 999 };
 
+// TIPOGRÁFIA — a kanonikus család-nevek egyetlen forrása a constants/fonts.js;
+// innen re-exportáljuk, hogy a `theme`-ből is elérhető legyen (Rokkitt címsor,
+// Inter törzs/UI; a betöltés App.js/useAppFonts központilag).
+export { FONTS } from './fonts';
+
+// Vizuális hierarchia opacitással (a videó 5. tippje): a fő címsorok teljes
+// erővel, a leírások halványabban, a kiegészítő meta-infók még halványabban.
+export const TEXT_OPACITY = {
+  primary: 1,     // fő címsorok
+  secondary: 0.7, // leírások, aloldali szövegek
+  meta: 0.6,      // képaláírások, meta adatok
+};
+
 // ---------------------------------------------------------------------------
 // ORGANIC — a claude.ai/design "Organic" rendszer sötét változata, ahogy a
 // "Dino Tudos Home" terv felülírja a világos alapot:

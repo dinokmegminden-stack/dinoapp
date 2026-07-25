@@ -10,19 +10,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import {
-  useFonts as useCaprasimo,
-  Caprasimo_400Regular,
-} from '@expo-google-fonts/caprasimo';
-import {
-  useFonts as useFredoka,
-  Fredoka_400Regular,
-  Fredoka_600SemiBold,
-} from '@expo-google-fonts/fredoka';
-import {
   useFonts as useCinzel,
   Cinzel_700Bold,
 } from '@expo-google-fonts/cinzel';
-import { COLORS, RADIUS } from '../constants/theme';
+import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { MAX_FAVORITES } from '../hooks/useFavorites';
 import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES } from './EraTimeline';
 
@@ -149,12 +140,10 @@ export default function TradingCard({
     ? (layout === 'alt' ? (isBigCard ? ALT_CARD_MAX_WIDTH_DESKTOP : CARD_MAX_WIDTH_DESKTOP) : CARD_MAX_WIDTH_DESKTOP)
     : CARD_MAX_WIDTH_MOBILE;
 
-  const [caprasimoLoaded] = useCaprasimo({ Caprasimo_400Regular });
-  const [fredokaLoaded] = useFredoka({ Fredoka_400Regular, Fredoka_600SemiBold });
   const [cinzelLoaded] = useCinzel({ Cinzel_700Bold });
-  const titleFont = caprasimoLoaded ? 'Caprasimo_400Regular' : 'System';
-  const bodyFont = fredokaLoaded ? 'Fredoka_400Regular' : 'System';
-  const boldFont = fredokaLoaded ? 'Fredoka_600SemiBold' : 'System';
+  const titleFont = FONTS.heading;  // magyar név címként — Rokkitt
+  const bodyFont = FONTS.body;      // Inter
+  const boldFont = FONTS.bodyBold;  // Inter Bold
   // Tudományos (latin) név — kizárólag Cinzel (lásd CLAUDE.md betűtípus-szabály).
   const latinFont = cinzelLoaded ? 'Cinzel_700Bold' : 'serif';
 

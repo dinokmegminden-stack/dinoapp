@@ -231,7 +231,6 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
           <Text style={[styles.headerDifficulty, { color: difficultyColor }]}>
             {DIFFICULTY_LABELS[tableRow.difficulty]} · +{tableRow.xp} XP
           </Text>
-          <Text style={styles.headerXP}>⭐ {earnedXP} XP</Text>
         </View>
 
         <View style={styles.questionBox}>

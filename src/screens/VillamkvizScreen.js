@@ -384,11 +384,6 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
           ))}
         </View>
 
-        {/* XP counter */}
-        <View style={styles.xpCounter}>
-          <Text style={styles.xpText}>⭐ {xpEarned} XP</Text>
-        </View>
-
         {/* Back button (bottom-left, always visible) */}
         <TouchableOpacity style={styles.backBtn} onPress={handleExit}>
           <Text style={styles.backBtnText}>✕</Text>

@@ -1,8 +1,7 @@
 // src/screens/GamingScreen.js
 // A fejléc "Játékok" gombjára kattintva nyíló képernyő — mind a 6 játékmód
-// egy oszlopban felsorolva (a korábbi, landing oldali 2 oszlopos rács helyett).
-// A gombok színe/ikonja megegyezik azzal, amit eddig a LandingMenu GAMES tömbje
-// használt — csak az elrendezés (teljes szélességű sor a rács helyett) más.
+// 2 oszlopos rácsban. A gombok színe/ikonja megegyezik azzal, amit eddig a
+// LandingMenu GAMES tömbje használt — csak az elrendezés más.
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -99,14 +98,17 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 40,
     gap: 12,
+    alignItems: 'flex-start',
   },
-  rowCell: { width: '100%' },
+  // Minden játékmód-gomb egységesen 250px széles.
+  rowCell: { width: 250, alignSelf: 'flex-start' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'stretch',
     borderRadius: RADIUS.button,
     paddingVertical: 18,
-    paddingHorizontal: 18,
+    paddingHorizontal: 22,
     gap: 14,
   },
   rowText: {

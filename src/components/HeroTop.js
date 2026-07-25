@@ -6,15 +6,7 @@
 // RegionWorldMap régiónév-tooltipje), hogy ne tolja el a lenti CTA gombot.
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
-import {
-  useFonts as useCaprasimo,
-  Caprasimo_400Regular,
-} from '@expo-google-fonts/caprasimo';
-import {
-  useFonts as useFigtree,
-  Figtree_600SemiBold,
-} from '@expo-google-fonts/figtree';
-import { COLORS } from '../constants/theme';
+import { COLORS, FONTS } from '../constants/theme';
 
 // Amíg az allDinos még nem töltött be (App.js preloadCreatures), ezt írjuk ki
 // helyette — a `creatures` tábla jelenlegi tartalma szerinti tényleges szám
@@ -27,11 +19,8 @@ export default function HeroTop({ isWide = false, totalCreatures }) {
   const { width } = useWindowDimensions();
   const [hovered, setHovered] = useState(false);
 
-  const [caprasimoLoaded] = useCaprasimo({ Caprasimo_400Regular });
-  const [figtreeLoaded] = useFigtree({ Figtree_600SemiBold });
-
-  const titleFont = caprasimoLoaded ? 'Caprasimo_400Regular' : 'System';
-  const subtitleFont = figtreeLoaded ? 'Figtree_600SemiBold' : 'System';
+  const titleFont = FONTS.headingXBold; // fő cím — Rokkitt ExtraBold
+  const subtitleFont = FONTS.bodyBold;  // alcím — Inter Bold
   // clamp(28px, 7vw, 38px) — RN-ben nincs clamp(), a vw-t a windowWidth-ből
   // számoljuk ki és Math.min/max-szal szorítjuk a 28–38px sávba.
   const titleSize = Math.min(38, Math.max(28, width * 0.07));

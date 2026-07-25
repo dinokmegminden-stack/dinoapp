@@ -5,16 +5,17 @@
 // alrend-csoportból származik, hogy a család-tény ne árulja el a megoldást.
 //
 // A `creatures` tábla `csalad` mezője túl finom felbontású ehhez (47 egyedi érték,
-// a legtöbb 1-3 taggal, és a `creature_families_hu` fordítótábla még üres) —
-// az `alrend` (pl. Theropoda, Sauropodomorpha) jóval kevesebb, de annál népesebb
-// csoportot ad, és Hungarian fordítást lentebb, kézzel rögzítve kap.
+// a legtöbb 1-3 taggal; magyar neve a `creatures.csalad_hu` oszlopban van, nincs
+// külön fordítótábla) — az `alrend` (pl. Theropoda, Sauropodomorpha) jóval kevesebb,
+// de annál népesebb csoportot ad, és Hungarian fordítást lentebb, kézzel rögzítve kap.
 
 import { getCountryLocative, getYearLocative, getDiscovererVerb, lowercaseFirst } from './hungarianGrammar';
 
 const MIN_CLASS_SIZE = 4; // 1 helyes + 3 rossz válasz ugyanabból a családból
 
 // Az alrend értékek (csak 6 létezik, lásd getFamilyHu) kézzel fordítva —
-// a creature_families_hu tábla erre még nem használható, mert jelenleg üres.
+// az alrendnek nincs magyar oszlopa a DB-ben (a `csalad_hu` csak a szűkebb
+// családot fordítja), ezért itt kézzel rögzítjük.
 const ALREND_HU = {
   Theropoda: 'ragadozó dinoszauruszok',
   Sauropodomorpha: 'hosszúnyakú dinoszauruszok',

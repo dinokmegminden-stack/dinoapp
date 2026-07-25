@@ -331,7 +331,6 @@ export default function RunnerGameScreen({ playerId, onBack }) {
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
-          <Text style={styles.headerXP}>⭐ {score} XP</Text>
           <View style={styles.headerRight}>
             <Text style={styles.levelText}>{level}. szint</Text>
             <TouchableOpacity onPress={handleQuit}>

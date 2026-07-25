@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { WORLD_MAP_SVG } from '../constants/worldMapSvg';
-import { COLORS } from '../constants/theme';
+import { COLORS, FONTS } from '../constants/theme';
 
 // A SVG viewBox-a: "30.767 241.591 784.077 458.627" — a marker-pozíciókat a
 // térkép saját koordinátarendszerében adjuk meg, majd %-ra váltjuk, hogy a
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   markerText: {
     color: COLORS.accent,
-    fontWeight: '900',
+    fontFamily: FONTS.bodyBold,
     fontSize: 19,
     letterSpacing: 0.5,
     // Sötét körvonal a jó olvashatóságért világos kontinensen és óceán fölött is.
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 8,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: FONTS.bodyBold,
     overflow: 'hidden',
   },
 });

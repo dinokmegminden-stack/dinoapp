@@ -219,7 +219,6 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
             Kérdés {currentQuestionIndex + 1} / {questions.length}
           </Text>
           <Text style={styles.headerLives}>{'❤️'.repeat(lives)}{'🖤'.repeat(MAX_LIVES - lives)}</Text>
-          <Text style={styles.headerXP}>⭐ {xpEarned} XP</Text>
         </View>
 
         <View style={styles.clueBox}>

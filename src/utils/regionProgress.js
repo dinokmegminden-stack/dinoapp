@@ -191,6 +191,22 @@ export function creatureCollectionStats(allDinos, progress) {
   return { collected, total };
 }
 
+// Régiónkénti (edu) gyűjtési statisztika a landing dashboardhoz: minden régióra
+// { collected, total } — a total az adott edu összes lénye, a collected azoké,
+// amelyek pakkja már teljesített kvízű (quizPassed). A creatureCollectionStats
+// lény-alapú logikáját bontja régiókra.
+export function regionCollectionStats(allDinos, progress) {
+  const perEdu = {};
+  REGION_ORDER.forEach((edu) => { perEdu[edu] = { collected: 0, total: 0 }; });
+  (allDinos || []).forEach((dino) => {
+    const edu = dino.edu;
+    if (!perEdu[edu]) return;
+    perEdu[edu].total += 1;
+    if (progress?.[edu]?.[dino.csomag]?.quizPassed === true) perEdu[edu].collected += 1;
+  });
+  return perEdu;
+}
+
 export function findNextPack(progress) {
   for (const edu of REGION_ORDER) {
     if (!isRegionUnlocked(edu, progress)) continue;
