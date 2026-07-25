@@ -148,6 +148,13 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bodyBold,
     fontSize: 19,
     letterSpacing: 0.5,
+    // Barnás pill-háttér a szám mögött (a landing streak-pilljével azonos tónus),
+    // hogy a szám minden kontinens/óceán fölött jól olvasható legyen.
+    backgroundColor: 'rgba(139,86,48,0.55)',
+    borderRadius: 999,
+    paddingHorizontal: 9,
+    paddingVertical: 2,
+    overflow: 'hidden',
     // Sötét körvonal a jó olvashatóságért világos kontinensen és óceán fölött is.
     textShadowColor: 'rgba(0,18,25,0.9)',
     textShadowOffset: { width: 0, height: 1 },

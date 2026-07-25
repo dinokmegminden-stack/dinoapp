@@ -105,7 +105,7 @@ export const IMAGE_MAP = {
   "Gorgosaurus": require('../../assets/images/gorgosaurus.jpg'),
   "Troodon": require('../../assets/images/troodon.jpg'),
   "Sinosauropteryx": require('../../assets/images/sinosauropteryx.jpg'),
-  // "Noasaurus": require('../../assets/images/noasaurus.jpg'),
+  "Noasaurus": require('../../assets/images/noasaurus.jpg'),
   "Alvarezsaurus": require('../../assets/images/alvarezsaurus.jpg'),
   // "Ligabuesaurus": require('../../assets/images/ligabuesaurus.jpg'),
   "Irritator": require('../../assets/images/irritator.jpg'),
@@ -136,4 +136,8 @@ export const IMAGE_MAP = {
   // Van hozzá kép, de a creatures táblában jelenleg nincs régióhoz/csomaghoz
   // rendelve (edu=null, pack_number=100) — a lookup készen áll, amint felkerül egy pakkba.
   "Janenschia": require('../../assets/images/janenschia.jpg'),
+
+  // Dínós Hírek új fajai (a tudományos név genusa szerint kulcsolva).
+  "Uragasaurus": require('../../assets/images/uragasaurus.jpg'),
+  "Zhengheornis": require('../../assets/images/zhengheornis.jpg'),
 };

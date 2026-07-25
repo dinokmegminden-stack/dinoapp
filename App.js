@@ -18,6 +18,7 @@ import GamingScreen from './src/screens/GamingScreen';
 import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
+import NewsScreen from './src/screens/NewsScreen';
 import { loadProgress, recordPackQuizResult, unlockAllProgress, saveProgress } from './src/utils/regionProgress';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
 import { getPlayerIdByNickname } from './src/services/playersService';
@@ -165,6 +166,10 @@ export default function App() {
     setView('gaming');
   };
 
+  const handleOpenNews = () => {
+    setView('news');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -219,6 +224,7 @@ export default function App() {
           onOpenLeaderboard={handleOpenLeaderboard}
           onOpenDashboard={handleOpenDashboard}
           onOpenGaming={handleOpenGaming}
+          onOpenNews={handleOpenNews}
         />
       )}
 
@@ -285,6 +291,10 @@ export default function App() {
 
       {view === 'leaderboard' && (
         <LeaderboardScreen onBack={() => setView('landing')} />
+      )}
+
+      {view === 'news' && (
+        <NewsScreen onBack={() => setView('landing')} />
       )}
 
       {view === 'dashboard' && (

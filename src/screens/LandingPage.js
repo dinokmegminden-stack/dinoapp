@@ -28,6 +28,7 @@ import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { recordAndGetStreak } from '../utils/dailyStreak';
+import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
 import { findNextPack, overallCompletionRatio } from '../utils/regionProgress';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 
@@ -36,6 +37,16 @@ import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 const landingBg = require('../../assets/images/trexhead_bg.jpg');
 
 const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
+
+// Hír dátuma magyar formátumban (2026. 07. 25.) — hibás/üres érték esetén üres.
+function formatNewsDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}. ${m}. ${day}.`;
+}
 
 function XPPill() {
   const [xp, setXP] = useState(0);
@@ -204,7 +215,7 @@ function ProgressCircle({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming }) {
+export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   // 700–1023px: még egy oszlopos elrendezés, de a tartalom ne ragadjon a
@@ -216,6 +227,12 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // Lokális napi belépési széria — megnyitáskor regisztráljuk és kiírjuk.
   useEffect(() => {
     recordAndGetStreak().then(setStreak);
+  }, []);
+
+  // Dínós Hírek betöltése a sidebarhoz (legfrissebb elöl).
+  const [news, setNews] = useState([]);
+  useEffect(() => {
+    fetchDinoNews(5).then(setNews);
   }, []);
 
   const handleOpenYoutube = () => {
@@ -251,6 +268,11 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   const handleOpenGaming = () => {
     playSound('click');
     onOpenGaming?.();
+  };
+
+  const handleOpenNews = () => {
+    playSound('click');
+    onOpenNews?.();
   };
 
   const handleStartAdventure = () => {
@@ -294,6 +316,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
             <NavLink label="Játékok" onPress={handleOpenGaming} />
             <NavLink label="Gyűjtemény" onPress={handleOpenGallery} />
             <NavLink label="Ranglista" onPress={handleOpenLeaderboard} />
+            <NavLink label="Hírek" onPress={handleOpenNews} />
           </View>
         )}
       </View>
@@ -308,68 +331,113 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     </View>
   );
 
+  // Bal oldali sáv tartalma: felül Dínós Hírek (placeholder), legalul a Napi
+  // Dínó kártya (wide nézetben a köztes rugalmas térrel az aljára tolva).
+  const sidebarBlock = (
+    <View style={[styles.sidebar, isWide && styles.sidebarWide]}>
+      <Text style={styles.sidebarHeading}>DÍNÓS HÍREK</Text>
+      {news.length === 0 ? (
+        <View style={styles.newsPlaceholder}>
+          <MaterialCommunityIcons name="newspaper-variant-outline" size={22} color={COLORS.accent} />
+          <Text style={styles.newsText}>
+            Hamarosan: friss dínós hírek, felfedezések és app-frissítések.
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.newsList}>
+          {news.map((item) => (
+            <Pressable
+              key={item.id}
+              style={styles.newsItem}
+              onPress={handleOpenNews}
+              accessibilityRole="button"
+            >
+              <Text style={styles.newsDate}>{formatNewsDate(item.published_at)}</Text>
+              <Text style={styles.newsTitle} numberOfLines={1}>
+                {genusOf(item.scientific_name) || item.scientific_name}
+              </Text>
+              {!!item.scientific_name && (
+                <Text style={styles.newsSci} numberOfLines={1}>{item.scientific_name}</Text>
+              )}
+              <Text style={styles.newsBody} numberOfLines={4}>{item.news_text}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
+
+      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>NAPI DÍNÓ</Text>
+      <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} isWide={false} />
+    </View>
+  );
+
+  // Jobb oldali (tágas) tartalom: a T-rex háttér fölött lebegő helyőrző szöveg,
+  // RÉGIÓK térkép és a gyűjtés-dashboard.
+  const rightBlock = (
+    <>
+      {dinosError && (
+        <View style={styles.errorBanner}>
+          <MaterialCommunityIcons name="wifi-off" size={16} color={COLORS.cream} />
+          <Text style={styles.errorBannerText}>
+            Nem sikerült betölteni a lényeket. Ellenőrizd az internetkapcsolatot.
+          </Text>
+          <Pressable
+            style={styles.errorRetryBtn}
+            onPress={() => onRetryLoadDinos?.()}
+            disabled={dinosLoading}
+            accessibilityRole="button"
+          >
+            <Text style={styles.errorRetryText}>
+              {dinosLoading ? 'Töltés…' : 'Újra'}
+            </Text>
+          </Pressable>
+        </View>
+      )}
+
+      <Text style={styles.loremText}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+        ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+        aliquip ex ea commodo consequat.
+      </Text>
+
+      <LandingMenu onSelectRegion={handleSelectRegion} regionCounts={regionCounts} />
+
+      <RegionProgressDashboard allDinos={allDinos} progress={progress} />
+    </>
+  );
+
   return (
     <Shell
       header={header}
       gradientColors={[COLORS.bgDark, COLORS.bgMid]}
       backgroundImage={landingBg}
-      contentMaxWidth={isWide ? 1280 : undefined}
+      contentMaxWidth={isWide ? 1920 : undefined}
     >
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-        <View style={[styles.column, isTablet && styles.columnTablet, isWide && styles.columnWide]}>
-          <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+      <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
 
-          <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
-
-          {/* Hálózati hiba a lények betöltésekor — korábban néma volt, és a
-              felület örökre "betöltés" állapotban maradt. */}
-          {dinosError && (
-            <View style={styles.errorBanner}>
-              <MaterialCommunityIcons name="wifi-off" size={16} color={COLORS.cream} />
-              <Text style={styles.errorBannerText}>
-                Nem sikerült betölteni a lényeket. Ellenőrizd az internetkapcsolatot.
-              </Text>
-              <Pressable
-                style={styles.errorRetryBtn}
-                onPress={() => onRetryLoadDinos?.()}
-                disabled={dinosLoading}
-                accessibilityRole="button"
-              >
-                <Text style={styles.errorRetryText}>
-                  {dinosLoading ? 'Töltés…' : 'Újra'}
-                </Text>
-              </Pressable>
-            </View>
-          )}
-
-          {/* Egyetlen oszlop, függőleges sorrend: helyőrző szöveg → Napi Dínó →
-              RÉGIÓK térkép (a térkép a Napi Dínó kártya alá kerül). */}
-          <View style={styles.mainArea}>
-            {/* 2. Helyőrző szöveg (a döntött cím + CTA gomb helyén) */}
-            <Text style={styles.loremText}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-              aliquip ex ea commodo consequat.
-            </Text>
-
-            {/* 2c. Napi Dínó flip-kártya */}
-            <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} isWide={isWide} />
-
-            {/* 3–5. RÉGIÓK térkép — a Napi Dínó alatt */}
-            <LandingMenu
-              onSelectRegion={handleSelectRegion}
-              regionCounts={regionCounts}
-            />
-
-            {/* 6. Gyűjtési előrehaladás régiónként — a térkép alatt */}
-            <RegionProgressDashboard allDinos={allDinos} progress={progress} />
-          </View>
+      {isWide ? (
+        // Asztali/Full HD: fix bal sáv (teljes magasság) + tágas, görgethető jobb oldal.
+        <View style={styles.bodyRow}>
+          {sidebarBlock}
+          <ScrollView style={styles.rightArea} contentContainerStyle={styles.rightContent}>
+            {rightBlock}
+          </ScrollView>
+          {/* Jobb oldali, a ballal azonos méretű üres üveghatású sáv. */}
+          <View style={[styles.sidebarWide, styles.sidebarRight]} />
         </View>
+      ) : (
+        // Mobil/tablet: egy oszlopban egymás alatt, közös görgetéssel.
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+          <View style={styles.columnNarrow}>
+            {sidebarBlock}
+            {rightBlock}
+          </View>
+        </ScrollView>
+      )}
 
-        {/* Alsó futósáv: lény-nevek véletlen sorrendben, jobbról balra görögve */}
-        <CreatureMarquee allDinos={allDinos} />
-      </ScrollView>
+      {/* Alsó futósáv: lény-nevek véletlen sorrendben, jobbról balra görögve */}
+      <CreatureMarquee allDinos={allDinos} />
     </Shell>
   );
 }
@@ -383,6 +451,128 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     paddingBottom: 32,
+  },
+  // ── Új, sidebaros elrendezés ──────────────────────────────────────────────
+  bodyRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    width: '100%',
+    // RN-web flex-lánc nem mindig nyúlik a viewportig (lásd Shell komment) —
+    // a fejléc-sáv (~96px) alatti teljes magasságot 100vh-ból számoljuk, hogy a
+    // bal sáv tényleg a képernyő aljáig érjen.
+    ...Platform.select({ web: { minHeight: 'calc(100vh - 96px)' } }),
+  },
+  sidebar: {
+    width: '100%',
+  },
+  // Wide: fix szélességű, teljes magasságú üveghatású (backdrop-blur) sáv.
+  sidebarWide: {
+    width: 360,
+    height: '100%',
+    paddingHorizontal: 22,
+    paddingVertical: 24,
+    backgroundColor: 'rgba(16,14,12,0.55)',
+    borderRightWidth: 1,
+    borderRightColor: 'rgba(254,250,224,0.10)',
+    ...Platform.select({
+      web: {
+        // Teljes képernyő-magasság a fejléc (~96px) alatt — a % magasság a
+        // RN-web flex-lánc miatt nem oldódik fel megbízhatóan, ezért 100vh-ból.
+        minHeight: 'calc(100vh - 96px)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+      },
+    }),
+  },
+  sidebarHeading: {
+    color: COLORS.accent,
+    fontSize: 14,
+    fontFamily: FONTS.heading,
+    letterSpacing: 2.5,
+    textTransform: 'uppercase',
+    opacity: 0.9,
+    marginBottom: 10,
+  },
+  // Jobb oldali sáv: azonos méret (360px, teljes magasság), de teljesen
+  // átlátszó — se háttér, se üveghatás, se szegély.
+  sidebarRight: {
+    borderRightWidth: 0,
+    backgroundColor: 'transparent',
+    ...Platform.select({ web: { backdropFilter: 'none', WebkitBackdropFilter: 'none' } }),
+  },
+  sidebarHeadingSpaced: { marginTop: 20 },
+  newsPlaceholder: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    padding: 14,
+    borderRadius: 14,
+    backgroundColor: 'rgba(20,18,16,0.5)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.08)',
+  },
+  newsText: {
+    flex: 1,
+    color: COLORS.cream,
+    fontSize: 13,
+    lineHeight: 19,
+    fontFamily: FONTS.body,
+    opacity: TEXT_OPACITY.secondary,
+  },
+  newsList: { gap: 12 },
+  newsItem: {
+    padding: 14,
+    borderRadius: 14,
+    backgroundColor: 'rgba(20,18,16,0.5)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.08)',
+  },
+  newsDate: {
+    color: COLORS.accent,
+    fontSize: 11,
+    fontFamily: FONTS.bodyBold,
+    letterSpacing: 0.5,
+    marginBottom: 4,
+    opacity: TEXT_OPACITY.meta,
+  },
+  newsTitle: {
+    color: COLORS.cream,
+    fontSize: 15,
+    fontFamily: FONTS.heading,
+    opacity: TEXT_OPACITY.primary,
+  },
+  newsSci: {
+    color: COLORS.cream,
+    fontSize: 11,
+    fontFamily: FONTS.body,
+    fontStyle: 'italic',
+    opacity: TEXT_OPACITY.meta,
+    marginBottom: 6,
+  },
+  newsBody: {
+    color: COLORS.cream,
+    fontSize: 12.5,
+    lineHeight: 18,
+    fontFamily: FONTS.body,
+    opacity: TEXT_OPACITY.secondary,
+    marginTop: 4,
+  },
+  sidebarSpacer: { flex: 1, minHeight: 24 },
+  rightArea: {
+    flex: 1,
+    width: '100%',
+  },
+  rightContent: {
+    paddingHorizontal: 40,
+    paddingVertical: 24,
+    paddingBottom: 40,
+  },
+  columnNarrow: {
+    width: '100%',
+    maxWidth: 680,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
   },
   column: {
     width: '100%',
