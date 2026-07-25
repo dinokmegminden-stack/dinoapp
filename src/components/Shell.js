@@ -18,7 +18,10 @@ const DEFAULT_BACKGROUND = require('../../assets/images/new_bg.jpg');
 // (pl. a landing 1024px fölött 1120px-es két-oszlopos elrendezéshez) — a
 // Shell külső (teljes szélességű) háttere és a többi képernyő 750px-es
 // alap-korlátja ettől függetlenül változatlan marad.
-export default function Shell({ children, wide = false, gradientColors = null, backgroundImage = DEFAULT_BACKGROUND, contentMaxWidth = null }) {
+// header: opcionális, a teljes böngésző-szélességben megjelenő fejléc-sáv, ami a
+// belső (maxWidth-re szorított, középre igazított) tartalom FÖLÖTT, azon kívül
+// renderel — így a fejléc végigér a viewporton, míg a body korlátozott marad.
+export default function Shell({ children, header = null, wide = false, gradientColors = null, backgroundImage = DEFAULT_BACKGROUND, contentMaxWidth = null }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
   const showBackgroundImage = backgroundImage && isWideWeb;
@@ -29,6 +32,12 @@ export default function Shell({ children, wide = false, gradientColors = null, b
     </View>
   );
 
+  // A fejléc teljes szélességű sávja + alatta a korlátozott body — egy oszlopban,
+  // felülről lefelé, hogy az inner flex:1-e a maradék helyet töltse ki.
+  const body = header != null
+    ? (<View style={s.stack}>{<View style={s.headerBand}>{header}</View>}{inner}</View>)
+    : inner;
+
   if (showBackgroundImage) {
     return (
       <View style={s.outer}>
@@ -37,7 +46,7 @@ export default function Shell({ children, wide = false, gradientColors = null, b
           colors={['rgba(0,18,25,0.55)', 'rgba(0,18,25,0.25)', 'rgba(0,18,25,0.8)']}
           style={s.bgOverlay}
         />
-        {inner}
+        {body}
       </View>
     );
   }
@@ -45,12 +54,12 @@ export default function Shell({ children, wide = false, gradientColors = null, b
   if (gradientColors) {
     return (
       <LinearGradient colors={gradientColors} style={s.outerGradient}>
-        {inner}
+        {body}
       </LinearGradient>
     );
   }
 
-  return <View style={s.outer}>{inner}</View>;
+  return <View style={s.outer}>{body}</View>;
 }
 
 // Web-en a flex:1 lánc nem mindig nyúlik ki a teljes viewportig, ha a tartalom
@@ -65,4 +74,7 @@ const s = StyleSheet.create({
   bgOverlay: { ...StyleSheet.absoluteFillObject },
   inner: { flex: 1, width: '100%', maxWidth: 480 },
   innerWide: { maxWidth: 1100, flexDirection: 'column', alignItems: 'center', paddingHorizontal: 40, paddingVertical: 20 },
+  // Teljes szélességű oszlop a fejléc-sávnak + a body-nak.
+  stack: { flex: 1, width: '100%', alignItems: 'center' },
+  headerBand: { width: '100%' },
 });

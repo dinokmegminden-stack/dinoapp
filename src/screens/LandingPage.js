@@ -277,8 +277,40 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     return counts;
   }, [allDinos]);
 
+  // A fejléc a Shell teljes böngésző-szélességű sávjaként jelenik meg (a Shell
+  // `header` propján át), az inner belső tartalmon kívül. A sáv full-width, a
+  // benne lévő tartalom vízszintes paddinggel igazodik.
+  const header = (
+    <View style={[styles.headerBar, isWide && styles.headerBarWide]}>
+      <View style={styles.headerLeft}>
+        <View style={styles.brand}>
+          <Image source={dinoLogo} style={styles.brandLogo} resizeMode="contain" />
+          <Text style={styles.brandText}>Dínó Lexikon</Text>
+        </View>
+
+        {isWide && (
+          <View style={styles.navLinks}>
+            <NavLink label="Kezdőlap" active />
+            <NavLink label="Játékok" onPress={handleOpenGaming} />
+            <NavLink label="Gyűjtemény" onPress={handleOpenGallery} />
+            <NavLink label="Ranglista" onPress={handleOpenLeaderboard} />
+          </View>
+        )}
+      </View>
+
+      <View style={styles.headerIcons}>
+        <StreakPill days={streak} />
+        <XPPill />
+        <ProgressCircle ratio={collectionRatio} onPress={handleOpenGallery} />
+        <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
+        <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
+      </View>
+    </View>
+  );
+
   return (
     <Shell
+      header={header}
       gradientColors={[COLORS.bgDark, COLORS.bgMid]}
       backgroundImage={landingBg}
       contentMaxWidth={isWide ? 1280 : undefined}
@@ -286,33 +318,6 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
         <View style={[styles.column, isTablet && styles.columnTablet, isWide && styles.columnWide]}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-
-          {/* 1. Header sáv: bal = márkajel + fő-navigáció, jobb = XP / haladás / ikonok */}
-          <View style={styles.headerBar}>
-            <View style={styles.headerLeft}>
-              <View style={styles.brand}>
-                <Image source={dinoLogo} style={styles.brandLogo} resizeMode="contain" />
-                <Text style={styles.brandText}>Dínó Lexikon</Text>
-              </View>
-
-              {isWide && (
-                <View style={styles.navLinks}>
-                  <NavLink label="Kezdőlap" active />
-                  <NavLink label="Játékok" onPress={handleOpenGaming} />
-                  <NavLink label="Gyűjtemény" onPress={handleOpenGallery} />
-                  <NavLink label="Ranglista" onPress={handleOpenLeaderboard} />
-                </View>
-              )}
-            </View>
-
-            <View style={styles.headerIcons}>
-              <StreakPill days={streak} />
-              <XPPill />
-              <ProgressCircle ratio={collectionRatio} onPress={handleOpenGallery} />
-              <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
-              <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
-            </View>
-          </View>
 
           <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
 
@@ -418,11 +423,19 @@ const styles = StyleSheet.create({
     flex: 14,
   },
   headerBar: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 16,
+    paddingBottom: 12,
+    paddingHorizontal: 20,
     gap: 16,
+  },
+  headerBarWide: {
+    paddingHorizontal: 40,
+    paddingTop: 20,
+    paddingBottom: 16,
   },
   headerLeft: {
     flexDirection: 'row',
