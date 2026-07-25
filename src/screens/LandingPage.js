@@ -21,13 +21,17 @@ import HeroTop from '../components/HeroTop';
 import PrimaryCTA from '../components/PrimaryCTA';
 import DailyDinoCard from '../components/DailyDinoCard';
 import AppInfoModal from '../components/AppInfoModal';
+import RankModal from '../components/RankModal';
 import CreatureMarquee from '../components/CreatureMarquee';
 import ProgressRing from '../components/ProgressRing';
 import RegionProgressDashboard from '../components/RegionProgressDashboard';
+import MessageBoard from '../components/MessageBoard';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { recordAndGetStreak } from '../utils/dailyStreak';
+import { rankForXP } from '../utils/ranks';
+import { isAdminNickname } from '../constants/admins';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
 import { findNextPack, overallCompletionRatio } from '../utils/regionProgress';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
@@ -59,9 +63,11 @@ function XPPill() {
     return () => clearInterval(interval);
   }, []);
 
+  const { rank } = rankForXP(xp);
+
   return (
     <View style={styles.xpPill}>
-      <MaterialCommunityIcons name="star" size={15} color={COLORS.accent} />
+      <Text style={styles.xpPillIcon}>{rank.icon}</Text>
       <Text style={styles.xpPillText}>{xp} XP</Text>
     </View>
   );
@@ -222,11 +228,26 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // mobilra szabott 520px-es korlátnál — levegősebb, tablet-méretű teret kap.
   const isTablet = width >= 700 && width < 1024;
   const [infoOpen, setInfoOpen] = useState(false);
+  const [rankOpen, setRankOpen] = useState(false);
+  const [xp, setXp] = useState(0);
   const [streak, setStreak] = useState(null);
+
+  // XP a rang-modálhoz (a fejléc XP-pilljével azonos forrás, könnyű pollozással).
+  useEffect(() => {
+    getTotalXP().then(setXp);
+    const t = setInterval(() => getTotalXP().then(setXp), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   // Lokális napi belépési széria — megnyitáskor regisztráljuk és kiírjuk.
   useEffect(() => {
     recordAndGetStreak().then(setStreak);
+  }, []);
+
+  // Betöltéskor dínóbőgés (mute-aware; weben az autoplay-tiltás miatt csak
+  // felhasználói interakció után szólal meg — natívon azonnal).
+  useEffect(() => {
+    playSound('roar', { volume: 0.5 });
   }, []);
 
   // Dínós Hírek betöltése a sidebarhoz (legfrissebb elöl).
@@ -273,6 +294,11 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   const handleOpenNews = () => {
     playSound('click');
     onOpenNews?.();
+  };
+
+  const handleOpenRank = () => {
+    playSound('click');
+    setRankOpen(true);
   };
 
   const handleStartAdventure = () => {
@@ -327,15 +353,19 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         <ProgressCircle ratio={collectionRatio} onPress={handleOpenGallery} />
         <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
         <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
+        <RoundIconButton icon="information" onPress={handleOpenRank} tooltip="Rangok" />
       </View>
     </View>
   );
 
-  // Bal oldali sáv tartalma: felül Dínós Hírek (placeholder), legalul a Napi
-  // Dínó kártya (wide nézetben a köztes rugalmas térrel az aljára tolva).
-  const sidebarBlock = (
-    <View style={[styles.sidebar, isWide && styles.sidebarWide]}>
-      <Text style={styles.sidebarHeading}>DÍNÓS HÍREK</Text>
+  // Bal oldali sáv tartalma: Dínós Hírek → Napi Dínó → Üzenőfal. Wide nézetben a
+  // sáv fix magasságú és belül görgethető (a tartalom túlnyúlhat a viewporton).
+  const sidebarInner = (
+    <>
+      <Text style={styles.sidebarHeading}>NAPI DÍNÓ</Text>
+      <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} isWide={false} />
+
+      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>DÍNÓS HÍREK</Text>
       {news.length === 0 ? (
         <View style={styles.newsPlaceholder}>
           <MaterialCommunityIcons name="newspaper-variant-outline" size={22} color={COLORS.accent} />
@@ -365,9 +395,21 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </View>
       )}
 
-      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>NAPI DÍNÓ</Text>
-      <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} isWide={false} />
-    </View>
+      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>ÜZENŐFAL</Text>
+      <MessageBoard nickname={nickname} isAdmin={isAdminNickname(nickname)} />
+    </>
+  );
+
+  const sidebarBlock = isWide ? (
+    <ScrollView
+      style={[styles.sidebar, styles.sidebarWide]}
+      contentContainerStyle={styles.sidebarWideContent}
+      showsVerticalScrollIndicator={false}
+    >
+      {sidebarInner}
+    </ScrollView>
+  ) : (
+    <View style={styles.sidebar}>{sidebarInner}</View>
   );
 
   // Jobb oldali (tágas) tartalom: a T-rex háttér fölött lebegő helyőrző szöveg,
@@ -394,10 +436,8 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
       )}
 
       <Text style={styles.loremText}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-        ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-        aliquip ex ea commodo consequat.
+        Fedezd fel a mélyidő őslényeit, játssz, kvízelj — minden győzelem XP, és
+        közelebb visz a Dínó Professzor ranghoz. Kezdődhet a kaland?
       </Text>
 
       <LandingMenu onSelectRegion={handleSelectRegion} regionCounts={regionCounts} />
@@ -415,6 +455,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     >
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
       <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
+      <RankModal visible={rankOpen} onClose={() => setRankOpen(false)} xp={xp} />
 
       {isWide ? (
         // Asztali/Full HD: fix bal sáv (teljes magasság) + tágas, görgethető jobb oldal.
@@ -466,24 +507,27 @@ const styles = StyleSheet.create({
   sidebar: {
     width: '100%',
   },
-  // Wide: fix szélességű, teljes magasságú üveghatású (backdrop-blur) sáv.
+  // Wide: fix szélességű, teljes magasságú, belül GÖRGETHETŐ üveghatású sáv.
+  // A fix magasság (100vh - fejléc) korlátozza a ScrollView-t, hogy a hosszú
+  // tartalom (hírek + napi dínó + üzenőfal) a sávon belül görögjön.
   sidebarWide: {
     width: 360,
-    height: '100%',
-    paddingHorizontal: 22,
-    paddingVertical: 24,
+    flexGrow: 0,
+    flexShrink: 0,
     backgroundColor: 'rgba(16,14,12,0.55)',
     borderRightWidth: 1,
     borderRightColor: 'rgba(254,250,224,0.10)',
     ...Platform.select({
       web: {
-        // Teljes képernyő-magasság a fejléc (~96px) alatt — a % magasság a
-        // RN-web flex-lánc miatt nem oldódik fel megbízhatóan, ezért 100vh-ból.
-        minHeight: 'calc(100vh - 96px)',
+        height: 'calc(100vh - 96px)',
         backdropFilter: 'blur(14px)',
         WebkitBackdropFilter: 'blur(14px)',
       },
     }),
+  },
+  sidebarWideContent: {
+    paddingHorizontal: 22,
+    paddingVertical: 24,
   },
   sidebarHeading: {
     color: COLORS.accent,
@@ -727,6 +771,9 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.pill,
     paddingVertical: 7,
     paddingHorizontal: 14,
+  },
+  xpPillIcon: {
+    fontSize: 15,
   },
   xpPillText: {
     color: COLORS.cream,

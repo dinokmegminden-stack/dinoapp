@@ -4,6 +4,7 @@ import { Audio } from 'expo-av';
 // külső Google URL-t használt, ami nem mindig töltődött be megbízhatóan.
 export const SOUNDS = {
   click: require('../../assets/sounds/click.mp3'),
+  roar: require('../../assets/sounds/roar.mp3'),
 };
 
 export const QUIZ_SOUND_FILES = {
@@ -42,14 +43,15 @@ export function setSoundMuted(muted) {
 // --- Egyszerű UI kattanás ---
 const loadedSounds = {};
 
-export async function playSound(soundKey) {
+export async function playSound(soundKey, { volume = 1 } = {}) {
   if (isSoundMuted) return;
   try {
     if (loadedSounds[soundKey]) {
+      await loadedSounds[soundKey].setVolumeAsync(volume);
       await loadedSounds[soundKey].replayAsync();
       return;
     }
-    const { sound } = await Audio.Sound.createAsync(SOUNDS[soundKey], { shouldPlay: true });
+    const { sound } = await Audio.Sound.createAsync(SOUNDS[soundKey], { shouldPlay: true, volume });
     loadedSounds[soundKey] = sound;
   } catch (error) {
     console.warn(`Nem sikerült a hang lejátszása: ${soundKey}`, error);

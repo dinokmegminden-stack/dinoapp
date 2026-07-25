@@ -61,12 +61,11 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
 
   return (
     <View style={[styles.wrapBase, isWide && styles.wrapWide]}>
-      <Text style={[styles.eyebrow, { fontFamily: boldFont }]}>🦕 NAPI DÍNÓ</Text>
       <Pressable onPress={flip} style={styles.stageBase}>
         {/* ELŐLAP */}
         <Animated.View style={[styles.card, styles.front, { transform: [{ perspective: 1000 }, { rotateY: frontRotate }] }]}>
           <View style={styles.imgWrap}>
-            <Image source={imgSource} style={styles.img} resizeMode="cover" />
+            <Image source={imgSource} style={styles.img} resizeMode="contain" />
           </View>
           <View style={styles.nameBand}>
             <Text style={[styles.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
@@ -95,9 +94,9 @@ const styles = StyleSheet.create({
   wrapBase: { width: '100%', marginTop: 2, marginBottom: 4 },
   wrapWide: { flex: 1 },
   eyebrow: { color: COLORS.accent, fontSize: 12, letterSpacing: 2, marginBottom: 4, opacity: 0.9 },
-  // A Napi Dínó kártya mindig 16:9 arányú — szélesség szerint méreteződik,
-  // mobilon és desktopon egyaránt (nem nyúlik le a jobb oszlop aljáig).
-  stageBase: { width: '100%', aspectRatio: 16 / 9 },
+  // A Napi Dínó kártya 4:3 arányú (kicsit magasabb, mint 16:9), hogy a
+  // `contain`-nel megjelenített teljes kép elférjen benne, kicsinyítve.
+  stageBase: { width: '100%', aspectRatio: 4 / 3 },
   card: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: RADIUS.cardLarge,
@@ -123,6 +122,6 @@ const styles = StyleSheet.create({
   fact: { color: COLORS.cream, fontSize: 14, lineHeight: 18, textAlign: 'center' },
   moreBtn: { marginTop: 8, backgroundColor: COLORS.accent, borderRadius: RADIUS.pill, paddingVertical: 6, paddingHorizontal: 16 },
   moreBtnText: { color: COLORS.bgDark, fontSize: 13 },
-  loading: { width: '100%', aspectRatio: 16 / 9, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.darkGreen, borderRadius: RADIUS.cardLarge },
+  loading: { width: '100%', aspectRatio: 4 / 3, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.darkGreen, borderRadius: RADIUS.cardLarge },
   loadingText: { color: COLORS.cream, opacity: 0.7 },
 });
