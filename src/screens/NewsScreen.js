@@ -3,7 +3,7 @@
 // dátummal, magyar + tudományos névvel és a teljes hírszöveggel. A landing
 // fejléc "Hírek" menüpontja és a bal sáv hír-tételei navigálnak ide.
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Linking, Platform, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import { COLORS } from '../constants/theme';
@@ -60,6 +60,16 @@ export default function NewsScreen({ onBack }) {
                       <Text style={styles.sci}>{item.scientific_name}</Text>
                     )}
                     <Text style={styles.text}>{item.news_text}</Text>
+                    {!!item.source_url && (
+                      <TouchableOpacity
+                        style={styles.source}
+                        onPress={() => Linking.openURL(item.source_url)}
+                        accessibilityRole="link"
+                      >
+                        <MaterialCommunityIcons name="link-variant" size={14} color={COLORS.accent} />
+                        <Text style={styles.sourceText} numberOfLines={1}>Forrás megtekintése</Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               );
@@ -146,5 +156,19 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontFamily: FONTS.body,
     opacity: 0.85,
+  },
+  source: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 14,
+    alignSelf: 'flex-start',
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  sourceText: {
+    color: COLORS.accent,
+    fontSize: 13,
+    fontFamily: FONTS.bold,
+    textDecorationLine: 'underline',
   },
 });

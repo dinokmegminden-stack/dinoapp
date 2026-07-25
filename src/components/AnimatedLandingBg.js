@@ -1,14 +1,4 @@
-// AnimatedLandingBg — a Shell statikus háttérkép+overlay párosát váltja ki a
-// landing oldalon: lassú Ken Burns közelítés a képen, izzó tábortűz-fény
-// pulzálás, felfelé szálló parázsszikrák és szentjánosbogarak vászon-alapú
-// részecskeszimulációval, ködréteg-sodródás. Kizárólag asztali weben fut
-// (lásd Shell.js showBackgroundImage feltétele), ezért itt nyers DOM elemeket
-// (div/canvas/style) és a böngésző requestAnimationFrame/Canvas2D API-ját
-// használjuk CSS-keyframe-ekkel — RN StyleSheet nem támogat kulcskocka-
-// animációt vagy vászon-rajzolást.
-// Szándékosan nincs egérmozgásra reagáló parallax — mivel ez a komponens
-// mostantól minden Shell-képernyőn fut (nem csak a landingen), az egérkövetés
-// felesleges költség lett volna a legtöbb (statikus tartalmú) képernyőn.
+
 import React, { useEffect, useRef } from 'react';
 import { Platform, Image as RNImage } from 'react-native';
 

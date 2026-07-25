@@ -14,7 +14,7 @@ export function genusOf(scientificName) {
 export async function fetchDinoNews(limit = 10) {
   const { data, error } = await supabase
     .from('dino_news')
-    .select('id, published_at, scientific_name, common_name, news_text, creature_id')
+    .select('id, published_at, scientific_name, common_name, news_text, creature_id, source_url')
     .eq('is_published', true)
     .order('published_at', { ascending: false })
     .limit(limit);

@@ -1,6 +1,6 @@
 #!/bin/bash
 # deploy.sh
-# Használat: ./deploy.sh "commit üzenet ide"
+# Használat: ./deploy.sh "final deploy 07.25"
 # Ha nem adsz üzenetet, automatikus időbélyeges üzenetet használ.
 
 set -e  # ha bármelyik lépés hibára fut, a script leáll, nem pusholunk félkész állapotot

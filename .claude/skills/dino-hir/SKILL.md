@@ -49,10 +49,11 @@ Töltsd ki, amit a szöveg egyértelműen tartalmaz VAGY biztosan levezethető. 
 azt HAGYD KI (ne találj ki adatot) és sorold fel a végén. Guess-nél tegyél `-- ` kommentet.
 
 - **scientific_name**: a latin binomiális név (pl. `Uragasaurus kalasinensis`).
-- **common_name**: NE találj ki magyar nevet. Ha a szöveg tartalmaz valódi magyar
-  köznapi nevet, tedd be; ha nincs, hagyd NULL-on. A megjelenített cím és a kép-kulcs
-  amúgy is a **genus** (a `scientific_name` első fele, pl. `Uragasaurus`), nem a common_name —
-  a `dino_news.common_name` opcionális/elhagyható.
+- **common_name**: SOHA ne találj ki magyar nevet (pl. NE „Uragaszaurusz").
+  - A `creatures.common_name` NOT NULL → ide a **genust** tedd (a `scientific_name`
+    első fele, pl. `Uragasaurus`), kivéve ha a szöveg valódi magyar köznapi nevet ad.
+  - A `dino_news.common_name` opcionális/elhagyható (a cím és a kép a genusból jön).
+  Az `IMAGE_MAP` genus-kulcsú, ezért a genus common_name = a gyűjtemény-kártyakép is betölt.
 - **mya_start / mya_end**: kor millió évben (pl. „150–145 millió éve" → start 150, end 145).
 - **edu**: a régió-szám a lelőhely alapján — mapping:
   1 = Kárpát-medence · 2 = Európa · 3 = Afrika · 4 = Ázsia · 5 = Dél-Amerika · 6 = Észak-Amerika.
@@ -99,7 +100,7 @@ Fontos: a `creatures` INSERT-nek a `dino_news` INSERT ELŐTT kell lefutnia (a `c
 alkérdés különben NULL-t ad). Ezt írd is oda egy sorban.
 
 ## Minta (Uragasaurus kalasinensis)
-A `creatures` INSERT tölti: scientific_name, common_name (ideiglenes), edu=4, pack_number=26,
+A `creatures` INSERT tölti: scientific_name, common_name = genus (`Uragasaurus`), edu=4, pack_number=26,
 region_hu=Ázsia, era/period/epoch (Mezozoikum/Jura/késő-jura), mya 150/145, diet növényevő,
 rend Saurischia, alrend Sauropodomorpha, csalad Mamenchisauridae / csalad_hu Mamenchisauridák,
 discovered_country Thaiföld, geological_formation Phu Kradung Formáció, description_hu tömör.
