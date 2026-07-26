@@ -121,20 +121,19 @@ export const IMAGE_MAP = {
   "Coelophysis": require('../../assets/images/coelophysis.jpg'),
   "Chubutisaurus": require('../../assets/images/chubutisaurus.jpg'),
   "Velociraptor": require('../../assets/images/velociraptor.jpg'),
-  // "Nagatitan": require('../../assets/images/nagatitan.jpg'),
+  "Nagatitan": require('../../assets/images/nagatitan.jpg'),
   "Deinocheirus": require('../../assets/images/deinocheirus.jpg'),
   "Australovenator": require('../../assets/images/australovenator.jpg'),
   "Deinonychus": require('../../assets/images/deinonychus.jpg'),
   // 
-  // "Psittacosaurus": require('../../assets/images/psittacosaurus.jpg'),
+  "Psittacosaurus": require('../../assets/images/psittacosaurus.jpg'),
   "Buitreraptor": require('../../assets/images/buitreraptor.jpg'),
   // "Diamantinasaurus": require('../../assets/images/diamantinasaurus.jpg'),
   // "Rhoetosaurus": require('../../assets/images/rhoetosaurus.jpg'),
   // 
   // "Kunbarrasaurus": require('../../assets/images/kunbarrasaurus.jpg'),
 
-  // Van hozzá kép, de a creatures táblában jelenleg nincs régióhoz/csomaghoz
-  // rendelve (edu=null, pack_number=100) — a lookup készen áll, amint felkerül egy pakkba.
+           
   "Janenschia": require('../../assets/images/janenschia.jpg'),
 
   // Dínós Hírek új fajai (a tudományos név genusa szerint kulcsolva).
