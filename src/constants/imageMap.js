@@ -117,7 +117,7 @@ export const IMAGE_MAP = {
   "Alioramus": require('../../assets/images/alioramus.jpg'),
   // 
   // "Utahraptor": require('../../assets/images/utahraptor.jpg'),
-  // "Pentaceratops": require('../../assets/images/pentaceratops.jpg'),
+  "Pentaceratops": require('../../assets/images/pentaceratops.jpg'),
   "Coelophysis": require('../../assets/images/coelophysis.jpg'),
   // "Chubutisaurus": require('../../assets/images/chubutisaurus.jpg'),
   "Velociraptor": require('../../assets/images/velociraptor.jpg'),
