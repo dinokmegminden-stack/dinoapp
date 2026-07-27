@@ -4,11 +4,12 @@ import { COLORS } from '../../constants/colors';
 import { isPackUnlocked, PASS_THRESHOLD, EDU_LABELS } from '../../utils/regionProgress';
 import { csomagToPackId } from '../../utils/regionHelpers';
 import LevelShell from './LevelShell';
+import HeaderBar from '../../components/HeaderBar';
 import { s } from './RegionLevel.styles';
 
-export default function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack }) {
+export default function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack, nickname, onNavigate }) {
   return (
-    <LevelShell>
+    <LevelShell header={<HeaderBar currentView="region" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
       <ScrollView style={s.packagesScrollFlex} contentContainerStyle={s.packagesScroll}>
         <Text style={s.levelTitle}>FELFEDEZÉS</Text>

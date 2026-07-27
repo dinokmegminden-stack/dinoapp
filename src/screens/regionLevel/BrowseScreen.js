@@ -4,6 +4,7 @@ import { IMAGE_MAP, MISSING_IMAGE } from '../../constants/imageMap';
 import { isGuestMode } from '../../utils/guestMode';
 import TradingCard from '../../components/TradingCard';
 import LevelShell from './LevelShell';
+import HeaderBar from '../../components/HeaderBar';
 import { s } from './RegionLevel.styles';
 import { useFavorites } from '../../hooks/useFavorites';
 
@@ -15,7 +16,7 @@ import { useFavorites } from '../../hooks/useFavorites';
 // bővül ki a LevelShell teljes szélességéig.
 const MOBILE_BREAKPOINT = 700;
 
-export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack, playerId }) {
+export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack, playerId, nickname, progress, onNavigate }) {
   const pkg = packages.find((p) => p.csomag === csomag);
   const dinos = pkg?.dinos || [];
   const [index, setIndex] = useState(0);
@@ -35,7 +36,7 @@ export default function BrowseScreen({ csomag, packages, onStartQuiz, onBack, pl
   };
 
   return (
-    <LevelShell extraWide>
+    <LevelShell extraWide header={<HeaderBar currentView="region" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       {/* A léptetés a TradingCard saját, képre helyezett nyilaival történik —
           nem oldalsó gombokkal, mert azok mobilon annyi szélességet
           vittek el, hogy a kártya tartalma (név, statisztikák) alig fért ki.

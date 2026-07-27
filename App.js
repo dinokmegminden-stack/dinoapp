@@ -157,6 +157,12 @@ export default function App() {
     setHideXPBar(false);
   };
 
+  const handleNavigateFromRegion = (target) => {
+    setEduLevel(null);
+    setHideXPBar(false);
+    setView(target);
+  };
+
   const handleStartLightningQuiz = () => {
     // Use preloaded creatures
     if (allDinos.length > 0) {
@@ -291,6 +297,8 @@ export default function App() {
           onStartLightningQuiz={handleStartLightningQuiz}
           onBrowsingChange={setHideXPBar}
           playerId={playerId}
+          nickname={nickname}
+          onNavigate={handleNavigateFromRegion}
         />
       )}
 

@@ -7,7 +7,7 @@ import BrowseScreen from './BrowseScreen';
 import PackageQuizScreen from './PackageQuizScreen';
 import { s } from './RegionLevel.styles';
 
-export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBrowsingChange, playerId }) {
+export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBrowsingChange, playerId, nickname, onNavigate }) {
   const { packages, creatures, loading, error } = useRegionData(eduLevel);
 
   const [currentScreen, setCurrentScreen] = useState('packages'); // 'packages' | 'browse' | 'quiz'
@@ -54,6 +54,8 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
           setCurrentScreen('browse');
         }}
         onBack={onBack}
+        nickname={nickname}
+        onNavigate={onNavigate}
       />
     );
   }
@@ -66,6 +68,9 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
         onStartQuiz={() => setCurrentScreen('quiz')}
         onBack={() => setCurrentScreen('packages')}
         playerId={playerId}
+        nickname={nickname}
+        progress={progress}
+        onNavigate={onNavigate}
       />
     );
   }

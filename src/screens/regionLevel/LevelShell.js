@@ -10,13 +10,19 @@ import { s } from './RegionLevel.styles';
 // a hátteret. Csak asztali weben jelenik meg (lásd Shell.js azonos logikáját).
 const landingBg = require('../../../assets/images/new_bg.jpg');
 
-export default function LevelShell({ children, extraWide = false }) {
+// header: opcionális, teljes szélességű fejléc-sáv a korlátozott (maxWidth-es)
+// tartalom fölött, azon kívül — ugyanaz a minta, mint a Shell.js header propja.
+export default function LevelShell({ children, extraWide = false, header = null }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
 
   const inner = (
     <View style={[s.inner, isWideWeb && (extraWide ? s.innerExtraWide : s.innerWide)]}>{children}</View>
   );
+
+  const body = header != null
+    ? (<View style={styles.stack}>{<View style={styles.headerBand}>{header}</View>}{inner}</View>)
+    : inner;
 
   if (isWideWeb) {
     return (
@@ -26,14 +32,16 @@ export default function LevelShell({ children, extraWide = false }) {
           colors={['rgba(0,18,25,0.55)', 'rgba(0,18,25,0.25)', 'rgba(0,18,25,0.8)']}
           style={styles.bgOverlay}
         />
-        {inner}
+        {body}
       </View>
     );
   }
 
-  return <View style={s.outer}>{inner}</View>;
+  return <View style={s.outer}>{body}</View>;
 }
 
 const styles = StyleSheet.create({
   bgOverlay: { ...StyleSheet.absoluteFillObject },
+  stack: { flex: 1, width: '100%', alignItems: 'center' },
+  headerBand: { width: '100%' },
 });
