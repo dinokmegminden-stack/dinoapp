@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "DinoExp",
-    "slug": "DinoApp",
+    "name": "DMM Lexikon",
+    "slug": "dmmlexikon",
     "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

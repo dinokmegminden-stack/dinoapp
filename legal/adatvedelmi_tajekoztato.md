@@ -1,10 +1,10 @@
-# Adatvédelmi tájékoztató — DínóTudós (Dínók Meg Minden)
+# Adatvédelmi tájékoztató — DMM Lexikon (Dínók Meg Minden)
 
 Hatályos: 2026. július 21-től
 
 ## 1. Bevezetés
 
-Ez a tájékoztató arról szól, hogy a DínóTudós (Dínók Meg Minden) nevű alkalmazás milyen adatokat kezel a játékosokról, miért, és meddig. Az alkalmazást a Dínók Meg Minden fejleszti és üzemelteti. Kérdés vagy kérés esetén a dinokmegminden@gmail.com címen érhető el az üzemeltető.
+Ez a tájékoztató arról szól, hogy a DMM Lexikon (Dínók Meg Minden) nevű alkalmazás milyen adatokat kezel a játékosokról, miért, és meddig. Az alkalmazást a Dínók Meg Minden fejleszti és üzemelteti. Kérdés vagy kérés esetén a dinokmegminden@gmail.com címen érhető el az üzemeltető.
 
 ## 2. Nincs regisztráció, nincs személyes adat
 
