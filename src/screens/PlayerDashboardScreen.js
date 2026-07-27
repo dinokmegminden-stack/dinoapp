@@ -53,31 +53,29 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
   const [monthOffset, setMonthOffset] = useState(0); // 0 = jelen hónap, -1 = előző, stb.
   const [xp, setXP] = useState(0);
 
-  useEffect(() => {
-    getTotalXP().then(setXP);
-    const interval = setInterval(() => {
-  const [loading, setLoading] = useState(true);
   const [redeemCode, setRedeemCode] = useState('');
-  const [redeemStatus, setRedeemStatus] = useState(null); // { type: 'success'|'error', text: '' }
+  const [redeeming, setRedeeming] = useState(false);
+  const [redeemError, setRedeemError] = useState(null);
   const [celebration, setCelebration] = useState({ visible: false, message: '' });
 
   useEffect(() => {
-    getTotalXP().then(setXp);
+    getTotalXP().then(setXP);
   }, []);
 
   const handleRedeem = async () => {
     if (!redeemCode.trim() || !playerId) return;
-    setRedeemStatus(null);
+    setRedeemError(null);
+    setRedeeming(true);
     const result = await redeemUnlockCode(redeemCode.trim(), playerId);
+    setRedeeming(false);
     if (!result.success) {
-      setRedeemStatus({
-        type: 'error',
-        text: result.error === 'already_used'
+      setRedeemError(
+        result.error === 'already_used'
           ? 'Ezt a kódot már beváltotta valaki.'
           : result.error === 'invalid_code'
             ? 'Érvénytelen kód.'
-            : 'Hiba történt, próbáld újra.',
-      });
+            : 'Hiba történt, próbáld újra.'
+      );
       return;
     }
 
