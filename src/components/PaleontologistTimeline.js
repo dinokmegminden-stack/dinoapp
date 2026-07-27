@@ -9,15 +9,26 @@ import { COLORS, RADIUS, FONTS } from '../constants/theme';
 
 const MARKER_SIZE = 40;
 const EDGE_PADDING_PCT = 6; // a legszélső pontok se lógjanak ki a sáv aljáról
+const TOOLTIP_WIDTH = 132;
+const TOOLTIP_GAP = 8;
 
 function yearsLabel(born, died) {
   if (!born) return '';
   return died ? `${born}–${died}` : `${born}–`;
 }
 
-function Marker({ person, selected, onPress }) {
+// A tooltipnek FIX méretűnek és abszolút pozíciójúnak kell lennie — ha
+// normál flow-elemként ülne a marker mellett/alatt, a megjelenésekor
+// megnövelné a szülő (markerWrap) szélességét, ami az `alignItems: 'center'`
+// miatt ÚJRAKÖZÉPRE IGAZÍTANÁ magát a markert is. Ez az egérkurzor alól
+// mozdítja ki a markert, ami hoverOut-ot vált ki, mire a tooltip eltűnik,
+// a marker visszaugrik a kurzor alá, ami újra hoverIn-t vált ki — végtelen
+// vibrálás. Az abszolút pozicionálás azért old meg mindent, mert a tooltip
+// megjelenése/eltűnése ekkor semmilyen hatással nincs a marker méretére
+// vagy helyére.
+function Marker({ person, selected, onPress, above }) {
   const [hovered, setHovered] = useState(false);
-  const showTooltip = hovered && !selected;
+  const showTooltip = hovered || selected;
 
   return (
     <View style={styles.markerWrap}>
@@ -31,8 +42,15 @@ function Marker({ person, selected, onPress }) {
       >
         <Text style={styles.markerEmoji}>{person.emoji || '🧑‍🔬'}</Text>
       </Pressable>
-      {(showTooltip || selected) && (
-        <View style={[styles.tooltip, selected && styles.tooltipSelected]} pointerEvents="none">
+      {showTooltip && (
+        <View
+          style={[
+            styles.tooltip,
+            above ? styles.tooltipAbove : styles.tooltipBelow,
+            selected && styles.tooltipSelected,
+          ]}
+          pointerEvents="none"
+        >
           <Text style={styles.tooltipName} numberOfLines={1}>{person.name}</Text>
           <Text style={styles.tooltipYears}>{yearsLabel(person.born_year, person.died_year)}</Text>
         </View>
@@ -63,12 +81,13 @@ export default function PaleontologistTimeline({ people, selectedId, onSelect })
       <Text style={styles.title}>KUTATÓK IDŐVONALA</Text>
       <View style={styles.track}>
         <View style={styles.baseline} />
-        {positioned.map((p) => (
+        {positioned.map((p, i) => (
           <View key={p.id} style={[styles.markerSlot, { left: `${p.leftPct}%` }]}>
             <Marker
               person={p}
               selected={selectedId === p.id}
               onPress={() => onSelect(selectedId === p.id ? null : p.id)}
+              above={i % 2 === 0}
             />
           </View>
         ))}
@@ -92,13 +111,13 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   track: {
-    height: 78,
+    height: 130,
     width: '100%',
     position: 'relative',
   },
   baseline: {
     position: 'absolute',
-    top: 20,
+    top: 55,
     left: 0,
     right: 0,
     height: 2,
@@ -106,11 +125,12 @@ const styles = StyleSheet.create({
   },
   markerSlot: {
     position: 'absolute',
-    top: 0,
+    top: 35,
     transform: [{ translateX: -MARKER_SIZE / 2 }],
     alignItems: 'center',
   },
   markerWrap: {
+    position: 'relative',
     alignItems: 'center',
   },
   marker: {
@@ -125,7 +145,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       web: {
         cursor: 'pointer',
-        transitionProperty: 'background-color, border-color, transform',
+        transitionProperty: 'background-color, border-color',
         transitionDuration: '120ms',
       },
     }),
@@ -138,14 +158,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   tooltip: {
-    marginTop: 8,
+    position: 'absolute',
+    left: (MARKER_SIZE - TOOLTIP_WIDTH) / 2,
+    width: TOOLTIP_WIDTH,
     backgroundColor: COLORS.cream,
     borderRadius: RADIUS.pill,
     paddingVertical: 5,
     paddingHorizontal: 12,
     alignItems: 'center',
-    maxWidth: 160,
     ...Platform.select({ web: { whiteSpace: 'nowrap' } }),
+  },
+  tooltipBelow: {
+    top: MARKER_SIZE + TOOLTIP_GAP,
+  },
+  tooltipAbove: {
+    bottom: MARKER_SIZE + TOOLTIP_GAP,
   },
   tooltipSelected: {
     backgroundColor: COLORS.accent,
