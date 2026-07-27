@@ -203,6 +203,7 @@ export default function HeaderBar({
               <NavLink label="Gyűjtemény" active={currentView === 'collection'} onPress={() => handleNav('collection')} />
               <NavLink label="Ranglista" active={currentView === 'leaderboard'} onPress={() => handleNav('leaderboard')} />
               <NavLink label="Hírek" active={currentView === 'news'} onPress={() => handleNav('news')} />
+              <NavLink label="Kutatók" active={currentView === 'kutatok'} onPress={() => handleNav('kutatok')} />
             </View>
           )}
         </View>

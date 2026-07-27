@@ -19,6 +19,7 @@ import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
+import KutatokScreen from './src/screens/KutatokScreen';
 import { loadProgress, recordPackQuizResult, unlockAllProgress, saveProgress, createEmptyProgress, applyPackQuizResult } from './src/utils/regionProgress';
 import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
@@ -191,6 +192,10 @@ export default function App() {
     setView('news');
   };
 
+  const handleOpenKutatok = () => {
+    setView('kutatok');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -257,6 +262,7 @@ export default function App() {
           onOpenDashboard={handleOpenDashboard}
           onOpenGaming={handleOpenGaming}
           onOpenNews={handleOpenNews}
+          onOpenKutatok={handleOpenKutatok}
           onRequireRegister={() => setView('nicknamePicker')}
         />
       )}
@@ -372,6 +378,15 @@ export default function App() {
 
       {view === 'news' && (
         <NewsScreen
+          nickname={nickname}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
+      )}
+
+      {view === 'kutatok' && (
+        <KutatokScreen
           nickname={nickname}
           progress={progress}
           onNavigate={(target) => setView(target)}
