@@ -17,6 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const dinoLogo = require('../../assets/images/dino_logo.png');
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import HeroTop from '../components/HeroTop';
 import PrimaryCTA from '../components/PrimaryCTA';
 import DailyDinoCard from '../components/DailyDinoCard';
@@ -347,34 +348,22 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // A fejléc a Shell teljes böngésző-szélességű sávjaként jelenik meg (a Shell
   // `header` propján át), az inner belső tartalmon kívül. A sáv full-width, a
   // benne lévő tartalom vízszintes paddinggel igazodik.
+  const handleNavigate = (targetView) => {
+    if (targetView === 'landing') return;
+    if (targetView === 'gaming') onOpenGaming?.();
+    else if (targetView === 'collection') onOpenGallery?.();
+    else if (targetView === 'leaderboard') onOpenLeaderboard?.();
+    else if (targetView === 'news') onOpenNews?.();
+    else if (targetView === 'dashboard') onOpenDashboard?.();
+  };
+
   const header = (
-    <View style={[styles.headerBar, isWide && styles.headerBarWide]}>
-      <View style={styles.headerLeft}>
-        <View style={styles.brand}>
-          <Image source={dinoLogo} style={styles.brandLogo} resizeMode="contain" />
-          <Text style={styles.brandText}>Dínó Lexikon</Text>
-        </View>
-
-        {isWide && (
-          <View style={styles.navLinks}>
-            <NavLink label="Kezdőlap" active />
-            <NavLink label="Játékok" onPress={handleOpenGaming} />
-            <NavLink label="Gyűjtemény" onPress={handleOpenGallery} />
-            <NavLink label="Ranglista" onPress={handleOpenLeaderboard} />
-            <NavLink label="Hírek" onPress={handleOpenNews} />
-          </View>
-        )}
-      </View>
-
-      <View style={styles.headerIcons}>
-        <StreakPill days={streak} />
-        <XPPill onPress={handleOpenRank} />
-        <ProgressCircle ratio={collectionRatio} onPress={handleOpenGallery} />
-        <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
-        <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
-        <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />
-      </View>
-    </View>
+    <HeaderBar
+      nickname={nickname}
+      progress={progress}
+      currentView="landing"
+      onNavigate={handleNavigate}
+    />
   );
 
   // Bal oldali sáv tartalma: Dínós Hírek → Napi Dínó → Üzenőfal. Wide nézetben a

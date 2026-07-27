@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { getLeaderboard, getRunnerLeaderboard } from '../services/leaderboardService';
@@ -45,8 +46,8 @@ function formatDuration(ms) {
   return `${days} nap ${totalHours % 24} óra`;
 }
 
-export default function LeaderboardScreen({ onBack }) {
-  const [activeTab, setActiveTab] = useState(TABS[0].key);
+export default function LeaderboardScreen({ nickname, progress, onNavigate, onBack }) {
+  const [activeTab, setActiveTab] = useState('memory_1');
   const [period, setPeriod] = useState('all'); // 'all' | 'week'
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +68,7 @@ export default function LeaderboardScreen({ onBack }) {
   }, [activeTab, period, loadEntries]);
 
   return (
-    <Shell>
+    <Shell header={<HeaderBar currentView="leaderboard" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 

@@ -6,6 +6,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import PressableButton from '../components/PressableButton';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
@@ -22,7 +23,7 @@ const GAMES = [
   { key: 'hangman', label: 'AKASZTÓFA', icon: 'bone', bg: `${COLORS.hangmanBtn}${GAME_BG_ALPHA}`, shadow: COLORS.hangmanBtnShadow },
 ];
 
-export default function GamingScreen({ onMemory, onWhoAmI, onLightningQuiz, onMillionaire, onRunner, onHangman, onBack }) {
+export default function GamingScreen({ nickname, progress, onNavigate, onMemory, onWhoAmI, onLightningQuiz, onMillionaire, onRunner, onHangman, onBack }) {
   const gameHandlers = {
     memory: onMemory,
     whoami: onWhoAmI,
@@ -33,7 +34,7 @@ export default function GamingScreen({ onMemory, onWhoAmI, onLightningQuiz, onMi
   };
 
   return (
-    <Shell>
+    <Shell header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 

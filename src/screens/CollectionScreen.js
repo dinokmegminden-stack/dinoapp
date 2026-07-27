@@ -14,6 +14,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import CollectionTimeline from '../components/CollectionTimeline';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -71,7 +72,7 @@ function LockedSlot() {
   );
 }
 
-export default function CollectionScreen({ allDinos, progress, onBack }) {
+export default function CollectionScreen({ nickname, allDinos, progress, onNavigate, onBack }) {
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
 
   const { sections, collectedCount, totalCount } = useMemo(() => {
@@ -103,7 +104,7 @@ export default function CollectionScreen({ allDinos, progress, onBack }) {
   }, [allDinos, progress]);
 
   return (
-    <Shell>
+    <Shell header={<HeaderBar currentView="collection" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 

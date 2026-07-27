@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Linking, Platform, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
@@ -20,7 +21,7 @@ function formatDate(iso) {
   return `${d.getFullYear()}. ${m}. ${day}.`;
 }
 
-export default function NewsScreen({ onBack }) {
+export default function NewsScreen({ nickname, progress, onNavigate, onBack }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 900;
   const [news, setNews] = useState(null); // null = töltés alatt
@@ -30,7 +31,7 @@ export default function NewsScreen({ onBack }) {
   }, []);
 
   return (
-    <Shell>
+    <Shell header={<HeaderBar currentView="news" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backBtn} onPress={onBack} accessibilityRole="button" accessibilityLabel="Vissza">

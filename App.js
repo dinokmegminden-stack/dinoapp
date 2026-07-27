@@ -230,6 +230,9 @@ export default function App() {
 
       {view === 'gaming' && (
         <GamingScreen
+          nickname={nickname}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
           onLightningQuiz={handleStartLightningQuiz}
           onMillionaire={handleStartMillionaire}
           onMemory={handleStartMemory}
@@ -283,18 +286,30 @@ export default function App() {
 
       {view === 'collection' && (
         <CollectionScreen
+          nickname={nickname}
           allDinos={allDinos}
           progress={progress}
+          onNavigate={(target) => setView(target)}
           onBack={() => setView('landing')}
         />
       )}
 
       {view === 'leaderboard' && (
-        <LeaderboardScreen onBack={() => setView('landing')} />
+        <LeaderboardScreen
+          nickname={nickname}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
       )}
 
       {view === 'news' && (
-        <NewsScreen onBack={() => setView('landing')} />
+        <NewsScreen
+          nickname={nickname}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
       )}
 
       {view === 'dashboard' && (
@@ -304,6 +319,7 @@ export default function App() {
           allDinos={allDinos}
           progress={progress}
           onUnlocked={setProgress}
+          onNavigate={(target) => setView(target)}
           onBack={() => setView('landing')}
         />
       )}

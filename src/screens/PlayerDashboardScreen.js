@@ -6,6 +6,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import Fireworks from '../components/Fireworks';
 import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES, CENOZOIC_ERAS, CENOZOIC_EPOCH_STAGES } from '../components/EraTimeline';
 import { getTotalXP } from '../components/XPBar';
@@ -55,30 +56,28 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
   useEffect(() => {
     getTotalXP().then(setXP);
     const interval = setInterval(() => {
-      getTotalXP().then(setXP);
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
-
+  const [loading, setLoading] = useState(true);
   const [redeemCode, setRedeemCode] = useState('');
-  const [redeeming, setRedeeming] = useState(false);
-  const [redeemError, setRedeemError] = useState('');
+  const [redeemStatus, setRedeemStatus] = useState(null); // { type: 'success'|'error', text: '' }
   const [celebration, setCelebration] = useState({ visible: false, message: '' });
+
+  useEffect(() => {
+    getTotalXP().then(setXp);
+  }, []);
 
   const handleRedeem = async () => {
     if (!redeemCode.trim() || !playerId) return;
-    setRedeeming(true);
-    setRedeemError('');
-
-    const result = await redeemUnlockCode(redeemCode, playerId);
-    setRedeeming(false);
-
+    setRedeemStatus(null);
+    const result = await redeemUnlockCode(redeemCode.trim(), playerId);
     if (!result.success) {
-      setRedeemError(
-        result.reason === 'not_found_or_used'
-          ? 'Ez a kód nem létezik, vagy már felhasználták.'
-          : 'Hiba történt, próbáld újra.'
-      );
+      setRedeemStatus({
+        type: 'error',
+        text: result.error === 'already_used'
+          ? 'Ezt a kódot már beváltotta valaki.'
+          : result.error === 'invalid_code'
+            ? 'Érvénytelen kód.'
+            : 'Hiba történt, próbáld újra.',
+      });
       return;
     }
 
@@ -116,7 +115,7 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
   const isCurrentMonth = monthOffset === 0;
 
   return (
-    <Shell>
+    <Shell header={<HeaderBar currentView="dashboard" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
         <Fireworks
