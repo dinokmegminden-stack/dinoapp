@@ -4,6 +4,8 @@
 // name_hu, name_latin, latin_name_ending, epoch, discoverer_name, discovery_year,
 // length_m_min/max, mya_min/max, edu.
 
+import { ALREND_HU } from './alrendHu';
+
 function shuffle(arr) {
   return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
 }
@@ -127,12 +129,51 @@ function buildCountryQuestion(dino, pool, fullPool = null) {
   };
 }
 
+// "ismeretlen" nem valódi étrend-tény, sem helyes válaszként, sem rossz
+// válaszként nem használható (lásd whoAmIQuizGenerator.js ugyanezt a szűrést).
+function buildDietQuestion(dino, pool, fullPool = null) {
+  if (!dino.diet_hu || dino.diet_hu === 'ismeretlen') return null;
+  const dietPool = pool.filter((d) => d.diet_hu && d.diet_hu !== 'ismeretlen');
+  const fallbackDietPool = fullPool ? fullPool.filter((d) => d.diet_hu && d.diet_hu !== 'ismeretlen') : null;
+  const distractors = pickDistinctDistractors(dino.diet_hu, dietPool, 'diet_hu', 3, fallbackDietPool);
+  if (distractors.length < 3) return null;
+  const options = shuffle([dino.diet_hu, ...distractors]);
+  return {
+    type: 'fact',
+    question: `Mi volt a ${dino.name_hu} étrendje?`,
+    options,
+    correctIndex: options.indexOf(dino.diet_hu),
+  };
+}
+
+// A `csalad_hu` (60+ egyedi érték, a legtöbb 1-3 taggal) alkalmatlan erre: a
+// család neve szinte mindig a génusz nevéből képzett latin szó (pl.
+// "Megalosaurus" → "Megalosauridák"), így a helyes válasz sokszor puszta
+// szótő-egyezéssel kitalálható, biológiai tudás nélkül. Az `alrend` (csak
+// 6 érték, lásd alrendHu.js) sokkal népesebb csoportokat ad, és a lefordított
+// magyar elnevezések (pl. "ragadozó dinoszauruszok") nem hordoznak
+// szótő-egyezést a dínó nevével.
+function buildOrderQuestion(dino, pool, fullPool = null) {
+  if (!dino.alrend) return null;
+  const distractors = pickDistinctDistractors(dino.alrend, pool, 'alrend', 3, fullPool);
+  if (distractors.length < 3) return null;
+  const options = shuffle([dino.alrend, ...distractors]).map((a) => ALREND_HU[a] || a);
+  return {
+    type: 'fact',
+    question: `Melyik dinoszaurusz-csoportba tartozott a ${dino.name_hu}?`,
+    options,
+    correctIndex: options.indexOf(ALREND_HU[dino.alrend] || dino.alrend),
+  };
+}
+
 const FACT_BUILDERS = [
   buildEpochQuestion,
   buildDiscovererQuestion,
   buildDiscoveryYearQuestion,
   buildLatinNameQuestion,
   buildCountryQuestion,
+  buildDietQuestion,
+  buildOrderQuestion,
 ];
 
 // --- Összehasonlító kérdések (2 dínóról szólnak) ------------------------------
@@ -251,7 +292,7 @@ function selectByQuota(candidates, questionCount) {
 
 /**
  * Kérdésszám: minimum 5. Ha a csomagban 5-nél több dínó van, akkor dínószám + 1.
- * Ténykérdés-típusok: korszak, felfedező, felfedezés éve, teljes tudományos név, ország.
+ * Ténykérdés-típusok: korszak, felfedező, felfedezés éve, teljes tudományos név, ország, étrend, dinoszaurusz-csoport (alrend).
  * Összehasonlító típusok: hossz, kor (mya).
  * Mindig 4 opció per kérdés. A rossz válaszok előbb az adott edu level (régió) pool-ból,
  * ha kevés, a fullPool-ból is szedünk (nem korlátozódunk az edu szintre).

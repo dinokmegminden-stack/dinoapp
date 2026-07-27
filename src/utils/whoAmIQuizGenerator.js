@@ -10,24 +10,9 @@
 // de annál népesebb csoportot ad, és Hungarian fordítást lentebb, kézzel rögzítve kap.
 
 import { getCountryLocative, getYearLocative, getDiscovererVerb, lowercaseFirst } from './hungarianGrammar';
+import { getFamilyHu } from './alrendHu';
 
 const MIN_CLASS_SIZE = 4; // 1 helyes + 3 rossz válasz ugyanabból a családból
-
-// Az alrend értékek (csak 6 létezik, lásd getFamilyHu) kézzel fordítva —
-// az alrendnek nincs magyar oszlopa a DB-ben (a `csalad_hu` csak a szűkebb
-// családot fordítja), ezért itt kézzel rögzítjük.
-const ALREND_HU = {
-  Theropoda: 'ragadozó dinoszauruszok',
-  Sauropodomorpha: 'hosszúnyakú dinoszauruszok',
-  Thyreophora: 'páncélos dinoszauruszok',
-  Ornithopoda: 'madárlábú dinoszauruszok',
-  Marginocephalia: 'szarvas- és vastagfejű dinoszauruszok',
-  Pterodactyloidea: 'repülő hüllők',
-};
-
-function getFamilyHu(alrend) {
-  return ALREND_HU[alrend] || alrend;
-}
 
 function shuffle(arr) {
   return [...arr].map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
