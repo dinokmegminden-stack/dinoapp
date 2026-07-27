@@ -52,8 +52,11 @@ function formatNewsDate(iso) {
   return `${d.getFullYear()}. ${m}. ${day}.`;
 }
 
-function XPPill() {
+function XPPill({ onPress }) {
   const [xp, setXP] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     getTotalXP().then(setXP);
@@ -66,10 +69,26 @@ function XPPill() {
   const { rank } = rankForXP(xp);
 
   return (
-    <View style={styles.xpPill}>
+    <Pressable
+      style={[
+        styles.xpPill,
+        hovered && styles.xpPillHovered,
+        pressed && styles.xpPillPressed,
+        focused && styles.roundBtnFocused,
+      ]}
+      onPress={onPress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      accessibilityRole="button"
+      accessibilityLabel={`XP Ranglétrák: ${xp} XP`}
+    >
       <Text style={styles.xpPillIcon}>{rank.icon}</Text>
       <Text style={styles.xpPillText}>{xp} XP</Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -349,11 +368,11 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
 
       <View style={styles.headerIcons}>
         <StreakPill days={streak} />
-        <XPPill />
+        <XPPill onPress={handleOpenRank} />
         <ProgressCircle ratio={collectionRatio} onPress={handleOpenGallery} />
         <RoundIconButton icon="account-circle" onPress={handleOpenDashboard} tooltip={nickname} />
         <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
-        <RoundIconButton icon="information" onPress={handleOpenRank} tooltip="Rangok" />
+        <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />
       </View>
     </View>
   );
@@ -771,6 +790,19 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.pill,
     paddingVertical: 7,
     paddingHorizontal: 14,
+    ...Platform.select({
+      web: {
+        transitionProperty: 'background-color, transform',
+        transitionDuration: '120ms',
+        cursor: 'pointer',
+      },
+    }),
+  },
+  xpPillHovered: {
+    backgroundColor: COLORS.bgMidLight,
+  },
+  xpPillPressed: {
+    transform: [{ scale: 0.94 }],
   },
   xpPillIcon: {
     fontSize: 15,
