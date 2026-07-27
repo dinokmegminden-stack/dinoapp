@@ -11,6 +11,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { playQuizSfx } from '../audio/audioSystem';
@@ -37,7 +38,7 @@ const DIFFICULTY_COLORS = {
   hard: '#BC6C25',
 };
 
-export default function MillionaireQuizScreen({ playerId, onBack }) {
+export default function MillionaireQuizScreen({ playerId, nickname, progress, onNavigate, onBack }) {
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'won' | 'lost'
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -122,7 +123,7 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
   if (gameStatus === 'idle') {
     const quizAvailable = buildMillionaireQuiz().length > 0;
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <ScrollView contentContainerStyle={styles.centerContent}>
@@ -172,7 +173,7 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
     const isMillionaire = gameStatus === 'won';
     const reachedQuestion = isMillionaire ? MILLIONAIRE_XP_TABLE.length : currentQuestionIndex + 1;
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <Fireworks
@@ -222,7 +223,7 @@ export default function MillionaireQuizScreen({ playerId, onBack }) {
   const difficultyColor = DIFFICULTY_COLORS[tableRow.difficulty];
 
   return (
-    <Shell backgroundImage={landingBg}>
+    <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 

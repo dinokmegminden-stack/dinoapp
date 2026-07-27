@@ -9,6 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
@@ -29,7 +30,7 @@ const MAX_LIVES = 3;
 const XP_PER_CORRECT = 5;
 const BONUS_XP = 10;
 
-export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBack }) {
+export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nickname, progress, onNavigate, onBack }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 700;
   const [isLoading, setIsLoading] = useState(!regionDinos.length || !allDinos.length);
@@ -231,7 +232,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   if (status === 'finished') {
     const isPerfect = correctCount === MAX_QUESTIONS;
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <Fireworks
@@ -278,7 +279,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   // Render loading screen
   if (isLoading) {
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <Text style={styles.loadingText}>Dínók betöltése...</Text>
         </View>
@@ -289,7 +290,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   // Render playing screen
   if (!question) {
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <Text style={styles.loadingText}>Kérdés generálása...</Text>
         </View>
@@ -305,7 +306,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, onBa
   const timeColor = timeLeft <= 2 ? '#FF6B6B' : '#DDA15E';
 
   return (
-    <Shell backgroundImage={landingBg}>
+    <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 

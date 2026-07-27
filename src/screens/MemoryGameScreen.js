@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
@@ -136,7 +137,7 @@ function MemoryCard({ card, width, height, left, top, onPress }) {
   );
 }
 
-export default function MemoryGameScreen({ nickname, playerId, onBack }) {
+export default function MemoryGameScreen({ nickname, playerId, progress, onNavigate, onBack }) {
   const { width: winWidth } = useWindowDimensions();
   const [imageKey, setImageKey] = useState(() => pickImageKey());
   const [difficulty, setDifficulty] = useState(null);
@@ -308,7 +309,7 @@ export default function MemoryGameScreen({ nickname, playerId, onBack }) {
   // Nehézségválasztó a játék indítása előtt
   if (!difficulty) {
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <View style={styles.selectContent}>
@@ -338,7 +339,7 @@ export default function MemoryGameScreen({ nickname, playerId, onBack }) {
   }
 
   return (
-    <Shell backgroundImage={landingBg}>
+    <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 

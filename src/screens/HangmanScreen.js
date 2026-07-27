@@ -12,6 +12,7 @@ import {
   Cinzel_700Bold,
 } from '@expo-google-fonts/cinzel';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import AsteroidImpactPanel from '../components/AsteroidImpactPanel';
 import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
@@ -45,7 +46,7 @@ function pickPuzzleCreature(allDinos) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-export default function HangmanScreen({ allDinos, onBack }) {
+export default function HangmanScreen({ allDinos, nickname, progress, onNavigate, onBack }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 760;
 
@@ -119,7 +120,7 @@ export default function HangmanScreen({ allDinos, onBack }) {
   if (gameStatus === 'idle') {
     const puzzleAvailable = pickPuzzleCreature(allDinos) != null;
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <ScrollView contentContainerStyle={styles.centerContent}>
@@ -153,7 +154,7 @@ export default function HangmanScreen({ allDinos, onBack }) {
   if (gameStatus === 'won' || gameStatus === 'lost') {
     const won = gameStatus === 'won';
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <ScrollView contentContainerStyle={styles.centerContent}>
@@ -183,7 +184,7 @@ export default function HangmanScreen({ allDinos, onBack }) {
 
   // --- Játék képernyő --------------------------------------------------------
   return (
-    <Shell backgroundImage={landingBg}>
+    <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 

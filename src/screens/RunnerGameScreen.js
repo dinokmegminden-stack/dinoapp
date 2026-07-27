@@ -12,6 +12,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Platform, PanResponder, Image } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { playSound, playQuizSfx } from '../audio/audioSystem';
@@ -76,7 +77,7 @@ const TERRAIN_SPEED_FACTOR = 1; // a díszsáv ugyanolyan gyorsan mozog, mint az
 let nextItemId = 1;
 let nextTerrainId = 1;
 
-export default function RunnerGameScreen({ playerId, onBack }) {
+export default function RunnerGameScreen({ playerId, nickname, progress, onNavigate, onBack }) {
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'over'
   const [lane, setLane] = useState(1);
   const [renderTick, setRenderTick] = useState(0);
@@ -269,7 +270,7 @@ export default function RunnerGameScreen({ playerId, onBack }) {
   // --- Kezdő képernyő -------------------------------------------------------
   if (gameStatus === 'idle') {
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <View style={styles.centerContent}>
@@ -295,7 +296,7 @@ export default function RunnerGameScreen({ playerId, onBack }) {
   // --- Eredmény képernyő ------------------------------------------------------
   if (gameStatus === 'over') {
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <Fireworks
@@ -326,7 +327,7 @@ export default function RunnerGameScreen({ playerId, onBack }) {
 
   // --- Játéktér (vízszintes) ---------------------------------------------------
   return (
-    <Shell backgroundImage={landingBg}>
+    <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 

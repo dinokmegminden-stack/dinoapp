@@ -9,6 +9,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import Shell from '../components/Shell';
+import HeaderBar from '../components/HeaderBar';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { playQuizSfx } from '../audio/audioSystem';
@@ -27,7 +28,7 @@ const QUESTION_COUNT = 10;
 const XP_PER_CORRECT = 5;
 const MAX_LIVES = 3;
 
-export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
+export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, onNavigate, onBack }) {
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'finished'
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -134,7 +135,7 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   if (gameStatus === 'idle') {
     const quizAvailable = buildWhoAmIQuiz(allDinos, QUESTION_COUNT).length > 0;
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
           <ScrollView contentContainerStyle={styles.centerContent}>
@@ -170,7 +171,7 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   // --- Eredmény képernyő ----------------------------------------------------
   if (gameStatus === 'finished') {
     return (
-      <Shell backgroundImage={landingBg}>
+      <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
           <Fireworks
@@ -210,7 +211,7 @@ export default function WhoAmIScreen({ allDinos, playerId, onBack }) {
   const question = questions[currentQuestionIndex];
 
   return (
-    <Shell backgroundImage={landingBg}>
+    <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
 

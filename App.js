@@ -195,6 +195,11 @@ export default function App() {
     setView('landing');
   };
 
+  const handleNavigateFromGame = (target) => {
+    endActiveGame();
+    setView(target);
+  };
+
   const handlePassed = async (csomag, packId, score) => {
     const updated = await recordPackQuizResult(nickname, eduLevel, csomag, score);
     setProgress(updated);
@@ -260,28 +265,62 @@ export default function App() {
           regionDinos={regionDinos}
           allDinos={allDinos}
           playerId={playerId}
+          nickname={nickname}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
           onBack={handleBackFromLightningQuiz}
         />
       )}
 
       {view === 'millionaire' && (
-        <MillionaireQuizScreen playerId={playerId} onBack={handleBackFromGame} />
+        <MillionaireQuizScreen
+          playerId={playerId}
+          nickname={nickname}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
+          onBack={handleBackFromGame}
+        />
       )}
 
       {view === 'memory' && (
-        <MemoryGameScreen nickname={nickname} playerId={playerId} onBack={handleBackFromGame} />
+        <MemoryGameScreen
+          nickname={nickname}
+          playerId={playerId}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
+          onBack={handleBackFromGame}
+        />
       )}
 
       {view === 'whoami' && (
-        <WhoAmIScreen allDinos={allDinos} playerId={playerId} onBack={handleBackFromGame} />
+        <WhoAmIScreen
+          allDinos={allDinos}
+          playerId={playerId}
+          nickname={nickname}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
+          onBack={handleBackFromGame}
+        />
       )}
 
       {view === 'runner' && (
-        <RunnerGameScreen playerId={playerId} onBack={handleBackFromGame} />
+        <RunnerGameScreen
+          playerId={playerId}
+          nickname={nickname}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
+          onBack={handleBackFromGame}
+        />
       )}
 
       {view === 'hangman' && (
-        <HangmanScreen allDinos={allDinos} onBack={handleBackFromGame} />
+        <HangmanScreen
+          allDinos={allDinos}
+          nickname={nickname}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
+          onBack={handleBackFromGame}
+        />
       )}
 
       {view === 'collection' && (
