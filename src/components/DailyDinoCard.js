@@ -52,6 +52,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
     );
   }
 
+  // Kivétel a vendég-módú kép-tiltás alól: a Napi Dínó mindenkinek látszik.
   const imgSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const latinFull = dino.latin_name_ending &&
     !String(dino.name_latin || '').toLowerCase().endsWith(String(dino.latin_name_ending).toLowerCase())
@@ -65,7 +66,13 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
         {/* ELŐLAP */}
         <Animated.View style={[styles.card, styles.front, { transform: [{ perspective: 1000 }, { rotateY: frontRotate }] }]}>
           <View style={styles.imgWrap}>
-            <Image source={imgSource} style={styles.img} resizeMode="contain" />
+            {imgSource ? (
+              <Image source={imgSource} style={styles.img} resizeMode="contain" />
+            ) : (
+              <View style={[styles.img, styles.imgFallback]}>
+                <Text style={styles.imgFallbackText}>🦴</Text>
+              </View>
+            )}
           </View>
           <View style={styles.nameBand}>
             <Text style={[styles.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
@@ -114,6 +121,8 @@ const styles = StyleSheet.create({
   },
   imgWrap: { flex: 1, backgroundColor: COLORS.darkGreen },
   img: { width: '100%', height: '100%' },
+  imgFallback: { alignItems: 'center', justifyContent: 'center' },
+  imgFallbackText: { fontSize: 40 },
   nameBand: { backgroundColor: COLORS.action, paddingVertical: 6, paddingHorizontal: 12 },
   name: { color: COLORS.cream, fontSize: 20, letterSpacing: 1 },
   latin: { color: COLORS.darkGreen, fontStyle: 'italic', fontSize: 12, marginTop: 2 },

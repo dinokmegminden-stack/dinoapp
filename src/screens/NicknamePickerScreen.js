@@ -23,7 +23,7 @@ const PIN_LENGTH = 4;
 
 export const NICKNAME_STORAGE_KEY = 'dino_player_nickname';
 
-export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
+export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGuestContinue }) {
   const commonNameOptions = useMemo(() => getCommonNameOptions(allDinos), [allDinos]);
 
   const [mode, setMode] = useState('new'); // 'new' | 'resume'
@@ -221,6 +221,14 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen }) {
             </TouchableOpacity>
           </>
         )}
+
+        <TouchableOpacity style={styles.guestLink} onPress={onGuestContinue}>
+          <Text style={styles.guestLinkText}>Tovább regisztráció nélkül →</Text>
+        </TouchableOpacity>
+        <Text style={styles.guestHint}>
+          Vendégként megnézheted az oldalt, de a haladásod (régiók, gyűjtemény,
+          ranglisták) nem mentődik, és a dínókártyákon nem látszik kép.
+        </Text>
       </ScrollView>
     </Shell>
   );
@@ -358,5 +366,25 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontSize: 12,
     lineHeight: 16,
+  },
+  guestLink: {
+    marginTop: 28,
+  },
+  guestLinkText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 15,
+    fontWeight: '700',
+    opacity: 0.8,
+    textAlign: 'center',
+  },
+  guestHint: {
+    color: 'rgba(254,250,224,0.5)',
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    lineHeight: 16,
+    textAlign: 'center',
+    marginTop: 8,
+    maxWidth: 340,
   },
 });

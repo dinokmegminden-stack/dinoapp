@@ -19,7 +19,8 @@ import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
-import { loadProgress, recordPackQuizResult, unlockAllProgress, saveProgress } from './src/utils/regionProgress';
+import { loadProgress, recordPackQuizResult, unlockAllProgress, saveProgress, createEmptyProgress, applyPackQuizResult } from './src/utils/regionProgress';
+import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
 import { getPlayerIdByNickname } from './src/services/playersService';
 import { hasFullUnlock } from './src/services/unlockCodesService';
@@ -33,6 +34,7 @@ export default function App() {
   const [view, setView] = useState('checking');
   const [nickname, setNickname] = useState(null);
   const [playerId, setPlayerId] = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [eduLevel, setEduLevel] = useState(null);
   const [progress, setProgress] = useState({});
   const [regionDinos, setRegionDinos] = useState([]);
@@ -88,6 +90,13 @@ export default function App() {
     setActivePlayerId(playerId);
   }, [playerId]);
 
+  // A DinoCard-család (TradingCard/DailyDinoCard/CollectionScreen) modul-
+  // szinten olvassa ezt, hogy ne kelljen minden képernyőn át propként vinni —
+  // lásd guestMode.js.
+  useEffect(() => {
+    setGuestMode(isGuest);
+  }, [isGuest]);
+
   // Ha a játékos korábban beváltott egy "minden kártya nyitva" kódot, ez a
   // Supabase-oldali tény (unlock_codes.used_by_player_id) minden eszközön/
   // újratelepítés után is helyreállítja az állapotot — nem csak azon a
@@ -103,9 +112,21 @@ export default function App() {
   }, [playerId, nickname]);
 
   const handleNicknameChosen = (chosenNickname, chosenPlayerId) => {
+    setIsGuest(false);
     setNickname(chosenNickname);
     setPlayerId(chosenPlayerId);
     loadProgress(chosenNickname).then(setProgress);
+    setView('landing');
+  };
+
+  // "Tovább regisztráció nélkül" — nincs nickname/playerId, a haladás csak a
+  // React state-ben él (sosem kerül AsyncStorage-ba vagy Supabase-be), és a
+  // DinoCard-család (guestMode.js) sosem mutat képet.
+  const handleContinueAsGuest = () => {
+    setIsGuest(true);
+    setNickname(null);
+    setPlayerId(null);
+    setProgress(createEmptyProgress());
     setView('landing');
   };
 
@@ -201,6 +222,12 @@ export default function App() {
   };
 
   const handlePassed = async (csomag, packId, score) => {
+    if (isGuest) {
+      // Vendég módban nincs nickname, amihez menteni lehetne — a haladás csak
+      // az aktuális munkamenetben, memóriában él, sosem íródik AsyncStorage-ba.
+      setProgress((prev) => applyPackQuizResult({ ...prev }, eduLevel, csomag, score));
+      return;
+    }
     const updated = await recordPackQuizResult(nickname, eduLevel, csomag, score);
     setProgress(updated);
   };
@@ -212,7 +239,7 @@ export default function App() {
           sem) — az XP-követés a háttérben (XPBar.js addXP/AsyncStorage) marad. */}
 
       {view === 'nicknamePicker' && (
-        <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} />
+        <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} onGuestContinue={handleContinueAsGuest} />
       )}
 
       {view === 'landing' && (
@@ -230,6 +257,7 @@ export default function App() {
           onOpenDashboard={handleOpenDashboard}
           onOpenGaming={handleOpenGaming}
           onOpenNews={handleOpenNews}
+          onRequireRegister={() => setView('nicknamePicker')}
         />
       )}
 

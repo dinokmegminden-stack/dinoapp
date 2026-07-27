@@ -21,6 +21,7 @@ import { rankForXP } from '../utils/ranks';
 import { overallCompletionRatio } from '../utils/regionProgress';
 import { playSound } from '../audio/audioSystem';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
+import { isGuestMode } from '../utils/guestMode';
 
 const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
 
@@ -210,7 +211,11 @@ export default function HeaderBar({
           <StreakPill days={streak} />
           <XPPill onPress={handleOpenRank} />
           <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
-          <RoundIconButton icon="account-circle" onPress={() => handleNav('dashboard')} tooltip={nickname} />
+          <RoundIconButton
+            icon="account-circle"
+            onPress={() => handleNav(isGuestMode() ? 'nicknamePicker' : 'dashboard')}
+            tooltip={isGuestMode() ? 'Vendég — koppints a regisztrációhoz' : nickname}
+          />
           <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
           <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />
         </View>

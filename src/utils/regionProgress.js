@@ -54,7 +54,7 @@ function storageKey(nickname) {
 
 // --- Alap progress objektum --------------------------------------------------
 
-function createEmptyProgress() {
+export function createEmptyProgress() {
   const progress = {};
   REGION_ORDER.forEach((edu) => {
     progress[edu] = {};
@@ -113,8 +113,9 @@ export async function saveProgress(nickname, progress) {
 
 // --- Pakk eredmény rögzítése ---------------------------------------------------
 
-export async function recordPackQuizResult(nickname, eduLevel, packNumber, scoreRatio) {
-  const progress = await loadProgress(nickname);
+// Tiszta (I/O nélküli) mutáció — a vendég módnak kell, ahol a haladás csak a
+// React state-ben él, sosem kerül AsyncStorage-ba (lásd App.js handlePassed).
+export function applyPackQuizResult(progress, eduLevel, packNumber, scoreRatio) {
   const entry = progress[eduLevel]?.[packNumber];
   if (!entry) {
     console.warn(`Ismeretlen edu/pakk: ${eduLevel}/${packNumber}`);
@@ -127,6 +128,12 @@ export async function recordPackQuizResult(nickname, eduLevel, packNumber, score
     entry.quizPassed = true;
   }
 
+  return progress;
+}
+
+export async function recordPackQuizResult(nickname, eduLevel, packNumber, scoreRatio) {
+  const progress = await loadProgress(nickname);
+  applyPackQuizResult(progress, eduLevel, packNumber, scoreRatio);
   await saveProgress(nickname, progress);
   return progress;
 }
