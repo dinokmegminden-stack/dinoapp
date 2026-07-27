@@ -3,14 +3,16 @@
 // `research_articles` táblából. A `dino_news`/NewsScreen.js mintáját követi,
 // de itt nincs egy adott lényhez kötött fotó — a cikkek egy-egy kutatóról,
 // expedícióról vagy korszakról szólnak, nem egy konkrét fajról.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Linking, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
-import { COLORS } from '../constants/theme';
+import PaleontologistTimeline from '../components/PaleontologistTimeline';
+import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { fetchResearchArticles } from '../services/researchArticlesService';
+import { fetchPaleontologists, fetchArticlePaleontologistLinks } from '../services/paleontologistsService';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -45,10 +47,34 @@ function ArticleBody({ text }) {
 
 export default function KutatokScreen({ nickname, progress, onNavigate, onBack }) {
   const [articles, setArticles] = useState(null); // null = töltés alatt
+  const [people, setPeople] = useState([]);
+  const [links, setLinks] = useState([]); // { article_id, paleontologist_id }[]
+  const [selectedPersonId, setSelectedPersonId] = useState(null);
 
   useEffect(() => {
     fetchResearchArticles(50).then(setArticles);
+    fetchPaleontologists().then(setPeople);
+    fetchArticlePaleontologistLinks().then(setLinks);
   }, []);
+
+  // paleontológus id -> az ő cikkeinek id-halmaza — kliensoldali join a
+  // kapcsolótábla apró méretét kihasználva (lásd paleontologistsService.js).
+  const articleIdsByPerson = useMemo(() => {
+    const map = new Map();
+    for (const link of links) {
+      if (!map.has(link.paleontologist_id)) map.set(link.paleontologist_id, new Set());
+      map.get(link.paleontologist_id).add(link.article_id);
+    }
+    return map;
+  }, [links]);
+
+  const selectedPerson = people.find((p) => p.id === selectedPersonId) || null;
+  const visibleArticles = useMemo(() => {
+    if (!articles) return articles;
+    if (!selectedPersonId) return articles;
+    const ids = articleIdsByPerson.get(selectedPersonId);
+    return articles.filter((a) => ids && ids.has(a.id));
+  }, [articles, selectedPersonId, articleIdsByPerson]);
 
   return (
     <Shell header={<HeaderBar currentView="kutatok" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
@@ -61,12 +87,31 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
         </View>
 
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+          <PaleontologistTimeline
+            people={people}
+            selectedId={selectedPersonId}
+            onSelect={setSelectedPersonId}
+          />
+
+          {!!selectedPerson && (
+            <TouchableOpacity style={styles.filterChip} onPress={() => setSelectedPersonId(null)}>
+              <Text style={styles.filterChipText}>
+                {selectedPerson.emoji} {selectedPerson.name} cikkei
+              </Text>
+              <MaterialCommunityIcons name="close" size={16} color={COLORS.bgDark} />
+            </TouchableOpacity>
+          )}
+
           {articles === null ? (
             <ActivityIndicator color={COLORS.accent} style={{ marginTop: 40 }} />
-          ) : articles.length === 0 ? (
-            <Text style={styles.empty}>Egyelőre nincs cikk.</Text>
+          ) : visibleArticles.length === 0 ? (
+            <Text style={styles.empty}>
+              {selectedPerson
+                ? `${selectedPerson.name}-hoz még nincs kapcsolódó cikk.`
+                : 'Egyelőre nincs cikk.'}
+            </Text>
           ) : (
-            articles.map((item) => (
+            visibleArticles.map((item) => (
               <View key={item.id} style={styles.post}>
                 <Text style={styles.date}>{formatDate(item.published_at)}</Text>
                 <Text style={styles.postTitle}>{item.title}</Text>
@@ -123,6 +168,23 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   empty: { color: COLORS.cream, opacity: 0.7, fontFamily: FONTS.body, marginTop: 40 },
+  filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    marginTop: -6,
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  filterChipText: {
+    color: COLORS.bgDark,
+    fontSize: 13,
+    fontFamily: FONTS.bodyBold,
+  },
   post: {
     width: '100%',
     maxWidth: 820,
