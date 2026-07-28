@@ -166,6 +166,11 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
+  // 'enciklopedia' — mindenkinek elérhető, kép nélküli, kor szerinti névlista
+  // szűrőkkel; 'album' — csak regisztráltaknak, a saját kinyitott pakkjaik
+  // valódi kártyaképekkel (a korábbi Csomagok/Idővonal nézet). Vendégnél az
+  // "album" fül nem váltható át, csak regisztrációra buzdít.
+  const [mainTab, setMainTab] = useState(guest ? 'enciklopedia' : 'album');
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
   const [filters, setFilters] = useState({}); // { [categoryKey]: Set<string> }
 
@@ -259,7 +264,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
         <View style={styles.header}>
           <Text style={styles.title}>🗂️ GYŰJTEMÉNY</Text>
           <View style={styles.headerRight}>
-            {!guest && (
+            {mainTab === 'album' && (
               <View style={styles.progressPill}>
                 <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
               </View>
@@ -269,13 +274,33 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
             </TouchableOpacity>
           </View>
         </View>
+
+        <View style={styles.mainTabRow}>
+          <TouchableOpacity
+            style={[styles.mainTabBtn, mainTab === 'enciklopedia' && styles.mainTabBtnActive]}
+            onPress={() => setMainTab('enciklopedia')}
+          >
+            <Text style={[styles.mainTabText, mainTab === 'enciklopedia' && styles.mainTabTextActive]}>
+              📖 Enciklopédia
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.mainTabBtn, mainTab === 'album' && styles.mainTabBtnActive]}
+            onPress={() => (guest ? onNavigate?.('join') : setMainTab('album'))}
+          >
+            <Text style={[styles.mainTabText, mainTab === 'album' && styles.mainTabTextActive]}>
+              🖼️ Saját album{guest ? ' 🔒' : ''}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <Text style={styles.headerHint}>
-          {guest
-            ? 'Az összes felfedezhető lény, kor szerint csoportosítva — regisztrálj a kártyaképekhez és a haladás mentéséhez.'
+          {mainTab === 'enciklopedia'
+            ? 'Az összes felfedezhető lény, kor szerint csoportosítva, szűrőkkel.'
             : `Egy csomag kártyái akkor oldódnak fel, ha a záró kvízt legalább ${Math.round(PASS_THRESHOLD * 100)}%-ra teljesíted.`}
         </Text>
 
-        {guest ? (
+        {mainTab === 'enciklopedia' ? (
           <View style={[styles.guestBody, isNarrow && styles.guestBodyNarrow]}>
             <CollectionFilterSidebar
               categories={filterCategories}
@@ -405,6 +430,34 @@ const styles = StyleSheet.create({
     opacity: 0.75,
     paddingHorizontal: 20,
     paddingTop: 6,
+  },
+  mainTabRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginHorizontal: 20,
+    marginTop: 14,
+  },
+  mainTabBtn: {
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(254,250,224,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.12)',
+  },
+  mainTabBtnActive: {
+    backgroundColor: COLORS.accent,
+    borderColor: COLORS.accent,
+  },
+  mainTabText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 14,
+    opacity: 0.75,
+  },
+  mainTabTextActive: {
+    color: COLORS.bgDark,
+    opacity: 1,
   },
   viewToggle: {
     flexDirection: 'row',
