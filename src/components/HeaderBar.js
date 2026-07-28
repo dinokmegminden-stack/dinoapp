@@ -159,6 +159,7 @@ export default function HeaderBar({
 }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
+  const isNarrow = width < 700;
   const guest = isGuestMode();
   const [infoOpen, setInfoOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
@@ -203,7 +204,7 @@ export default function HeaderBar({
         <View style={styles.headerLeft}>
           <Pressable style={styles.brand} onPress={() => handleNav('landing')}>
             <Image source={dinoLogo} style={styles.brandLogo} resizeMode="contain" />
-            <Text style={styles.brandText}>DMM Lexikon</Text>
+            {!isNarrow && <Text style={styles.brandText}>DMM Lexikon</Text>}
           </Pressable>
 
           {isWide && (
@@ -219,9 +220,11 @@ export default function HeaderBar({
         </View>
 
         <View style={styles.headerIcons}>
-          <StreakPill days={streak} />
-          <XPPill onPress={handleOpenRank} />
-          <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
+          {!(isNarrow && guest) && <StreakPill days={streak} />}
+          {!(isNarrow && guest) && <XPPill onPress={handleOpenRank} />}
+          {!(isNarrow && guest) && (
+            <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
+          )}
           {!guest && (
             <RoundIconButton
               icon="account-circle"
@@ -229,8 +232,8 @@ export default function HeaderBar({
               tooltip={nickname}
             />
           )}
-          <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
-          <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />
+          {!isNarrow && <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />}
+          {!isNarrow && <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />}
           {guest && (
             <View style={styles.authButtons}>
               <Pressable style={styles.joinBtn} onPress={() => handleNav('join')} accessibilityRole="button">
