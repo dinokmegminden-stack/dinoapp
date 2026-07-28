@@ -33,3 +33,13 @@ Platform: React Native (Expo), egyszerre fut webes és natív mobil nézetben; w
 - **Játékos-táblák:** `players` (id uuid, `nickname` unique, `created_at`) az egyedi azonosító; `player_progress` (régiónkénti feloldás/streak), `player_cards` és `memory_results` (Párok-specifikus, `nickname` alapján, nem `player_id`-vel — inkonzisztens a többivel, ismert eltérés) tárolja a haladást és eredményeket.
 - **Ranglisták & analitika:** `leaderboard_entries` (`player_id`, `region` nullable, `level_type` — pl. `memory_1/2/3`, `whoami`, `lightning`, `millionaire` —, `completion_time_ms`, `achieved_at`) az időalapú, csak hibátlan futásokból épülő ranglistákhoz; `xp_milestones` (`player_id`, `milestone`, `achieved_at`, unique(player_id, milestone)) az "ennyi idő alatt ért el X XP-t" ranglistához; `game_events` (`player_id`, `game_type`, `region`, `edu_level`, `started_at`, `completed_at`) minden játékindítás/-befejezés naplózására.
 - **Egyéb:** `quiz_questions`. A taxonómiai család magyar neve nem külön táblában, hanem közvetlenül a `creatures.csalad_hu` oszlopban él (a nyers latin `csalad` mellett; pl. `Brachiosauridae` → `Brachiosauridák`) — nincs `creature_families_hu` tábla a DB-ben. Az összetett lekérdezéseknél a Supabase foreign key hivatkozásait és joinjait kell alkalmazni — de figyelem: nem minden fenti FK-szerű oszlopnak van formális DB-szintű foreign key constraintje, ezért a `leaderboardService.js`/`xpMilestonesService.js` szándékosan két külön lekérdezéssel, kliensoldalon joinolja össze a `nickname`-eket a `player_id`-khoz, nem PostgREST embedded select-tel.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as GitHub issues in `dinokmegminden-stack/dinoapp`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context layout — `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
