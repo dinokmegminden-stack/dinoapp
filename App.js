@@ -77,7 +77,12 @@ export default function App() {
         getPlayerIdByNickname(saved).then(setPlayerId);
         setView('landing');
       } else {
-        setView('nicknamePicker');
+        // Első látogatáskor nem kérünk nevet — a NicknamePickerScreen csak
+        // a header "Csatlakozz"/"Jelentkezz be" gombjára nyílik meg (view
+        // 'join'/'login'). Addig vendégként nézi az oldalt.
+        setIsGuest(true);
+        setProgress(createEmptyProgress());
+        setView('landing');
       }
     });
 
