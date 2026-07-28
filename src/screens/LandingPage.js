@@ -241,7 +241,7 @@ function ProgressCircle({ ratio, onPress }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onRequireRegister }) {
+export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onRequireRegister, onOpenJoin, onOpenLogin }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   // 700–1023px: még egy oszlopos elrendezés, de a tartalom ne ragadjon a
@@ -357,6 +357,8 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     else if (targetView === 'kutatok') onOpenKutatok?.();
     else if (targetView === 'dashboard') onOpenDashboard?.();
     else if (targetView === 'nicknamePicker') onRequireRegister?.();
+    else if (targetView === 'join') onOpenJoin?.();
+    else if (targetView === 'login') onOpenLogin?.();
   };
 
   const header = (

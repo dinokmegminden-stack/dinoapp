@@ -253,6 +253,14 @@ export default function App() {
         <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} onGuestContinue={handleContinueAsGuest} />
       )}
 
+      {view === 'join' && (
+        <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} onGuestContinue={handleContinueAsGuest} initialMode="new" />
+      )}
+
+      {view === 'login' && (
+        <NicknamePickerScreen allDinos={allDinos} onNicknameChosen={handleNicknameChosen} onGuestContinue={handleContinueAsGuest} initialMode="resume" />
+      )}
+
       {view === 'landing' && (
         <LandingPage
           nickname={nickname}
@@ -270,6 +278,8 @@ export default function App() {
           onOpenNews={handleOpenNews}
           onOpenKutatok={handleOpenKutatok}
           onRequireRegister={() => setView('nicknamePicker')}
+          onOpenJoin={() => setView('join')}
+          onOpenLogin={() => setView('login')}
         />
       )}
 

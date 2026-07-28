@@ -159,6 +159,7 @@ export default function HeaderBar({
 }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
+  const guest = isGuestMode();
   const [infoOpen, setInfoOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [xp, setXp] = useState(0);
@@ -221,13 +222,25 @@ export default function HeaderBar({
           <StreakPill days={streak} />
           <XPPill onPress={handleOpenRank} />
           <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
-          <RoundIconButton
-            icon="account-circle"
-            onPress={() => handleNav(isGuestMode() ? 'nicknamePicker' : 'dashboard')}
-            tooltip={isGuestMode() ? 'Vendég — koppints a regisztrációhoz' : nickname}
-          />
+          {!guest && (
+            <RoundIconButton
+              icon="account-circle"
+              onPress={() => handleNav('dashboard')}
+              tooltip={nickname}
+            />
+          )}
           <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />
           <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />
+          {guest && (
+            <View style={styles.authButtons}>
+              <Pressable style={styles.joinBtn} onPress={() => handleNav('join')} accessibilityRole="button">
+                <Text style={styles.joinBtnText}>Csatlakozz</Text>
+              </Pressable>
+              <Pressable style={styles.loginBtn} onPress={() => handleNav('login')} accessibilityRole="button">
+                <Text style={styles.loginBtnText}>Jelentkezz be</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
       </View>
 
@@ -319,6 +332,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  authButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginLeft: 4,
+  },
+  joinBtn: {
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'background-color, transform',
+        transitionDuration: '120ms',
+      },
+    }),
+  },
+  joinBtnText: {
+    color: COLORS.bgDark,
+    fontSize: 14,
+    fontFamily: FONTS.bodyBold,
+  },
+  loginBtn: {
+    borderWidth: 1.5,
+    borderColor: 'rgba(254,250,224,0.35)',
+    borderRadius: RADIUS.pill,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'background-color, border-color',
+        transitionDuration: '120ms',
+      },
+    }),
+  },
+  loginBtnText: {
+    color: COLORS.cream,
+    fontSize: 14,
+    fontFamily: FONTS.bodyBold,
   },
   streakPill: {
     flexDirection: 'row',

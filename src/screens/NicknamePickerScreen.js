@@ -23,10 +23,10 @@ const PIN_LENGTH = 4;
 
 export const NICKNAME_STORAGE_KEY = 'dino_player_nickname';
 
-export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGuestContinue }) {
+export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGuestContinue, initialMode = 'new' }) {
   const commonNameOptions = useMemo(() => getCommonNameOptions(allDinos), [allDinos]);
 
-  const [mode, setMode] = useState('new'); // 'new' | 'resume'
+  const [mode, setMode] = useState(initialMode); // 'new' | 'resume'
 
   const [adjective, setAdjective] = useState(() => randomFrom(NICKNAME_ADJECTIVES));
   const [commonName, setCommonName] = useState('');
