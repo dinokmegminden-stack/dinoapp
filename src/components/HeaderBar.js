@@ -136,8 +136,17 @@ function NavLink({ label, active, onPress }) {
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       accessibilityRole="button"
+      style={[styles.navLinkWrap, hovered && styles.navLinkWrapHovered]}
     >
-      <Text style={[styles.navLink, (active || hovered) && styles.navLinkActive]}>{label}</Text>
+      <Text
+        style={[
+          styles.navLink,
+          (active || hovered) && styles.navLinkActive,
+          hovered && styles.navLinkHoveredText,
+        ]}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -193,7 +202,7 @@ export default function HeaderBar({
         <View style={styles.headerLeft}>
           <Pressable style={styles.brand} onPress={() => handleNav('landing')}>
             <Image source={dinoLogo} style={styles.brandLogo} resizeMode="contain" />
-            <Text style={styles.brandText}>Dínó Lexikon</Text>
+            <Text style={styles.brandText}>DMM Lexikon</Text>
           </Pressable>
 
           {isWide && (
@@ -268,18 +277,43 @@ const styles = StyleSheet.create({
   navLinks: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 22,
+    gap: 6,
+  },
+  navLinkWrap: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'transparent',
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'background-color',
+        transitionDuration: '150ms',
+      },
+    }),
+  },
+  navLinkWrapHovered: {
+    backgroundColor: 'rgba(221,161,94,0.16)',
   },
   navLink: {
     color: COLORS.cream,
     fontSize: 14.5,
     fontFamily: FONTS.bodyBold,
     opacity: TEXT_OPACITY.secondary,
-    ...Platform.select({ web: { cursor: 'pointer' } }),
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'font-size, color, opacity',
+        transitionDuration: '150ms',
+      },
+    }),
   },
   navLinkActive: {
     color: COLORS.accent,
     opacity: TEXT_OPACITY.primary,
+  },
+  navLinkHoveredText: {
+    fontSize: 16.5,
   },
   headerIcons: {
     flexDirection: 'row',
