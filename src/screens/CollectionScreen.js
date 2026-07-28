@@ -11,18 +11,51 @@ import {
   TouchableOpacity,
   StyleSheet,
   SectionList,
+  ScrollView,
   StatusBar,
+  useWindowDimensions,
 } from 'react-native';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionTimeline from '../components/CollectionTimeline';
+import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { REGION_ORDER, REGION_PACKS, EDU_LABELS, PASS_THRESHOLD } from '../utils/regionProgress';
+import { ALREND_HU } from '../utils/alrendHu';
 
 const NUM_COLUMNS = 3;
+
+// Vendégeknek nincs kép a kártyákon (isGuestMode), így a csomagos rács- és
+// idővonal-nézet helyett egy tiszta, csak-név listát kapnak, kor szerint
+// csoportosítva — a facts.app encyclopédia-listájának mintájára. Sorrend:
+// legkésőbbi kréta a legelöl, legkorábbi triász a legvégén (fordított
+// geológiai sorrend, ahogy kérték — nem az őslénytani "régi elöl" konvenció).
+// A `epoch_hu` mezőben volt egy "közép-jura"/"középső-jura" írásmód-kettősség
+// (lásd data/sqls/normalize_epoch_hu_kozep_jura.sql) — itt védekezésből
+// kliensoldalon is egységesítjük, ha a javítás még nem futott le.
+const EPOCH_ORDER = ['késő-kréta', 'kora-kréta', 'késő-jura', 'közép-jura', 'kora-jura', 'késő-triász'];
+const EPOCH_LABEL_HU = {
+  'késő-kréta': 'Késő-kréta',
+  'kora-kréta': 'Kora-kréta',
+  'késő-jura': 'Késő-jura',
+  'közép-jura': 'Közép-jura',
+  'kora-jura': 'Kora-jura',
+  'késő-triász': 'Késő-triász',
+};
+
+function normalizeEpoch(epoch) {
+  return epoch === 'középső-jura' ? 'közép-jura' : epoch;
+}
+
+// "ragadozó" és "húsevő" ugyanazt jelenti a DB-ben (lásd
+// data/sqls/normalize_diet_hu_ragadozo_husevo.sql) — kliensoldali védőháló,
+// ha a javítás még nem futott le.
+function normalizeDiet(diet) {
+  return diet === 'ragadozó' ? 'húsevő' : diet;
+}
 
 const RARITY_COLOR = {
   gyakori: '#c8ccbe',
@@ -30,6 +63,51 @@ const RARITY_COLOR = {
   epikus: '#c9a6e6',
   legendás: COLORS.accent,
 };
+
+// Kánoni sorrendek a szűrőpanelhez — ugyanazok, mint amiket a többi
+// képernyő már használ (RARITY_COLOR kulcssorrendje, EDU_LABELS/REGION_ORDER,
+// alrendHu.js), hogy a szűrő-listák sorrendje ne alfabetikus-véletlenszerű
+// legyen, hanem következetes az app többi részével.
+const RARITY_ORDER = Object.keys(RARITY_COLOR);
+const REGION_LABEL_ORDER = REGION_ORDER.map((edu) => EDU_LABELS[edu]);
+const ALREND_ORDER = Object.values(ALREND_HU);
+
+// Ezek nem valódi, szűrhető tények, hanem "nincs adat" placeholderek —
+// sem kategória-opcióként, sem dínó-tulajdonságként nem szabad megjelenniük.
+const NON_FILTERABLE_VALUES = new Set(['ismeretlen', '']);
+
+function sortByOrder(values, order) {
+  const seen = new Set(values);
+  const ordered = order.filter((v) => seen.has(v));
+  const rest = values.filter((v) => !order.includes(v)).sort((a, b) => a.localeCompare(b, 'hu'));
+  return [...ordered, ...rest];
+}
+
+// diet_hu összetett értékeket is tartalmaz (pl. "húsevő, mindenevő") — ezeket
+// vesszőnél szétbontjuk, hogy a szűrő minden valódi étrend-értéket felajánljon,
+// és egy összetett-értékű dínó mindkét (vagy több) kategóriájában megjelenjen.
+function splitMultiValue(raw) {
+  return String(raw || '')
+    .split(',')
+    .map((v) => v.trim())
+    .filter((v) => v && !NON_FILTERABLE_VALUES.has(v));
+}
+
+function buildFilterCategory(dinos, field, order, title, transform = (v) => v) {
+  const counts = new Map();
+  for (const d of dinos) {
+    for (const raw of splitMultiValue(d[field])) {
+      const v = transform(raw);
+      if (!v || NON_FILTERABLE_VALUES.has(v)) continue;
+      counts.set(v, (counts.get(v) || 0) + 1);
+    }
+  }
+  const values = sortByOrder([...counts.keys()], order || []);
+  return {
+    title,
+    options: values.map((value) => ({ value, count: counts.get(value) })),
+  };
+}
 
 function chunk(list, size) {
   const rows = [];
@@ -73,8 +151,74 @@ function LockedSlot() {
   );
 }
 
+const FILTER_FIELDS = [
+  { key: 'epoch', field: 'epoch', title: 'Kor', order: EPOCH_ORDER, transform: normalizeEpoch },
+  { key: 'region', field: 'region', title: 'Régió', order: REGION_LABEL_ORDER },
+  { key: 'country', field: 'discovered_country', title: 'Felfedezés országa', order: [] },
+  { key: 'diet', field: 'diet_hu', title: 'Étrend', order: [], transform: normalizeDiet },
+  { key: 'csalad', field: 'csalad_hu', title: 'Család', order: [] },
+  { key: 'alrend', field: 'alrend', title: 'Dinoszaurusz-csoport', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
+  { key: 'rarity', field: 'rarity', title: 'Ritkaság', order: RARITY_ORDER },
+];
+
 export default function CollectionScreen({ nickname, allDinos, progress, onNavigate, onBack }) {
+  const guest = isGuestMode();
+  const { width } = useWindowDimensions();
+  const isNarrow = width < 700;
+  const isWide = width >= 1024;
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
+  const [filters, setFilters] = useState({}); // { [categoryKey]: Set<string> }
+
+  const filterCategories = useMemo(() => {
+    return FILTER_FIELDS.map(({ key, field, title, order, transform }) => ({
+      key,
+      ...buildFilterCategory(allDinos || [], field, order, title, transform),
+    }));
+  }, [allDinos]);
+
+  const handleToggleFilter = (categoryKey, value) => {
+    setFilters((prev) => {
+      const next = { ...prev };
+      const current = new Set(next[categoryKey] || []);
+      if (current.has(value)) current.delete(value);
+      else current.add(value);
+      next[categoryKey] = current;
+      return next;
+    });
+  };
+
+  const handleClearFilters = () => setFilters({});
+
+  // Kategórián belül VAGY (elég egy egyező érték, pl. összetett étrendnél),
+  // kategóriák között ÉS — üres kategória nem szűkít.
+  const filteredDinos = useMemo(() => {
+    const activeFields = FILTER_FIELDS.filter(({ key }) => (filters[key] || new Set()).size > 0);
+    if (activeFields.length === 0) return allDinos || [];
+
+    return (allDinos || []).filter((d) =>
+      activeFields.every(({ key, field, transform }) => {
+        const selected = filters[key];
+        const values = splitMultiValue(d[field]).map(transform || ((v) => v));
+        return values.some((v) => selected.has(v));
+      })
+    );
+  }, [allDinos, filters]);
+
+  const epochSections = useMemo(() => {
+    const byEpoch = new Map();
+    (filteredDinos || []).forEach((d) => {
+      const key = normalizeEpoch(d.epoch);
+      if (!key) return;
+      if (!byEpoch.has(key)) byEpoch.set(key, []);
+      byEpoch.get(key).push(d);
+    });
+
+    return EPOCH_ORDER.filter((key) => byEpoch.has(key)).map((key) => ({
+      key,
+      title: EPOCH_LABEL_HU[key] || key,
+      data: [...byEpoch.get(key)].sort((a, b) => a.name_hu.localeCompare(b.name_hu, 'hu')),
+    }));
+  }, [filteredDinos]);
 
   const { sections, collectedCount, totalCount } = useMemo(() => {
     let collected = 0;
@@ -105,46 +249,78 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   }, [allDinos, progress]);
 
   return (
-    <Shell header={<HeaderBar currentView="collection" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
+    <Shell
+      header={<HeaderBar currentView="collection" nickname={nickname} progress={progress} onNavigate={onNavigate} />}
+      contentMaxWidth={isWide ? 1920 : undefined}
+    >
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
           <Text style={styles.title}>🗂️ GYŰJTEMÉNY</Text>
           <View style={styles.headerRight}>
-            <View style={styles.progressPill}>
-              <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
-            </View>
+            {!guest && (
+              <View style={styles.progressPill}>
+                <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
+              </View>
+            )}
             <TouchableOpacity style={styles.backBtn} onPress={onBack}>
               <Text style={styles.backBtnText}>✕</Text>
             </TouchableOpacity>
           </View>
         </View>
         <Text style={styles.headerHint}>
-          Egy csomag kártyái akkor oldódnak fel, ha a záró kvízt legalább{' '}
-          {Math.round(PASS_THRESHOLD * 100)}%-ra teljesíted.
+          {guest
+            ? 'Az összes felfedezhető lény, kor szerint csoportosítva — regisztrálj a kártyaképekhez és a haladás mentéséhez.'
+            : `Egy csomag kártyái akkor oldódnak fel, ha a záró kvízt legalább ${Math.round(PASS_THRESHOLD * 100)}%-ra teljesíted.`}
         </Text>
 
-        <View style={styles.viewToggle}>
-          <TouchableOpacity
-            style={[styles.viewToggleBtn, viewMode === 'csomagok' && styles.viewToggleBtnActive]}
-            onPress={() => setViewMode('csomagok')}
-          >
-            <Text style={[styles.viewToggleText, viewMode === 'csomagok' && styles.viewToggleTextActive]}>
-              Csomagok
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.viewToggleBtn, viewMode === 'idovonal' && styles.viewToggleBtnActive]}
-            onPress={() => setViewMode('idovonal')}
-          >
-            <Text style={[styles.viewToggleText, viewMode === 'idovonal' && styles.viewToggleTextActive]}>
-              Idővonal
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {guest ? (
+          <View style={[styles.guestBody, isNarrow && styles.guestBodyNarrow]}>
+            <CollectionFilterSidebar
+              categories={filterCategories}
+              selected={filters}
+              onToggle={handleToggleFilter}
+              onClear={handleClearFilters}
+              style={isNarrow && styles.sidebarNarrow}
+            />
+            <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
+              {epochSections.length === 0 ? (
+                <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
+              ) : (
+                epochSections.map((section) => (
+                  <View key={section.key} style={styles.epochBlock}>
+                    <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
+                    <Text style={styles.epochBlockNames}>
+                      {section.data.map((d) => d.name_hu).join(', ')}
+                    </Text>
+                  </View>
+                ))
+              )}
+            </ScrollView>
+          </View>
+        ) : (
+          <>
+            <View style={styles.viewToggle}>
+              <TouchableOpacity
+                style={[styles.viewToggleBtn, viewMode === 'csomagok' && styles.viewToggleBtnActive]}
+                onPress={() => setViewMode('csomagok')}
+              >
+                <Text style={[styles.viewToggleText, viewMode === 'csomagok' && styles.viewToggleTextActive]}>
+                  Csomagok
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.viewToggleBtn, viewMode === 'idovonal' && styles.viewToggleBtnActive]}
+                onPress={() => setViewMode('idovonal')}
+              >
+                <Text style={[styles.viewToggleText, viewMode === 'idovonal' && styles.viewToggleTextActive]}>
+                  Idővonal
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-        {viewMode === 'csomagok' ? (
+            {viewMode === 'csomagok' ? (
           <SectionList
             style={styles.list}
             contentContainerStyle={styles.listContent}
@@ -173,10 +349,12 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
             )}
             stickySectionHeadersEnabled={false}
           />
-        ) : (
-          <View style={styles.timelineWrapper}>
-            <CollectionTimeline allDinos={allDinos} progress={progress} />
-          </View>
+            ) : (
+              <View style={styles.timelineWrapper}>
+                <CollectionTimeline allDinos={allDinos} progress={progress} />
+              </View>
+            )}
+          </>
         )}
       </View>
     </Shell>
@@ -262,6 +440,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 80,
   },
+  guestBody: {
+    flex: 1,
+    minHeight: 0,
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 14,
+    paddingHorizontal: 16,
+  },
+  guestBodyNarrow: {
+    flexDirection: 'column',
+  },
+  sidebarNarrow: {
+    width: '100%',
+  },
   list: {
     flex: 1,
     marginTop: 10,
@@ -269,6 +461,12 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 16,
     paddingBottom: 80,
+  },
+  empty: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    opacity: 0.7,
+    marginTop: 20,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -296,6 +494,24 @@ const styles = StyleSheet.create({
   sectionBadgeLocked: {
     fontSize: 15,
     opacity: 0.7,
+  },
+  epochBlock: {
+    marginBottom: 24,
+  },
+  epochBlockTitle: {
+    color: COLORS.accent,
+    fontFamily: FONTS.bold,
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  epochBlockNames: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 15,
+    lineHeight: 24,
+    opacity: 0.9,
   },
   row: {
     flexDirection: 'row',

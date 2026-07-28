@@ -131,18 +131,30 @@ function buildCountryQuestion(dino, pool, fullPool = null) {
 
 // "ismeretlen" nem valódi étrend-tény, sem helyes válaszként, sem rossz
 // válaszként nem használható (lásd whoAmIQuizGenerator.js ugyanezt a szűrést).
+// "ragadozó" és "húsevő" ugyanazt jelenti a DB-ben (lásd
+// data/sqls/normalize_diet_hu_ragadozo_husevo.sql) — enélkül egy kérdésnek
+// két, egymással felcserélhető "helyes" válasza lehetne. Kliensoldali
+// védőháló, ha a javítás még nem futott le.
+function normalizeDiet(diet) {
+  return diet === 'ragadozó' ? 'húsevő' : diet;
+}
+
 function buildDietQuestion(dino, pool, fullPool = null) {
-  if (!dino.diet_hu || dino.diet_hu === 'ismeretlen') return null;
-  const dietPool = pool.filter((d) => d.diet_hu && d.diet_hu !== 'ismeretlen');
-  const fallbackDietPool = fullPool ? fullPool.filter((d) => d.diet_hu && d.diet_hu !== 'ismeretlen') : null;
-  const distractors = pickDistinctDistractors(dino.diet_hu, dietPool, 'diet_hu', 3, fallbackDietPool);
+  const dietOf = (d) => normalizeDiet(d.diet_hu);
+  const dinoDiet = dietOf(dino);
+  if (!dinoDiet || dinoDiet === 'ismeretlen') return null;
+  const dietPool = pool.filter((d) => dietOf(d) && dietOf(d) !== 'ismeretlen').map((d) => ({ ...d, diet_hu: dietOf(d) }));
+  const fallbackDietPool = fullPool
+    ? fullPool.filter((d) => dietOf(d) && dietOf(d) !== 'ismeretlen').map((d) => ({ ...d, diet_hu: dietOf(d) }))
+    : null;
+  const distractors = pickDistinctDistractors(dinoDiet, dietPool, 'diet_hu', 3, fallbackDietPool);
   if (distractors.length < 3) return null;
-  const options = shuffle([dino.diet_hu, ...distractors]);
+  const options = shuffle([dinoDiet, ...distractors]);
   return {
     type: 'fact',
     question: `Mi volt a ${dino.name_hu} étrendje?`,
     options,
-    correctIndex: options.indexOf(dino.diet_hu),
+    correctIndex: options.indexOf(dinoDiet),
   };
 }
 
