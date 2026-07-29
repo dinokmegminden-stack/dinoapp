@@ -11,11 +11,17 @@ function SectionLabel({ children }) {
   return <Text style={styles.sectionLabel}>{children}</Text>;
 }
 
-export default function LandingMenu({ onSelectRegion, regionCounts }) {
+export default function LandingMenu({ onSelectRegion, regionCounts, regionRatios, highlightEdu, onHoverRegion }) {
   return (
     <View style={styles.menuContainer}>
       <SectionLabel>RÉGIÓK</SectionLabel>
-      <RegionWorldMap onSelectRegion={onSelectRegion} regionCounts={regionCounts} />
+      <RegionWorldMap
+        onSelectRegion={onSelectRegion}
+        regionCounts={regionCounts}
+        regionRatios={regionRatios}
+        highlightEdu={highlightEdu}
+        onHoverRegion={onHoverRegion}
+      />
     </View>
   );
 }

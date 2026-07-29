@@ -22,6 +22,7 @@ import {
   DIFFICULTY_LABELS,
 } from '../constants/millionaireXP';
 import { addXP } from '../components/XPBar';
+import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
@@ -67,6 +68,7 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
     setGameStatus(status);
     if (finalXP > 0) {
       await addXP(finalXP); // vesztes és győztes futásnál is jár az addigi XP
+      claimDailyChallengeBonus('millionaire', finalXP);
     }
     // "won" itt eleve csak hibátlanul érhető el (egy rossz válasz azonnal
     // lezárja a játékot, lásd a fájl tetején lévő design doc kommentet).

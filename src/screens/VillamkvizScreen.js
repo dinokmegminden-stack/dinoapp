@@ -16,6 +16,7 @@ import { FONTS } from '../constants/fonts';
 import { playQuizSfx } from '../audio/audioSystem';
 import { generateLightningQuestion } from '../utils/lightningQuizGenerator';
 import { addXP } from '../components/XPBar';
+import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
@@ -181,6 +182,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
 
     // Save to localStorage
     await addXP(finalXP);
+    claimDailyChallengeBonus('lightning', finalXP);
 
     if (playerId && correctCountRef.current === MAX_QUESTIONS) {
       submitLeaderboardEntry({
@@ -204,7 +206,10 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
       onBack();
     } else {
       // Save current XP and exit
-      addXP(xpEarned).then(() => onBack());
+      addXP(xpEarned).then(() => {
+        claimDailyChallengeBonus('lightning', xpEarned);
+        onBack();
+      });
     }
   };
 

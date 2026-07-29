@@ -18,18 +18,16 @@ function rand(a, b) {
   return a + Math.random() * (b - a);
 }
 
-export default function AnimatedLandingBg({ source }) {
+export default function AnimatedLandingBg({ source, dim = false }) {
   const sceneRef = useRef(null);
   const canvasRef = useRef(null);
-  const glowRef = useRef(null);
 
   useEffect(() => {
     if (Platform.OS !== 'web' || typeof window === 'undefined') return undefined;
 
     const scene = sceneRef.current;
     const canvas = canvasRef.current;
-    const glow = glowRef.current;
-    if (!scene || !canvas || !glow) return undefined;
+    if (!scene || !canvas) return undefined;
 
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return undefined;
@@ -39,21 +37,11 @@ export default function AnimatedLandingBg({ source }) {
     let H = 0;
     let dpr = 1;
     let flies = [];
-    let embers = [];
 
     const newFly = () => ({
       x: rand(0, W), y: rand(H * 0.55, H), t: rand(0, 6.28),
       spd: rand(0.008, 0.02), drift: rand(-0.15, 0.15), r: rand(0.8, 1.8), bp: rand(0, 6.28),
     });
-    const newEmber = () => {
-      const fx = W * 0.53;
-      const fy = H * 0.5;
-      return {
-        x: fx + rand(-W * 0.06, W * 0.06), y: fy + rand(-H * 0.05, H * 0.06),
-        vx: rand(-0.15, 0.35), vy: rand(-0.9, -0.35), r: rand(0.7, 2.1),
-        life: 0, max: rand(90, 220), hue: rand(18, 42), ph: rand(0, 6.28),
-      };
-    };
 
     function resize() {
       const r = scene.getBoundingClientRect();
@@ -71,7 +59,6 @@ export default function AnimatedLandingBg({ source }) {
     resize();
 
     let t = 0;
-    const seed = rand(0, 100);
     let cancelled = false;
     let rafId = null;
 
@@ -80,29 +67,6 @@ export default function AnimatedLandingBg({ source }) {
       rafId = requestAnimationFrame(loop);
       t++;
       ctx.clearRect(0, 0, W, H);
-
-      glow.style.opacity = Math.max(0, Math.min(1,
-        0.5 + 0.13 * Math.sin(t * 0.09 + seed) + 0.09 * Math.sin(t * 0.23 + 1.7) + 0.05 * (Math.random() - 0.5)
-      )).toFixed(3);
-
-      if (Math.random() < 0.55) embers.push(newEmber());
-      for (let i = embers.length - 1; i >= 0; i--) {
-        const p = embers[i];
-        p.life++;
-        p.x += p.vx + Math.sin(p.life * 0.05 + p.ph) * 0.25;
-        p.y += p.vy;
-        p.vy *= 0.996;
-        if (p.life > p.max) { embers.splice(i, 1); continue; }
-        const lr = p.life / p.max;
-        const a = (1 - lr) * (0.7 + 0.3 * Math.sin(p.life * 0.4 + p.ph));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, 6.283);
-        ctx.fillStyle = `hsla(${p.hue},95%,${58 + lr * 12}%,${a})`;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = `hsla(${p.hue},95%,55%,${a})`;
-        ctx.fill();
-      }
-      ctx.shadowBlur = 0;
 
       for (const f of flies) {
         f.t += f.spd;
@@ -137,11 +101,10 @@ export default function AnimatedLandingBg({ source }) {
     <div ref={sceneRef} style={styles.scene}>
       <style>{SCENE_CSS}</style>
       <div style={styles.pan}>
-        <div className="dmm-scene-img" style={styles.imgWrap}>
+        <div className="dmm-scene-img" style={dim ? { ...styles.imgWrap, filter: 'saturate(0.72) contrast(0.9) brightness(0.92)' } : styles.imgWrap}>
           <RNImage source={source} style={styles.imgFill} resizeMode="cover" />
         </div>
       </div>
-      <div ref={glowRef} style={styles.glow} />
       <div className="dmm-scene-fog1" style={{ ...styles.fog, ...styles.fog1 }} />
       <div className="dmm-scene-fog2" style={{ ...styles.fog, ...styles.fog2 }} />
       <canvas ref={canvasRef} style={styles.canvas} />
@@ -160,12 +123,6 @@ const styles = {
   },
   imgWrap: { position: 'absolute', inset: 0 },
   imgFill: { width: '100%', height: '100%' },
-  glow: {
-    position: 'absolute', left: '53%', top: '49%', width: '46%', height: '52%',
-    transform: 'translate(-50%,-50%)',
-    mixBlendMode: 'screen', opacity: 0.6, pointerEvents: 'none',
-    background: 'radial-gradient(ellipse 55% 60% at 50% 45%, rgba(255,150,40,.85) 0%, rgba(255,110,20,.45) 32%, rgba(200,60,10,.14) 60%, rgba(0,0,0,0) 78%)',
-  },
   fog: { position: 'absolute', left: '-10%', right: '-10%', mixBlendMode: 'screen', pointerEvents: 'none' },
   fog1: {
     bottom: 0, height: '56%', filter: 'blur(14px)',

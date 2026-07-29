@@ -25,8 +25,9 @@ import AppInfoModal from '../components/AppInfoModal';
 import RankModal from '../components/RankModal';
 import CreatureMarquee from '../components/CreatureMarquee';
 import ProgressRing from '../components/ProgressRing';
-import RegionProgressDashboard from '../components/RegionProgressDashboard';
 import MessageBoard from '../components/MessageBoard';
+import Footer from '../components/Footer';
+import ProgressSidebar from '../components/ProgressSidebar';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
@@ -34,7 +35,8 @@ import { recordAndGetStreak } from '../utils/dailyStreak';
 import { rankForXP } from '../utils/ranks';
 import { isAdminNickname } from '../constants/admins';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
-import { findNextPack, overallCompletionRatio } from '../utils/regionProgress';
+import { findNextPack, overallCompletionRatio, regionCollectionStats } from '../utils/regionProgress';
+import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
@@ -251,6 +253,9 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   const [rankOpen, setRankOpen] = useState(false);
   const [xp, setXp] = useState(0);
   const [streak, setStreak] = useState(null);
+  // A térkép-marker és az alsó "Gyűjtési előrehaladás" kártyák közti hover-
+  // szinkronhoz (spec 4. pont): amelyiken az egér áll, a másikon is felvillan.
+  const [hoveredRegion, setHoveredRegion] = useState(null);
 
   // XP a rang-modálhoz (a fejléc XP-pilljével azonos forrás, könnyű pollozással).
   useEffect(() => {
@@ -345,6 +350,18 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     return counts;
   }, [allDinos]);
 
+  // Régiónkénti teljesítési arány (0..1) a térkép-markerek progresszió-
+  // gyűrűjéhez — ugyanaz a forrás, mint a lenti Gyűjtési előrehaladás kártyák.
+  const regionRatios = useMemo(() => {
+    const stats = regionCollectionStats(allDinos, progress || {});
+    const ratios = {};
+    Object.keys(stats).forEach((edu) => {
+      const s = stats[edu];
+      ratios[edu] = s.total > 0 ? s.collected / s.total : 0;
+    });
+    return ratios;
+  }, [allDinos, progress]);
+
   // A fejléc a Shell teljes böngésző-szélességű sávjaként jelenik meg (a Shell
   // `header` propján át), az inner belső tartalmon kívül. A sáv full-width, a
   // benne lévő tartalom vízszintes paddinggel igazodik.
@@ -407,8 +424,12 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </View>
       )}
 
-      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>ÜZENŐFAL</Text>
-      <MessageBoard nickname={nickname} isAdmin={isAdminNickname(nickname)} />
+      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>KÖZÖSSÉG</Text>
+      <MessageBoard
+        nickname={nickname}
+        isAdmin={isAdminNickname(nickname)}
+        onRequireRegister={onRequireRegister}
+      />
     </>
   );
 
@@ -422,6 +443,37 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     </ScrollView>
   ) : (
     <View style={styles.sidebar}>{sidebarInner}</View>
+  );
+
+  // Jobb oldali sáv (spec: 3-oszlopos elrendezés) — saját haladás (XP, széria,
+  // régiónkénti gyűjtési arány), vendégnek regisztrációs CTA. A régió-sorok
+  // hoverje ugyanazt a hoveredRegion state-et vezérli, mint a térkép/kártyák.
+  const guest = isGuestMode();
+  const progressSidebarInner = (
+    <ProgressSidebar
+      guest={guest}
+      xp={xp}
+      streak={streak}
+      regionRatios={regionRatios}
+      regionCounts={regionCounts}
+      overallRatio={collectionRatio}
+      hoveredRegion={hoveredRegion}
+      onHoverRegion={setHoveredRegion}
+      onSelectRegion={handleSelectRegion}
+      onOpenJoin={onOpenJoin}
+    />
+  );
+
+  const progressSidebarBlock = isWide ? (
+    <ScrollView
+      style={[styles.sidebar, styles.sidebarWide, styles.sidebarRight]}
+      contentContainerStyle={styles.sidebarWideContent}
+      showsVerticalScrollIndicator={false}
+    >
+      {progressSidebarInner}
+    </ScrollView>
+  ) : (
+    <View style={styles.sidebar}>{progressSidebarInner}</View>
   );
 
   // Jobb oldali (tágas) tartalom: a T-rex háttér fölött lebegő helyőrző szöveg,
@@ -447,22 +499,33 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </View>
       )}
 
-      <Text style={styles.loremText}>
-        Fedezd fel a mélyidő őslényeit, játssz, kvízelj — minden győzelem XP, és
-        közelebb visz a Dínó Professzor ranghoz. Kezdődhet a kaland?
-      </Text>
+      <View style={styles.heroCopy}>
+        <Text style={styles.heroTitle}>Légy Te a Dínó Professzor!</Text>
+        <Text style={styles.heroSubtitle}>
+          Fedezd fel a mélyidő őslényeit, gyűjts kártyákat, és válj a legnagyobb szakértővé!
+        </Text>
+        <View style={styles.heroCtaWrap}>
+          <PrimaryCTA onPress={handleStartAdventure} label="Kezdd el a felfedezést!" />
+        </View>
+      </View>
 
-      <LandingMenu onSelectRegion={handleSelectRegion} regionCounts={regionCounts} />
-
-      <RegionProgressDashboard allDinos={allDinos} progress={progress} />
+      <LandingMenu
+        onSelectRegion={handleSelectRegion}
+        regionCounts={regionCounts}
+        regionRatios={regionRatios}
+        highlightEdu={hoveredRegion}
+        onHoverRegion={setHoveredRegion}
+      />
     </>
   );
 
   return (
     <Shell
       header={header}
+      footer={<Footer onOpenInfo={handleOpenInfo} />}
       gradientColors={[COLORS.bgDark, COLORS.bgMid]}
       backgroundImage={landingBg}
+      backgroundDim
       contentMaxWidth={isWide ? 1920 : undefined}
     >
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
@@ -476,8 +539,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           <ScrollView style={styles.rightArea} contentContainerStyle={styles.rightContent}>
             {rightBlock}
           </ScrollView>
-          {/* Jobb oldali, a ballal azonos méretű üres üveghatású sáv. */}
-          <View style={[styles.sidebarWide, styles.sidebarRight]} />
+          {progressSidebarBlock}
         </View>
       ) : (
         // Mobil/tablet: egy oszlopban egymás alatt, közös görgetéssel.
@@ -485,6 +547,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           <View style={styles.columnNarrow}>
             {sidebarBlock}
             {rightBlock}
+            <View style={styles.narrowProgressBlock}>{progressSidebarInner}</View>
           </View>
         </ScrollView>
       )}
@@ -550,12 +613,17 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginBottom: 10,
   },
-  // Jobb oldali sáv: azonos méret (360px, teljes magasság), de teljesen
-  // átlátszó — se háttér, se üveghatás, se szegély.
+  // Jobb oldali sáv: azonos szélesség és stílus, mint a bal (spec: 3-oszlopos
+  // elrendezés) — a "Te haladásod" panelt tartalmazza, bal szegély helyett
+  // jobb szegéllyel (a középső tartalom felé néz), tükrözve a bal sávot.
   sidebarRight: {
     borderRightWidth: 0,
-    backgroundColor: 'transparent',
-    ...Platform.select({ web: { backdropFilter: 'none', WebkitBackdropFilter: 'none' } }),
+    borderLeftWidth: 1,
+    borderLeftColor: 'rgba(254,250,224,0.10)',
+  },
+  narrowProgressBlock: {
+    width: '100%',
+    marginTop: 8,
   },
   sidebarHeadingSpaced: { marginTop: 20 },
   newsPlaceholder: {
@@ -697,14 +765,33 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
   },
-  loremText: {
+  // Hero-headline a térkép fölött (spec 2. pont) — rövid, cselekvésorientált
+  // cím + alcím, a korábbi hosszabb "loremText" bekezdés helyett.
+  heroCopy: {
+    marginTop: 8,
+    marginBottom: 18,
+  },
+  heroTitle: {
+    color: COLORS.cream,
+    fontSize: 30,
+    fontFamily: FONTS.headingXBold,
+    opacity: TEXT_OPACITY.primary,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
+    marginBottom: 6,
+  },
+  heroSubtitle: {
     color: COLORS.cream,
     fontSize: 15,
-    lineHeight: 23,
+    lineHeight: 22,
     fontFamily: FONTS.body,
     opacity: TEXT_OPACITY.secondary,
-    marginTop: 8,
-    marginBottom: 16,
+    maxWidth: 560,
+  },
+  heroCtaWrap: {
+    maxWidth: 320,
+    marginTop: 14,
   },
   brandText: {
     color: COLORS.cream,

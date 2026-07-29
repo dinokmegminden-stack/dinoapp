@@ -57,18 +57,24 @@ function normalizeDiet(diet) {
   return diet === 'ragadozó' ? 'húsevő' : diet;
 }
 
+// A valódi `creatures.rarity` 3 magyar tier: Lelet (leggyakoribb) < Kincs <
+// Ereklye (legritkább). Két rekordnál tévesen angol "Common" maradt egy
+// korábbi migrációból — normalizeRarity() erre "Lelet"-re képezi le, hogy a
+// szűrőlistában és a kártya-jelvényen sose jelenjen meg angol szó.
+function normalizeRarity(raw) {
+  return String(raw || '').toLowerCase() === 'common' ? 'Lelet' : raw;
+}
+
 const RARITY_COLOR = {
-  gyakori: '#c8ccbe',
-  ritka: '#8ecbe6',
-  epikus: '#c9a6e6',
-  legendás: COLORS.accent,
+  lelet: '#c8ccbe',
+  kincs: '#8ecbe6',
+  ereklye: COLORS.accent,
 };
 
 // Kánoni sorrendek a szűrőpanelhez — ugyanazok, mint amiket a többi
-// képernyő már használ (RARITY_COLOR kulcssorrendje, EDU_LABELS/REGION_ORDER,
-// alrendHu.js), hogy a szűrő-listák sorrendje ne alfabetikus-véletlenszerű
-// legyen, hanem következetes az app többi részével.
-const RARITY_ORDER = Object.keys(RARITY_COLOR);
+// képernyő már használ (EDU_LABELS/REGION_ORDER, alrendHu.js), hogy a
+// szűrő-listák sorrendje ne alfabetikus-véletlenszerű legyen, hanem
+// következetes az app többi részével.
 const REGION_LABEL_ORDER = REGION_ORDER.map((edu) => EDU_LABELS[edu]);
 const ALREND_ORDER = Object.values(ALREND_HU);
 
@@ -117,7 +123,7 @@ function chunk(list, size) {
 
 function MiniDinoCard({ dino }) {
   const imageSource = isGuestMode() ? null : (IMAGE_MAP[dino.name_hu] || MISSING_IMAGE);
-  const rarityColor = RARITY_COLOR[String(dino.rarity || '').toLowerCase()];
+  const rarityColor = RARITY_COLOR[normalizeRarity(dino.rarity || '').toLowerCase()];
 
   return (
     <View style={styles.card}>
@@ -158,7 +164,6 @@ const FILTER_FIELDS = [
   { key: 'diet', field: 'diet_hu', title: 'Étrend', order: [], transform: normalizeDiet },
   { key: 'csalad', field: 'csalad_hu', title: 'Család', order: [] },
   { key: 'alrend', field: 'alrend', title: 'Dinoszaurusz-csoport', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
-  { key: 'rarity', field: 'rarity', title: 'Ritkaság', order: RARITY_ORDER },
 ];
 
 export default function CollectionScreen({ nickname, allDinos, progress, onNavigate, onBack }) {

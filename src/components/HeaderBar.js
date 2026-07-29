@@ -200,6 +200,7 @@ export default function HeaderBar({
 
   return (
     <>
+      <View style={styles.headerTexture}>
       <View style={[styles.headerBar, isWide && styles.headerBarWide]}>
         <View style={styles.headerLeft}>
           <Pressable style={styles.brand} onPress={() => handleNav('landing')}>
@@ -220,31 +221,35 @@ export default function HeaderBar({
         </View>
 
         <View style={styles.headerIcons}>
-          {!(isNarrow && guest) && <StreakPill days={streak} />}
-          {!(isNarrow && guest) && <XPPill onPress={handleOpenRank} />}
-          {!(isNarrow && guest) && (
-            <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
-          )}
-          {!guest && (
-            <RoundIconButton
-              icon="account-circle"
-              onPress={() => handleNav('dashboard')}
-              tooltip={nickname}
-            />
-          )}
-          {!isNarrow && <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />}
-          {!isNarrow && <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />}
+          {/* "Vezérlőpult" csoport: haladás/XP/profil, egy közös keretben. */}
+          <View style={styles.dashboardGroup}>
+            {!(isNarrow && guest) && <StreakPill days={streak} />}
+            {!(isNarrow && guest) && <XPPill onPress={handleOpenRank} />}
+            {!(isNarrow && guest) && (
+              <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
+            )}
+            {!guest && (
+              <RoundIconButton
+                icon="account-circle"
+                onPress={() => handleNav('dashboard')}
+                tooltip={nickname}
+              />
+            )}
+            {!isNarrow && <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />}
+            {!isNarrow && <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />}
+          </View>
           {guest && (
             <View style={styles.authButtons}>
-              <Pressable style={styles.joinBtn} onPress={() => handleNav('join')} accessibilityRole="button">
-                <Text style={styles.joinBtnText}>Csatlakozz</Text>
-              </Pressable>
               <Pressable style={styles.loginBtn} onPress={() => handleNav('login')} accessibilityRole="button">
                 <Text style={styles.loginBtnText}>Jelentkezz be</Text>
+              </Pressable>
+              <Pressable style={styles.joinBtn} onPress={() => handleNav('join')} accessibilityRole="button">
+                <Text style={styles.joinBtnText}>Csatlakozz</Text>
               </Pressable>
             </View>
           )}
         </View>
+      </View>
       </View>
 
       <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
@@ -254,6 +259,34 @@ export default function HeaderBar({
 }
 
 const styles = StyleSheet.create({
+  // Finom, sötét, texturált fejléc-sáv — kőerezet-hatás rétegzett, halvány
+  // átlós csíkokkal (repeating-linear-gradient), hogy elváljon a landing
+  // alatta lévő T-rex hátterétől.
+  headerTexture: {
+    width: '100%',
+    backgroundColor: 'rgba(8,10,10,0.86)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(238,155,0,0.16)',
+    ...Platform.select({
+      web: {
+        backgroundImage:
+          'repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 2px, transparent 2px, transparent 8px), ' +
+          'linear-gradient(180deg, rgba(30,26,22,0.94) 0%, rgba(10,9,8,0.9) 100%)',
+        boxShadow: '0 2px 14px rgba(0,0,0,0.35)',
+      },
+    }),
+  },
+  dashboardGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(254,250,224,0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.08)',
+  },
   headerBar: {
     width: '100%',
     flexDirection: 'row',
@@ -346,11 +379,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     borderRadius: RADIUS.pill,
     paddingVertical: 9,
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     ...Platform.select({
       web: {
         cursor: 'pointer',
-        transitionProperty: 'background-color, transform',
+        boxShadow: '0 0 0 1px rgba(238,155,0,0.4), 0 4px 14px rgba(238,155,0,0.35)',
+        transitionProperty: 'background-color, transform, box-shadow',
         transitionDuration: '120ms',
       },
     }),

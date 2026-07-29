@@ -17,6 +17,7 @@ import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { playSound, playQuizSfx } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
+import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitRunnerScore, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
@@ -114,6 +115,7 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
     playQuizSfx('wrong');
     if (finalScore > 0) {
       addXP(finalScore);
+      claimDailyChallengeBonus('runner', finalScore);
       if (playerId) {
         submitRunnerScore({ playerId, score: finalScore }).then((result) => {
           const message = getCelebrationMessage(result);

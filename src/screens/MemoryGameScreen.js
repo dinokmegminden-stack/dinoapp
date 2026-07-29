@@ -17,6 +17,7 @@ import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/fonts';
 import { playQuizSfx, playSound } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
+import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { saveMemoryResult } from '../services/memoryResultsService';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
@@ -33,7 +34,7 @@ const BOARD_HORIZONTAL_PADDING = 10; // egyeznie kell a boardWrapper paddingHori
 const DIFFICULTIES = [
   { key: 'easy', label: '🐣 KEZDŐ', cols: 4, rows: 3, xp: 3, level: 1 },
   { key: 'medium', label: '🦕 HALADÓ', cols: 6, rows: 4, xp: 6, level: 2 },
-  { key: 'hard', label: '🦖 PROFI', cols: 10, rows: 6, xp: 10, level: 3 },
+  { key: 'hard', label: '🦖 PROFI', cols: 10, rows: 6, xp: 50, level: 3 },
 ];
 
 const PAIR_EMOJIS = [
@@ -179,6 +180,7 @@ export default function MemoryGameScreen({ nickname, playerId, progress, onNavig
       setWon(true);
       playQuizSfx('winningTheme');
       addXP(difficulty.xp);
+      claimDailyChallengeBonus('memory', difficulty.xp);
       xpAnim.setValue(0);
       Animated.spring(xpAnim, {
         toValue: 1,

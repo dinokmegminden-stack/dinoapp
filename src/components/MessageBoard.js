@@ -4,9 +4,11 @@
 // Supabase tábla adja/tárolja (fetch/postMessage).
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, Platform } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { fetchMessages, postMessage, setMessageHidden, MESSAGE_MAX_LEN } from '../services/messagesService';
+import { isGuestMode } from '../utils/guestMode';
 
 function timeAgo(iso) {
   if (!iso) return '';
@@ -19,10 +21,11 @@ function timeAgo(iso) {
   return `${Math.floor(s / 86400)} napja`;
 }
 
-export default function MessageBoard({ nickname, isAdmin = false }) {
+export default function MessageBoard({ nickname, isAdmin = false, onRequireRegister }) {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const guest = isGuestMode();
 
   useEffect(() => {
     fetchMessages(40, { includeHidden: isAdmin }).then(setMessages);
@@ -52,36 +55,50 @@ export default function MessageBoard({ nickname, isAdmin = false }) {
 
   return (
     <View>
-      <View style={styles.composer}>
-        <TextInput
-          style={styles.input}
-          value={text}
-          onChangeText={(t) => setText(t.slice(0, MESSAGE_MAX_LEN))}
-          placeholder={`Üzenet írása${nickname ? ` – ${nickname}` : ''}…`}
-          placeholderTextColor="rgba(254,250,224,0.4)"
-          multiline
-          maxLength={MESSAGE_MAX_LEN}
-        />
-        <View style={styles.composerRow}>
-          <Text style={styles.counter}>{remaining}</Text>
-          <Pressable
-            style={[styles.sendBtn, (!text.trim() || sending) && styles.sendBtnDisabled]}
-            onPress={send}
-            disabled={!text.trim() || sending}
-            accessibilityRole="button"
-          >
-            <Text style={styles.sendBtnText}>{sending ? 'Küldés…' : 'Küldés'}</Text>
-          </Pressable>
+      {guest ? (
+        <Pressable
+          style={styles.lockedComposer}
+          onPress={() => onRequireRegister?.()}
+          accessibilityRole="button"
+        >
+          <MaterialCommunityIcons name="lock-outline" size={16} color={COLORS.cream} style={{ opacity: 0.7 }} />
+          <Text style={styles.lockedComposerText}>Hozzászóláshoz jelentkezz be</Text>
+        </Pressable>
+      ) : (
+        <View style={styles.composer}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={(t) => setText(t.slice(0, MESSAGE_MAX_LEN))}
+            placeholder={`Üzenet írása${nickname ? ` – ${nickname}` : ''}…`}
+            placeholderTextColor="rgba(254,250,224,0.4)"
+            multiline
+            maxLength={MESSAGE_MAX_LEN}
+          />
+          <View style={styles.composerRow}>
+            <Text style={styles.counter}>{remaining}</Text>
+            <Pressable
+              style={[styles.sendBtn, (!text.trim() || sending) && styles.sendBtnDisabled]}
+              onPress={send}
+              disabled={!text.trim() || sending}
+              accessibilityRole="button"
+            >
+              <Text style={styles.sendBtnText}>{sending ? 'Küldés…' : 'Küldés'}</Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      )}
 
       {messages.length === 0 ? (
-        <Text style={styles.empty}>Még nincs üzenet — legyél te az első!</Text>
+        <Text style={styles.empty}>Még nincs hozzászólás — legyél te az első!</Text>
       ) : (
         <View style={styles.list}>
           {messages.map((m) => (
             <View key={m.id} style={[styles.msg, m.is_hidden && styles.msgHidden]}>
               <View style={styles.msgHead}>
+                <View style={styles.avatar}>
+                  <MaterialCommunityIcons name="account-circle" size={22} color={COLORS.accent} />
+                </View>
                 <Text style={styles.msgName} numberOfLines={1}>{m.nickname || 'Névtelen'}</Text>
                 <Text style={styles.msgTime}>{timeAgo(m.created_at)}</Text>
               </View>
@@ -132,6 +149,23 @@ const styles = StyleSheet.create({
     ...Platform.select({ web: { cursor: 'pointer' } }),
   },
   sendBtnDisabled: { opacity: 0.45 },
+  lockedComposer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: 'rgba(254,250,224,0.18)',
+    backgroundColor: 'rgba(20,18,16,0.4)',
+    paddingVertical: 14,
+    marginBottom: 12,
+    opacity: 0.75,
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  lockedComposerText: { color: COLORS.cream, fontFamily: FONTS.bold, fontSize: 12.5 },
+  avatar: { marginRight: 6 },
   sendBtnText: { color: COLORS.bgDark, fontFamily: FONTS.bold, fontSize: 13 },
   empty: { color: COLORS.cream, opacity: 0.6, fontFamily: FONTS.body, fontSize: 12.5, lineHeight: 18 },
   list: { gap: 10 },

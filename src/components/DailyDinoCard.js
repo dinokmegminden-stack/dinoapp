@@ -22,6 +22,7 @@ function firstSentence(text) {
 
 export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
   const [flipped, setFlipped] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const rot = useRef(new Animated.Value(0)).current;
 
   const [cinzelLoaded] = useCinzel({ Cinzel_700Bold });
@@ -62,7 +63,12 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
 
   return (
     <View style={[styles.wrapBase, isWide && styles.wrapWide]}>
-      <Pressable onPress={flip} style={styles.stageBase}>
+      <Pressable
+        onPress={flip}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+        style={[styles.stageBase, hovered && styles.stageHovered]}
+      >
         {/* ELŐLAP */}
         <Animated.View style={[styles.card, styles.front, { transform: [{ perspective: 1000 }, { rotateY: frontRotate }] }]}>
           <View style={styles.imgWrap}>
@@ -103,7 +109,25 @@ const styles = StyleSheet.create({
   eyebrow: { color: COLORS.accent, fontSize: 12, letterSpacing: 2, marginBottom: 4, opacity: 0.9 },
   // A Napi Dínó kártya 4:3 arányú (kicsit magasabb, mint 16:9), hogy a
   // `contain`-nel megjelenített teljes kép elférjen benne, kicsinyítve.
-  stageBase: { width: '100%', aspectRatio: 4 / 3 },
+  stageBase: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    ...Platform.select({
+      web: { transitionProperty: 'transform, filter', transitionDuration: '220ms' },
+    }),
+  },
+  // Finom 3D perspektíva + emelkedő árnyék hoverre — a kártya kicsit "kibillen"
+  // és megemelkedik, mintha a kurzor felé fordulna.
+  stageHovered: {
+    ...Platform.select({
+      web: {
+        transform: [{ perspective: 900 }, { rotateX: '3deg' }, { rotateY: '-4deg' }, { translateY: -4 }, { scale: 1.015 }],
+        transitionProperty: 'transform, filter',
+        transitionDuration: '220ms',
+        filter: 'drop-shadow(0 14px 22px rgba(0,0,0,0.45))',
+      },
+    }),
+  },
   card: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: RADIUS.cardLarge,

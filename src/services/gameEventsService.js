@@ -38,6 +38,31 @@ export async function trackGameComplete(eventId) {
   }
 }
 
+// A Játékmódok képernyő "Xszer játszva" jelvényéhez (GamingScreen) — csak a
+// LEZÁRT (completed_at != null) eseményeket számoljuk, game_type szerint
+// csoportosítva. Kliensoldali reduce, mert a játékos game_events sora kicsi
+// (nincs szükség szerver-oldali GROUP BY-ra egy RPC-vel).
+export async function getGamePlayCounts(playerId) {
+  if (!playerId) return {};
+
+  const { data, error } = await supabase
+    .from('game_events')
+    .select('game_type')
+    .eq('player_id', playerId)
+    .not('completed_at', 'is', null);
+
+  if (error) {
+    console.warn('getGamePlayCounts hiba:', error);
+    return {};
+  }
+
+  const counts = {};
+  (data || []).forEach((row) => {
+    counts[row.game_type] = (counts[row.game_type] || 0) + 1;
+  });
+  return counts;
+}
+
 // A játékos irányítópultjának (PlayerDashboardScreen) naptár- és
 // széria-nézetéhez: minden nap, amikor legalább egy game_event indult —
 // egyedi, helyi időzóna szerinti "ÉÉÉÉ-HH-NN" kulcsok, növekvő sorrendben.

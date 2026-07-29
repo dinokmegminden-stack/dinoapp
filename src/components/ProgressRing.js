@@ -10,6 +10,7 @@ export default function ProgressRing({
   ratio = 0,
   color = '#aebf92',
   trackColor = 'rgba(254,250,224,0.15)',
+  bgColor = null,
   children,
 }) {
   const r = (size - stroke) / 2;
@@ -20,6 +21,7 @@ export default function ProgressRing({
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
       <Svg width={size} height={size} style={{ position: 'absolute' }}>
+        {!!bgColor && <Circle cx={size / 2} cy={size / 2} r={r - stroke / 2} fill={bgColor} />}
         <Circle cx={size / 2} cy={size / 2} r={r} stroke={trackColor} strokeWidth={stroke} fill="none" />
         <Circle
           cx={size / 2}

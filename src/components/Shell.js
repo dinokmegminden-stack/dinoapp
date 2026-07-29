@@ -21,7 +21,7 @@ const DEFAULT_BACKGROUND = require('../../assets/images/new_bg.jpg');
 // header: opcionális, a teljes böngésző-szélességben megjelenő fejléc-sáv, ami a
 // belső (maxWidth-re szorított, középre igazított) tartalom FÖLÖTT, azon kívül
 // renderel — így a fejléc végigér a viewporton, míg a body korlátozott marad.
-export default function Shell({ children, header = null, wide = false, gradientColors = null, backgroundImage = DEFAULT_BACKGROUND, contentMaxWidth = null }) {
+export default function Shell({ children, header = null, wide = false, gradientColors = null, backgroundImage = DEFAULT_BACKGROUND, backgroundDim = false, contentMaxWidth = null, footer = null }) {
   const { width } = useWindowDimensions();
   const isWideWeb = Platform.OS === 'web' && width >= 700;
   const showBackgroundImage = backgroundImage && isWideWeb;
@@ -34,14 +34,16 @@ export default function Shell({ children, header = null, wide = false, gradientC
 
   // A fejléc teljes szélességű sávja + alatta a korlátozott body — egy oszlopban,
   // felülről lefelé, hogy az inner flex:1-e a maradék helyet töltse ki.
+  const footerBand = footer != null ? <View style={s.footerBand}>{footer}</View> : null;
+
   const body = header != null
-    ? (<View style={s.stack}>{<View style={s.headerBand}>{header}</View>}{inner}</View>)
-    : inner;
+    ? (<View style={s.stack}>{<View style={s.headerBand}>{header}</View>}{inner}{footerBand}</View>)
+    : (<View style={s.stack}>{inner}{footerBand}</View>);
 
   if (showBackgroundImage) {
     return (
       <View style={s.outer}>
-        <AnimatedLandingBg source={backgroundImage} />
+        <AnimatedLandingBg source={backgroundImage} dim={backgroundDim} />
         <LinearGradient
           colors={['rgba(0,18,25,0.55)', 'rgba(0,18,25,0.25)', 'rgba(0,18,25,0.8)']}
           style={s.bgOverlay}
@@ -77,4 +79,5 @@ const s = StyleSheet.create({
   // Teljes szélességű oszlop a fejléc-sávnak + a body-nak.
   stack: { flex: 1, width: '100%', alignItems: 'center' },
   headerBand: { width: '100%' },
+  footerBand: { width: '100%' },
 });

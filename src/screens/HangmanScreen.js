@@ -18,6 +18,7 @@ import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { playSound, playQuizSfx } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
+import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
@@ -86,6 +87,7 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
         if (solved) {
           setGameStatus('won');
           addXP(XP_REWARD);
+          claimDailyChallengeBonus('hangman', XP_REWARD);
           playQuizSfx('winningTheme');
         }
       } else {

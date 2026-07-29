@@ -15,6 +15,7 @@ import { FONTS } from '../constants/fonts';
 import { playQuizSfx } from '../audio/audioSystem';
 import { buildWhoAmIQuiz, buildWhoAmIClueSegments } from '../utils/whoAmIQuizGenerator';
 import { addXP } from '../components/XPBar';
+import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 
@@ -67,6 +68,7 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
     setGameStatus('finished');
     if (finalXP > 0) {
       await addXP(finalXP);
+      claimDailyChallengeBonus('whoami', finalXP);
     }
     if (playerId && correctCountRef.current === QUESTION_COUNT) {
       submitLeaderboardEntry({
@@ -125,7 +127,10 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
 
   const handleQuitMidGame = () => {
     if (xpEarned > 0) {
-      addXP(xpEarned).then(() => onBack());
+      addXP(xpEarned).then(() => {
+        claimDailyChallengeBonus('whoami', xpEarned);
+        onBack();
+      });
     } else {
       onBack();
     }

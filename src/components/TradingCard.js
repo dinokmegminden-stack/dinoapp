@@ -30,14 +30,13 @@ const ALT_IMAGE_WIDTH_DESKTOP = Math.round((ALT_CARD_HEIGHT_DESKTOP - ALT_NAME_B
 const ALT_CARD_MAX_WIDTH_DESKTOP = ALT_IMAGE_WIDTH_DESKTOP + ALT_DATA_COL_WIDTH_DESKTOP;
 const CARD_RADIUS = 14;
 
-// A `creatures.rarity` oszlop angol értékeket tárol (common/rare/epic/legendary),
-// a táblán viszont magyarul, egységesen arany színnel jelenik meg.
-const RARITY_LABEL = {
-  common: 'gyakori',
-  rare: 'ritka',
-  epic: 'epikus',
-  legendary: 'legendás',
-};
+// A `creatures.rarity` oszlop 3 magyar tiert tárol: Lelet (leggyakoribb) <
+// Kincs < Ereklye (legritkább). Két rekordnál tévesen az angol "Common"
+// maradt bent egy korábbi migrációból — ez normalizálódik "Lelet"-re, hogy a
+// UI-n sose jelenjen meg angol szó a magyar ritkaság-nevek között.
+function normalizeRarity(raw) {
+  return String(raw || '').toLowerCase() === 'common' ? 'Lelet' : raw;
+}
 
 function capitalize(text) {
   if (!text) return '';
@@ -149,8 +148,7 @@ export default function TradingCard({
 
   if (!dino) return null;
 
-  const rarityKey = String(dino.rarity || '').toLowerCase();
-  const rarityLabel = RARITY_LABEL[rarityKey] || dino.rarity;
+  const rarityLabel = normalizeRarity(dino.rarity);
 
   const latinFull = dino.latin_name_ending && !String(dino.name_latin || '').toLowerCase().endsWith(String(dino.latin_name_ending).toLowerCase())
     ? [dino.name_latin, dino.latin_name_ending].filter(Boolean).join(' ')

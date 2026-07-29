@@ -22,13 +22,18 @@ export const EDU_LABELS = {
 export const REGION_ORDER = [1, 2, 3, 4, 5, 6];
 export const STARTER_REGIONS = REGION_ORDER;
 
+// A 99-es "bónusz" csomag (creatures.pack_number = 99) minden régióban a
+// lánc VÉGÉN áll — a szekvenciális isPackUnlocked() logika miatt csak akkor
+// nyílik ki, ha a régió összes rendes csomagja már teljesítve van.
+export const BONUS_PACK = 99;
+
 export const REGION_PACKS = {
-  1: [1, 2, 3],
-  2: [1, 2, 3, 4, 5],
-  3: [1, 2],
-  4: [1, 2, 3, 4, 5],
-  5: [1, 2, 3, 4],
-  6: [1, 2, 3, 4, 5],
+  1: [1, 2, 3, BONUS_PACK],
+  2: [1, 2, 3, 4, 5, BONUS_PACK],
+  3: [1, 2, BONUS_PACK],
+  4: [1, 2, 3, 4, 5, BONUS_PACK],
+  5: [1, 2, 3, 4, BONUS_PACK],
+  6: [1, 2, 3, 4, 5, BONUS_PACK],
 };
 
 

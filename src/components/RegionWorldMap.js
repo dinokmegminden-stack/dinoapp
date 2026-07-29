@@ -9,12 +9,16 @@ import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { WORLD_MAP_SVG } from '../constants/worldMapSvg';
 import { COLORS, FONTS } from '../constants/theme';
+import ProgressRing from './ProgressRing';
 
 // A SVG viewBox-a: "30.767 241.591 784.077 458.627" — a marker-pozíciókat a
 // térkép saját koordinátarendszerében adjuk meg, majd %-ra váltjuk, hogy a
 // méretezéstől (reszponzivitás) függetlenül mindig a helyükön maradjanak.
 const VIEWBOX = { x: 30.767, y: 241.591, w: 784.077, h: 458.627 };
 const ASPECT = VIEWBOX.w / VIEWBOX.h; // ~1.71
+// A konténer magassága 20%-kal csökken (szélesség változatlan) — a térkép
+// enyhén "megdől" (rotateX), ehhez illő, laposabb arány kell.
+const DISPLAY_ASPECT = ASPECT / 0.8;
 
 function toPct(x, y) {
   return {
@@ -70,7 +74,7 @@ const STYLED_SVG = WORLD_MAP_SVG
   // a szűrő rákötése a legfelső (bare) <g>-re, ami az összes országot tartalmazza
   .replace('<g>', '<g filter="url(#continentOutline)">');
 
-export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
+export default function RegionWorldMap({ onSelectRegion, regionCounts, regionRatios, highlightEdu, onHoverRegion }) {
   // Amíg az allDinos (App.js) még nem töltött be, regionCounts üres — ilyenkor
   // "…"-t írunk 0 helyett (ugyanaz a logika, mint a régi gomboknál).
   const countsLoading = !regionCounts || Object.keys(regionCounts).length === 0;
@@ -85,14 +89,15 @@ export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
       <SvgXml xml={STYLED_SVG} width="100%" height="100%" />
 
       {MARKERS.map((m) => {
-        const isHovered = hoveredEdu === m.edu;
+        const isHovered = hoveredEdu === m.edu || highlightEdu === m.edu;
         const isFocused = focusedEdu === m.edu;
+        const ratio = regionRatios?.[m.edu] || 0;
         return (
           <Pressable
             key={m.edu}
             onPress={() => onSelectRegion(m.edu)}
-            onHoverIn={() => setHoveredEdu(m.edu)}
-            onHoverOut={() => setHoveredEdu((prev) => (prev === m.edu ? null : prev))}
+            onHoverIn={() => { setHoveredEdu(m.edu); onHoverRegion?.(m.edu); }}
+            onHoverOut={() => { setHoveredEdu((prev) => (prev === m.edu ? null : prev)); onHoverRegion?.(null); }}
             onFocus={() => setFocusedEdu(m.edu)}
             onBlur={() => setFocusedEdu((prev) => (prev === m.edu ? null : prev))}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -112,9 +117,13 @@ export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
                 </Text>
               </View>
             )}
-            <Text style={[styles.markerText, (isHovered || isFocused) && styles.markerTextHover]}>
-              {countsLoading ? '…' : regionCounts[m.edu] || 0}
-            </Text>
+            <View style={[styles.markerRing, isHovered && styles.markerRingHover]}>
+              <ProgressRing size={isHovered ? 40 : 34} stroke={2.5} ratio={ratio} color={COLORS.accent} trackColor="rgba(0,18,25,0.12)" bgColor={COLORS.cream}>
+                <Text style={[styles.markerText, isHovered && styles.markerTextHover]}>
+                  {countsLoading ? '…' : regionCounts[m.edu] || 0}
+                </Text>
+              </ProgressRing>
+            </View>
           </Pressable>
         );
       })}
@@ -122,16 +131,22 @@ export default function RegionWorldMap({ onSelectRegion, regionCounts }) {
   );
 }
 
-const MARKER_W = 34;
-const MARKER_H = 26;
+const MARKER_W = 40;
+const MARKER_H = 40;
 const TOOLTIP_W = 130; // a hover-tooltip fix szélessége (a marker fölött középre igazítva)
 
 const styles = StyleSheet.create({
   wrap: {
     width: '100%',
-    aspectRatio: ASPECT,
+    aspectRatio: DISPLAY_ASPECT,
     position: 'relative',
     marginVertical: 6,
+    ...Platform.select({
+      web: {
+        transform: 'perspective(1400px) rotateX(8deg)',
+        transformOrigin: 'center bottom',
+      },
+    }),
   },
   marker: {
     position: 'absolute',
@@ -143,22 +158,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Kis fehér kör + vékony narancs progresszió-gyűrű (ProgressRing) a szám
+  // mögött — a régió pakk-teljesítési arányát mutatja, jól olvasható minden
+  // kontinens/óceán fölött, a barnás pill helyett.
+  markerRing: {
+    ...Platform.select({
+      web: {
+        transitionProperty: 'transform, filter',
+        transitionDuration: '160ms',
+        filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.45))',
+      },
+    }),
+  },
+  markerRingHover: {
+    ...Platform.select({
+      web: {
+        filter: 'drop-shadow(0 4px 12px rgba(238,155,0,0.55))',
+      },
+    }),
+  },
   markerText: {
-    color: COLORS.accent,
+    color: COLORS.bgDark,
     fontFamily: FONTS.bodyBold,
-    fontSize: 19,
-    letterSpacing: 0.5,
-    // Barnás pill-háttér a szám mögött (a landing streak-pilljével azonos tónus),
-    // hogy a szám minden kontinens/óceán fölött jól olvasható legyen.
-    backgroundColor: 'rgba(139,86,48,0.55)',
-    borderRadius: 999,
-    paddingHorizontal: 9,
-    paddingVertical: 2,
-    overflow: 'hidden',
-    // Sötét körvonal a jó olvashatóságért világos kontinensen és óceán fölött is.
-    textShadowColor: 'rgba(0,18,25,0.9)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
+    fontSize: 14,
+    letterSpacing: 0.2,
   },
   // Hover: a megcélzott marker a többi fölé kerüljön (tooltip + nagyítás miatt).
   markerHover: {
@@ -177,11 +200,7 @@ const styles = StyleSheet.create({
     }),
   },
   markerTextHover: {
-    // Kiemelkedik: nagyobb, világosabb, narancs ragyogással.
-    color: COLORS.cream,
-    transform: [{ scale: 1.35 }],
-    textShadowColor: COLORS.accent,
-    textShadowRadius: 8,
+    fontSize: 16,
   },
   // A régió neve a szám fölött, hoverkor.
   tooltip: {

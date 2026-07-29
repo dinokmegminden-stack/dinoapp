@@ -1,7 +1,7 @@
 console.log("APP STARTED");
 
-import { useEffect, useState } from 'react';
-import { View, StatusBar } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { View, StatusBar, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LandingPage from './src/screens/LandingPage';
@@ -47,6 +47,43 @@ export default function App() {
   const [dinosLoading, setDinosLoading] = useState(true);
   const [activeGameEventId, setActiveGameEventId] = useState(null);
   const [hideXPBar, setHideXPBar] = useState(false);
+
+  // A navigáció (view/eduLevel) csak React state — nincs router, ezért a
+  // böngésző Vissza gombja korábban nem az előző belső képernyőre vitt, hanem
+  // rögtön elhagyta az oldalt (nem volt history-bejegyzés a nézetekhez). Ez a
+  // két effect minden view/eduLevel váltásnál history.pushState-et hív (a
+  // legelsőt replaceState-tel, hogy a "checking" kezdőállapot ne maradjon a
+  // history-ban), a popstate-re pedig visszaállítja a korábbi nézetet —
+  // csak weben van értelme, natívon nincs böngésző-history.
+  const isRestoringHistoryRef = useRef(false);
+  const historyInitRef = useRef(false);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+    if (view === 'checking') return;
+    if (isRestoringHistoryRef.current) {
+      isRestoringHistoryRef.current = false;
+      return;
+    }
+    const state = { view, eduLevel };
+    if (!historyInitRef.current) {
+      window.history.replaceState(state, '');
+      historyInitRef.current = true;
+    } else {
+      window.history.pushState(state, '');
+    }
+  }, [view, eduLevel]);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return undefined;
+    const onPopState = (e) => {
+      isRestoringHistoryRef.current = true;
+      setEduLevel(e.state?.eduLevel ?? null);
+      setView(e.state?.view ?? 'landing');
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   // Minden régió lényeit egyszer töltjük be (villámkvíz, napi dínó, régió-számok).
   const preloadCreatures = async () => {
@@ -291,6 +328,7 @@ export default function App() {
       {view === 'gaming' && (
         <GamingScreen
           nickname={nickname}
+          playerId={playerId}
           progress={progress}
           onNavigate={(target) => setView(target)}
           onLightningQuiz={handleStartLightningQuiz}
