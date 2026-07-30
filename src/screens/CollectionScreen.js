@@ -162,8 +162,8 @@ const FILTER_FIELDS = [
   { key: 'region', field: 'region', title: 'Régió', order: REGION_LABEL_ORDER },
   { key: 'country', field: 'discovered_country', title: 'Felfedezés országa', order: [] },
   { key: 'diet', field: 'diet_hu', title: 'Étrend', order: [], transform: normalizeDiet },
-  { key: 'csalad', field: 'csalad_hu', title: 'Család', order: [] },
   { key: 'alrend', field: 'alrend', title: 'Dinoszaurusz-csoport', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
+  { key: 'csalad', field: 'csalad_hu', title: 'Család', order: [] },
 ];
 
 export default function CollectionScreen({ nickname, allDinos, progress, onNavigate, onBack }) {
