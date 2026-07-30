@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(238,155,0,0.35)',
   },
-  bannerImage: { flex: 1, justifyContent: 'center' },
+  bannerImage: { flex: 1, width: '100%', height: '100%', justifyContent: 'center' },
   bannerImageInner: { resizeMode: 'cover' },
   bannerOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   cardHovered: {
     transform: [{ scale: 1.02 }],
   },
-  cardImage: { flex: 1 },
+  cardImage: { flex: 1, width: '100%', height: '100%' },
   cardImageInner: { resizeMode: 'cover' },
   cardOverlay: {
     ...StyleSheet.absoluteFillObject,
