@@ -608,11 +608,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   epochThumb: {
-    width: 150,
+    width: 200,
   },
   epochThumbImage: {
-    width: 150,
-    height: 84,
+    width: 200,
+    height: 112.5,
     borderRadius: RADIUS.card,
     backgroundColor: 'rgba(255,255,255,0.06)',
   },

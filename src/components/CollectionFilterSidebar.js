@@ -88,21 +88,22 @@ function LengthRangeSection({ range, onChange, defaultExpanded = false }) {
       </Pressable>
 
       {expanded && (
-        <View style={styles.lengthRangeRow}>
+        <View style={styles.lengthRangeCol}>
+          <Text style={styles.lengthFieldLabel}>Testhossz min</Text>
           <TextInput
             style={styles.lengthInput}
             value={range.min}
             onChangeText={(v) => onChange('min', v.replace(/[^0-9.]/g, ''))}
-            placeholder="min"
+            placeholder="pl. 2"
             placeholderTextColor="rgba(254,250,224,0.35)"
             keyboardType="decimal-pad"
           />
-          <Text style={styles.lengthRangeDash}>–</Text>
+          <Text style={styles.lengthFieldLabel}>Testhossz max</Text>
           <TextInput
             style={styles.lengthInput}
             value={range.max}
             onChangeText={(v) => onChange('max', v.replace(/[^0-9.]/g, ''))}
-            placeholder="max"
+            placeholder="pl. 15"
             placeholderTextColor="rgba(254,250,224,0.35)"
             keyboardType="decimal-pad"
           />
@@ -260,15 +261,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.45,
   },
-  lengthRangeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  lengthRangeCol: {
+    gap: 6,
     paddingHorizontal: 14,
     paddingBottom: 12,
   },
+  lengthFieldLabel: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    opacity: 0.6,
+  },
   lengthInput: {
-    flex: 1,
     color: COLORS.cream,
     fontFamily: FONTS.body,
     fontSize: 13.5,
@@ -277,9 +281,5 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.button,
     paddingVertical: 6,
     paddingHorizontal: 10,
-  },
-  lengthRangeDash: {
-    color: COLORS.cream,
-    opacity: 0.5,
   },
 });
