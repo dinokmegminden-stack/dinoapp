@@ -321,9 +321,17 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
                 epochSections.map((section) => (
                   <View key={section.key} style={styles.epochBlock}>
                     <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
-                    <Text style={styles.epochBlockNames}>
-                      {section.data.map((d) => d.name_hu).join(', ')}
-                    </Text>
+                    <View style={styles.epochThumbRow}>
+                      {section.data.map((d) => {
+                        const imageSource = IMAGE_MAP[d.name_hu] || MISSING_IMAGE;
+                        return (
+                          <View key={d.id} style={styles.epochThumb}>
+                            <Image source={imageSource} style={styles.epochThumbImage} resizeMode="cover" />
+                            <Text style={styles.epochThumbName} numberOfLines={2}>{d.name_hu}</Text>
+                          </View>
+                        );
+                      })}
+                    </View>
                   </View>
                 ))
               )}
@@ -569,6 +577,27 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontSize: 15,
     lineHeight: 24,
+    opacity: 0.9,
+  },
+  epochThumbRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  epochThumb: {
+    width: 150,
+  },
+  epochThumbImage: {
+    width: 150,
+    height: 84,
+    borderRadius: RADIUS.card,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  epochThumbName: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 12.5,
+    marginTop: 4,
     opacity: 0.9,
   },
   row: {
