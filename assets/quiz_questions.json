@@ -2835,5 +2835,4698 @@
       "10 tonna"
     ],
     "correctIndex": 1
+  },
+  {
+    "id": 246,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Richard Cifelli és Matt Wedel csapata?",
+    "options": [
+      "Maiasaura",
+      "Dryosaurus",
+      "Riojasaurus",
+      "Sauroposeidon"
+    ],
+    "correctIndex": 3,
+    "hint": "1994-ben fedezték fel."
+  },
+  {
+    "id": 247,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Edward Drinker Cope?",
+    "options": [
+      "Psittacosaurus",
+      "Tyrannotitan",
+      "Dryptosaurus",
+      "Euoplocephalus"
+    ],
+    "correctIndex": 2,
+    "hint": "1866-ben fedezték fel."
+  },
+  {
+    "id": 248,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Werner Janensch és a Tendaguru-expedíció?",
+    "options": [
+      "Elaphrosaurus",
+      "Pneumatoraptor",
+      "Noasaurus",
+      "Chasmosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1910-ben fedezték fel."
+  },
+  {
+    "id": 249,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Facundo Riguetti, Sebastián Apesteguía és Xabier Pol?",
+    "options": [
+      "Nigersaurus",
+      "Nodosaurus",
+      "Jakapil",
+      "Leaellynasaura"
+    ],
+    "correctIndex": 2,
+    "hint": "2022-ben fedezték fel."
+  },
+  {
+    "id": 250,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Richard Owen?",
+    "options": [
+      "Dacentrurus",
+      "Psittacosaurus",
+      "Mapusaurus",
+      "Oviraptor"
+    ],
+    "correctIndex": 0,
+    "hint": "1874-ben fedezték fel."
+  },
+  {
+    "id": 251,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel amatőr fosszíliagyűjtő, leírta Cristiano Dal Sasso?",
+    "options": [
+      "Scutellosaurus",
+      "Scipionyx",
+      "Lophorhothon",
+      "Albertaceratops"
+    ],
+    "correctIndex": 1,
+    "hint": "1980-ben fedezték fel."
+  },
+  {
+    "id": 252,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel egy amatőr gyűjtő, leírta Xu Xing csapata?",
+    "options": [
+      "Lourinhanosaurus",
+      "Jobaria",
+      "Yi qi",
+      "Torosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "2007-ben fedezték fel."
+  },
+  {
+    "id": 253,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Hu Chengzhi?",
+    "options": [
+      "Zephyrosaurus",
+      "Dromaeosaurus",
+      "Shantungosaurus",
+      "Sinosauropteryx"
+    ],
+    "correctIndex": 2,
+    "hint": "1973-ben fedezték fel."
+  },
+  {
+    "id": 254,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Alan Bartholomai és Ralph Molnar?",
+    "options": [
+      "Minmi",
+      "Mantellisaurus",
+      "Podokesaurus",
+      "Abydosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1980-ben fedezték fel."
+  },
+  {
+    "id": 255,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Paul Sereno csapata?",
+    "options": [
+      "Jobaria",
+      "Pelecanimimus",
+      "Rugops",
+      "Saltasaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1997-ben fedezték fel."
+  },
+  {
+    "id": 256,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel J. Willis Stovall és Wann Langston Jr.?",
+    "options": [
+      "Hadrosaurus",
+      "Albertosaurus",
+      "Acrocanthosaurus",
+      "Secernosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1940-ben fedezték fel."
+  },
+  {
+    "id": 257,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Philip Currie és Zhao Xijin?",
+    "options": [
+      "Syntarsus   ",
+      "Lourinhanosaurus",
+      "Majungasaurus",
+      "Sinraptor"
+    ],
+    "correctIndex": 3,
+    "hint": "1987-ben fedezték fel."
+  },
+  {
+    "id": 258,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Bryan Small?",
+    "options": [
+      "Parasaurolophus",
+      "Sinosauropteryx",
+      "Chindesaurus",
+      "Masiakasaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1985-ben fedezték fel."
+  },
+  {
+    "id": 259,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel James Kirkland és Douglas Wolfe?",
+    "options": [
+      "Nothronychus",
+      "Stegoceras",
+      "Nodosaurus",
+      "Dryosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1999-ben fedezték fel."
+  },
+  {
+    "id": 260,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Gary Byrd (amatőr gyűjtő), leírta Jason Head?",
+    "options": [
+      "Aragosaurus",
+      "Protohadros",
+      "Yi qi",
+      "Oryctodromeus"
+    ],
+    "correctIndex": 1,
+    "hint": "1994-ben fedezték fel."
+  },
+  {
+    "id": 261,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Paul Sereno és Stephen Brusatte?",
+    "options": [
+      "Secernosaurus",
+      "Rugops",
+      "Daspletosaurus",
+      "Pisanosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "2000-ben fedezték fel."
+  },
+  {
+    "id": 262,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Vremir Mátyás (elemezte Csiki Zoltán és csapata)?",
+    "options": [
+      "Balaur",
+      "Pelecanimimus",
+      "Torvosaurus",
+      "Elaphrosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "2010-ben fedezték fel."
+  },
+  {
+    "id": 263,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Pablo Puerta (leírta Rauhut és csapata)?",
+    "options": [
+      "Protohadros",
+      "Brachytrachelopan",
+      "Neovenator",
+      "Scutellosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "2005-ben fedezték fel."
+  },
+  {
+    "id": 264,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Hans-Dieter Sues?",
+    "options": [
+      "Saurornitholestes",
+      "Acrocanthosaurus",
+      "Tenontosaurus",
+      "Dromaeosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1974-ben fedezték fel."
+  },
+  {
+    "id": 265,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Francisco Ortega csapata?",
+    "options": [
+      "Parksosaurus",
+      "Anchisaurus",
+      "Concavenator",
+      "Giganotosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "2010-ben fedezték fel."
+  },
+  {
+    "id": 266,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Michael Lawler (leírta Edwin Colbert)?",
+    "options": [
+      "Eolambia",
+      "Podokesaurus",
+      "Scutellosaurus",
+      "Oryctodromeus"
+    ],
+    "correctIndex": 2,
+    "hint": "1981-ben fedezték fel."
+  },
+  {
+    "id": 267,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel francia paleontológus csapat, leírta Le Loeuff?",
+    "options": [
+      "Supersaurus",
+      "Scutellosaurus",
+      "Ampelosaurus",
+      "Minmi"
+    ],
+    "correctIndex": 2,
+    "hint": "1989-ben fedezték fel."
+  },
+  {
+    "id": 268,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Illegális kövületgyűjtők (leírta Martill és csapata)?",
+    "options": [
+      "Riojasaurus",
+      "Irritator",
+      "Parksosaurus",
+      "Utahraptor"
+    ],
+    "correctIndex": 1,
+    "hint": "1995-ben fedezték fel."
+  },
+  {
+    "id": 269,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Oramel William Lucas (leírta Edward Drinker Cope)?",
+    "options": [
+      "Protoceratops",
+      "Camarasaurus",
+      "Corythosaurus",
+      "Daspletosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "1877-ben fedezték fel."
+  },
+  {
+    "id": 270,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel David Hone és Xu Xing csapata?",
+    "options": [
+      "Aragosaurus",
+      "Zhuchengtyrannus",
+      "Pycnonemosaurus",
+      "Acrocanthosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "2009-ben fedezték fel."
+  },
+  {
+    "id": 271,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Aurelio Meira farmja (leírta Carballido és csapata)?",
+    "options": [
+      "Ajkaceratops",
+      "Patagotitan",
+      "Bambiraptor",
+      "Amygdalodon"
+    ],
+    "correctIndex": 1,
+    "hint": "2012-ben fedezték fel."
+  },
+  {
+    "id": 272,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Werner Janensch és a német Tendaguru-expedíció, 1909–1912?",
+    "options": [
+      "Jobaria",
+      "Giraffatitan",
+      "Deinocheirus",
+      "Sinraptor"
+    ],
+    "correctIndex": 1,
+    "hint": "1909-ben fedezték fel."
+  },
+  {
+    "id": 273,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Wes Linster?",
+    "options": [
+      "Massospondylus",
+      "Aragosaurus",
+      "Bambiraptor",
+      "Edmontosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1995-ben fedezték fel."
+  },
+  {
+    "id": 274,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel James Kirkland?",
+    "options": [
+      "Petrustitan",
+      "Lophorhothon",
+      "Unenlagia",
+      "Eolambia"
+    ],
+    "correctIndex": 3,
+    "hint": "1993-ben fedezték fel."
+  },
+  {
+    "id": 275,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Michael Raath?",
+    "options": [
+      "Mussaurus",
+      "Edmontosaurus",
+      "Buitreraptor",
+      "Syntarsus   "
+    ],
+    "correctIndex": 3,
+    "hint": "1963-ben fedezték fel."
+  },
+  {
+    "id": 276,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Michael Ryan?",
+    "options": [
+      "Ajkaceratops",
+      "Protohadros",
+      "Coloradisaurus",
+      "Albertaceratops"
+    ],
+    "correctIndex": 3,
+    "hint": "2005-ben fedezték fel."
+  },
+  {
+    "id": 277,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Robert Makela (leírta Horner és Weishampel)?",
+    "options": [
+      "Antarctosaurus",
+      "Orodromeus",
+      "Chirostenotes",
+      "Massospondylus"
+    ],
+    "correctIndex": 1,
+    "hint": "1979-ben fedezték fel."
+  },
+  {
+    "id": 278,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Gareth Dyke és Ősi Attila?",
+    "options": [
+      "Petrustitan",
+      "Mapusaurus",
+      "Bauxitornis",
+      "Minmi"
+    ],
+    "correctIndex": 2,
+    "hint": "2010-ben fedezték fel."
+  },
+  {
+    "id": 279,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Kadić Ottokár nyomán, leírta Díez Díaz és csapata?",
+    "options": [
+      "Uriash",
+      "Aegyptosaurus",
+      "Piatnitzkysaurus",
+      "Edmontonia"
+    ],
+    "correctIndex": 0,
+    "hint": "2025-ben fedezték fel."
+  },
+  {
+    "id": 280,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Peter Makovicky, Sebastián Apesteguía és Agnolín?",
+    "options": [
+      "Syntarsus   ",
+      "Hadrosaurus",
+      "Buitreraptor",
+      "Majungasaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "2004-ben fedezték fel."
+  },
+  {
+    "id": 281,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Jaime Powell és José Bonaparte?",
+    "options": [
+      "Bambiraptor",
+      "Pelecanimimus",
+      "Staurikosaurus",
+      "Noasaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1980-ben fedezték fel."
+  },
+  {
+    "id": 282,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Charles M. Sternberg (leírta Dale Russell)?",
+    "options": [
+      "Rhoetosaurus",
+      "Herrerasaurus",
+      "Daspletosaurus",
+      "Hadrosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1921-ben fedezték fel."
+  },
+  {
+    "id": 283,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Guillermo del Corro?",
+    "options": [
+      "Seismosaurus",
+      "Maxakalisaurus",
+      "Chubutisaurus",
+      "Torvosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1965-ben fedezték fel."
+  },
+  {
+    "id": 284,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Friedrich von Huene?",
+    "options": [
+      "Pleurocoelus",
+      "Hadrosaurus",
+      "Rugops",
+      "Amygdalodon"
+    ],
+    "correctIndex": 3,
+    "hint": "1929-ben fedezték fel."
+  },
+  {
+    "id": 285,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Friedrich von Huene nyomán, leírta Díez Díaz és csapata?",
+    "options": [
+      "Troodon",
+      "Struthiomimus",
+      "Edmontonia",
+      "Petrustitan"
+    ],
+    "correctIndex": 3,
+    "hint": "2025-ben fedezték fel."
+  },
+  {
+    "id": 286,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel William Winkley (leírta Brown és Schlaikjer)?",
+    "options": [
+      "Coloradisaurus",
+      "Noasaurus",
+      "Ajkaceratops",
+      "Pachycephalosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1940-ben fedezték fel."
+  },
+  {
+    "id": 287,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Charles Depéret, 1896 (eredeti leírás); modern revízió: Scott Sampson és David Krause, 1996–2007?",
+    "options": [
+      "Pneumatoraptor",
+      "Scelidosaurus",
+      "Majungasaurus",
+      "Dromaeosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1896-ben fedezték fel."
+  },
+  {
+    "id": 288,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Alberto Garrido (leírta Coria és csapata)?",
+    "options": [
+      "Hadrosaurus",
+      "Sauroposeidon",
+      "Aucasaurus",
+      "Tyrannosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1999-ben fedezték fel."
+  },
+  {
+    "id": 289,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel John Bell Hatcher?",
+    "options": [
+      "Masiakasaurus",
+      "Haplocanthosaurus",
+      "Tyrannosaurus",
+      "Troodon"
+    ],
+    "correctIndex": 1,
+    "hint": "1901-ben fedezték fel."
+  },
+  {
+    "id": 290,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Jim Jensen?",
+    "options": [
+      "Nothronychus",
+      "Neuquenosaurus",
+      "Maiasaura",
+      "Supersaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1972-ben fedezték fel."
+  },
+  {
+    "id": 291,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Kellner, Campos és Trotta?",
+    "options": [
+      "Pycnonemosaurus",
+      "Hadrosaurus",
+      "Gastonia",
+      "Syntarsus   "
+    ],
+    "correctIndex": 0,
+    "hint": "2004-ben fedezték fel."
+  },
+  {
+    "id": 292,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Christophe Hendrickx és Octávio Mateus?",
+    "options": [
+      "Dromiceiomimus",
+      "Eodromaeus",
+      "Euoplocephalus",
+      "Torvosaurus gurneyi"
+    ],
+    "correctIndex": 3,
+    "hint": "2003-ben fedezték fel."
+  },
+  {
+    "id": 293,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Andreas Wagner?",
+    "options": [
+      "Australovenator",
+      "Kentrosaurus",
+      "Compsognathus",
+      "Camptosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1857-ben fedezték fel."
+  },
+  {
+    "id": 294,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Xu Xing csapata?",
+    "options": [
+      "Dacentrurus",
+      "Concavenator",
+      "Anchiornis",
+      "Carcharodontosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "2009-ben fedezték fel."
+  },
+  {
+    "id": 295,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Charles Depéret és Justin Savornin, 1925; újraleírás: Ernst Stromer, 1931?",
+    "options": [
+      "Plateosaurus",
+      "Ornitholestes",
+      "Carcharodontosaurus",
+      "Deinonychus"
+    ],
+    "correctIndex": 2,
+    "hint": "1925-ben fedezték fel."
+  },
+  {
+    "id": 296,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Steve Hutt csapata?",
+    "options": [
+      "Alioramus",
+      "Neovenator",
+      "Supersaurus",
+      "Lophorhothon"
+    ],
+    "correctIndex": 1,
+    "hint": "1978-ben fedezték fel."
+  },
+  {
+    "id": 297,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel fosszíliakalózok által megrongált lelet, leírta Michael Taylor csapata?",
+    "options": [
+      "Struthiomimus",
+      "Brontomerus",
+      "Apatosaurus",
+      "Gasparinisaura"
+    ],
+    "correctIndex": 1,
+    "hint": "1994-ben fedezték fel."
+  },
+  {
+    "id": 298,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel David Gillette?",
+    "options": [
+      "Ornithomimus",
+      "Seismosaurus",
+      "Hagryphus",
+      "Masiakasaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "1979-ben fedezték fel."
+  },
+  {
+    "id": 299,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel John Bell Hatcher (leírta Charles Gilmore)?",
+    "options": [
+      "Amargasaurus",
+      "Thescelosaurus",
+      "Hypsilophodon",
+      "Othnielia"
+    ],
+    "correctIndex": 1,
+    "hint": "1891-ben fedezték fel."
+  },
+  {
+    "id": 300,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Doug Langdon?",
+    "options": [
+      "Daspletosaurus",
+      "Muttaburrasaurus",
+      "Brachiosaurus",
+      "Segisaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "1981-ben fedezték fel."
+  },
+  {
+    "id": 301,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Sergei Kurzanov?",
+    "options": [
+      "Plateosaurus",
+      "Coelurus",
+      "Rhoetosaurus",
+      "Alioramus"
+    ],
+    "correctIndex": 3,
+    "hint": "1976-ben fedezték fel."
+  },
+  {
+    "id": 302,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Daniel Chure és Brooks Britt csapata?",
+    "options": [
+      "Eolambia",
+      "Antarctosaurus",
+      "Xenotarsosaurus",
+      "Abydosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "2009-ben fedezték fel."
+  },
+  {
+    "id": 303,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Ricardo Martínez és Paul Sereno csapata?",
+    "options": [
+      "Pachycephalosaurus",
+      "Eodromaeus",
+      "Dryptosaurus",
+      "Sinraptor"
+    ],
+    "correctIndex": 1,
+    "hint": "1996-ben fedezték fel."
+  },
+  {
+    "id": 304,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Zofia Kielan-Jaworowska?",
+    "options": [
+      "Cetiosaurus",
+      "Iguanodon",
+      "Deinocheirus",
+      "Ouranosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1965-ben fedezték fel."
+  },
+  {
+    "id": 305,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Lucy Elphinstone?",
+    "options": [
+      "Kunbarrasaurus",
+      "Muttaburrasaurus",
+      "Gorgosaurus",
+      "Amygdalodon"
+    ],
+    "correctIndex": 0,
+    "hint": "2015-ben fedezték fel."
+  },
+  {
+    "id": 306,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Tom Rich & Patricia Vickers-Rich?",
+    "options": [
+      "Qantassaurus",
+      "Leaellynasaura",
+      "Unenlagia",
+      "Pneumatoraptor"
+    ],
+    "correctIndex": 1,
+    "hint": "1989-ben fedezték fel."
+  },
+  {
+    "id": 307,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Guillermo Heredia (leírta Bonaparte és Coria)?",
+    "options": [
+      "Diamantinasaurus",
+      "Jakapil",
+      "Argentinosaurus",
+      "Coelurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1987-ben fedezték fel."
+  },
+  {
+    "id": 308,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel José Luis Sanz csapata?",
+    "options": [
+      "Aragosaurus",
+      "Gorgosaurus",
+      "Brachylophosaurus",
+      "Xenotarsosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1987-ben fedezték fel."
+  },
+  {
+    "id": 309,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Santiago Roth (leírta Friedrich von Huene)?",
+    "options": [
+      "Saurornitholestes",
+      "Antarctosaurus",
+      "Haplocanthosaurus",
+      "Torvosaurus gurneyi"
+    ],
+    "correctIndex": 1,
+    "hint": "1912-ben fedezték fel."
+  },
+  {
+    "id": 310,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel leírta John Brett-Surman?",
+    "options": [
+      "Secernosaurus",
+      "Triceratops",
+      "Protoceratops",
+      "Qantassaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1979-ben fedezték fel."
+  },
+  {
+    "id": 311,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Patricia Vickers-Rich & Tom Rich?",
+    "options": [
+      "Riojasaurus",
+      "Qantassaurus",
+      "Dromaeosaurus",
+      "Haplocanthosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "1999-ben fedezték fel."
+  },
+  {
+    "id": 312,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Heber Longman?",
+    "options": [
+      "Torosaurus",
+      "Mussaurus",
+      "Dromiceiomimus",
+      "Rhoetosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1926-ben fedezték fel."
+  },
+  {
+    "id": 313,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Arthur Lakes (leírta Othniel Charles Marsh)?",
+    "options": [
+      "Herrerasaurus",
+      "Torosaurus",
+      "Acrocanthosaurus",
+      "Apatosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1877-ben fedezték fel."
+  },
+  {
+    "id": 314,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel James Madsen?",
+    "options": [
+      "Marshosaurus",
+      "Apatosaurus",
+      "Corythosaurus",
+      "Albertosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1976-ben fedezték fel."
+  },
+  {
+    "id": 315,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Rinchen Barsbold?",
+    "options": [
+      "Yi qi",
+      "Saurophaganax",
+      "Gallimimus",
+      "Ouranosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1972-ben fedezték fel."
+  },
+  {
+    "id": 316,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Ronald Condray (leírta Theodore Eaton)?",
+    "options": [
+      "Silvisaurus",
+      "Aragosaurus",
+      "Gallimimus",
+      "Irritator"
+    ],
+    "correctIndex": 0,
+    "hint": "1955-ben fedezték fel."
+  },
+  {
+    "id": 317,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Thai-French Paleontological Team?",
+    "options": [
+      "Ouranosaurus",
+      "Sauroposeidon",
+      "Miragaia",
+      "Nagatitan"
+    ],
+    "correctIndex": 3,
+    "hint": "2024-ben fedezték fel."
+  },
+  {
+    "id": 318,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Marion Brandvold (leírta Horner és Makela)?",
+    "options": [
+      "Maiasaura",
+      "Ajkaceratops",
+      "Telmatosaurus",
+      "Podokesaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1978-ben fedezték fel."
+  },
+  {
+    "id": 319,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Paul Sereno és munkatársai, 1997–1998 (leírás: 1998)?",
+    "options": [
+      "Protohadros",
+      "Maxakalisaurus",
+      "Suchomimus",
+      "Mapusaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1997-ben fedezték fel."
+  },
+  {
+    "id": 320,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Alexander Kellner csapata?",
+    "options": [
+      "Aucasaurus",
+      "Maxakalisaurus",
+      "Hylaeosaurus",
+      "Prosaurolophus"
+    ],
+    "correctIndex": 1,
+    "hint": "1998-ben fedezték fel."
+  },
+  {
+    "id": 321,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Nopcsa Ilona és Báró Nopcsa Ferenc?",
+    "options": [
+      "Telmatosaurus",
+      "Carnotaurus",
+      "Triceratops",
+      "Megalosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1895-ben fedezték fel."
+  },
+  {
+    "id": 322,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel William Parker Foulke (leírta Joseph Leidy)?",
+    "options": [
+      "Hadrosaurus",
+      "Eodromaeus",
+      "Scutellosaurus",
+      "Supersaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1858-ben fedezték fel."
+  },
+  {
+    "id": 323,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Charles H. Sternberg és fiai?",
+    "options": [
+      "Cedarpelta",
+      "Diplodocus",
+      "Spinops",
+      "Utahraptor"
+    ],
+    "correctIndex": 2,
+    "hint": "1916-ben fedezték fel."
+  },
+  {
+    "id": 324,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel solnhofeni kőfejtő munkások, leírta Hermann von Meyer?",
+    "options": [
+      "Syntarsus   ",
+      "Carnotaurus",
+      "Hadrosaurus",
+      "Archaeopteryx"
+    ],
+    "correctIndex": 3,
+    "hint": "1861-ben fedezték fel."
+  },
+  {
+    "id": 325,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Chuck Schalf (leírta Hans-Dieter Sues)?",
+    "options": [
+      "Zephyrosaurus",
+      "Spinops",
+      "Amargasaurus",
+      "Hypsilophodon"
+    ],
+    "correctIndex": 0,
+    "hint": "1978-ben fedezték fel."
+  },
+  {
+    "id": 326,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel J. Willis Stovall?",
+    "options": [
+      "Saurophaganax",
+      "Hesperosaurus",
+      "Tyrannotitan",
+      "Brachytrachelopan"
+    ],
+    "correctIndex": 0,
+    "hint": "1931-ben fedezték fel."
+  },
+  {
+    "id": 327,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel José Bonaparte és Fernando Novas?",
+    "options": [
+      "Abelisaurus",
+      "Therizinosaurus",
+      "Edmontonia",
+      "Pelecanimimus"
+    ],
+    "correctIndex": 0,
+    "hint": "1985-ben fedezték fel."
+  },
+  {
+    "id": 328,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Mauro Aranciaga Rolando (és munkatársai)?",
+    "options": [
+      "Dryptosaurus",
+      "Coelophysis",
+      "Acrocanthosaurus",
+      "Maip"
+    ],
+    "correctIndex": 3,
+    "hint": "2022-ben fedezték fel."
+  },
+  {
+    "id": 329,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Christopher Wolfe?",
+    "options": [
+      "Zuniceratops",
+      "Albertosaurus",
+      "Carcharodontosaurus",
+      "Antarctosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1996-ben fedezték fel."
+  },
+  {
+    "id": 330,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Holger Lüdtke nyomán elnevezve, Oliver Hartung csapata?",
+    "options": [
+      "Europasaurus",
+      "Tenontosaurus",
+      "Miragaia",
+      "Piatnitzkysaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "2006-ben fedezték fel."
+  },
+  {
+    "id": 331,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Charles Camp?",
+    "options": [
+      "Segisaurus",
+      "Zalmoxes",
+      "Polacanthus",
+      "Sauropelta"
+    ],
+    "correctIndex": 0,
+    "hint": "1933-ben fedezték fel."
+  },
+  {
+    "id": 332,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel William Buckland?",
+    "options": [
+      "Bakonydraco",
+      "Megalosaurus",
+      "Oryctodromeus",
+      "Dilophosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "1824-ben fedezték fel."
+  },
+  {
+    "id": 333,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Octávio Mateus csapata?",
+    "options": [
+      "Australovenator",
+      "Thescelosaurus",
+      "Shantungosaurus",
+      "Miragaia"
+    ],
+    "correctIndex": 3,
+    "hint": "2009-ben fedezték fel."
+  },
+  {
+    "id": 334,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Bernardino Pérez-Moreno csapata?",
+    "options": [
+      "Telmatosaurus",
+      "Pelecanimimus",
+      "Unenlagia",
+      "Dacentrurus"
+    ],
+    "correctIndex": 1,
+    "hint": "1993-ben fedezték fel."
+  },
+  {
+    "id": 335,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel leírta Octávio Mateus?",
+    "options": [
+      "Coloradisaurus",
+      "Ankylosaurus",
+      "Lourinhanosaurus",
+      "Torvosaurus gurneyi"
+    ],
+    "correctIndex": 2,
+    "hint": "1998-ben fedezték fel."
+  },
+  {
+    "id": 336,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel leírta Reginald Hooley?",
+    "options": [
+      "Lourinhanosaurus",
+      "Mantellisaurus",
+      "Coelophysis",
+      "Sauroposeidon"
+    ],
+    "correctIndex": 1,
+    "hint": "1914-ben fedezték fel."
+  },
+  {
+    "id": 337,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel leírta Jorge Bonaparte és csapata?",
+    "options": [
+      "Suchomimus",
+      "Herrerasaurus",
+      "Guaibasaurus",
+      "Jakapil"
+    ],
+    "correctIndex": 2,
+    "hint": "1999-ben fedezték fel."
+  },
+  {
+    "id": 338,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Ősi Attila és munkatársai?",
+    "options": [
+      "Alvarezsaurus",
+      "Staurikosaurus",
+      "Ajkaceratops",
+      "Dryptosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "2010-ben fedezték fel."
+  },
+  {
+    "id": 339,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel William Walker amatőr fosszíliagyűjtő?",
+    "options": [
+      "Allosaurus",
+      "Magyarosaurus",
+      "Hadrosaurus",
+      "Baryonyx"
+    ],
+    "correctIndex": 3,
+    "hint": "1983-ben fedezték fel."
+  },
+  {
+    "id": 340,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Elmer S. Riggs?",
+    "options": [
+      "Camarasaurus",
+      "Komlosaurus",
+      "Apatosaurus",
+      "Brachiosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1900-ben fedezték fel."
+  },
+  {
+    "id": 341,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Báró Nopcsa Ferenc?",
+    "options": [
+      "Hypsilophodon",
+      "Zalmoxes",
+      "Gryposaurus",
+      "Sauropelta"
+    ],
+    "correctIndex": 1,
+    "hint": "1899-ben fedezték fel."
+  },
+  {
+    "id": 342,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel James Harrison, leírta Richard Owen?",
+    "options": [
+      "Scelidosaurus",
+      "Europasaurus",
+      "Carnotaurus",
+      "Buitreraptor"
+    ],
+    "correctIndex": 0,
+    "hint": "1859-ben fedezték fel."
+  },
+  {
+    "id": 343,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel James Phillips munkásai, leírta Alick Walker?",
+    "options": [
+      "Pelecanimimus",
+      "Daspletosaurus",
+      "Scelidosaurus",
+      "Eustreptospondylus"
+    ],
+    "correctIndex": 3,
+    "hint": "1870-ben fedezték fel."
+  },
+  {
+    "id": 344,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel James Jensen és Peter Galton?",
+    "options": [
+      "Ajkaceratops",
+      "Komlosaurus",
+      "Camptosaurus",
+      "Torvosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1971-ben fedezték fel."
+  },
+  {
+    "id": 345,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Ősi Attila, Weishampel és Coralia Jianu?",
+    "options": [
+      "Bakonydraco",
+      "Patagosaurus",
+      "Ornithomimus",
+      "Brachylophosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "2005-ben fedezték fel."
+  },
+  {
+    "id": 346,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Li Yumin?",
+    "options": [
+      "Lourinhanosaurus",
+      "Sinosauropteryx",
+      "Maiasaura",
+      "Orodromeus"
+    ],
+    "correctIndex": 1,
+    "hint": "1996-ben fedezték fel."
+  },
+  {
+    "id": 347,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Rodolfo Coria?",
+    "options": [
+      "Spinosaurus",
+      "Mochlodon",
+      "Ankylosaurus",
+      "Gasparinisaura"
+    ],
+    "correctIndex": 3,
+    "hint": "1992-ben fedezték fel."
+  },
+  {
+    "id": 348,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Lindsay Zanno és Scott Sampson?",
+    "options": [
+      "Patagosaurus",
+      "Ouranosaurus",
+      "Brontomerus",
+      "Hagryphus"
+    ],
+    "correctIndex": 3,
+    "hint": "2001-ben fedezték fel."
+  },
+  {
+    "id": 349,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Bajazid Elmas Doda (leírta Báró Nopcsa Ferenc)?",
+    "options": [
+      "Ligabuesaurus",
+      "Gigantoraptor",
+      "Shantungosaurus",
+      "Struthiosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1912-ben fedezték fel."
+  },
+  {
+    "id": 350,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Solomon Ellsworth (1818), leírta Othniel Charles Marsh?",
+    "options": [
+      "Barosaurus",
+      "Marshosaurus",
+      "Anchisaurus",
+      "Ornithomimus"
+    ],
+    "correctIndex": 2,
+    "hint": "1818-ben fedezték fel."
+  },
+  {
+    "id": 351,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Torma András és Ősi Attila csapata?",
+    "options": [
+      "Pleurocoelus",
+      "Oviraptor",
+      "Hungarosaurus",
+      "Aucasaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "2000-ben fedezték fel."
+  },
+  {
+    "id": 352,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Eric Buffetaut, Dan Grigorescu és Csiki Zoltán?",
+    "options": [
+      "Hatzegopteryx",
+      "Anchisaurus",
+      "Qantassaurus",
+      "Neovenator"
+    ],
+    "correctIndex": 0,
+    "hint": "2002-ben fedezték fel."
+  },
+  {
+    "id": 353,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Tomás Rich csapata (leírva Novas és de Valais)?",
+    "options": [
+      "Tyrannotitan",
+      "Gryposaurus",
+      "Archaeopteryx",
+      "Xenotarsosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "2002-ben fedezték fel."
+  },
+  {
+    "id": 354,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Mignon Talbot?",
+    "options": [
+      "Elaphrosaurus",
+      "Lourinhanosaurus",
+      "Podokesaurus",
+      "Styracosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1910-ben fedezték fel."
+  },
+  {
+    "id": 355,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel David Varricchio csapata?",
+    "options": [
+      "Ceratosaurus",
+      "Spinops",
+      "Oryctodromeus",
+      "Giraffatitan"
+    ],
+    "correctIndex": 2,
+    "hint": "2005-ben fedezték fel."
+  },
+  {
+    "id": 356,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Charles Hazelius Sternberg?",
+    "options": [
+      "Ornithomimus",
+      "Deinocheirus",
+      "Masiakasaurus",
+      "Pentaceratops"
+    ],
+    "correctIndex": 3,
+    "hint": "1921-ben fedezték fel."
+  },
+  {
+    "id": 357,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Philippe Taquet, 1966 (leírás: 1976)?",
+    "options": [
+      "Aragosaurus",
+      "Velociraptor",
+      "Ouranosaurus",
+      "Edmontonia"
+    ],
+    "correctIndex": 2,
+    "hint": "1966-ben fedezték fel."
+  },
+  {
+    "id": 358,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Jim Mjos (leírta Kenneth Carpenter)?",
+    "options": [
+      "Hesperosaurus",
+      "Argentinosaurus",
+      "Protoceratops",
+      "Dacentrurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1985-ben fedezték fel."
+  },
+  {
+    "id": 359,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel David Baldwin (leírta Edward Drinker Cope)?",
+    "options": [
+      "Coelophysis",
+      "Rugops",
+      "Guaibasaurus",
+      "Giganotosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1881-ben fedezték fel."
+  },
+  {
+    "id": 360,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Edwin Hennig és a német Tendaguru-expedíció, 1909–1912 (leírás: 1915)?",
+    "options": [
+      "Bambiraptor",
+      "Pneumatoraptor",
+      "Kentrosaurus",
+      "Ajkaceratops"
+    ],
+    "correctIndex": 2,
+    "hint": "1909-ben fedezték fel."
+  },
+  {
+    "id": 361,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Joseph Burr Tyrrell?",
+    "options": [
+      "Albertosaurus",
+      "Anchiornis",
+      "Pachycephalosaurus",
+      "Prosaurolophus"
+    ],
+    "correctIndex": 0,
+    "hint": "1884-ben fedezték fel."
+  },
+  {
+    "id": 362,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Jim Kirkland, Rob Gaston és dán Columbe?",
+    "options": [
+      "Giganotosaurus",
+      "Dromiceiomimus",
+      "Protohadros",
+      "Utahraptor"
+    ],
+    "correctIndex": 3,
+    "hint": "1991-ben fedezték fel."
+  },
+  {
+    "id": 363,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Eddie Cole (leírta Peter Dodson)?",
+    "options": [
+      "Syntarsus   ",
+      "Zuniceratops",
+      "Patagotitan",
+      "Avaceratops"
+    ],
+    "correctIndex": 3,
+    "hint": "1981-ben fedezték fel."
+  },
+  {
+    "id": 364,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Rodolfo Coria és Philip Currie?",
+    "options": [
+      "Hypacrosaurus",
+      "Chasmosaurus",
+      "Mapusaurus",
+      "Brontomerus"
+    ],
+    "correctIndex": 2,
+    "hint": "1997-ben fedezték fel."
+  },
+  {
+    "id": 365,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Santiago Roth (leírta Richard Lydekker)?",
+    "options": [
+      "Kentrosaurus",
+      "Brachylophosaurus",
+      "Neuquenosaurus",
+      "Herrerasaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1893-ben fedezték fel."
+  },
+  {
+    "id": 366,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Guillermo Heredia (leírta Bonaparte és Salgado)?",
+    "options": [
+      "Amargasaurus",
+      "Patagosaurus",
+      "Yi qi",
+      "Neuquenosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1984-ben fedezték fel."
+  },
+  {
+    "id": 367,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Richard Owen, 1854?",
+    "options": [
+      "Eoraptor",
+      "Massospondylus",
+      "Bambiraptor",
+      "Iguanodon"
+    ],
+    "correctIndex": 1,
+    "hint": "1854-ben fedezték fel."
+  },
+  {
+    "id": 368,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Nopcsa Ilona?",
+    "options": [
+      "Muttaburrasaurus",
+      "Sauropelta",
+      "Australotitan",
+      "Magyarosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1895-ben fedezték fel."
+  },
+  {
+    "id": 369,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Victorino Herrera (leírta Osvaldo Reig)?",
+    "options": [
+      "Dromiceiomimus",
+      "Panoplosaurus",
+      "Silvisaurus",
+      "Herrerasaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1959-ben fedezték fel."
+  },
+  {
+    "id": 370,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel leírta Richard Owen?",
+    "options": [
+      "Cetiosaurus",
+      "Cedarpelta",
+      "Pentaceratops",
+      "Parksosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1841-ben fedezték fel."
+  },
+  {
+    "id": 371,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Llewellyn Ivor Price (leírta Edwin Colbert)?",
+    "options": [
+      "Acrocanthosaurus",
+      "Secernosaurus",
+      "Diamantinasaurus",
+      "Staurikosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1936-ben fedezték fel."
+  },
+  {
+    "id": 372,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Xu Xing?",
+    "options": [
+      "Gigantoraptor",
+      "Stegosaurus",
+      "Chindesaurus",
+      "Syntarsus   "
+    ],
+    "correctIndex": 0,
+    "hint": "2005-ben fedezték fel."
+  },
+  {
+    "id": 373,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Rodolfo Casamiquela?",
+    "options": [
+      "Brachiosaurus",
+      "Ouranosaurus",
+      "Pisanosaurus",
+      "Australovenator"
+    ],
+    "correctIndex": 2,
+    "hint": "1962-ben fedezték fel."
+  },
+  {
+    "id": 374,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Christopher Johnston?",
+    "options": [
+      "Ankylosaurus",
+      "Pleurocoelus",
+      "Carnotaurus",
+      "Eodromaeus"
+    ],
+    "correctIndex": 1,
+    "hint": "1858-ben fedezték fel."
+  },
+  {
+    "id": 375,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Robert Gaston (leírta James Kirkland)?",
+    "options": [
+      "Gastonia",
+      "Nagatitan",
+      "Ampelosaurus",
+      "Aegyptosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1989-ben fedezték fel."
+  },
+  {
+    "id": 376,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Rubén Carolini (leírta Coria és Salgado)?",
+    "options": [
+      "Neovenator",
+      "Deinocheirus",
+      "Giganotosaurus",
+      "Zalmoxes"
+    ],
+    "correctIndex": 2,
+    "hint": "1993-ben fedezték fel."
+  },
+  {
+    "id": 377,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Ferdinand Vandeveer Hayden?",
+    "options": [
+      "Triceratops",
+      "Troodon",
+      "Eodromaeus",
+      "Utahraptor"
+    ],
+    "correctIndex": 1,
+    "hint": "1855-ben fedezték fel."
+  },
+  {
+    "id": 378,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Philippe Taquet, 1976; újraleírás: Paul Sereno és munkatársai, 1999/2010?",
+    "options": [
+      "Ankylosaurus",
+      "Jakapil",
+      "Nigersaurus",
+      "Giganotosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1976-ben fedezték fel."
+  },
+  {
+    "id": 379,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Jesse Williams (leírta Samuel Paul Welles)?",
+    "options": [
+      "Sinraptor",
+      "Torosaurus",
+      "Hungarosaurus",
+      "Dilophosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "1942-ben fedezték fel."
+  },
+  {
+    "id": 380,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Wann Langston Jr.?",
+    "options": [
+      "Jakapil",
+      "Brontomerus",
+      "Lophorhothon",
+      "Qantassaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "1948-ben fedezték fel."
+  },
+  {
+    "id": 381,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Benjamin Mudge és Samuel Wendell Williston?",
+    "options": [
+      "Scutellosaurus",
+      "Tarbosaurus",
+      "Corythosaurus",
+      "Diplodocus"
+    ],
+    "correctIndex": 3,
+    "hint": "1877-ben fedezték fel."
+  },
+  {
+    "id": 382,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel Peter Kaisen?",
+    "options": [
+      "Allosaurus",
+      "Velociraptor",
+      "Camarasaurus",
+      "Nothronychus"
+    ],
+    "correctIndex": 1,
+    "hint": "1923-ben fedezték fel."
+  },
+  {
+    "id": 383,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Scott Sampson, Catherine Forster és munkatársaik, 1996–2001?",
+    "options": [
+      "Gryposaurus",
+      "Masiakasaurus",
+      "Protohadros",
+      "Giraffatitan"
+    ],
+    "correctIndex": 1,
+    "hint": "1996-ben fedezték fel."
+  },
+  {
+    "id": 384,
+    "difficulty": "easy",
+    "question": "Melyik dínót fedezte fel Kőbányászok és Wein György geológus?",
+    "options": [
+      "Brachiosaurus",
+      "Brachytrachelopan",
+      "Komlosaurus",
+      "Sauropelta"
+    ],
+    "correctIndex": 2,
+    "hint": "1966-ben fedezték fel."
+  },
+  {
+    "id": 385,
+    "difficulty": "medium",
+    "question": "Melyik dínót fedezte fel José Bonaparte és Jaime Powell?",
+    "options": [
+      "Saltasaurus",
+      "Scutellosaurus",
+      "Zuniceratops",
+      "Kritosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1975-ben fedezték fel."
+  },
+  {
+    "id": 386,
+    "difficulty": "hard",
+    "question": "Melyik dínót fedezte fel Johann Friedrich Engelhardt?",
+    "options": [
+      "Plateosaurus",
+      "Maiasaura",
+      "Cetiosaurus",
+      "Staurikosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "1837-ben fedezték fel."
+  },
+  {
+    "id": 387,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Sauroposeidon-t?",
+    "options": [
+      "1913",
+      "1994",
+      "1978",
+      "1962"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Richard Cifelli és Matt Wedel csapata volt."
+  },
+  {
+    "id": 388,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Dryptosaurus-t?",
+    "options": [
+      "1866",
+      "1921",
+      "1942",
+      "1877"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Edward Drinker Cope volt."
+  },
+  {
+    "id": 389,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Elaphrosaurus-t?",
+    "options": [
+      "1974",
+      "1914",
+      "1910",
+      "1901"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Werner Janensch és a Tendaguru-expedíció volt."
+  },
+  {
+    "id": 390,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Barosaurus-t?",
+    "options": [
+      "1955",
+      "2021",
+      "1936",
+      "1889"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 391,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Jakapil-t?",
+    "options": [
+      "1854",
+      "1942",
+      "2022",
+      "1965"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Facundo Riguetti, Sebastián Apesteguía és Xabier Pol volt."
+  },
+  {
+    "id": 392,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Dacentrurus-t?",
+    "options": [
+      "1818",
+      "1980",
+      "1874",
+      "2006"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Richard Owen volt."
+  },
+  {
+    "id": 393,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Scipionyx-t?",
+    "options": [
+      "1874",
+      "1980",
+      "1914",
+      "1994"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező amatőr fosszíliagyűjtő, leírta Cristiano Dal Sasso volt."
+  },
+  {
+    "id": 394,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Yi qi-t?",
+    "options": [
+      "1904",
+      "1976",
+      "1896",
+      "2007"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező egy amatőr gyűjtő, leírta Xu Xing csapata volt."
+  },
+  {
+    "id": 395,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Shantungosaurus-t?",
+    "options": [
+      "1979",
+      "1893",
+      "1921",
+      "1973"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Hu Chengzhi volt."
+  },
+  {
+    "id": 396,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Minmi-t?",
+    "options": [
+      "1865",
+      "1931",
+      "2009",
+      "1980"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Alan Bartholomai és Ralph Molnar volt."
+  },
+  {
+    "id": 397,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Jobaria-t?",
+    "options": [
+      "1971",
+      "1997",
+      "1922",
+      "1869"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Paul Sereno csapata volt."
+  },
+  {
+    "id": 398,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Acrocanthosaurus-t?",
+    "options": [
+      "1940",
+      "1965",
+      "1971",
+      "1995"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező J. Willis Stovall és Wann Langston Jr. volt."
+  },
+  {
+    "id": 399,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Sinraptor-t?",
+    "options": [
+      "1987",
+      "1824",
+      "1893",
+      "2000"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Philip Currie és Zhao Xijin volt."
+  },
+  {
+    "id": 400,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Eoraptor-t?",
+    "options": [
+      "1991",
+      "1990",
+      "1955",
+      "1915"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Ricardo Martínez volt."
+  },
+  {
+    "id": 401,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Chindesaurus-t?",
+    "options": [
+      "1985",
+      "1889",
+      "1857",
+      "1874"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Bryan Small volt."
+  },
+  {
+    "id": 402,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Gargoyleosaurus-t?",
+    "options": [
+      "1841",
+      "1962",
+      "1942",
+      "1996"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Kenneth Carpenter csapata volt."
+  },
+  {
+    "id": 403,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Nothronychus-t?",
+    "options": [
+      "1889",
+      "1877",
+      "1999",
+      "1983"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező James Kirkland és Douglas Wolfe volt."
+  },
+  {
+    "id": 404,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Protohadros-t?",
+    "options": [
+      "2003",
+      "1994",
+      "1992",
+      "1995"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Gary Byrd (amatőr gyűjtő), leírta Jason Head volt."
+  },
+  {
+    "id": 405,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Aegyptosaurus-t?",
+    "options": [
+      "1915",
+      "1959",
+      "1932",
+      "1890"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Ernst Stromer von Reichenbach volt."
+  },
+  {
+    "id": 406,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Rugops-t?",
+    "options": [
+      "1929",
+      "1906",
+      "2000",
+      "1942"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Paul Sereno és Stephen Brusatte volt."
+  },
+  {
+    "id": 407,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Balaur-t?",
+    "options": [
+      "2021",
+      "1877",
+      "2010",
+      "1973"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Vremir Mátyás (elemezte Csiki Zoltán és csapata) volt."
+  },
+  {
+    "id": 408,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Coloradisaurus-t?",
+    "options": [
+      "1891",
+      "2024",
+      "1978",
+      "1893"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 409,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Anatotitan-t?",
+    "options": [
+      "1993",
+      "1978",
+      "1933",
+      "1892"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 410,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Dryosaurus-t?",
+    "options": [
+      "1913",
+      "1942",
+      "1878",
+      "1923"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 411,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Brachytrachelopan-t?",
+    "options": [
+      "2005",
+      "1933",
+      "2001",
+      "1940"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Pablo Puerta (leírta Rauhut és csapata) volt."
+  },
+  {
+    "id": 412,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Saurornitholestes-t?",
+    "options": [
+      "2003",
+      "1990",
+      "1906",
+      "1974"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Hans-Dieter Sues volt."
+  },
+  {
+    "id": 413,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Concavenator-t?",
+    "options": [
+      "1841",
+      "1998",
+      "1924",
+      "2010"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Francisco Ortega csapata volt."
+  },
+  {
+    "id": 414,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Kritosaurus-t?",
+    "options": [
+      "1904",
+      "1931",
+      "1878",
+      "1989"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 415,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Hypacrosaurus-t?",
+    "options": [
+      "1964",
+      "1854",
+      "1913",
+      "1955"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 416,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Scutellosaurus-t?",
+    "options": [
+      "1881",
+      "1962",
+      "1981",
+      "1996"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Michael Lawler (leírta Edwin Colbert) volt."
+  },
+  {
+    "id": 417,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Ampelosaurus-t?",
+    "options": [
+      "1917",
+      "2003",
+      "1887",
+      "1989"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező francia paleontológus csapat, leírta Le Loeuff volt."
+  },
+  {
+    "id": 418,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Irritator-t?",
+    "options": [
+      "1900",
+      "1936",
+      "2001",
+      "1995"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Illegális kövületgyűjtők (leírta Martill és csapata) volt."
+  },
+  {
+    "id": 419,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Camarasaurus-t?",
+    "options": [
+      "2009",
+      "1906",
+      "1877",
+      "1994"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Oramel William Lucas (leírta Edward Drinker Cope) volt."
+  },
+  {
+    "id": 420,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Zhuchengtyrannus-t?",
+    "options": [
+      "1861",
+      "1854",
+      "2009",
+      "1929"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező David Hone és Xu Xing csapata volt."
+  },
+  {
+    "id": 421,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Tyrannosaurus-t?",
+    "options": [
+      "1985",
+      "1977",
+      "1921",
+      "1902"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 422,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Patagotitan-t?",
+    "options": [
+      "2012",
+      "1909",
+      "1977",
+      "1912"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Aurelio Meira farmja (leírta Carballido és csapata) volt."
+  },
+  {
+    "id": 423,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Centrosaurus-t?",
+    "options": [
+      "1910",
+      "1901",
+      "1866",
+      "1994"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 424,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Giraffatitan-t?",
+    "options": [
+      "1909",
+      "1901",
+      "2003",
+      "1917"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Werner Janensch és a német Tendaguru-expedíció, 1909–1912 volt."
+  },
+  {
+    "id": 425,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Bambiraptor-t?",
+    "options": [
+      "1970",
+      "2001",
+      "1995",
+      "1940"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Wes Linster volt."
+  },
+  {
+    "id": 426,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Eolambia-t?",
+    "options": [
+      "1993",
+      "2009",
+      "1966",
+      "1866"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező James Kirkland volt."
+  },
+  {
+    "id": 427,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Syntarsus   -t?",
+    "options": [
+      "1964",
+      "1993",
+      "1874",
+      "1963"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Michael Raath volt."
+  },
+  {
+    "id": 428,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Albertaceratops-t?",
+    "options": [
+      "1995",
+      "1892",
+      "1822",
+      "2005"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Michael Ryan volt."
+  },
+  {
+    "id": 429,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Orodromeus-t?",
+    "options": [
+      "2015",
+      "1979",
+      "1993",
+      "1970"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Robert Makela (leírta Horner és Weishampel) volt."
+  },
+  {
+    "id": 430,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Bauxitornis-t?",
+    "options": [
+      "1912",
+      "2010",
+      "1906",
+      "1892"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Gareth Dyke és Ősi Attila volt."
+  },
+  {
+    "id": 431,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Uriash-t?",
+    "options": [
+      "2001",
+      "1932",
+      "2025",
+      "1991"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Kadić Ottokár nyomán, leírta Díez Díaz és csapata volt."
+  },
+  {
+    "id": 432,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Stegosaurus-t?",
+    "options": [
+      "1877",
+      "1971",
+      "1970",
+      "1902"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 433,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Buitreraptor-t?",
+    "options": [
+      "1900",
+      "2024",
+      "2004",
+      "2015"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Peter Makovicky, Sebastián Apesteguía és Agnolín volt."
+  },
+  {
+    "id": 434,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Noasaurus-t?",
+    "options": [
+      "2015",
+      "1874",
+      "1955",
+      "1980"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Jaime Powell és José Bonaparte volt."
+  },
+  {
+    "id": 435,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Edmontosaurus-t?",
+    "options": [
+      "1917",
+      "1859",
+      "1891",
+      "1898"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 436,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Daspletosaurus-t?",
+    "options": [
+      "1879",
+      "1859",
+      "1921",
+      "1869"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Charles M. Sternberg (leírta Dale Russell) volt."
+  },
+  {
+    "id": 437,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Camptosaurus-t?",
+    "options": [
+      "1879",
+      "1858",
+      "1901",
+      "1955"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 438,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Deinonychus-t?",
+    "options": [
+      "1866",
+      "1855",
+      "2021",
+      "1964"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező John Ostrom volt."
+  },
+  {
+    "id": 439,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Chubutisaurus-t?",
+    "options": [
+      "1998",
+      "1965",
+      "1921",
+      "1970"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Guillermo del Corro volt."
+  },
+  {
+    "id": 440,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Brachyceratops-t?",
+    "options": [
+      "1913",
+      "1879",
+      "1980",
+      "1978"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Charles Whitney Gilmore volt."
+  },
+  {
+    "id": 441,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Amygdalodon-t?",
+    "options": [
+      "1989",
+      "1824",
+      "1929",
+      "1910"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Friedrich von Huene volt."
+  },
+  {
+    "id": 442,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Petrustitan-t?",
+    "options": [
+      "1993",
+      "1996",
+      "2025",
+      "1965"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Friedrich von Huene nyomán, leírta Díez Díaz és csapata volt."
+  },
+  {
+    "id": 443,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Pachycephalosaurus-t?",
+    "options": [
+      "1931",
+      "1923",
+      "1942",
+      "1940"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező William Winkley (leírta Brown és Schlaikjer) volt."
+  },
+  {
+    "id": 444,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Majungasaurus-t?",
+    "options": [
+      "1896",
+      "1877",
+      "1936",
+      "2015"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Charles Depéret, 1896 (eredeti leírás); modern revízió: Scott Sampson és David Krause, 1996–2007 volt."
+  },
+  {
+    "id": 445,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Aucasaurus-t?",
+    "options": [
+      "1909",
+      "1999",
+      "1975",
+      "1940"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Alberto Garrido (leírta Coria és csapata) volt."
+  },
+  {
+    "id": 446,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Arrhinoceratops-t?",
+    "options": [
+      "1892",
+      "1955",
+      "1923",
+      "1974"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező William Parks volt."
+  },
+  {
+    "id": 447,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Haplocanthosaurus-t?",
+    "options": [
+      "1940",
+      "1901",
+      "1979",
+      "1841"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező John Bell Hatcher volt."
+  },
+  {
+    "id": 448,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Supersaurus-t?",
+    "options": [
+      "1959",
+      "1964",
+      "1946",
+      "1972"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Jim Jensen volt."
+  },
+  {
+    "id": 449,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Pycnonemosaurus-t?",
+    "options": [
+      "2004",
+      "2010",
+      "1985",
+      "1933"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Kellner, Campos és Trotta volt."
+  },
+  {
+    "id": 450,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Torvosaurus gurneyi-t?",
+    "options": [
+      "1892",
+      "1931",
+      "1855",
+      "2003"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Christophe Hendrickx és Octávio Mateus volt."
+  },
+  {
+    "id": 451,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Compsognathus-t?",
+    "options": [
+      "1857",
+      "1989",
+      "1966",
+      "1889"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Andreas Wagner volt."
+  },
+  {
+    "id": 452,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Anchiornis-t?",
+    "options": [
+      "1914",
+      "2009",
+      "1990",
+      "2004"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Xu Xing csapata volt."
+  },
+  {
+    "id": 453,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Carcharodontosaurus-t?",
+    "options": [
+      "1984",
+      "1925",
+      "1874",
+      "1971"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Charles Depéret és Justin Savornin, 1925; újraleírás: Ernst Stromer, 1931 volt."
+  },
+  {
+    "id": 454,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Neovenator-t?",
+    "options": [
+      "1917",
+      "2002",
+      "1978",
+      "1913"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Steve Hutt csapata volt."
+  },
+  {
+    "id": 455,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Brontomerus-t?",
+    "options": [
+      "2006",
+      "1962",
+      "1994",
+      "1832"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező fosszíliakalózok által megrongált lelet, leírta Michael Taylor csapata volt."
+  },
+  {
+    "id": 456,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Seismosaurus-t?",
+    "options": [
+      "1996",
+      "1979",
+      "1940",
+      "1898"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező David Gillette volt."
+  },
+  {
+    "id": 457,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Thescelosaurus-t?",
+    "options": [
+      "1865",
+      "1996",
+      "1891",
+      "1975"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező John Bell Hatcher (leírta Charles Gilmore) volt."
+  },
+  {
+    "id": 458,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Pneumatoraptor-t?",
+    "options": [
+      "1985",
+      "1824",
+      "1974",
+      "2010"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Iharkúti kutatócsoport volt."
+  },
+  {
+    "id": 459,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Muttaburrasaurus-t?",
+    "options": [
+      "1981",
+      "1897",
+      "1895",
+      "1861"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Doug Langdon volt."
+  },
+  {
+    "id": 460,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Alioramus-t?",
+    "options": [
+      "2006",
+      "1879",
+      "1976",
+      "1818"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Sergei Kurzanov volt."
+  },
+  {
+    "id": 461,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Australovenator-t?",
+    "options": [
+      "1981",
+      "1901",
+      "1984",
+      "2009"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Scott Hocknull volt."
+  },
+  {
+    "id": 462,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Abydosaurus-t?",
+    "options": [
+      "1980",
+      "1895",
+      "1906",
+      "2009"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Daniel Chure és Brooks Britt csapata volt."
+  },
+  {
+    "id": 463,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Eodromaeus-t?",
+    "options": [
+      "1996",
+      "1837",
+      "1877",
+      "1959"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Ricardo Martínez és Paul Sereno csapata volt."
+  },
+  {
+    "id": 464,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Deinocheirus-t?",
+    "options": [
+      "1998",
+      "1884",
+      "1965",
+      "1973"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Zofia Kielan-Jaworowska volt."
+  },
+  {
+    "id": 465,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Piatnitzkysaurus-t?",
+    "options": [
+      "1822",
+      "1942",
+      "1977",
+      "1890"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 466,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Kunbarrasaurus-t?",
+    "options": [
+      "1866",
+      "2015",
+      "1942",
+      "1985"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Lucy Elphinstone volt."
+  },
+  {
+    "id": 467,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Leaellynasaura-t?",
+    "options": [
+      "1989",
+      "1906",
+      "1904",
+      "2015"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Tom Rich & Patricia Vickers-Rich volt."
+  },
+  {
+    "id": 468,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Dromiceiomimus-t?",
+    "options": [
+      "1955",
+      "1869",
+      "1893",
+      "1926"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező William Parks volt."
+  },
+  {
+    "id": 469,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Argentinosaurus-t?",
+    "options": [
+      "1993",
+      "1883",
+      "1964",
+      "1987"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Guillermo Heredia (leírta Bonaparte és Coria) volt."
+  },
+  {
+    "id": 470,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Aragosaurus-t?",
+    "options": [
+      "1990",
+      "1987",
+      "1887",
+      "1948"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező José Luis Sanz csapata volt."
+  },
+  {
+    "id": 471,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Chirostenotes-t?",
+    "options": [
+      "1998",
+      "1963",
+      "1901",
+      "1914"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Charles Whitney Gilmore volt."
+  },
+  {
+    "id": 472,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Sauropelta-t?",
+    "options": [
+      "1959",
+      "1966",
+      "1887",
+      "1936"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező John Ostrom volt."
+  },
+  {
+    "id": 473,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Antarctosaurus-t?",
+    "options": [
+      "1940",
+      "1912",
+      "1925",
+      "2001"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Santiago Roth (leírta Friedrich von Huene) volt."
+  },
+  {
+    "id": 474,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Corythosaurus-t?",
+    "options": [
+      "1854",
+      "1914",
+      "1832",
+      "1963"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 475,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Secernosaurus-t?",
+    "options": [
+      "1893",
+      "1979",
+      "1912",
+      "1924"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező leírta John Brett-Surman volt."
+  },
+  {
+    "id": 476,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Carnotaurus-t?",
+    "options": [
+      "1972",
+      "1954",
+      "1984",
+      "1932"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 477,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Panoplosaurus-t?",
+    "options": [
+      "1895",
+      "1942",
+      "1987",
+      "1917"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 478,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Einiosaurus-t?",
+    "options": [
+      "2005",
+      "1985",
+      "1914",
+      "1995"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Jack Horner csapata (leírta Scott Sampson) volt."
+  },
+  {
+    "id": 479,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Qantassaurus-t?",
+    "options": [
+      "1983",
+      "1897",
+      "1931",
+      "1999"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Patricia Vickers-Rich & Tom Rich volt."
+  },
+  {
+    "id": 480,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Rhoetosaurus-t?",
+    "options": [
+      "1926",
+      "1866",
+      "2007",
+      "1899"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Heber Longman volt."
+  },
+  {
+    "id": 481,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Australotitan-t?",
+    "options": [
+      "1963",
+      "1898",
+      "2021",
+      "2005"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Scott Hocknull volt."
+  },
+  {
+    "id": 482,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Apatosaurus-t?",
+    "options": [
+      "1877",
+      "1869",
+      "1965",
+      "2015"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Arthur Lakes (leírta Othniel Charles Marsh) volt."
+  },
+  {
+    "id": 483,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Patagosaurus-t?",
+    "options": [
+      "1916",
+      "1979",
+      "1997",
+      "1897"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 484,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Torosaurus-t?",
+    "options": [
+      "1906",
+      "1877",
+      "1902",
+      "1891"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező John Bell Hatcher (leírta Othniel Charles Marsh) volt."
+  },
+  {
+    "id": 485,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Marshosaurus-t?",
+    "options": [
+      "1865",
+      "2000",
+      "1976",
+      "1922"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező James Madsen volt."
+  },
+  {
+    "id": 486,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Gallimimus-t?",
+    "options": [
+      "1917",
+      "2022",
+      "1972",
+      "1995"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Rinchen Barsbold volt."
+  },
+  {
+    "id": 487,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Coelurus-t?",
+    "options": [
+      "1879",
+      "1989",
+      "1822",
+      "1910"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 488,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Silvisaurus-t?",
+    "options": [
+      "1955",
+      "1861",
+      "1915",
+      "1931"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Ronald Condray (leírta Theodore Eaton) volt."
+  },
+  {
+    "id": 489,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Edmontonia-t?",
+    "options": [
+      "1832",
+      "1889",
+      "1924",
+      "1987"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Charles M. Sternberg volt."
+  },
+  {
+    "id": 490,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Nagatitan-t?",
+    "options": [
+      "2024",
+      "1818",
+      "1854",
+      "1900"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Thai-French Paleontological Team volt."
+  },
+  {
+    "id": 491,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Maiasaura-t?",
+    "options": [
+      "1884",
+      "1978",
+      "1991",
+      "2015"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Marion Brandvold (leírta Horner és Makela) volt."
+  },
+  {
+    "id": 492,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Suchomimus-t?",
+    "options": [
+      "1915",
+      "1865",
+      "1997",
+      "1818"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Paul Sereno és munkatársai, 1997–1998 (leírás: 1998) volt."
+  },
+  {
+    "id": 493,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Ceratosaurus-t?",
+    "options": [
+      "1916",
+      "1948",
+      "1883",
+      "1900"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 494,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Maxakalisaurus-t?",
+    "options": [
+      "1923",
+      "1998",
+      "1902",
+      "2001"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Alexander Kellner csapata volt."
+  },
+  {
+    "id": 495,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Telmatosaurus-t?",
+    "options": [
+      "1879",
+      "2022",
+      "2006",
+      "1895"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Nopcsa Ilona és Báró Nopcsa Ferenc volt."
+  },
+  {
+    "id": 496,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Protoceratops-t?",
+    "options": [
+      "1893",
+      "1895",
+      "1923",
+      "2010"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Roy Chapman Andrews volt."
+  },
+  {
+    "id": 497,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Leptoceratops-t?",
+    "options": [
+      "2009",
+      "1910",
+      "1893",
+      "1917"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 498,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Hadrosaurus-t?",
+    "options": [
+      "1858",
+      "1969",
+      "1972",
+      "1857"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező William Parker Foulke (leírta Joseph Leidy) volt."
+  },
+  {
+    "id": 499,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Spinops-t?",
+    "options": [
+      "1912",
+      "1995",
+      "1904",
+      "1916"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Charles H. Sternberg és fiai volt."
+  },
+  {
+    "id": 500,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Archaeopteryx-t?",
+    "options": [
+      "2015",
+      "1916",
+      "1891",
+      "1861"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező solnhofeni kőfejtő munkások, leírta Hermann von Meyer volt."
+  },
+  {
+    "id": 501,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Lambeosaurus-t?",
+    "options": [
+      "1901",
+      "1923",
+      "1890",
+      "1983"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező William Parks volt."
+  },
+  {
+    "id": 502,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Stegoceras-t?",
+    "options": [
+      "1879",
+      "1898",
+      "1966",
+      "1906"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 503,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Tenontosaurus-t?",
+    "options": [
+      "1966",
+      "1962",
+      "1858",
+      "2022"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező John Ostrom volt."
+  },
+  {
+    "id": 504,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Zephyrosaurus-t?",
+    "options": [
+      "1978",
+      "1893",
+      "1929",
+      "1997"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Chuck Schalf (leírta Hans-Dieter Sues) volt."
+  },
+  {
+    "id": 505,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Saurophaganax-t?",
+    "options": [
+      "1916",
+      "1931",
+      "1966",
+      "1929"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező J. Willis Stovall volt."
+  },
+  {
+    "id": 506,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Alamosaurus-t?",
+    "options": [
+      "1989",
+      "1889",
+      "1869",
+      "1921"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Charles Whitney Gilmore volt."
+  },
+  {
+    "id": 507,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Abelisaurus-t?",
+    "options": [
+      "2006",
+      "1978",
+      "1985",
+      "1991"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező José Bonaparte és Fernando Novas volt."
+  },
+  {
+    "id": 508,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Maip-t?",
+    "options": [
+      "1992",
+      "1942",
+      "2022",
+      "1822"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Mauro Aranciaga Rolando (és munkatársai) volt."
+  },
+  {
+    "id": 509,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Prosaurolophus-t?",
+    "options": [
+      "1979",
+      "1915",
+      "1914",
+      "2012"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 510,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Unenlagia-t?",
+    "options": [
+      "1915",
+      "1996",
+      "2015",
+      "1987"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 511,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Ornithomimus-t?",
+    "options": [
+      "1940",
+      "1890",
+      "1909",
+      "1900"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 512,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Zuniceratops-t?",
+    "options": [
+      "1832",
+      "2004",
+      "1996",
+      "1990"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Christopher Wolfe volt."
+  },
+  {
+    "id": 513,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Europasaurus-t?",
+    "options": [
+      "1892",
+      "1946",
+      "1916",
+      "2006"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Holger Lüdtke nyomán elnevezve, Oliver Hartung csapata volt."
+  },
+  {
+    "id": 514,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Segisaurus-t?",
+    "options": [
+      "1924",
+      "1895",
+      "1933",
+      "2025"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Charles Camp volt."
+  },
+  {
+    "id": 515,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Brachylophosaurus-t?",
+    "options": [
+      "1858",
+      "1936",
+      "1891",
+      "1898"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Charles M. Sternberg volt."
+  },
+  {
+    "id": 516,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Megalosaurus-t?",
+    "options": [
+      "1824",
+      "1972",
+      "1936",
+      "1965"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező William Buckland volt."
+  },
+  {
+    "id": 517,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Therizinosaurus-t?",
+    "options": [
+      "1910",
+      "1954",
+      "1890",
+      "1832"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Evgeny Maleev volt."
+  },
+  {
+    "id": 518,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Miragaia-t?",
+    "options": [
+      "2009",
+      "1993",
+      "1818",
+      "1975"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Octávio Mateus csapata volt."
+  },
+  {
+    "id": 519,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Pelecanimimus-t?",
+    "options": [
+      "2000",
+      "1974",
+      "1993",
+      "1994"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Bernardino Pérez-Moreno csapata volt."
+  },
+  {
+    "id": 520,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Mochlodon-t?",
+    "options": [
+      "1855",
+      "1912",
+      "2012",
+      "1898"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Iharkúti kutatócsoport volt."
+  },
+  {
+    "id": 521,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Oviraptor-t?",
+    "options": [
+      "1999",
+      "2015",
+      "1874",
+      "1923"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Roy Chapman Andrews volt."
+  },
+  {
+    "id": 522,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Lourinhanosaurus-t?",
+    "options": [
+      "1980",
+      "1998",
+      "1978",
+      "1924"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező leírta Octávio Mateus volt."
+  },
+  {
+    "id": 523,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Mantellisaurus-t?",
+    "options": [
+      "1837",
+      "1914",
+      "1869",
+      "1994"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező leírta Reginald Hooley volt."
+  },
+  {
+    "id": 524,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Guaibasaurus-t?",
+    "options": [
+      "1946",
+      "1999",
+      "1975",
+      "1898"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező leírta Jorge Bonaparte és csapata volt."
+  },
+  {
+    "id": 525,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Ajkaceratops-t?",
+    "options": [
+      "1996",
+      "1932",
+      "2010",
+      "1933"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Ősi Attila és munkatársai volt."
+  },
+  {
+    "id": 526,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Baryonyx-t?",
+    "options": [
+      "1881",
+      "1983",
+      "1869",
+      "1887"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező William Walker amatőr fosszíliagyűjtő volt."
+  },
+  {
+    "id": 527,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Brachiosaurus-t?",
+    "options": [
+      "1900",
+      "1913",
+      "1932",
+      "1870"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Elmer S. Riggs volt."
+  },
+  {
+    "id": 528,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Parksosaurus-t?",
+    "options": [
+      "1824",
+      "1990",
+      "1926",
+      "1996"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező William Parks volt."
+  },
+  {
+    "id": 529,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Anchiceratops-t?",
+    "options": [
+      "2007",
+      "1837",
+      "1855",
+      "1912"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 530,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Chasmosaurus-t?",
+    "options": [
+      "1832",
+      "1913",
+      "1954",
+      "1895"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 531,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Zalmoxes-t?",
+    "options": [
+      "1977",
+      "1899",
+      "1989",
+      "1965"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Báró Nopcsa Ferenc volt."
+  },
+  {
+    "id": 532,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Scelidosaurus-t?",
+    "options": [
+      "1859",
+      "2003",
+      "1965",
+      "1897"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező James Harrison, leírta Richard Owen volt."
+  },
+  {
+    "id": 533,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Eustreptospondylus-t?",
+    "options": [
+      "1870",
+      "1921",
+      "1869",
+      "1929"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező James Phillips munkásai, leírta Alick Walker volt."
+  },
+  {
+    "id": 534,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Othnielia-t?",
+    "options": [
+      "1897",
+      "1980",
+      "1993",
+      "1877"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 535,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Tarbosaurus-t?",
+    "options": [
+      "1999",
+      "1929",
+      "1955",
+      "2006"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Evgeny Maleev volt."
+  },
+  {
+    "id": 536,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Torvosaurus-t?",
+    "options": [
+      "1874",
+      "1896",
+      "1971",
+      "1932"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező James Jensen és Peter Galton volt."
+  },
+  {
+    "id": 537,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Bakonydraco-t?",
+    "options": [
+      "1877",
+      "1990",
+      "1979",
+      "2005"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Ősi Attila, Weishampel és Coralia Jianu volt."
+  },
+  {
+    "id": 538,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Sinosauropteryx-t?",
+    "options": [
+      "1981",
+      "1954",
+      "1883",
+      "1996"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Li Yumin volt."
+  },
+  {
+    "id": 539,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Gasparinisaura-t?",
+    "options": [
+      "1992",
+      "1915",
+      "1942",
+      "1984"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Rodolfo Coria volt."
+  },
+  {
+    "id": 540,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Hagryphus-t?",
+    "options": [
+      "1942",
+      "2001",
+      "1998",
+      "1995"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Lindsay Zanno és Scott Sampson volt."
+  },
+  {
+    "id": 541,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Struthiosaurus-t?",
+    "options": [
+      "1902",
+      "1989",
+      "1912",
+      "1858"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Bajazid Elmas Doda (leírta Báró Nopcsa Ferenc) volt."
+  },
+  {
+    "id": 542,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Anchisaurus-t?",
+    "options": [
+      "1971",
+      "1932",
+      "1818",
+      "1946"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Solomon Ellsworth (1818), leírta Othniel Charles Marsh volt."
+  },
+  {
+    "id": 543,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Hungarosaurus-t?",
+    "options": [
+      "1984",
+      "2000",
+      "1994",
+      "1912"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Torma András és Ősi Attila csapata volt."
+  },
+  {
+    "id": 544,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Ammosaurus-t?",
+    "options": [
+      "1884",
+      "1866",
+      "1916",
+      "1998"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 545,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Dromaeosaurus-t?",
+    "options": [
+      "1914",
+      "2004",
+      "2000",
+      "1924"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 546,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Polacanthus-t?",
+    "options": [
+      "1870",
+      "1865",
+      "1837",
+      "2002"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező William Fox volt."
+  },
+  {
+    "id": 547,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Hatzegopteryx-t?",
+    "options": [
+      "2002",
+      "2012",
+      "1979",
+      "1992"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Eric Buffetaut, Dan Grigorescu és Csiki Zoltán volt."
+  },
+  {
+    "id": 548,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Tyrannotitan-t?",
+    "options": [
+      "1977",
+      "1902",
+      "2002",
+      "1965"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Tomás Rich csapata (leírva Novas és de Valais) volt."
+  },
+  {
+    "id": 549,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Cedarpelta-t?",
+    "options": [
+      "2001",
+      "1999",
+      "2004",
+      "1990"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Kenneth Carpenter csapata volt."
+  },
+  {
+    "id": 550,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Podokesaurus-t?",
+    "options": [
+      "1925",
+      "2005",
+      "1910",
+      "1893"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Mignon Talbot volt."
+  },
+  {
+    "id": 551,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Euoplocephalus-t?",
+    "options": [
+      "1897",
+      "1895",
+      "2005",
+      "1971"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 552,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Oryctodromeus-t?",
+    "options": [
+      "1857",
+      "2005",
+      "1910",
+      "1898"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező David Varricchio csapata volt."
+  },
+  {
+    "id": 553,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Iguanodon-t?",
+    "options": [
+      "1965",
+      "1884",
+      "1936",
+      "1822"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Gideon Mantell volt."
+  },
+  {
+    "id": 554,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Pentaceratops-t?",
+    "options": [
+      "1921",
+      "2010",
+      "1897",
+      "1913"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Charles Hazelius Sternberg volt."
+  },
+  {
+    "id": 555,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Ouranosaurus-t?",
+    "options": [
+      "1889",
+      "1966",
+      "1929",
+      "1999"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Philippe Taquet, 1966 (leírás: 1976) volt."
+  },
+  {
+    "id": 556,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Hylaeosaurus-t?",
+    "options": [
+      "1874",
+      "1832",
+      "1857",
+      "1978"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Gideon Mantell volt."
+  },
+  {
+    "id": 557,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Hesperosaurus-t?",
+    "options": [
+      "1924",
+      "1985",
+      "1963",
+      "1998"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Jim Mjos (leírta Kenneth Carpenter) volt."
+  },
+  {
+    "id": 558,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Gorgosaurus-t?",
+    "options": [
+      "1913",
+      "1855",
+      "1999",
+      "1969"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 559,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Coelophysis-t?",
+    "options": [
+      "1977",
+      "1881",
+      "1921",
+      "1971"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező David Baldwin (leírta Edward Drinker Cope) volt."
+  },
+  {
+    "id": 560,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Styracosaurus-t?",
+    "options": [
+      "1981",
+      "1887",
+      "2012",
+      "1913"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 561,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Kentrosaurus-t?",
+    "options": [
+      "1909",
+      "1874",
+      "1978",
+      "1822"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Edwin Hennig és a német Tendaguru-expedíció, 1909–1912 (leírás: 1915) volt."
+  },
+  {
+    "id": 562,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Ornitholestes-t?",
+    "options": [
+      "1900",
+      "1942",
+      "1978",
+      "1896"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Henry Fairfield Osborn volt."
+  },
+  {
+    "id": 563,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Albertosaurus-t?",
+    "options": [
+      "1884",
+      "2001",
+      "1966",
+      "1869"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Joseph Burr Tyrrell volt."
+  },
+  {
+    "id": 564,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Alvarezsaurus-t?",
+    "options": [
+      "1955",
+      "1987",
+      "1996",
+      "2006"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 565,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Hypsilophodon-t?",
+    "options": [
+      "2009",
+      "1859",
+      "1889",
+      "1869"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező William Fox volt."
+  },
+  {
+    "id": 566,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Allosaurus-t?",
+    "options": [
+      "1877",
+      "1995",
+      "2015",
+      "1978"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 567,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Utahraptor-t?",
+    "options": [
+      "2025",
+      "1891",
+      "1917",
+      "1991"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Jim Kirkland, Rob Gaston és dán Columbe volt."
+  },
+  {
+    "id": 568,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Ankylosaurus-t?",
+    "options": [
+      "1977",
+      "2025",
+      "1954",
+      "1906"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Barnum Brown volt."
+  },
+  {
+    "id": 569,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Avaceratops-t?",
+    "options": [
+      "1959",
+      "1926",
+      "1991",
+      "1981"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Eddie Cole (leírta Peter Dodson) volt."
+  },
+  {
+    "id": 570,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Triceratops-t?",
+    "options": [
+      "1955",
+      "1887",
+      "1824",
+      "1891"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező John Bell Hatcher (leírta Othniel Charles Marsh) volt."
+  },
+  {
+    "id": 571,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Mapusaurus-t?",
+    "options": [
+      "1993",
+      "1866",
+      "2025",
+      "1997"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Rodolfo Coria és Philip Currie volt."
+  },
+  {
+    "id": 572,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Neuquenosaurus-t?",
+    "options": [
+      "1936",
+      "1893",
+      "1948",
+      "1892"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Santiago Roth (leírta Richard Lydekker) volt."
+  },
+  {
+    "id": 573,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Amargasaurus-t?",
+    "options": [
+      "1984",
+      "1884",
+      "2025",
+      "1879"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Guillermo Heredia (leírta Bonaparte és Salgado) volt."
+  },
+  {
+    "id": 574,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Massospondylus-t?",
+    "options": [
+      "1898",
+      "1936",
+      "1926",
+      "1854"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Richard Owen, 1854 volt."
+  },
+  {
+    "id": 575,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Magyarosaurus-t?",
+    "options": [
+      "1994",
+      "1981",
+      "1895",
+      "1942"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Nopcsa Ilona volt."
+  },
+  {
+    "id": 576,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Herrerasaurus-t?",
+    "options": [
+      "2024",
+      "1959",
+      "1936",
+      "1861"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Victorino Herrera (leírta Osvaldo Reig) volt."
+  },
+  {
+    "id": 577,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Cetiosaurus-t?",
+    "options": [
+      "1998",
+      "1841",
+      "1818",
+      "2005"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező leírta Richard Owen volt."
+  },
+  {
+    "id": 578,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Achelousaurus-t?",
+    "options": [
+      "1987",
+      "1895",
+      "1933",
+      "1964"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Jack Horner csapata (leírta Scott Sampson) volt."
+  },
+  {
+    "id": 579,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Mussaurus-t?",
+    "options": [
+      "1878",
+      "1861",
+      "1936",
+      "1970"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 580,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Staurikosaurus-t?",
+    "options": [
+      "1999",
+      "1970",
+      "1936",
+      "1962"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Llewellyn Ivor Price (leírta Edwin Colbert) volt."
+  },
+  {
+    "id": 581,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Gigantoraptor-t?",
+    "options": [
+      "1979",
+      "2005",
+      "1878",
+      "2010"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Xu Xing volt."
+  },
+  {
+    "id": 582,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Pisanosaurus-t?",
+    "options": [
+      "1962",
+      "1915",
+      "2021",
+      "1900"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Rodolfo Casamiquela volt."
+  },
+  {
+    "id": 583,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Pleurocoelus-t?",
+    "options": [
+      "2003",
+      "1923",
+      "1998",
+      "1858"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Christopher Johnston volt."
+  },
+  {
+    "id": 584,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Gastonia-t?",
+    "options": [
+      "1897",
+      "1989",
+      "1991",
+      "1992"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Robert Gaston (leírta James Kirkland) volt."
+  },
+  {
+    "id": 585,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Nodosaurus-t?",
+    "options": [
+      "1859",
+      "1925",
+      "1889",
+      "1915"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Othniel Charles Marsh volt."
+  },
+  {
+    "id": 586,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Giganotosaurus-t?",
+    "options": [
+      "1906",
+      "1993",
+      "2009",
+      "1884"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Rubén Carolini (leírta Coria és Salgado) volt."
+  },
+  {
+    "id": 587,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Gryposaurus-t?",
+    "options": [
+      "2001",
+      "1913",
+      "1865",
+      "2022"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező William Parks volt."
+  },
+  {
+    "id": 588,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Parasaurolophus-t?",
+    "options": [
+      "1909",
+      "2006",
+      "2015",
+      "1922"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező William Parks volt."
+  },
+  {
+    "id": 589,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Troodon-t?",
+    "options": [
+      "1996",
+      "1971",
+      "1855",
+      "2006"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Ferdinand Vandeveer Hayden volt."
+  },
+  {
+    "id": 590,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Nigersaurus-t?",
+    "options": [
+      "1976",
+      "1892",
+      "2010",
+      "1881"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Philippe Taquet, 1976; újraleírás: Paul Sereno és munkatársai, 1999/2010 volt."
+  },
+  {
+    "id": 591,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Riojasaurus-t?",
+    "options": [
+      "1855",
+      "1942",
+      "1898",
+      "1969"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 592,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Xenotarsosaurus-t?",
+    "options": [
+      "1925",
+      "2003",
+      "1865",
+      "1980"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Ricardo Martínez volt."
+  },
+  {
+    "id": 593,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Dilophosaurus-t?",
+    "options": [
+      "1859",
+      "2004",
+      "1942",
+      "1929"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Jesse Williams (leírta Samuel Paul Welles) volt."
+  },
+  {
+    "id": 594,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Lophorhothon-t?",
+    "options": [
+      "2006",
+      "1866",
+      "1948",
+      "1837"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Wann Langston Jr. volt."
+  },
+  {
+    "id": 595,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Pachyrhinosaurus-t?",
+    "options": [
+      "1946",
+      "1879",
+      "1985",
+      "1990"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Charles M. Sternberg volt."
+  },
+  {
+    "id": 596,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Diplodocus-t?",
+    "options": [
+      "1874",
+      "1946",
+      "1997",
+      "1877"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Benjamin Mudge és Samuel Wendell Williston volt."
+  },
+  {
+    "id": 597,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Struthiomimus-t?",
+    "options": [
+      "1948",
+      "1901",
+      "1989",
+      "1865"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Lawrence Lambe volt."
+  },
+  {
+    "id": 598,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Velociraptor-t?",
+    "options": [
+      "2010",
+      "2015",
+      "1965",
+      "1923"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Peter Kaisen volt."
+  },
+  {
+    "id": 599,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Masiakasaurus-t?",
+    "options": [
+      "1878",
+      "1955",
+      "1996",
+      "1972"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Scott Sampson, Catherine Forster és munkatársaik, 1996–2001 volt."
+  },
+  {
+    "id": 600,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Diamantinasaurus-t?",
+    "options": [
+      "1999",
+      "1874",
+      "2009",
+      "1891"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező Scott Hocknull volt."
+  },
+  {
+    "id": 601,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Komlosaurus-t?",
+    "options": [
+      "1973",
+      "1994",
+      "2002",
+      "1966"
+    ],
+    "correctIndex": 3,
+    "hint": "A felfedező Kőbányászok és Wein György geológus volt."
+  },
+  {
+    "id": 602,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Ligabuesaurus-t?",
+    "options": [
+      "1979",
+      "1990",
+      "1998",
+      "1870"
+    ],
+    "correctIndex": 2,
+    "hint": "A felfedező José Bonaparte volt."
+  },
+  {
+    "id": 603,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Psittacosaurus-t?",
+    "options": [
+      "1923",
+      "2021",
+      "1992",
+      "1890"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Henry Fairfield Osborn volt."
+  },
+  {
+    "id": 604,
+    "difficulty": "medium",
+    "question": "Melyik évben fedezték fel a Saltasaurus-t?",
+    "options": [
+      "1975",
+      "1877",
+      "1892",
+      "1979"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező José Bonaparte és Jaime Powell volt."
+  },
+  {
+    "id": 605,
+    "difficulty": "hard",
+    "question": "Melyik évben fedezték fel a Plateosaurus-t?",
+    "options": [
+      "1837",
+      "1878",
+      "1870",
+      "2012"
+    ],
+    "correctIndex": 0,
+    "hint": "A felfedező Johann Friedrich Engelhardt volt."
+  },
+  {
+    "id": 606,
+    "difficulty": "easy",
+    "question": "Melyik évben fedezték fel a Spinosaurus-t?",
+    "options": [
+      "1879",
+      "1912",
+      "2024",
+      "1841"
+    ],
+    "correctIndex": 1,
+    "hint": "A felfedező Ernst Stromer von Reichenbach volt."
   }
 ]

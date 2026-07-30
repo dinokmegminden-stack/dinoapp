@@ -64,9 +64,29 @@ function buildDiscoveryYearQuestion(dino, pool, fullPool = null) {
   const options = shuffle([dino.discovery_year, ...distractors]).map(String);
   return {
     type: 'fact',
-    question: `Mikor fedezték fel a ${dino.name_hu}-t?`,
+    question: `Melyik évben fedezték fel a ${dino.name_hu}-t?`,
     options,
     correctIndex: options.indexOf(String(dino.discovery_year)),
+  };
+}
+
+// A visszafelé kérdés (felfedezőből dínóra) csak akkor egyértelmű, ha a
+// felfedező neve az adott pool-ban EGYETLEN dínóhoz kötődik — különben
+// több "helyes" válasz is lehetne, ezért ilyenkor kihagyjuk.
+function buildReverseDiscovererQuestion(dino, pool, fullPool = null) {
+  if (!dino.discoverer_name) return null;
+  const widePool = fullPool && fullPool.length ? fullPool : pool;
+  const sameDiscoverer = widePool.filter((d) => d.discoverer_name === dino.discoverer_name);
+  if (sameDiscoverer.length > 1) return null;
+
+  const distractors = pickDistinctDistractors(dino.name_hu, pool, 'name_hu', 3, fullPool);
+  if (distractors.length < 3) return null;
+  const options = shuffle([dino.name_hu, ...distractors]);
+  return {
+    type: 'fact',
+    question: `Melyik dínót fedezte fel ${dino.discoverer_name}?`,
+    options,
+    correctIndex: options.indexOf(dino.name_hu),
   };
 }
 
@@ -182,6 +202,7 @@ const FACT_BUILDERS = [
   buildEpochQuestion,
   buildDiscovererQuestion,
   buildDiscoveryYearQuestion,
+  buildReverseDiscovererQuestion,
   buildLatinNameQuestion,
   buildCountryQuestion,
   buildDietQuestion,
