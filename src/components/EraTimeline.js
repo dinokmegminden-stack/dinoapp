@@ -135,38 +135,42 @@ export default function EraTimeline({
 
   const epochInteriorBoundaries = epochStages.slice(1).map((e) => e.start);
 
+  // A korszak-feliratok felváltva a vonal fölé/alá kerülnek (mint a Kutatók
+  // idővonalán a felváltva fent/lent lévő figurák) — két külön sorba
+  // szétosztva, hogy ne zsúfolódjanak egyetlen keskeny sávba.
+  const renderEpochLabels = (parity) =>
+    epochStages.map((epoch, i) => {
+      if (i % 2 !== parity) return null;
+      const leftP = pct(epoch.start);
+      const widthP = pct(epoch.end) - leftP;
+      if (widthP < EPOCH_MIN_LABEL_PCT) return null;
+      return (
+        <View key={epoch.label} style={[s.epochLabelWrap, { left: `${leftP}%`, width: `${widthP}%` }]}>
+          <Text
+            style={[s.epochLabelText, large && s.epochLabelTextLarge, xlarge && s.epochLabelTextXLarge, { fontFamily: bodyFont }]}
+            numberOfLines={1}
+          >
+            {epoch.label}
+          </Text>
+        </View>
+      );
+    });
+
   return (
     <LinearGradient colors={[COLORS.action, COLORS.accentDark]} style={[s.timeline, large && s.timelineLarge, xlarge && s.timelineXLarge]}>
-      <View style={s.timelineLabelRow}>
+      <View style={[s.epochLabelRow, large && s.epochLabelRowLarge, xlarge && s.epochLabelRowXLarge]}>{renderEpochLabels(0)}</View>
+
+      <View style={s.eraBarRow}>
         <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, xlarge && s.timelineLabelTextXLarge, { fontFamily: boldFont }]}>{startLabel}</Text>
+        <View style={[s.timelineEras, xlarge && s.timelineErasXLarge]}>
+          {segments.map((seg) => (
+            <View
+              key={`${seg.start}-${seg.end}`}
+              style={[s.era, { flex: seg.width, backgroundColor: eras.find((e) => e.start === seg.start).color }]}
+            />
+          ))}
+        </View>
         <Text style={[s.timelineLabelText, large && s.timelineLabelTextLarge, xlarge && s.timelineLabelTextXLarge, { fontFamily: boldFont }]}>{endLabel}</Text>
-      </View>
-
-      <View style={[s.timelineEras, xlarge && s.timelineErasXLarge]}>
-        {segments.map((seg) => (
-          <View
-            key={`${seg.start}-${seg.end}`}
-            style={[s.era, { flex: seg.width, backgroundColor: eras.find((e) => e.start === seg.start).color }]}
-          />
-        ))}
-      </View>
-
-      <View style={[s.epochLabelRow, xlarge && s.epochLabelRowXLarge]}>
-        {epochStages.map((epoch) => {
-          const leftP = pct(epoch.start);
-          const widthP = pct(epoch.end) - leftP;
-          if (widthP < EPOCH_MIN_LABEL_PCT) return null;
-          return (
-            <View key={epoch.label} style={[s.epochLabelWrap, { left: `${leftP}%`, width: `${widthP}%` }]}>
-              <Text
-                style={[s.epochLabelText, large && s.epochLabelTextLarge, xlarge && s.epochLabelTextXLarge, { fontFamily: bodyFont }]}
-                numberOfLines={1}
-              >
-                {epoch.label}
-              </Text>
-            </View>
-          );
-        })}
       </View>
 
       <View style={s.timelineTrack}>
@@ -196,6 +200,8 @@ export default function EraTimeline({
           </View>
         )}
       </View>
+
+      <View style={[s.epochLabelRow, large && s.epochLabelRowLarge, xlarge && s.epochLabelRowXLarge, s.epochLabelRowBelow]}>{renderEpochLabels(1)}</View>
     </LinearGradient>
   );
 }
@@ -216,10 +222,11 @@ const s = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 16,
   },
-  timelineLabelRow: {
+  eraBarRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 4,
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 3,
   },
   timelineLabelText: {
     color: '#3c2c17',
@@ -233,26 +240,32 @@ const s = StyleSheet.create({
     fontSize: 15,
   },
   timelineEras: {
+    flex: 1,
     flexDirection: 'row',
     height: 5,
     borderRadius: 3,
     overflow: 'hidden',
-    marginBottom: 3,
   },
   timelineErasXLarge: {
     height: 10,
     borderRadius: 5,
-    marginBottom: 6,
   },
   era: { height: '100%' },
   epochLabelRow: {
-    height: 9,
+    height: 12,
     marginBottom: 8,
     position: 'relative',
   },
+  epochLabelRowLarge: {
+    height: 14,
+  },
   epochLabelRowXLarge: {
-    height: 18,
+    height: 20,
     marginBottom: 10,
+  },
+  epochLabelRowBelow: {
+    marginBottom: 0,
+    marginTop: 8,
   },
   epochLabelWrap: {
     position: 'absolute',
@@ -264,14 +277,14 @@ const s = StyleSheet.create({
   },
   epochLabelText: {
     color: 'rgba(60,44,23,0.75)',
-    fontSize: 5.5,
+    fontSize: 7.5,
     letterSpacing: 0.1,
   },
   epochLabelTextLarge: {
-    fontSize: 7,
+    fontSize: 9,
   },
   epochLabelTextXLarge: {
-    fontSize: 13,
+    fontSize: 15,
     color: 'rgba(60,44,23,0.85)',
   },
   timelineTrack: {
