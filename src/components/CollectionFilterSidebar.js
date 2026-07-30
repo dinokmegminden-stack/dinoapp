@@ -4,7 +4,7 @@
 // üres kategória = nincs megszorítás. A logikát (opciók levezetése,
 // szűrés) a CollectionScreen.js végzi, ez a komponens csak megjelenít.
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet, ScrollView, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 
@@ -63,10 +63,62 @@ function FilterSection({ title, options, selectedSet, onToggle, defaultExpanded 
   );
 }
 
+// Numerikus tartomány-szűrő (testhossz, méterben) — nem checkbox-lista, mint
+// a többi kategória, hanem két szám-mező (min/max), ezért külön komponens.
+function LengthRangeSection({ range, onChange, defaultExpanded = false }) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const active = range.min !== '' || range.max !== '';
+
+  return (
+    <View style={styles.section}>
+      <Pressable style={styles.sectionHeader} onPress={() => setExpanded((e) => !e)}>
+        <View style={styles.sectionHeaderLeft}>
+          <Text style={styles.sectionTitle}>Testhossz (m)</Text>
+          {active && (
+            <View style={styles.countBadge}>
+              <Text style={styles.countBadgeText}>1</Text>
+            </View>
+          )}
+        </View>
+        <MaterialCommunityIcons
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={18}
+          color={COLORS.cream}
+        />
+      </Pressable>
+
+      {expanded && (
+        <View style={styles.lengthRangeRow}>
+          <TextInput
+            style={styles.lengthInput}
+            value={range.min}
+            onChangeText={(v) => onChange('min', v.replace(/[^0-9.]/g, ''))}
+            placeholder="min"
+            placeholderTextColor="rgba(254,250,224,0.35)"
+            keyboardType="decimal-pad"
+          />
+          <Text style={styles.lengthRangeDash}>–</Text>
+          <TextInput
+            style={styles.lengthInput}
+            value={range.max}
+            onChangeText={(v) => onChange('max', v.replace(/[^0-9.]/g, ''))}
+            placeholder="max"
+            placeholderTextColor="rgba(254,250,224,0.35)"
+            keyboardType="decimal-pad"
+          />
+        </View>
+      )}
+    </View>
+  );
+}
+
 // `categories`: [{ key, title, options: [{value,count}] }], sorrend szerint.
 // `selected`: { [key]: Set<string> }. `onToggle(key, value)`.
-export default function CollectionFilterSidebar({ categories, selected, onToggle, onClear, style }) {
-  const totalSelected = Object.values(selected).reduce((sum, s) => sum + s.size, 0);
+// `lengthRange`: { min, max } (string). `onLengthRangeChange(field, value)`.
+export default function CollectionFilterSidebar({ categories, selected, onToggle, onClear, lengthRange, onLengthRangeChange, style }) {
+  const totalSelected =
+    Object.values(selected).reduce((sum, s) => sum + s.size, 0) +
+    (lengthRange && (lengthRange.min !== '' || lengthRange.max !== '') ? 1 : 0);
 
   return (
     <View style={[styles.container, style]}>
@@ -88,6 +140,9 @@ export default function CollectionFilterSidebar({ categories, selected, onToggle
             onToggle={(value) => onToggle(cat.key, value)}
           />
         ))}
+        {lengthRange && (
+          <LengthRangeSection range={lengthRange} onChange={onLengthRangeChange} />
+        )}
       </ScrollView>
     </View>
   );
@@ -204,5 +259,27 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontSize: 12,
     opacity: 0.45,
+  },
+  lengthRangeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingBottom: 12,
+  },
+  lengthInput: {
+    flex: 1,
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 13.5,
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.2)',
+    borderRadius: RADIUS.button,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
+  lengthRangeDash: {
+    color: COLORS.cream,
+    opacity: 0.5,
   },
 });

@@ -178,6 +178,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   const [mainTab, setMainTab] = useState(guest ? 'enciklopedia' : 'album');
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
   const [filters, setFilters] = useState({}); // { [categoryKey]: Set<string> }
+  const [lengthRange, setLengthRange] = useState({ min: '', max: '' }); // testhossz (m), string mezők a TextInputhoz
 
   const filterCategories = useMemo(() => {
     return FILTER_FIELDS.map(({ key, field, title, order, transform }) => ({
@@ -197,22 +198,42 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
     });
   };
 
-  const handleClearFilters = () => setFilters({});
+  const handleClearFilters = () => {
+    setFilters({});
+    setLengthRange({ min: '', max: '' });
+  };
+
+  const handleLengthRangeChange = (field, value) => {
+    setLengthRange((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Kategórián belül VAGY (elég egy egyező érték, pl. összetett étrendnél),
-  // kategóriák között ÉS — üres kategória nem szűkít.
+  // kategóriák között ÉS — üres kategória nem szűkít. A testhossz külön,
+  // numerikus tartomány-szűrő (nincs benne a FILTER_FIELDS checkbox-listában).
   const filteredDinos = useMemo(() => {
     const activeFields = FILTER_FIELDS.filter(({ key }) => (filters[key] || new Set()).size > 0);
-    if (activeFields.length === 0) return allDinos || [];
+    const minLen = lengthRange.min !== '' ? Number(lengthRange.min) : null;
+    const maxLen = lengthRange.max !== '' ? Number(lengthRange.max) : null;
 
-    return (allDinos || []).filter((d) =>
-      activeFields.every(({ key, field, transform }) => {
+    if (activeFields.length === 0 && minLen == null && maxLen == null) return allDinos || [];
+
+    return (allDinos || []).filter((d) => {
+      const categoryMatch = activeFields.every(({ key, field, transform }) => {
         const selected = filters[key];
         const values = splitMultiValue(d[field]).map(transform || ((v) => v));
         return values.some((v) => selected.has(v));
-      })
-    );
-  }, [allDinos, filters]);
+      });
+      if (!categoryMatch) return false;
+
+      if (minLen != null || maxLen != null) {
+        const len = d.length_m_max ?? d.length_m_min;
+        if (len == null) return false;
+        if (minLen != null && len < minLen) return false;
+        if (maxLen != null && len > maxLen) return false;
+      }
+      return true;
+    });
+  }, [allDinos, filters, lengthRange]);
 
   const epochSections = useMemo(() => {
     const byEpoch = new Map();
@@ -312,6 +333,8 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
               selected={filters}
               onToggle={handleToggleFilter}
               onClear={handleClearFilters}
+              lengthRange={lengthRange}
+              onLengthRangeChange={handleLengthRangeChange}
               style={isNarrow && styles.sidebarNarrow}
             />
             <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
