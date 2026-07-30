@@ -30,6 +30,21 @@ const GAMES = [
 
 const GAMES_BY_KEY = Object.fromEntries(GAMES.map((g) => [g.key, g]));
 
+// 16:9-re előre kivágott (attention-crop) tile-képek — a nyers IMAGE_MAP
+// forrás aspektusa változó (pl. Tyrannosaurus 1.5:1), a runtime `cover`
+// crop emiatt esetlegesen vágta a témát; ez a kártya-méretre szabott előre
+// vágott verzió a `card` aspectRatio 16/9-hez igazítva, lásd scripts/
+// generate-dino-images.js origin-pipeline-jét — nem érinti a máshol
+// (enciklopédia, trading card) használt eredeti IMAGE_MAP fájlokat.
+const TILE_IMAGE_MAP = {
+  Ankylosaurus: require('../../assets/images/tiles/ankylosaurus.jpg'),
+  Velociraptor: require('../../assets/images/tiles/velociraptor.jpg'),
+  Compsognathus: require('../../assets/images/tiles/compsognathus.jpg'),
+  Tyrannosaurus: require('../../assets/images/tiles/tyrannosaurus.jpg'),
+  Gallimimus: require('../../assets/images/tiles/gallimimus.jpg'),
+  Triceratops: require('../../assets/images/tiles/triceratops.jpg'),
+};
+
 function TierBadge({ tier }) {
   return (
     <View style={styles.tierBadge}>
@@ -40,7 +55,7 @@ function TierBadge({ tier }) {
 
 function GameCard({ game, onPress, isToday, playCount, cardWidth }) {
   const [hovered, setHovered] = useState(false);
-  const imgSource = IMAGE_MAP[game.dino];
+  const imgSource = TILE_IMAGE_MAP[game.dino] || IMAGE_MAP[game.dino];
 
   return (
     <TouchableOpacity
