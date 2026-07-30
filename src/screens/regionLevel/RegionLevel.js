@@ -86,6 +86,9 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
         onPassed={onPassed}
         onRetry={() => setQuizAttempt((n) => n + 1)}
         onBack={() => setCurrentScreen('packages')}
+        nickname={nickname}
+        progress={progress}
+        onNavigate={onNavigate}
       />
     );
   }

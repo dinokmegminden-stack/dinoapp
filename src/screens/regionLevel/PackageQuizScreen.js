@@ -6,9 +6,10 @@ import { buildQuiz } from '../../utils/quizGenerator';
 import { PASS_THRESHOLD } from '../../utils/regionProgress';
 import { csomagToPackId } from '../../utils/regionHelpers';
 import LevelShell from './LevelShell';
+import HeaderBar from '../../components/HeaderBar';
 import { s } from './RegionLevel.styles';
 
-export default function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack }) {
+export default function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack, nickname, progress, onNavigate }) {
   const pack = packages.find((p) => p.csomag === csomag);
   const questions = useRef(buildQuiz(pack ? pack.dinos : [], creatures)).current;
 
@@ -58,7 +59,7 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
 
   if (finished) {
     return (
-      <LevelShell>
+      <LevelShell header={<HeaderBar currentView="region" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
         <View style={s.resultWrap}>
           <Text style={s.resultEmoji}>{passed ? '🏆' : '😕'}</Text>
@@ -86,7 +87,7 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
   }
 
   return (
-    <LevelShell>
+    <LevelShell header={<HeaderBar currentView="region" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
       <View style={s.quizContentFlex}>
         <View style={s.browseCounterRow}>
