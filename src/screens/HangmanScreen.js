@@ -6,7 +6,7 @@
 // Ha mind a 6 lépés megtörténik, a játékos veszít; ha kitalálja a nevet,
 // mielőtt ez megtörténne, +10 XP jár.
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Platform, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Platform } from 'react-native';
 import {
   useFonts as useCinzel,
   Cinzel_700Bold,
@@ -48,9 +48,6 @@ function pickPuzzleCreature(allDinos) {
 }
 
 export default function HangmanScreen({ allDinos, nickname, progress, onNavigate, onBack }) {
-  const { width } = useWindowDimensions();
-  const isWide = width >= 760;
-
   const [cinzelLoaded] = useCinzel({ Cinzel_700Bold });
   const letterFont = cinzelLoaded ? 'Cinzel_700Bold' : 'System';
 
@@ -198,14 +195,12 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
         </View>
 
         <ScrollView style={styles.playScroll} contentContainerStyle={styles.playContent}>
-          <View style={[styles.playRow, isWide && styles.playRowWide]}>
-            {!isWide && (
-              <View style={styles.playRightCol}>
-                <AsteroidImpactPanel step={wrongCount} />
-              </View>
-            )}
+          <View style={styles.playRow}>
+            <View style={styles.impactBanner}>
+              <AsteroidImpactPanel step={wrongCount} />
+            </View>
 
-            <View style={[styles.playLeftCol, isWide && styles.playLeftColWide]}>
+            <View style={styles.playLeftCol}>
               <View style={styles.wordRow}>
                 {word.split(' ').map((segment, wi) => (
                   <View key={wi} style={styles.wordSegment}>
@@ -243,12 +238,6 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
                 })}
               </View>
             </View>
-
-            {isWide && (
-              <View style={[styles.playRightCol, styles.playRightColWide]}>
-                <AsteroidImpactPanel step={wrongCount} />
-              </View>
-            )}
           </View>
         </ScrollView>
       </View>
@@ -322,34 +311,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 20,
   },
-  playRowWide: {
-    flexDirection: 'row',
-    // 'center' (nem 'flex-start'): a bal oszlop (szó+billentyűzet) jóval
-    // alacsonyabb, mint a magas képsáv — enélkül a tetejéhez tapadva, nagy
-    // üres sáv maradt volna alatta a kép aljáig.
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 28,
+  impactBanner: {
+    width: '100%',
   },
   playLeftCol: {
     width: '100%',
     alignItems: 'center',
     gap: 20,
-  },
-  playLeftColWide: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  playRightCol: {
-    // Mobilon (nem-wide) szűkebb, hogy a magas (kb. 1:3.3 arányú) képsáv ne
-    // nyomja le a képernyő aljára a betűket/billentyűzetet.
-    width: '100%',
-    maxWidth: 75,
-    alignSelf: 'center',
-  },
-  playRightColWide: {
-    width: 110,
-    maxWidth: 110,
   },
   wordRow: {
     flexDirection: 'row',
