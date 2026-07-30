@@ -2,13 +2,16 @@
 // Könnyűsúlyú, függőség nélküli "tűzijáték" — Animated.Value-alapú
 // részecske-kitörés + üzenetsáv, ami leaderboard.js-ben leírt két esetnél jelenik
 // meg: saját legjobb idő megjavítása, vagy Top 10-be kerülés. Automatikusan
-// eltűnik ~1.9s után (lásd onDone hívás).
+// eltűnik ~1.9s után (lásd onDone hívás). Emellett a winner.png kabalafigura
+// felülről beesik/pattan a képernyőre ugyanennél a két esetnél.
 import React, { useEffect, useRef, useMemo } from 'react';
-import { View, Text, Animated, StyleSheet, Easing } from 'react-native';
+import { View, Text, Image, Animated, StyleSheet, Easing } from 'react-native';
 
 const PARTICLE_COUNT = 28;
 const PARTICLE_COLORS = ['#ee9b00', '#ca6702', '#ae2012', '#0a9396', '#94a187', '#0077b6', '#FEFAE0', '#9c8fb0'];
 const VISIBLE_DURATION_MS = 1900;
+const WINNER_IMG = require('../../assets/images/winner.png');
+const WINNER_SIZE = 180;
 
 function Particle({ angle, distance, color }) {
   const progress = useRef(new Animated.Value(0)).current;
@@ -39,11 +42,19 @@ function Particle({ angle, distance, color }) {
 
 export default function Fireworks({ visible, message, onDone }) {
   const bannerAnim = useRef(new Animated.Value(0)).current;
+  const winnerDrop = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (!visible) return;
     bannerAnim.setValue(0);
+    winnerDrop.setValue(0);
     Animated.spring(bannerAnim, { toValue: 1, friction: 5, useNativeDriver: true }).start();
+    Animated.spring(winnerDrop, {
+      toValue: 1,
+      friction: 4.5,
+      tension: 45,
+      useNativeDriver: true,
+    }).start();
     const timeout = setTimeout(() => onDone?.(), VISIBLE_DURATION_MS);
     return () => clearTimeout(timeout);
   }, [visible]);
@@ -61,8 +72,25 @@ export default function Fireworks({ visible, message, onDone }) {
 
   if (!visible) return null;
 
+  const winnerTranslateY = winnerDrop.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-500, 0],
+  });
+  const winnerRotate = winnerDrop.interpolate({
+    inputRange: [0, 0.6, 0.8, 1],
+    outputRange: ['-8deg', '6deg', '-3deg', '0deg'],
+  });
+
   return (
     <View style={styles.overlay} pointerEvents="none">
+      <Animated.Image
+        source={WINNER_IMG}
+        resizeMode="contain"
+        style={[
+          styles.winnerImage,
+          { transform: [{ translateY: winnerTranslateY }, { rotate: winnerRotate }] },
+        ]}
+      />
       <View style={styles.burstCenter}>
         {particles.map((p) => (
           <Particle key={p.key} angle={p.angle} distance={p.distance} color={p.color} />
@@ -91,6 +119,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 9999,
+  },
+  winnerImage: {
+    position: 'absolute',
+    top: 24,
+    left: '50%',
+    marginLeft: -WINNER_SIZE / 2,
+    width: WINNER_SIZE,
+    height: WINNER_SIZE,
   },
   burstCenter: {
     position: 'absolute',
