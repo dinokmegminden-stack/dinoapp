@@ -44,49 +44,37 @@ function buildEpochQuestion(dino, pool, fullPool = null) {
   };
 }
 
-function buildDiscovererQuestion(dino, pool, fullPool = null) {
-  if (!dino.discoverer_name) return null;
-  const distractors = pickDistinctDistractors(dino.discoverer_name, pool, 'discoverer_name', 3, fullPool);
+// Egyesített kérdés: felfedezés éve + felfedező egyetlen kérdésben, egyetlen
+// (év, felfedező) párként megjelenő válaszlehetőségekkel — a korábbi két külön
+// kérdés (ki / mikor) helyett, egyszerűsítésként.
+function buildDiscoveryQuestion(dino, pool, fullPool = null) {
+  if (!dino.discovery_year || !dino.discoverer_name) return null;
+
+  const formatAnswer = (d) => `${d.discovery_year} – ${d.discoverer_name}`;
+  const correct = formatAnswer(dino);
+
+  const eligible = (list) =>
+    list.filter((d) => d.discovery_year && d.discoverer_name && d.name_hu !== dino.name_hu);
+
+  const dedupe = (values) => [...new Set(values)].filter((v) => v !== correct);
+
+  let distractors = dedupe(shuffle(eligible(pool)).map(formatAnswer)).slice(0, 3);
+
+  if (distractors.length < 3 && fullPool) {
+    const fallbackValues = dedupe(shuffle(eligible(fullPool)).map(formatAnswer)).filter(
+      (v) => !distractors.includes(v)
+    );
+    distractors = [...distractors, ...fallbackValues].slice(0, 3);
+  }
+
   if (distractors.length < 3) return null;
-  const options = shuffle([dino.discoverer_name, ...distractors]);
+
+  const options = shuffle([correct, ...distractors]);
   return {
     type: 'fact',
-    question: `Ki fedezte fel a ${dino.name_hu}-t?`,
+    question: `Melyik évben és ki fedezte fel a ${dino.name_hu} dinoszauruszt?`,
     options,
-    correctIndex: options.indexOf(dino.discoverer_name),
-  };
-}
-
-function buildDiscoveryYearQuestion(dino, pool, fullPool = null) {
-  if (!dino.discovery_year) return null;
-  const distractors = pickDistinctDistractors(dino.discovery_year, pool, 'discovery_year', 3, fullPool);
-  if (distractors.length < 3) return null;
-  const options = shuffle([dino.discovery_year, ...distractors]).map(String);
-  return {
-    type: 'fact',
-    question: `Melyik évben fedezték fel a ${dino.name_hu}-t?`,
-    options,
-    correctIndex: options.indexOf(String(dino.discovery_year)),
-  };
-}
-
-// A visszafelé kérdés (felfedezőből dínóra) csak akkor egyértelmű, ha a
-// felfedező neve az adott pool-ban EGYETLEN dínóhoz kötődik — különben
-// több "helyes" válasz is lehetne, ezért ilyenkor kihagyjuk.
-function buildReverseDiscovererQuestion(dino, pool, fullPool = null) {
-  if (!dino.discoverer_name) return null;
-  const widePool = fullPool && fullPool.length ? fullPool : pool;
-  const sameDiscoverer = widePool.filter((d) => d.discoverer_name === dino.discoverer_name);
-  if (sameDiscoverer.length > 1) return null;
-
-  const distractors = pickDistinctDistractors(dino.name_hu, pool, 'name_hu', 3, fullPool);
-  if (distractors.length < 3) return null;
-  const options = shuffle([dino.name_hu, ...distractors]);
-  return {
-    type: 'fact',
-    question: `Melyik dínót fedezte fel ${dino.discoverer_name}?`,
-    options,
-    correctIndex: options.indexOf(dino.name_hu),
+    correctIndex: options.indexOf(correct),
   };
 }
 
@@ -200,9 +188,7 @@ function buildOrderQuestion(dino, pool, fullPool = null) {
 
 const FACT_BUILDERS = [
   buildEpochQuestion,
-  buildDiscovererQuestion,
-  buildDiscoveryYearQuestion,
-  buildReverseDiscovererQuestion,
+  buildDiscoveryQuestion,
   buildLatinNameQuestion,
   buildCountryQuestion,
   buildDietQuestion,
@@ -325,7 +311,7 @@ function selectByQuota(candidates, questionCount) {
 
 /**
  * Kérdésszám: minimum 5. Ha a csomagban 5-nél több dínó van, akkor dínószám + 1.
- * Ténykérdés-típusok: korszak, felfedező, felfedezés éve, teljes tudományos név, ország, étrend, dinoszaurusz-csoport (alrend).
+ * Ténykérdés-típusok: korszak, felfedezés (év + felfedező egyben), teljes tudományos név, ország, étrend, dinoszaurusz-csoport (alrend).
  * Összehasonlító típusok: hossz, kor (mya).
  * Mindig 4 opció per kérdés. A rossz válaszok előbb az adott edu level (régió) pool-ból,
  * ha kevés, a fullPool-ból is szedünk (nem korlátozódunk az edu szintre).

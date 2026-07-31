@@ -8,8 +8,8 @@
 // - győztes futás (15/15): 200 XP jóváírva
 // - megszakított futás (Kilépés játék közben): NINCS jóváírás
 
-import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, StatusBar, ScrollView, Animated } from 'react-native';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import { COLORS } from '../constants/colors';
@@ -21,10 +21,11 @@ import {
   MILLIONAIRE_MAX_XP,
   DIFFICULTY_LABELS,
 } from '../constants/millionaireXP';
-import { addXP } from '../components/XPBar';
+import { addXP, getTotalXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
+import GameTitleTag from '../components/GameTitleTag';
 
 // Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
 // asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
@@ -32,6 +33,11 @@ import Fireworks from '../components/Fireworks';
 const landingBg = require('../../assets/images/new_bg.jpg');
 
 const REVEAL_DELAY_MS = 1500;
+const LADDER_RUNGS = 15;
+const LADDER_HEIGHT = 420;
+const RUNG_GAP = LADDER_HEIGHT / (LADDER_RUNGS - 1);
+const pentaceratopsImg = require('../../assets/images/pentaceratops.png');
+const FIFTY_FIFTY_COST = 50;
 
 const DIFFICULTY_COLORS = {
   easy: '#606C38',
@@ -47,8 +53,20 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
   const [selected, setSelected] = useState(null);
   const [revealed, setRevealed] = useState(false);
   const [celebration, setCelebration] = useState({ visible: false, message: '' });
+  const [totalXP, setTotalXP] = useState(0);
+  const [fiftyFiftyUsed, setFiftyFiftyUsed] = useState(false);
+  const [removedOptions, setRemovedOptions] = useState([]);
 
   const startTimeRef = useRef(null);
+  const ladderAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(ladderAnim, {
+      toValue: currentQuestionIndex,
+      duration: 400,
+      useNativeDriver: false,
+    }).start();
+  }, [currentQuestionIndex]);
 
   const startGame = () => {
     const quiz = buildMillionaireQuiz();
@@ -61,7 +79,25 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
     setSelected(null);
     setRevealed(false);
     setCelebration({ visible: false, message: '' });
+    setFiftyFiftyUsed(false);
+    setRemovedOptions([]);
+    getTotalXP().then(setTotalXP);
     setGameStatus('playing');
+  };
+
+  const handleFiftyFifty = async () => {
+    if (revealed || fiftyFiftyUsed || totalXP < FIFTY_FIFTY_COST) return;
+    const question = questions[currentQuestionIndex];
+    const wrongIndices = question.options
+      .map((_, idx) => idx)
+      .filter((idx) => idx !== question.correctIndex);
+    const keepWrong = wrongIndices[Math.floor(Math.random() * wrongIndices.length)];
+    const toRemove = wrongIndices.filter((idx) => idx !== keepWrong);
+
+    setFiftyFiftyUsed(true);
+    setRemovedOptions(toRemove);
+    const newTotal = await addXP(-FIFTY_FIFTY_COST);
+    setTotalXP(newTotal);
   };
 
   const finishRun = async (finalXP, status) => {
@@ -103,6 +139,7 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
           setCurrentQuestionIndex((i) => i + 1);
           setSelected(null);
           setRevealed(false);
+          setRemovedOptions([]);
         } else {
           playQuizSfx('winningTheme');
           finishRun(newXP, 'won');
@@ -133,7 +170,7 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
 
             <View style={styles.rulesBox}>
               <RuleRow text={`${MILLIONAIRE_XP_TABLE.length} kérdés, egyre nehezebbek`} />
-              <RuleRow text="Nincs segítség, nincs joker" />
+              <RuleRow text={`Egyszer használható 50:50 (-${FIFTY_FIFTY_COST} XP)`} />
               <RuleRow text="Egy rossz válasz — vége a játéknak" />
               <RuleRow text="A megszerzett XP hibánál is megmarad" />
               <RuleRow text={`Mind a ${MILLIONAIRE_XP_TABLE.length} helyes: ${MILLIONAIRE_MAX_XP} XP + XP Milliomos cím`} />
@@ -224,10 +261,17 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
   const tableRow = MILLIONAIRE_XP_TABLE[currentQuestionIndex];
   const difficultyColor = DIFFICULTY_COLORS[tableRow.difficulty];
 
+  const markerTop = ladderAnim.interpolate({
+    inputRange: [0, LADDER_RUNGS - 1],
+    outputRange: [LADDER_HEIGHT - 25, -25],
+  });
+
   return (
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+
+        <GameTitleTag title="XP MILLIOMOS" />
 
         <View style={styles.header}>
           <Text style={styles.headerCounter}>Kérdés {currentQuestionIndex + 1} / {questions.length}</Text>
@@ -236,33 +280,68 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
           </Text>
         </View>
 
-        <View style={styles.questionBox}>
-          <Text style={styles.questionText}>{question.question}</Text>
-        </View>
+        <View style={styles.playBody}>
+          <View style={styles.playMain}>
+            <View style={styles.questionBox}>
+              <Text style={styles.questionText}>{question.question}</Text>
+            </View>
 
-        <View style={styles.optionsList}>
-          {question.options.map((opt, idx) => {
-            const optStyle = [styles.optionBtn];
-            if (revealed) {
-              if (idx === question.correctIndex) optStyle.push(styles.optionBtnCorrect);
-              else if (idx === selected) optStyle.push(styles.optionBtnWrong);
-            }
-            return (
-              <TouchableOpacity
-                key={idx}
-                style={optStyle}
-                disabled={revealed}
-                onPress={() => handleSelect(idx)}
-              >
-                <Text style={styles.optionText}>{['A', 'B', 'C', 'D'][idx]}: {opt}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+            <View style={styles.optionsList}>
+              {question.options.map((opt, idx) => {
+                if (removedOptions.includes(idx)) return null;
+                const optStyle = [styles.optionBtn];
+                if (revealed) {
+                  if (idx === question.correctIndex) optStyle.push(styles.optionBtnCorrect);
+                  else if (idx === selected) optStyle.push(styles.optionBtnWrong);
+                }
+                return (
+                  <TouchableOpacity
+                    key={idx}
+                    style={optStyle}
+                    disabled={revealed}
+                    onPress={() => handleSelect(idx)}
+                  >
+                    <Text style={styles.optionText}>{['A', 'B', 'C', 'D'][idx]}: {opt}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
 
-        <TouchableOpacity style={styles.backLink} onPress={handleQuitMidGame}>
-          <Text style={styles.backLinkText}>✕ Feladom (XP nem kerül jóváírásra)</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.fiftyFiftyBtn,
+                (revealed || fiftyFiftyUsed || totalXP < FIFTY_FIFTY_COST) && styles.fiftyFiftyBtnDisabled,
+              ]}
+              onPress={handleFiftyFifty}
+              disabled={revealed || fiftyFiftyUsed || totalXP < FIFTY_FIFTY_COST}
+            >
+              <Text style={styles.fiftyFiftyBtnText}>50:50 (-{FIFTY_FIFTY_COST} XP)</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.backLink} onPress={handleQuitMidGame}>
+              <Text style={styles.backLinkText}>✕ Feladom (XP nem kerül jóváírásra)</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.ladderTrack}>
+            <View style={styles.ladderLine} />
+            {MILLIONAIRE_XP_TABLE.map((row, idx) => (
+              <View
+                key={row.question}
+                style={[
+                  styles.ladderTick,
+                  { bottom: idx * RUNG_GAP - 3 },
+                  idx <= currentQuestionIndex && styles.ladderTickPassed,
+                ]}
+              />
+            ))}
+            <Animated.Image
+              source={pentaceratopsImg}
+              resizeMode="contain"
+              style={[styles.ladderMarker, { top: markerTop }]}
+            />
+          </View>
+        </View>
       </View>
     </Shell>
   );
@@ -364,6 +443,43 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     gap: 10,
+  },
+  playBody: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  playMain: {
+    flex: 1,
+  },
+  ladderTrack: {
+    width: 70,
+    marginTop: 10,
+    marginRight: 12,
+    height: LADDER_HEIGHT,
+    alignItems: 'center',
+  },
+  ladderLine: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 3,
+    backgroundColor: 'rgba(254,250,224,0.25)',
+    borderRadius: 2,
+  },
+  ladderTick: {
+    position: 'absolute',
+    width: 14,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(254,250,224,0.3)',
+  },
+  ladderTickPassed: {
+    backgroundColor: '#DDA15E',
+  },
+  ladderMarker: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
   },
   headerCounter: {
     color: '#FEFAE0',
@@ -501,6 +617,25 @@ const styles = StyleSheet.create({
     color: '#FEFAE0',
     fontFamily: FONTS.bold,
     fontSize: 16,
+    fontWeight: '700',
+  },
+  fiftyFiftyBtn: {
+    alignSelf: 'center',
+    marginTop: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(96,108,56,0.25)',
+    borderWidth: 2,
+    borderColor: '#606C38',
+  },
+  fiftyFiftyBtnDisabled: {
+    opacity: 0.35,
+  },
+  fiftyFiftyBtnText: {
+    color: '#FEFAE0',
+    fontFamily: FONTS.bold,
+    fontSize: 15,
     fontWeight: '700',
   },
   backLink: {

@@ -27,7 +27,6 @@ import CreatureMarquee from '../components/CreatureMarquee';
 import ProgressRing from '../components/ProgressRing';
 import MessageBoard from '../components/MessageBoard';
 import Footer from '../components/Footer';
-import ProgressSidebar from '../components/ProgressSidebar';
 import LandingMenu from './LandingMenu';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
@@ -36,7 +35,6 @@ import { rankForXP } from '../utils/ranks';
 import { isAdminNickname } from '../constants/admins';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
 import { findNextPack, overallCompletionRatio, regionCollectionStats } from '../utils/regionProgress';
-import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
@@ -423,13 +421,6 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           ))}
         </View>
       )}
-
-      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>KÖZÖSSÉG</Text>
-      <MessageBoard
-        nickname={nickname}
-        isAdmin={isAdminNickname(nickname)}
-        onRequireRegister={onRequireRegister}
-      />
     </>
   );
 
@@ -448,20 +439,15 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // Jobb oldali sáv (spec: 3-oszlopos elrendezés) — saját haladás (XP, széria,
   // régiónkénti gyűjtési arány), vendégnek regisztrációs CTA. A régió-sorok
   // hoverje ugyanazt a hoveredRegion state-et vezérli, mint a térkép/kártyák.
-  const guest = isGuestMode();
   const progressSidebarInner = (
-    <ProgressSidebar
-      guest={guest}
-      xp={xp}
-      streak={streak}
-      regionRatios={regionRatios}
-      regionCounts={regionCounts}
-      overallRatio={collectionRatio}
-      hoveredRegion={hoveredRegion}
-      onHoverRegion={setHoveredRegion}
-      onSelectRegion={handleSelectRegion}
-      onOpenJoin={onOpenJoin}
-    />
+    <>
+      <Text style={styles.sidebarHeading}>KÖZÖSSÉG</Text>
+      <MessageBoard
+        nickname={nickname}
+        isAdmin={isAdminNickname(nickname)}
+        onRequireRegister={onRequireRegister}
+      />
+    </>
   );
 
   const progressSidebarBlock = isWide ? (

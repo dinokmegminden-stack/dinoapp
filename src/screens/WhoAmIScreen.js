@@ -18,6 +18,7 @@ import { addXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
+import GameTitleTag from '../components/GameTitleTag';
 
 // Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
 // asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
@@ -219,6 +220,7 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+        <GameTitleTag title="KI VAGYOK ÉN?" />
 
         <View style={styles.header}>
           <Text style={styles.headerCounter}>

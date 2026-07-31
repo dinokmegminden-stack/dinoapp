@@ -19,6 +19,7 @@ import { FONTS } from '../constants/fonts';
 import { playSound, playQuizSfx } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
+import GameTitleTag from '../components/GameTitleTag';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
@@ -186,6 +187,7 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+        <GameTitleTag title="AKASZTÓFA" />
 
         <View style={styles.header}>
           <Text style={styles.headerMistakes}>Hibák: {wrongCount} / {MAX_MISTAKES}</Text>

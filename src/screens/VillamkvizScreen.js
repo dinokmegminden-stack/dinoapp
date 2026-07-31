@@ -19,6 +19,7 @@ import { addXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
+import GameTitleTag from '../components/GameTitleTag';
 
 // Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
 // asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
@@ -314,6 +315,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
+        <GameTitleTag title="5MP KÉPKVÍZ" />
 
         {/* Lives indicator */}
         <View style={styles.livesBar}>

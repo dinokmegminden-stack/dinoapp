@@ -20,6 +20,7 @@ import { addXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitRunnerScore, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
+import GameTitleTag from '../components/GameTitleTag';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
@@ -332,6 +333,7 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
+        <GameTitleTag title="DÍNÓFUTAM" />
 
         <View style={styles.header}>
           <View style={styles.headerRight}>
