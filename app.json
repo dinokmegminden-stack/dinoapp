@@ -24,10 +24,14 @@
       "package": "com.dinokmegminden.dinoapp",
       "versionCode": 2
     },
+   
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "output": "static"
     },
+
+
     "extra": {
       "eas": {
         "projectId": "0d094bdf-4af8-4388-8a8b-8a1d406875dd"

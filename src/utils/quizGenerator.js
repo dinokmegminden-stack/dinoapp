@@ -246,7 +246,123 @@ function buildAgeComparisonQuestion(dinoA, dinoB) {
   };
 }
 
+// --- Igaz/Hamis típusok (assertion questions) ---------------------------------
+
+function buildSizeAssertionQuestion(dino, pool) {
+  const len = midLength(dino);
+  if (len == null) return null;
+
+  // 50% igaz, 50% hamis
+  const isTrue = Math.random() > 0.5;
+  let statement = '';
+  let correctAnswer = '';
+
+  if (isTrue) {
+    const comparison = len > 10 ? 'nagyobb' : len > 5 ? 'közepes' : 'kisebb';
+    statement = `A ${dino.name_hu} ${comparison} méretű volt (${len.toFixed(1)}m).`;
+    correctAnswer = 'Igaz';
+  } else {
+    const falseLen = len > 10 ? len / 2 : len * 2;
+    statement = `A ${dino.name_hu} körülbelül ${falseLen.toFixed(1)}m hosszú volt.`;
+    correctAnswer = 'Hamis';
+  }
+
+  const options = shuffle(['Igaz', 'Hamis']);
+  return {
+    type: 'assertion',
+    question: statement,
+    options,
+    correctIndex: options.indexOf(correctAnswer),
+  };
+}
+
+function buildTimeAssertionQuestion(dino, pool) {
+  const mya = midMya(dino);
+  if (mya == null) return null;
+
+  const isTrue = Math.random() > 0.5;
+  let statement = '';
+  let correctAnswer = '';
+
+  if (isTrue) {
+    const timeDescription = mya > 100 ? 'a Jura korban' : mya > 65 ? 'a Kréta korban' : 'az őskori időkben';
+    statement = `A ${dino.name_hu} ${mya.toFixed(0)} millió éve élt (${timeDescription}).`;
+    correctAnswer = 'Igaz';
+  } else {
+    const falseEra = mya > 100 ? '10 millió' : '150 millió';
+    statement = `A ${dino.name_hu} körülbelül ${falseEra} éve élt.`;
+    correctAnswer = 'Hamis';
+  }
+
+  const options = shuffle(['Igaz', 'Hamis']);
+  return {
+    type: 'assertion',
+    question: statement,
+    options,
+    correctIndex: options.indexOf(correctAnswer),
+  };
+}
+
+// --- Leírás-alapú kérdések ---
+
+function buildDescriptionQuestion(dino, pool, fullPool = null) {
+  if (!dino.description_hu || dino.description_hu.length < 50) return null;
+
+  const desc = dino.description_hu.substring(0, 150);
+  const distractors = shuffle(
+    pool.filter((d) => d.name_hu !== dino.name_hu && d.description_hu).slice(0, 3)
+  ).slice(0, 3);
+
+  if (distractors.length < 3) return null;
+
+  const options = shuffle([dino.name_hu, ...distractors.map((d) => d.name_hu)]);
+  return {
+    type: 'description',
+    question: `Melyik dinoszauruszra vonatkozik ez a leírás?\n\n"${desc}..."`,
+    options,
+    correctIndex: options.indexOf(dino.name_hu),
+  };
+}
+
+// --- Család-alapú kérdések ---
+
+function buildFamilyQuestion(dino, pool, fullPool = null) {
+  if (!dino.csalad_hu || dino.csalad_hu.length < 2) return null;
+  const distractors = pickDistinctDistractors(dino.csalad_hu, pool, 'csalad_hu', 3, fullPool);
+  if (distractors.length < 3) return null;
+  const options = shuffle([dino.csalad_hu, ...distractors]);
+  return {
+    type: 'fact',
+    question: `Melyik családba tartozott a ${dino.name_hu}?`,
+    options,
+    correctIndex: options.indexOf(dino.csalad_hu),
+  };
+}
+
+// --- Rend-alapú kérdések ---
+
+function buildOrderTypeQuestion(dino, pool, fullPool = null) {
+  if (!dino.rend) return null;
+  const distractors = pickDistinctDistractors(dino.rend, pool, 'rend', 3, fullPool);
+  if (distractors.length < 3) return null;
+  const options = shuffle([dino.rend, ...distractors]);
+  return {
+    type: 'fact',
+    question: `Melyik rendbe (Saurischia/Ornithischia/Pterosauria) tartozott a ${dino.name_hu}?`,
+    options,
+    correctIndex: options.indexOf(dino.rend),
+  };
+}
+
 const COMPARISON_BUILDERS = [buildLengthComparisonQuestion, buildAgeComparisonQuestion];
+
+const ASSERTION_BUILDERS = [buildSizeAssertionQuestion, buildTimeAssertionQuestion];
+
+const NEW_FACT_BUILDERS = [
+  buildDescriptionQuestion,
+  buildFamilyQuestion,
+  buildOrderTypeQuestion,
+];
 
 function allPairs(list) {
   const pairs = [];
@@ -256,6 +372,49 @@ function allPairs(list) {
     }
   }
   return pairs;
+}
+
+// --- 3-Way rank (A, B, C közül melyik a legkisebb/legnagyobb) ----
+
+function buildRankingQuestion(dinoA, dinoB, dinoC, criteria = 'length') {
+  if (criteria === 'length') {
+    const lens = [dinoA, dinoB, dinoC].map((d) => ({ dino: d, len: midLength(d) }));
+    if (lens.some((l) => l.len == null)) return null;
+    const sorted = lens.sort((a, b) => a.len - b.len);
+    const smallest = sorted[0].dino;
+    const options = shuffle([dinoA.name_hu, dinoB.name_hu, dinoC.name_hu]);
+    return {
+      type: 'ranking',
+      question: `Melyik volt a legkisebb közülük?\n${dinoA.name_hu}, ${dinoB.name_hu}, ${dinoC.name_hu}`,
+      options,
+      correctIndex: options.indexOf(smallest.name_hu),
+    };
+  } else if (criteria === 'age') {
+    const ages = [dinoA, dinoB, dinoC].map((d) => ({ dino: d, mya: midMya(d) }));
+    if (ages.some((a) => a.mya == null)) return null;
+    const sorted = ages.sort((a, b) => b.mya - a.mya);
+    const oldest = sorted[0].dino;
+    const options = shuffle([dinoA.name_hu, dinoB.name_hu, dinoC.name_hu]);
+    return {
+      type: 'ranking',
+      question: `Melyik élt a legrégebben közülük?\n${dinoA.name_hu}, ${dinoB.name_hu}, ${dinoC.name_hu}`,
+      options,
+      correctIndex: options.indexOf(oldest.name_hu),
+    };
+  }
+  return null;
+}
+
+function allTriples(list) {
+  const triples = [];
+  for (let i = 0; i < list.length; i++) {
+    for (let j = i + 1; j < list.length; j++) {
+      for (let k = j + 1; k < list.length; k++) {
+        triples.push([list[i], list[j], list[k]]);
+      }
+    }
+  }
+  return triples;
 }
 
 // --- Jelöltlista + kvóta alapú kiválasztás ------------------------------------
@@ -273,16 +432,42 @@ function buildCandidates(packageDinos, pool, fullPool) {
     candidates.push({ dinoIds, question });
   };
 
+  // Összes fact builder
+  const allFactBuilders = [...FACT_BUILDERS, ...NEW_FACT_BUILDERS];
   for (const dino of packageDinos) {
-    for (const builder of FACT_BUILDERS) {
+    for (const builder of allFactBuilders) {
       tryAdd(`${builder.name}:${dino.id}`, builder(dino, pool, fullPool), [dino.id]);
+    }
+    // Assertion builders (igaz/hamis)
+    for (const builder of ASSERTION_BUILDERS) {
+      // Każdy assertion létrehozhat más-más igaz/hamis ágat — stabil seed kell
+      const seed = Math.abs(parseInt(dino.id.toString().slice(0, 8), 16) % 2);
+      tryAdd(`${builder.name}:${dino.id}:${seed}`, builder(dino, pool, fullPool), [dino.id]);
     }
   }
 
+  // Pair-based comparisons
   for (const [a, b] of allPairs(packageDinos)) {
     const pairKey = [a.id, b.id].sort().join(':');
     for (const builder of COMPARISON_BUILDERS) {
       tryAdd(`${builder.name}:${pairKey}`, builder(a, b), [a.id, b.id]);
+    }
+  }
+
+  // Triple-based ranking (csak ha 3+ dínó van a csomagban)
+  if (packageDinos.length >= 3) {
+    for (const [a, b, c] of allTriples(packageDinos)) {
+      const tripleKey = [a.id, b.id, c.id].sort().join(':');
+      tryAdd(
+        `buildRankingQuestion:length:${tripleKey}`,
+        buildRankingQuestion(a, b, c, 'length'),
+        [a.id, b.id, c.id]
+      );
+      tryAdd(
+        `buildRankingQuestion:age:${tripleKey}`,
+        buildRankingQuestion(a, b, c, 'age'),
+        [a.id, b.id, c.id]
+      );
     }
   }
 
@@ -310,14 +495,15 @@ function selectByQuota(candidates, questionCount) {
 }
 
 /**
- * Kérdésszám: minimum 5. Ha a csomagban 5-nél több dínó van, akkor dínószám + 1.
- * Ténykérdés-típusok: korszak, felfedezés (év + felfedező egyben), teljes tudományos név, ország, étrend, dinoszaurusz-csoport (alrend).
- * Összehasonlító típusok: hossz, kor (mya).
+ * Kérdésszám: minimum 5. Több kérdéstípus miatt dinamikusan több lehet.
+ * Ténykérdés-típusok: korszak, felfedezés, latin név, ország, étrend, alrend, család, rend, leírás.
+ * Igaz/Hamis: méret, idő.
+ * Összehasonlító: hossz, kor.
+ * Ranking (3-way): hossz, kor.
  * Mindig 4 opció per kérdés. A rossz válaszok előbb az adott edu level (régió) pool-ból,
  * ha kevés, a fullPool-ból is szedünk (nem korlátozódunk az edu szintre).
  * Minden lehetséges kérdés egyszer generálódik (dedupolt jelöltlista), majd kvóta alapján
- * választunk úgy, hogy minden dínóról legalább egy kérdés bekerüljön, mielőtt bármelyikről
- * második is bekerülne.
+ * választunk úgy, hogy minden dínóról legalább egy kérdés bekerüljön.
  */
 export function buildQuiz(packageDinos, fullPool) {
   if (!packageDinos || packageDinos.length === 0) return [];
@@ -326,7 +512,8 @@ export function buildQuiz(packageDinos, fullPool) {
   const basePool = fullPool && fullPool.length ? fullPool : packageDinos;
   const pool = eduLevel != null ? basePool.filter((d) => d.edu === eduLevel) : basePool;
 
-  const questionCount = packageDinos.length > 5 ? packageDinos.length + 1 : 5;
+  // Több típus = több kérdés: min 8, vagy dínó-szám × 1.5
+  const questionCount = Math.max(8, Math.ceil(packageDinos.length * 1.5));
 
   const candidates = buildCandidates(packageDinos, pool, basePool);
   const selected = selectByQuota(candidates, questionCount);
