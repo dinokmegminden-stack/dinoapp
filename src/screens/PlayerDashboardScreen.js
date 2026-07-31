@@ -4,18 +4,16 @@
 // amin kiemelve látszik, mely napokon indított játékot (game_events.started_at
 // alapján, lásd gameEventsService.getVisitDates()).
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
-import Fireworks from '../components/Fireworks';
 import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES, CENOZOIC_ERAS, CENOZOIC_EPOCH_STAGES } from '../components/EraTimeline';
 import { getTotalXP } from '../components/XPBar';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { getVisitDates } from '../services/gameEventsService';
 import { toDateKey, computeStreak } from '../utils/visitStats';
-import { creatureCollectionStats, unlockAllProgress } from '../utils/regionProgress';
-import { redeemUnlockCode } from '../services/unlockCodesService';
+import { creatureCollectionStats } from '../utils/regionProgress';
 
 // Az irányítópult idővonala a dínókártyán látott sávot folytatja a kréta
 // végétől (66M) egészen máig (0M), hogy a jégkorszaki emlősök (pl. Kárpát-medence
@@ -47,42 +45,15 @@ function buildMonthGrid(year, month) {
   return cells;
 }
 
-export default function PlayerDashboardScreen({ nickname, playerId, allDinos, progress, onUnlocked, onBack }) {
+export default function PlayerDashboardScreen({ nickname, playerId, allDinos, progress, onBack }) {
   const [loading, setLoading] = useState(true);
   const [visitDateKeys, setVisitDateKeys] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = jelen hónap, -1 = előző, stb.
   const [xp, setXP] = useState(0);
 
-  const [redeemCode, setRedeemCode] = useState('');
-  const [redeeming, setRedeeming] = useState(false);
-  const [redeemError, setRedeemError] = useState(null);
-  const [celebration, setCelebration] = useState({ visible: false, message: '' });
-
   useEffect(() => {
     getTotalXP().then(setXP);
   }, []);
-
-  const handleRedeem = async () => {
-    if (!redeemCode.trim() || !playerId) return;
-    setRedeemError(null);
-    setRedeeming(true);
-    const result = await redeemUnlockCode(redeemCode.trim(), playerId);
-    setRedeeming(false);
-    if (!result.success) {
-      setRedeemError(
-        result.error === 'already_used'
-          ? 'Ezt a kódot már beváltotta valaki.'
-          : result.error === 'invalid_code'
-            ? 'Érvénytelen kód.'
-            : 'Hiba történt, próbáld újra.'
-      );
-      return;
-    }
-
-    setRedeemCode('');
-    onUnlocked?.(unlockAllProgress());
-    setCelebration({ visible: true, message: '🎉 Minden dínókártya kinyitva!' });
-  };
 
   useEffect(() => {
     let cancelled = false;
@@ -116,11 +87,6 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
     <Shell header={<HeaderBar currentView="dashboard" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-        <Fireworks
-          visible={celebration.visible}
-          message={celebration.message}
-          onDone={() => setCelebration((c) => ({ ...c, visible: false }))}
-        />
 
         <View style={styles.header}>
           <View style={styles.titleRow}>
@@ -216,33 +182,6 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               <Text style={styles.calendarHint}>
                 Kiemelve azok a napok, amikor játszottál valamelyik játékmóddal.
               </Text>
-            </View>
-
-            <View style={styles.redeemCard}>
-              <Text style={styles.redeemTitle}>🎁 Kód beváltása</Text>
-              <Text style={styles.redeemHint}>
-                Ha támogattad a csatornát és kaptál egy egyedi kódot, itt válthatod be —
-                az összes dínókártya azonnal megnyílik.
-              </Text>
-              <View style={styles.redeemRow}>
-                <TextInput
-                  style={styles.redeemInput}
-                  value={redeemCode}
-                  onChangeText={(text) => setRedeemCode(text.toUpperCase())}
-                  placeholder="pl. DMM-7KX9QA"
-                  placeholderTextColor="rgba(254,250,224,0.35)"
-                  autoCapitalize="characters"
-                  autoCorrect={false}
-                />
-                <TouchableOpacity
-                  style={[styles.redeemBtn, (redeeming || !redeemCode.trim()) && styles.redeemBtnDisabled]}
-                  onPress={handleRedeem}
-                  disabled={redeeming || !redeemCode.trim()}
-                >
-                  <Text style={styles.redeemBtnText}>{redeeming ? '…' : 'Beváltás'}</Text>
-                </TouchableOpacity>
-              </View>
-              {!!redeemError && <Text style={styles.redeemError}>{redeemError}</Text>}
             </View>
           </ScrollView>
         )}
@@ -443,67 +382,6 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginTop: 10,
     textAlign: 'center',
-  },
-  redeemCard: {
-    marginTop: 16,
-    backgroundColor: 'rgba(0,95,115,0.4)',
-    borderWidth: 1,
-    borderColor: 'rgba(254,250,224,0.16)',
-    borderRadius: RADIUS.cardLarge,
-    padding: 16,
-  },
-  redeemTitle: {
-    color: COLORS.accent,
-    fontFamily: FONTS.bold,
-    fontSize: 15,
-    fontWeight: '700',
-    marginBottom: 6,
-  },
-  redeemHint: {
-    color: COLORS.cream,
-    fontFamily: FONTS.body,
-    fontSize: 12,
-    opacity: 0.7,
-    lineHeight: 17,
-    marginBottom: 12,
-  },
-  redeemRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  redeemInput: {
-    flex: 1,
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 15,
-    fontWeight: '700',
-    backgroundColor: COLORS.bgMid,
-    borderRadius: RADIUS.button,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-  },
-  redeemBtn: {
-    backgroundColor: COLORS.accent,
-    borderRadius: RADIUS.button,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  redeemBtnDisabled: {
-    opacity: 0.5,
-  },
-  redeemBtnText: {
-    color: COLORS.bgDark,
-    fontFamily: FONTS.bold,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  redeemError: {
-    color: '#F44336',
-    fontFamily: FONTS.body,
-    fontSize: 13,
-    marginTop: 10,
   },
   backBtn: {
     width: 32,

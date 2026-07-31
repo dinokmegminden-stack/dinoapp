@@ -20,11 +20,10 @@ import XPBar, { setActivePlayerId } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import KutatokScreen from './src/screens/KutatokScreen';
-import { loadProgress, recordPackQuizResult, unlockAllProgress, saveProgress, createEmptyProgress, applyPackQuizResult } from './src/utils/regionProgress';
+import { loadProgress, recordPackQuizResult, saveProgress, createEmptyProgress, applyPackQuizResult } from './src/utils/regionProgress';
 import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
 import { getPlayerIdByNickname } from './src/services/playersService';
-import { hasFullUnlock } from './src/services/unlockCodesService';
 import { trackGameStart, trackGameComplete } from './src/services/gameEventsService';
 import useAppFonts from './src/hooks/useAppFonts';
 
@@ -139,20 +138,6 @@ export default function App() {
   useEffect(() => {
     setGuestMode(isGuest);
   }, [isGuest]);
-
-  // Ha a játékos korábban beváltott egy "minden kártya nyitva" kódot, ez a
-  // Supabase-oldali tény (unlock_codes.used_by_player_id) minden eszközön/
-  // újratelepítés után is helyreállítja az állapotot — nem csak azon a
-  // készüléken marad meg, ahol a beváltás történt.
-  useEffect(() => {
-    if (!playerId || !nickname) return;
-    hasFullUnlock(playerId).then((unlocked) => {
-      if (!unlocked) return;
-      const full = unlockAllProgress();
-      setProgress(full);
-      saveProgress(nickname, full);
-    });
-  }, [playerId, nickname]);
 
   const handleNicknameChosen = (chosenNickname, chosenPlayerId) => {
     setIsGuest(false);
@@ -461,7 +446,6 @@ export default function App() {
           playerId={playerId}
           allDinos={allDinos}
           progress={progress}
-          onUnlocked={setProgress}
           onNavigate={(target) => setView(target)}
           onBack={() => setView('landing')}
         />

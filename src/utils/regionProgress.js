@@ -70,19 +70,6 @@ export function createEmptyProgress() {
   return progress;
 }
 
-// Beváltott "kód" (Super Thanks unlock) hatására minden csomag azonnal
-// teljesítettnek számít — lásd unlockCodesService.js hasFullUnlock().
-export function unlockAllProgress() {
-  const progress = {};
-  REGION_ORDER.forEach((edu) => {
-    progress[edu] = {};
-    REGION_PACKS[edu].forEach((packNum) => {
-      progress[edu][packNum] = { quizPassed: true, bestScore: 1, attempts: 1 };
-    });
-  });
-  return progress;
-}
-
 // --- Betöltés / mentés --------------------------------------------------------
 
 export async function loadProgress(nickname) {
