@@ -119,34 +119,28 @@ function AlbumCard({ dino, width }) {
         <View style={styles.cardInfo}>
           <Text style={styles.cardName} numberOfLines={1}>{dino.name_hu}</Text>
           <Text style={styles.cardLatin} numberOfLines={1}>{dino.name_latin}</Text>
-          <View style={styles.infoRow}>
-            <View style={styles.infoCellHalf}>
-              <Text style={styles.infoLabel}>Korszak</Text>
-              <Text style={styles.infoValue} numberOfLines={1}>{dino.period || '—'}</Text>
-            </View>
-            <View style={styles.infoCellHalf}>
+          <View style={styles.infoGrid}>
+            <View style={styles.infoCell}>
               <Text style={styles.infoLabel}>Hossz</Text>
               <Text style={styles.infoValue}>{lengthStr}</Text>
             </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.infoCellHalf}>
+            <View style={styles.infoCell}>
+              <Text style={styles.infoLabel}>Korszak</Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{dino.period || '—'}</Text>
+            </View>
+            <View style={styles.infoCell}>
               <Text style={styles.infoLabel}>Étrend</Text>
               <Text style={styles.infoValue} numberOfLines={1}>{dino.diet_hu || '—'}</Text>
             </View>
-            <View style={styles.infoCellHalf}>
+            <View style={styles.infoCell}>
               <Text style={styles.infoLabel}>Család</Text>
               <Text style={styles.infoValue} numberOfLines={1}>{dino.csalad_hu || '—'}</Text>
             </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.infoCellFull}>
+            <View style={styles.infoCell}>
               <Text style={styles.infoLabel}>Felfedezés</Text>
               <Text style={styles.infoValue} numberOfLines={1}>{dino.discoverer_name || '—'}</Text>
             </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.infoCellFull}>
+            <View style={styles.infoCell}>
               <Text style={styles.infoLabel}>Ország</Text>
               <Text style={styles.infoValue} numberOfLines={1}>{dino.discovered_country || '—'}</Text>
             </View>
@@ -478,19 +472,33 @@ const styles = StyleSheet.create({
   cardInfo: {
     flex: 1,
     minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
   },
   cardName: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
     fontSize: 16,
     fontWeight: '700',
+    marginBottom: 2,
   },
   cardLatin: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 12,
-    opacity: 0.7,
+    fontSize: 11,
+    opacity: 0.65,
     marginBottom: 8,
+  },
+  infoGrid: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 8,
+  },
+  infoCell: {
+    flex: 1,
+    minWidth: 100,
   },
   infoRow: {
     flexDirection: 'row',
