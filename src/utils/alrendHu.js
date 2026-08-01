@@ -4,11 +4,11 @@
 // kézzel rögzítve. Közös hely a whoAmIQuizGenerator.js és a quizGenerator.js
 // számára, hogy a fordítás egy helyen éljen.
 export const ALREND_HU = {
-  Theropoda: 'ragadozó dinoszauruszok',
-  Sauropodomorpha: 'hosszúnyakú dinoszauruszok',
-  Thyreophora: 'páncélos dinoszauruszok',
-  Ornithopoda: 'madárlábú dinoszauruszok',
-  Marginocephalia: 'szarvas- és vastagfejű dinoszauruszok',
+  Theropoda: 'ragadozók',
+  Sauropodomorpha: 'hosszúnyakúak',
+  Thyreophora: 'páncélosok',
+  Ornithopoda: 'madárlábúak',
+  Marginocephalia: 'szarvas- és vastagfejűek',
   Pterodactyloidea: 'repülő hüllők',
 };
 
