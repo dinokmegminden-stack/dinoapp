@@ -8,8 +8,8 @@ export const SOUNDS = {
 };
 
 export const QUIZ_SOUND_FILES = {
-  correct: require('../../assets/sounds/correct_answer.mp3'),
-  wrong: require('../../assets/sounds/wrong_answer.mp3'),
+  correct: require('../../assets/sounds/GUI_Sound_Effects_by_Lokif/positive.wav'),
+  wrong: require('../../assets/sounds/GUI_Sound_Effects_by_Lokif/negative.wav'),
   finalAnswer: require('../../assets/sounds/final_answer.mp3'),
   next: require('../../assets/sounds/next.mp3'),
   lifeline: require('../../assets/sounds/lifelines.mp3'),
