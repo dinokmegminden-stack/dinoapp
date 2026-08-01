@@ -150,9 +150,6 @@ export default function GamingScreen({ nickname, playerId, progress, onNavigate,
 
         <View style={styles.header}>
           <Text style={styles.title}>🎮 JÁTÉKMÓDOK</Text>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-            <Text style={styles.backBtnText}>✕</Text>
-          </TouchableOpacity>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -197,20 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     letterSpacing: 1,
-  },
-  backBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(244,67,54,0.6)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backBtnText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   scrollContent: {
     paddingHorizontal: 20,

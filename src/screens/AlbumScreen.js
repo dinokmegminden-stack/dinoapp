@@ -13,10 +13,11 @@ import HeaderBar from '../components/HeaderBar';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
 import DinoCard from '../components/DinoCard';
 import DinoCardModal from '../components/DinoCardModal';
+import ProgressRing from '../components/ProgressRing';
 import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
-import { REGION_ORDER, EDU_LABELS } from '../utils/regionProgress';
+import { REGION_ORDER, EDU_LABELS, regionCollectionStats } from '../utils/regionProgress';
 import { ALREND_HU } from '../utils/alrendHu';
 
 
@@ -186,6 +187,10 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
     });
   }, [unlockedDinos, filters, lengthRange, selectedLetter]);
 
+  // 6 KPI karika a fejlécben — régiónkénti gyűjtési arány (lény-alapú, nem
+  // pakk-alapú, hogy egyezzen az Album valódi tartalmával).
+  const regionStats = useMemo(() => regionCollectionStats(allDinos, progress), [allDinos, progress]);
+
   // Régiónként csoportosítva — így gyűjtik őket (hub-modell, lásd CLAUDE.md).
   const regionSections = useMemo(() => {
     const byRegion = new Map();
@@ -212,9 +217,23 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
 
         <View style={styles.header}>
           <Text style={styles.title}>📖 ALBUMOD</Text>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-            <Text style={styles.backBtnText}>✕</Text>
-          </TouchableOpacity>
+        </View>
+
+        <View style={styles.kpiRow}>
+          {REGION_ORDER.map((edu) => {
+            const stats = regionStats[edu] || { collected: 0, total: 0 };
+            const ratio = stats.total > 0 ? stats.collected / stats.total : 0;
+            return (
+              <View key={edu} style={styles.kpiItem}>
+                <ProgressRing size={52} stroke={4} ratio={ratio} color={COLORS.accent} trackColor="rgba(254,250,224,0.12)">
+                  <Text style={styles.kpiPercent}>{Math.round(ratio * 100)}%</Text>
+                </ProgressRing>
+                <Text style={styles.kpiLabel} numberOfLines={2}>
+                  {EDU_LABELS[edu]}
+                </Text>
+              </View>
+            );
+          })}
         </View>
 
         <Text style={styles.headerHint}>
@@ -313,6 +332,33 @@ const styles = StyleSheet.create({
     paddingTop: 6,
     marginBottom: 12,
   },
+  kpiRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 14,
+    paddingHorizontal: 20,
+    paddingTop: 14,
+  },
+  kpiItem: {
+    alignItems: 'center',
+    width: 76,
+  },
+  kpiPercent: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  kpiLabel: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 10,
+    opacity: 0.75,
+    textAlign: 'center',
+    marginTop: 4,
+    lineHeight: 12,
+  },
   letterFilterScroll: {
     flexGrow: 0,
     maxHeight: 45,
@@ -353,7 +399,7 @@ const styles = StyleSheet.create({
     minHeight: 0,
     flexDirection: 'row',
     gap: 16,
-    marginTop: 0,
+    marginTop: 10,
     paddingHorizontal: 16,
   },
   bodyNarrow: {
@@ -394,19 +440,5 @@ const styles = StyleSheet.create({
   gridItem: {
     paddingHorizontal: 6,
     paddingBottom: 12,
-  },
-  backBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(244,67,54,0.6)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backBtnText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 });

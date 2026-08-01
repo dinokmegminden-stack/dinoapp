@@ -131,7 +131,7 @@ export async function recordPackQuizResult(nickname, eduLevel, packNumber, score
 
   // Sync to server if playerId available
   if (playerId) {
-    saveProgressToServer(playerId, nickname, progress).catch(err => {
+    saveProgressToServer(playerId, progress).catch(err => {
       console.warn('Failed to sync progress to server:', err);
     });
   }

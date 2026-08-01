@@ -74,9 +74,6 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
 
         <View style={styles.header}>
           <Text style={styles.title}>🏆 RANGLISTA</Text>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-            <Text style={styles.backBtnText}>✕</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.periodToggle}>
@@ -285,19 +282,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     opacity: 0.85,
     fontVariant: ['tabular-nums'],
-  },
-  backBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(244,67,54,0.6)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backBtnText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 });

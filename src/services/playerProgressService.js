@@ -1,13 +1,17 @@
 import { supabase } from './supabaseClient';
+import { getPlayerIdByNickname } from './playersService';
 
-export async function saveProgressToServer(playerId, nickname, progressData) {
+// FIGYELEM: a `player_progress` táblának NINCS `nickname` oszlopa (lásd
+// data/sqls/create_player_progress_table.sql) — a player_id (UUID, FK a
+// players.id-ra) az egyetlen azonosító, hogy ne legyen redundáns/state-elavulós
+// másolat a nicknameből.
+export async function saveProgressToServer(playerId, progressData) {
   try {
     const { data, error } = await supabase
       .from('player_progress')
       .upsert(
         {
           player_id: playerId,
-          nickname,
           progress_data: progressData,
           updated_at: new Date().toISOString(),
         },
@@ -50,25 +54,10 @@ export async function loadProgressFromServer(playerId) {
   }
 }
 
+// Nincs `nickname` oszlop a player_progress táblában — előbb feloldjuk a
+// player_id-t (players.nickname unique), aztán azzal kérdezünk.
 export async function loadProgressFromServerByNickname(nickname) {
-  try {
-    const { data, error } = await supabase
-      .from('player_progress')
-      .select('progress_data, player_id')
-      .eq('nickname', nickname)
-      .single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return null;
-      }
-      console.warn('loadProgressFromServerByNickname error:', error);
-      return null;
-    }
-
-    return data?.progress_data || null;
-  } catch (err) {
-    console.warn('loadProgressFromServerByNickname exception:', err);
-    return null;
-  }
+  const playerId = await getPlayerIdByNickname(nickname);
+  if (!playerId) return null;
+  return loadProgressFromServer(playerId);
 }

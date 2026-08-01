@@ -215,9 +215,6 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
 
         <View style={styles.header}>
           <Text style={styles.title}>🗂️ KATALÓGUS</Text>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-            <Text style={styles.backBtnText}>✕</Text>
-          </TouchableOpacity>
         </View>
 
         <Text style={styles.headerHint}>
@@ -459,20 +456,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 24,
     opacity: 0.9,
-  },
-  backBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(244,67,54,0.6)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backBtnText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   letterFilterScroll: {
     flexGrow: 0,

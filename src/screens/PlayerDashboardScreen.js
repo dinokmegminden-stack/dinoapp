@@ -95,9 +95,6 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               <Text style={styles.xpPillText}>⭐ {xp} XP</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-            <Text style={styles.backBtnText}>✕</Text>
-          </TouchableOpacity>
         </View>
 
         {loading ? (
@@ -382,19 +379,5 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginTop: 10,
     textAlign: 'center',
-  },
-  backBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backBtnText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 });

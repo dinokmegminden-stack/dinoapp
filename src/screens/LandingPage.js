@@ -23,7 +23,6 @@ import PrimaryCTA from '../components/PrimaryCTA';
 import DailyDinoCard from '../components/DailyDinoCard';
 import AppInfoModal from '../components/AppInfoModal';
 import RankModal from '../components/RankModal';
-import CreatureMarquee from '../components/CreatureMarquee';
 import ProgressRing from '../components/ProgressRing';
 import MessageBoard from '../components/MessageBoard';
 import Footer from '../components/Footer';
@@ -539,8 +538,6 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </ScrollView>
       )}
 
-      {/* Alsó futósáv: lény-nevek véletlen sorrendben, jobbról balra görögve */}
-      <CreatureMarquee allDinos={allDinos} />
     </Shell>
   );
 }
