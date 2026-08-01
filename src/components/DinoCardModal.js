@@ -46,7 +46,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
   ];
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View
         style={styles.sheet}
         accessibilityRole="none"
@@ -113,6 +113,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
 const styles = StyleSheet.create({
   sheet: {
     flex: 1,
+    height: '100%',
     backgroundColor: COLORS.darkGreen,
   },
   imageWrapper: {
@@ -135,11 +136,11 @@ const styles = StyleSheet.create({
   closeBtn: {
     position: 'absolute',
     top: 16,
-    left: 16,
+    right: 16,
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(0,0,0,0.45)',
+    backgroundColor: 'rgba(255,255,255,0.25)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
+    opacity: 0.8,
   },
   titleOverlay: {
     position: 'absolute',

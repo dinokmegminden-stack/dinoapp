@@ -89,7 +89,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
-  const numColumns = isNarrow ? 2 : isWide ? 4 : 3;
+  const numColumns = isNarrow ? 2 : 4;
   const [filters, setFilters] = useState({});
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' });
   const [selectedLetter, setSelectedLetter] = useState(null);
@@ -186,6 +186,21 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
     });
   }, [unlockedDinos, filters, lengthRange, selectedLetter]);
 
+  // Régiónként csoportosítva — így gyűjtik őket (hub-modell, lásd CLAUDE.md).
+  const regionSections = useMemo(() => {
+    const byRegion = new Map();
+    (filteredDinos || []).forEach((d) => {
+      const edu = d.edu;
+      if (!byRegion.has(edu)) byRegion.set(edu, []);
+      byRegion.get(edu).push(d);
+    });
+
+    return REGION_ORDER.filter((edu) => byRegion.has(edu)).map((edu) => ({
+      key: edu,
+      title: EDU_LABELS[edu] || edu,
+      data: [...byRegion.get(edu)].sort((a, b) => a.name_hu.localeCompare(b.name_hu, 'hu')),
+    }));
+  }, [filteredDinos]);
 
   return (
     <Shell
@@ -244,16 +259,21 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
             style={isNarrow && styles.sidebarNarrow}
           />
           <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
-            {filteredDinos.length === 0 ? (
+            {regionSections.length === 0 ? (
               <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
             ) : (
-              <View style={styles.grid}>
-                {filteredDinos.map((dino) => (
-                  <View key={dino.id} style={[styles.gridItem, { width: `${100 / numColumns}%` }]}>
-                    <DinoCard creature={dino} onPress={() => openModal(dino)} />
+              regionSections.map((section) => (
+                <View key={section.key} style={styles.regionBlock}>
+                  <Text style={styles.regionBlockTitle}>{section.title.toUpperCase()}</Text>
+                  <View style={styles.grid}>
+                    {section.data.map((dino) => (
+                      <View key={dino.id} style={[styles.gridItem, { width: `${100 / numColumns}%` }]}>
+                        <DinoCard creature={dino} onPress={() => openModal(dino)} />
+                      </View>
+                    ))}
                   </View>
-                ))}
-              </View>
+                </View>
+              ))
             )}
           </ScrollView>
         </View>
@@ -354,6 +374,17 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     opacity: 0.7,
     marginTop: 20,
+  },
+  regionBlock: {
+    marginBottom: 24,
+  },
+  regionBlockTitle: {
+    color: COLORS.accent,
+    fontFamily: FONTS.bold,
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: 1,
+    marginBottom: 8,
   },
   grid: {
     flexDirection: 'row',

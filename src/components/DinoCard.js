@@ -1,16 +1,23 @@
-// DinoCard — kompakt galéria-kártya az Albumod rács-nézetéhez. Koppintásra a
-// DinoCardModal nyílik meg a teljes részletekkel (lásd AlbumScreen.js).
+// DinoCard — kompakt galéria-kártya az Albumod rács-nézetéhez, "focis kártya"
+// elrendezésben: 16:9 kép felül, alatta név/latin név sáv, majd egy nagyobb
+// infó-blokk. Koppintásra a DinoCardModal nyílik meg a teljes részletekkel.
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { getRarityColor } from '../utils/rarity';
 
+function formatMeasure(min, max, unit) {
+  if (min == null && max == null) return '—';
+  const v = max ?? min;
+  return `${v}${unit}`;
+}
+
 export default function DinoCard({ creature, onPress }) {
   const imageSource = IMAGE_MAP[creature.name_hu] || MISSING_IMAGE;
   const rarityColor = getRarityColor(creature.rarity);
+  const length = formatMeasure(creature.length_m_min, creature.length_m_max, 'm');
 
   return (
     <TouchableOpacity
@@ -28,16 +35,51 @@ export default function DinoCard({ creature, onPress }) {
             <Text style={styles.imageFallbackText}>🦴</Text>
           </View>
         )}
-        {!!rarityColor && <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />}
-        <LinearGradient colors={['transparent', 'rgba(40,54,24,0.92)']} style={styles.overlay}>
-          <Text style={styles.title} numberOfLines={1}>
-            {creature.name_hu}
-          </Text>
-          <Text style={styles.subtitle} numberOfLines={1}>
-            {creature.epoch || creature.period || 'Ismeretlen kor'}
-          </Text>
-        </LinearGradient>
-        <Text style={styles.chevron}>›</Text>
+      </View>
+
+      <View style={styles.nameBar}>
+        <Text style={styles.commonName} numberOfLines={1}>
+          {creature.name_hu}
+        </Text>
+      </View>
+      <View style={styles.latinBar}>
+        <Text style={styles.epochText} numberOfLines={1}>
+          {creature.epoch || creature.period || 'Ismeretlen kor'}
+        </Text>
+      </View>
+
+      <View style={styles.infoBlock}>
+        <View style={styles.statsGrid}>
+          <View style={styles.statCell}>
+            <Text style={styles.statLabel}>HOSSZ</Text>
+            <Text style={styles.statValue} numberOfLines={1}>
+              {length}
+            </Text>
+          </View>
+          <View style={styles.statCell}>
+            <Text style={styles.statLabel}>ORSZÁG</Text>
+            <Text style={styles.statValue} numberOfLines={1}>
+              {creature.discovered_country || '—'}
+            </Text>
+          </View>
+          <View style={styles.statCell}>
+            <Text style={styles.statLabel}>ÉTREND</Text>
+            <Text style={styles.statValue} numberOfLines={1}>
+              {creature.diet_hu || '—'}
+            </Text>
+          </View>
+          <View style={styles.statCell}>
+            <Text style={styles.statLabel}>CSALÁD</Text>
+            <Text style={styles.statValue} numberOfLines={1}>
+              {creature.csalad_hu || '—'}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          {!!rarityColor && <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />}
+          <Text style={styles.packBadge}>{Number(creature.csomag || 1)}. csomag</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -57,7 +99,6 @@ const styles = StyleSheet.create({
   imageWrapper: {
     width: '100%',
     aspectRatio: 16 / 9,
-    position: 'relative',
   },
   image: {
     width: '100%',
@@ -71,46 +112,75 @@ const styles = StyleSheet.create({
   imageFallbackText: {
     fontSize: 32,
   },
-  rarityDot: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    borderWidth: 1.5,
-    borderColor: 'rgba(0,0,0,0.4)',
-  },
-  overlay: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
+  nameBar: {
+    backgroundColor: '#1c2912',
     paddingHorizontal: 10,
-    paddingTop: 20,
-    paddingBottom: 8,
+    paddingTop: 7,
+    paddingBottom: 3,
   },
-  title: {
+  commonName: {
     color: COLORS.cream,
     fontFamily: FONTS.heading,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
   },
-  subtitle: {
+  latinBar: {
+    backgroundColor: '#1c2912',
+    paddingHorizontal: 10,
+    paddingBottom: 7,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(254,250,224,0.1)',
+  },
+  epochText: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 12,
+    fontSize: 11,
     fontStyle: 'italic',
-    opacity: 0.8,
-    marginTop: 2,
+    opacity: 0.65,
   },
-  chevron: {
-    position: 'absolute',
-    right: 8,
-    bottom: 6,
-    color: COLORS.cream,
-    fontSize: 14,
-    opacity: 0.6,
+  infoBlock: {
+    padding: 10,
+    justifyContent: 'space-between',
+    minHeight: 110,
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  statCell: {
+    width: '47%',
+  },
+  statLabel: {
+    color: COLORS.gold,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 10,
     fontWeight: '700',
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  statValue: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 13,
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 8,
+  },
+  rarityDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.4)',
+  },
+  packBadge: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 11,
+    opacity: 0.6,
   },
 });
