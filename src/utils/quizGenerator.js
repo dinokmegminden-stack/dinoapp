@@ -495,7 +495,7 @@ function selectByQuota(candidates, questionCount) {
 }
 
 /**
- * Kérdésszám: minimum 5. Több kérdéstípus miatt dinamikusan több lehet.
+ * Kérdésszám: mindig 5 (a csomagok mérete).
  * Ténykérdés-típusok: korszak, felfedezés, latin név, ország, étrend, alrend, család, rend, leírás.
  * Igaz/Hamis: méret, idő.
  * Összehasonlító: hossz, kor.
@@ -512,8 +512,9 @@ export function buildQuiz(packageDinos, fullPool) {
   const basePool = fullPool && fullPool.length ? fullPool : packageDinos;
   const pool = eduLevel != null ? basePool.filter((d) => d.edu === eduLevel) : basePool;
 
-  // Több típus = több kérdés: min 8, vagy dínó-szám × 1.5
-  const questionCount = Math.max(8, Math.ceil(packageDinos.length * 1.5));
+  // Csomagonként mindig 5 kérdés (a csomagok 5 dínóból állnak) — 4/5 helyes
+  // válasz épp eléri a PASS_THRESHOLD-ot (80%).
+  const questionCount = 5;
 
   const candidates = buildCandidates(packageDinos, pool, basePool);
   const selected = selectByQuota(candidates, questionCount);

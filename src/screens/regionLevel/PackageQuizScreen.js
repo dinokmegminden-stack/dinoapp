@@ -39,6 +39,7 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
     setRevealed(true);
 
     const isCorrect = idx === question.correctIndex;
+    const finalCorrectCount = correctCount + (isCorrect ? 1 : 0);
     if (isCorrect) {
       setCorrectCount((c) => c + 1);
       playQuizSfx('correct');
@@ -52,6 +53,11 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
         setSelected(null);
         setRevealed(false);
       } else {
+        // Csomag-teljesítéskor a sima "correct" pötty helyett a diadalmasabb
+        // winning_theme szól, ugyanaz a minta, mint MillionaireQuizScreen-nél.
+        if (finalCorrectCount / questions.length >= PASS_THRESHOLD) {
+          playQuizSfx('winningTheme');
+        }
         setFinished(true);
       }
     }, 1200);
