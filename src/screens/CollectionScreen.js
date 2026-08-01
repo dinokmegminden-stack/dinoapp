@@ -179,6 +179,16 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
   const [filters, setFilters] = useState({}); // { [categoryKey]: Set<string> }
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' }); // testhossz (m), string mezők a TextInputhoz
+  const [selectedLetter, setSelectedLetter] = useState(null); // Levelező szűrő
+
+  const distinctLetters = useMemo(() => {
+    const letters = new Set();
+    (allDinos || []).forEach((d) => {
+      const firstLetter = (d.name_hu || '').charAt(0).toUpperCase();
+      if (firstLetter) letters.add(firstLetter);
+    });
+    return Array.from(letters).sort();
+  }, [allDinos]);
 
   const filterCategories = useMemo(() => {
     return FILTER_FIELDS.map(({ key, field, title, order, transform }) => ({
@@ -201,6 +211,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   const handleClearFilters = () => {
     setFilters({});
     setLengthRange({ min: '', max: '' });
+    setSelectedLetter(null);
   };
 
   const handleLengthRangeChange = (field, value) => {
@@ -215,9 +226,14 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
     const minLen = lengthRange.min !== '' ? Number(lengthRange.min) : null;
     const maxLen = lengthRange.max !== '' ? Number(lengthRange.max) : null;
 
-    if (activeFields.length === 0 && minLen == null && maxLen == null) return allDinos || [];
+    if (activeFields.length === 0 && minLen == null && maxLen == null && !selectedLetter) return allDinos || [];
 
     return (allDinos || []).filter((d) => {
+      if (selectedLetter) {
+        const firstLetter = (d.name_hu || '').charAt(0).toUpperCase();
+        if (firstLetter !== selectedLetter) return false;
+      }
+
       const categoryMatch = activeFields.every(({ key, field, transform }) => {
         const selected = filters[key];
         const values = splitMultiValue(d[field]).map(transform || ((v) => v));
@@ -233,7 +249,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
       }
       return true;
     });
-  }, [allDinos, filters, lengthRange]);
+  }, [allDinos, filters, lengthRange, selectedLetter]);
 
   const epochSections = useMemo(() => {
     const byEpoch = new Map();
@@ -327,16 +343,43 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
         </Text>
 
         {mainTab === 'enciklopedia' ? (
-          <View style={[styles.guestBody, isNarrow && styles.guestBodyNarrow]}>
-            <CollectionFilterSidebar
-              categories={filterCategories}
-              selected={filters}
-              onToggle={handleToggleFilter}
-              onClear={handleClearFilters}
-              lengthRange={lengthRange}
-              onLengthRangeChange={handleLengthRangeChange}
-              style={isNarrow && styles.sidebarNarrow}
-            />
+          <>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.letterFilterScroll}
+              contentContainerStyle={styles.letterFilterContent}
+            >
+              <TouchableOpacity
+                style={[styles.letterBtn, !selectedLetter && styles.letterBtnActive]}
+                onPress={() => setSelectedLetter(null)}
+              >
+                <Text style={[styles.letterText, !selectedLetter && styles.letterTextActive]}>
+                  Mind
+                </Text>
+              </TouchableOpacity>
+              {distinctLetters.map((letter) => (
+                <TouchableOpacity
+                  key={letter}
+                  style={[styles.letterBtn, selectedLetter === letter && styles.letterBtnActive]}
+                  onPress={() => setSelectedLetter(letter === selectedLetter ? null : letter)}
+                >
+                  <Text style={[styles.letterText, selectedLetter === letter && styles.letterTextActive]}>
+                    {letter}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <View style={[styles.guestBody, isNarrow && styles.guestBodyNarrow]}>
+              <CollectionFilterSidebar
+                categories={filterCategories}
+                selected={filters}
+                onToggle={handleToggleFilter}
+                onClear={handleClearFilters}
+                lengthRange={lengthRange}
+                onLengthRangeChange={handleLengthRangeChange}
+                style={isNarrow && styles.sidebarNarrow}
+              />
             <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
               {epochSections.length === 0 ? (
                 <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
@@ -359,7 +402,8 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
                 ))
               )}
             </ScrollView>
-          </View>
+            </View>
+          </>
         ) : (
           <>
             <View style={styles.viewToggle}>
@@ -713,5 +757,41 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  letterFilterScroll: {
+    flexGrow: 0,
+    maxHeight: 45,
+    marginHorizontal: 16,
+    marginTop: 12,
+  },
+  letterFilterContent: {
+    gap: 6,
+    paddingHorizontal: 4,
+  },
+  letterBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(254,250,224,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(221,161,94,0.3)',
+    minWidth: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  letterBtnActive: {
+    backgroundColor: COLORS.accent,
+    borderColor: COLORS.accent,
+  },
+  letterText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 13,
+    fontWeight: '700',
+    opacity: 0.7,
+  },
+  letterTextActive: {
+    color: COLORS.bgDark,
+    opacity: 1,
   },
 });
