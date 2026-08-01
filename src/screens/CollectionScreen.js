@@ -7,10 +7,8 @@ import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
-  SectionList,
   ScrollView,
   StatusBar,
   useWindowDimensions,
@@ -19,14 +17,12 @@ import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionTimeline from '../components/CollectionTimeline';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
-import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
+import SpecimenCard from '../components/SpecimenCard';
 import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { REGION_ORDER, REGION_PACKS, EDU_LABELS, PASS_THRESHOLD } from '../utils/regionProgress';
 import { ALREND_HU } from '../utils/alrendHu';
-
-const NUM_COLUMNS = 3;
 
 // Vendégeknek nincs kép a kártyákon (isGuestMode), így a csomagos rács- és
 // idővonal-nézet helyett egy tiszta, csak-név listát kapnak, kor szerint
@@ -56,20 +52,6 @@ function normalizeEpoch(epoch) {
 function normalizeDiet(diet) {
   return diet === 'ragadozó' ? 'húsevő' : diet;
 }
-
-// A valódi `creatures.rarity` 3 magyar tier: Lelet (leggyakoribb) < Kincs <
-// Ereklye (legritkább). Két rekordnál tévesen angol "Common" maradt egy
-// korábbi migrációból — normalizeRarity() erre "Lelet"-re képezi le, hogy a
-// szűrőlistában és a kártya-jelvényen sose jelenjen meg angol szó.
-function normalizeRarity(raw) {
-  return String(raw || '').toLowerCase() === 'common' ? 'Lelet' : raw;
-}
-
-const RARITY_COLOR = {
-  lelet: '#c8ccbe',
-  kincs: '#8ecbe6',
-  ereklye: COLORS.accent,
-};
 
 // Kánoni sorrendek a szűrőpanelhez — ugyanazok, mint amiket a többi
 // képernyő már használ (EDU_LABELS/REGION_ORDER, alrendHu.js), hogy a
@@ -115,47 +97,6 @@ function buildFilterCategory(dinos, field, order, title, transform = (v) => v) {
   };
 }
 
-function chunk(list, size) {
-  const rows = [];
-  for (let i = 0; i < list.length; i += size) rows.push(list.slice(i, i + size));
-  return rows;
-}
-
-function MiniDinoCard({ dino }) {
-  const imageSource = isGuestMode() ? null : (IMAGE_MAP[dino.name_hu] || MISSING_IMAGE);
-  const rarityColor = RARITY_COLOR[normalizeRarity(dino.rarity || '').toLowerCase()];
-
-  return (
-    <View style={styles.card}>
-      <View style={styles.cardImageWrapper}>
-        {imageSource ? (
-          <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
-        ) : (
-          <View style={[styles.cardImage, styles.cardImageFallback]}>
-            <Text style={styles.cardImageFallbackText}>🦴</Text>
-          </View>
-        )}
-        {!!rarityColor && (
-          <View style={[styles.rarityBadge, { borderColor: rarityColor }]}>
-            <Text style={styles.rarityBadgeIcon}>💎</Text>
-          </View>
-        )}
-      </View>
-      <Text style={styles.cardName} numberOfLines={2}>{dino.name_hu}</Text>
-    </View>
-  );
-}
-
-function LockedSlot() {
-  return (
-    <View style={[styles.card, styles.lockedCard]}>
-      <View style={[styles.cardImageWrapper, styles.lockedImageWrapper]}>
-        <Text style={styles.lockedIcon}>🔒</Text>
-      </View>
-      <Text style={styles.lockedText}>Zárolva</Text>
-    </View>
-  );
-}
 
 const FILTER_FIELDS = [
   { key: 'epoch', field: 'epoch', title: 'Kor', order: EPOCH_ORDER, transform: normalizeEpoch },
@@ -264,34 +205,6 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
     }));
   }, [filteredDinos]);
 
-  const { sections, collectedCount, totalCount } = useMemo(() => {
-    let collected = 0;
-    let total = 0;
-    const built = [];
-
-    REGION_ORDER.forEach((edu) => {
-      REGION_PACKS[edu].forEach((packId) => {
-        const packDinos = (allDinos || [])
-          .filter((d) => d.edu === edu && d.csomag === packId)
-          .sort((a, b) => a.name_hu.localeCompare(b.name_hu, 'hu'));
-        if (packDinos.length === 0) return;
-
-        const unlocked = progress?.[edu]?.[packId]?.quizPassed === true;
-        total += packDinos.length;
-        if (unlocked) collected += packDinos.length;
-
-        built.push({
-          key: `${edu}-${packId}`,
-          title: `${packId}. CSOMAG · ${EDU_LABELS[edu] || edu}`,
-          unlocked,
-          data: chunk(packDinos, NUM_COLUMNS),
-        });
-      });
-    });
-
-    return { sections: built, collectedCount: collected, totalCount: total };
-  }, [allDinos, progress]);
-
   return (
     <Shell
       header={<HeaderBar currentView="collection" nickname={nickname} progress={progress} onNavigate={onNavigate} />}
@@ -354,17 +267,9 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
               epochSections.map((section) => (
                 <View key={section.key} style={styles.epochBlock}>
                   <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
-                  <View style={styles.epochThumbRow}>
-                    {section.data.map((d) => {
-                      const imageSource = IMAGE_MAP[d.name_hu] || MISSING_IMAGE;
-                      return (
-                        <View key={d.id} style={styles.epochThumb}>
-                          <Image source={imageSource} style={styles.epochThumbImage} resizeMode="cover" />
-                          <Text style={styles.epochThumbName} numberOfLines={2}>{d.name_hu}</Text>
-                        </View>
-                      );
-                    })}
-                  </View>
+                  {section.data.map((d) => (
+                    <SpecimenCard key={d.id} dino={d} showDescription={false} />
+                  ))}
                 </View>
               ))
             )}
@@ -554,104 +459,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 24,
     opacity: 0.9,
-  },
-  epochThumbRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  epochThumb: {
-    width: 300,
-  },
-  epochThumbImage: {
-    width: 300,
-    height: 168.75,
-    borderRadius: RADIUS.card,
-    backgroundColor: 'rgba(255,255,255,0.06)',
-  },
-  epochThumbName: {
-    color: COLORS.cream,
-    fontFamily: FONTS.body,
-    fontSize: 12.5,
-    marginTop: 4,
-    opacity: 0.9,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 10,
-  },
-  card: {
-    width: '31%',
-    backgroundColor: 'rgba(254,250,224,0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(221,161,94,0.5)',
-    borderRadius: RADIUS.card,
-    overflow: 'hidden',
-    paddingBottom: 6,
-  },
-  cardImageWrapper: {
-    width: '100%',
-    aspectRatio: 16 / 9,
-    backgroundColor: '#1a1a1a',
-    position: 'relative',
-  },
-  cardImage: {
-    width: '100%',
-    height: '100%',
-  },
-  cardImageFallback: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cardImageFallbackText: {
-    fontSize: 20,
-  },
-  rarityBadge: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 1.5,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rarityBadgeIcon: {
-    fontSize: 8,
-  },
-  cardName: {
-    color: COLORS.cream,
-    fontFamily: FONTS.bold,
-    fontSize: 15,
-    fontWeight: '700',
-    paddingHorizontal: 6,
-    paddingTop: 5,
-    textAlign: 'center',
-  },
-  lockedCard: {
-    borderStyle: 'dashed',
-    borderColor: 'rgba(254,250,224,0.3)',
-    backgroundColor: 'transparent',
-  },
-  lockedImageWrapper: {
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lockedIcon: {
-    fontSize: 22,
-    opacity: 0.6,
-  },
-  lockedText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.body,
-    fontSize: 15,
-    opacity: 0.5,
-    textAlign: 'center',
-    paddingTop: 5,
   },
   backBtn: {
     width: 32,

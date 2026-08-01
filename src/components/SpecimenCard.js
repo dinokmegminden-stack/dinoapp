@@ -1,0 +1,227 @@
+import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { COLORS, RADIUS } from '../constants/theme';
+import { FONTS } from '../constants/fonts';
+import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
+import { isGuestMode } from '../utils/guestMode';
+
+const RARITY_COLOR = {
+  lelet: '#c8ccbe',
+  kincs: '#8ecbe6',
+  ereklye: COLORS.accent,
+};
+
+function normalizeRarity(raw) {
+  return String(raw || '').toLowerCase() === 'common' ? 'Lelet' : raw;
+}
+
+export default function SpecimenCard({ dino, showDescription = true }) {
+  const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
+  const rarityColor = RARITY_COLOR[normalizeRarity(dino.rarity || '').toLowerCase()];
+  const isGuest = isGuestMode();
+
+  // Fact labels + values (6 boxes, 2 columns)
+  const facts = [
+    {
+      label: 'HOSSZ',
+      value: dino.length_m_max ?? dino.length_m_min ? `${dino.length_m_max ?? dino.length_m_min}m` : '—',
+    },
+    {
+      label: 'KORSZAK',
+      value: dino.period || dino.epoch || '—',
+    },
+    {
+      label: 'ÉTREND',
+      value: dino.diet_hu || '—',
+    },
+    {
+      label: 'CSALÁD',
+      value: dino.csalad_hu || '—',
+    },
+    {
+      label: 'FELFEDEZÉS ORSZÁGA',
+      value: dino.discovered_country || '—',
+    },
+    {
+      label: 'FELFEDEZŐ',
+      value: dino.discoverer_name || '—',
+    },
+  ];
+
+  const factsCol1 = facts.slice(0, 3);
+  const factsCol2 = facts.slice(3, 6);
+
+  const hasDescription = showDescription && !isGuest && !!dino.description_hu;
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.row}>
+        {/* Image: 33% width, full container height */}
+        <View style={styles.imageContainer}>
+          {imageSource ? (
+            <Image source={imageSource} style={styles.image} resizeMode="cover" />
+          ) : (
+            <View style={[styles.image, styles.imageFallback]}>
+              <Text style={styles.imageFallbackText}>🦴</Text>
+            </View>
+          )}
+          {!!rarityColor && (
+            <View style={[styles.rarityBadge, { borderColor: rarityColor }]}>
+              <Text style={styles.rarityBadgeIcon}>💎</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Content: 2 columns, 33% each */}
+        <View style={styles.content}>
+          <View style={styles.titleRow}>
+            <Text style={styles.commonName} numberOfLines={2}>
+              {dino.name_hu}
+            </Text>
+            {dino.name_latin && (
+              <Text style={styles.scientificName} numberOfLines={1}>
+                {dino.name_latin}
+              </Text>
+            )}
+          </View>
+
+          <View style={styles.factsRow}>
+            <View style={styles.factCol}>
+              {factsCol1.map((fact, idx) => (
+                <View key={idx} style={styles.factBox}>
+                  <Text style={styles.factLabel}>{fact.label}</Text>
+                  <Text style={styles.factValue} numberOfLines={1}>
+                    {fact.value}
+                  </Text>
+                </View>
+              ))}
+            </View>
+            <View style={styles.factCol}>
+              {factsCol2.map((fact, idx) => (
+                <View key={idx} style={styles.factBox}>
+                  <Text style={styles.factLabel}>{fact.label}</Text>
+                  <Text style={styles.factValue} numberOfLines={1}>
+                    {fact.value}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* Description: registered players only, full card width, below image */}
+      {hasDescription && (
+        <Text style={styles.description}>{dino.description_hu}</Text>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: 'rgba(254,250,224,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(221,161,94,0.5)',
+    borderRadius: RADIUS.card,
+    overflow: 'hidden',
+    flexDirection: 'column',
+    padding: 12,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  imageContainer: {
+    flex: 1,
+    position: 'relative',
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.card,
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  imageFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageFallbackText: {
+    fontSize: 48,
+  },
+  rarityBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 1.5,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rarityBadgeIcon: {
+    fontSize: 8,
+  },
+  content: {
+    flex: 2,
+    minHeight: 0,
+    justifyContent: 'flex-start',
+  },
+  titleRow: {
+    marginBottom: 8,
+  },
+  commonName: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  scientificName: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 13,
+    opacity: 0.65,
+    fontStyle: 'italic',
+  },
+  factsRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  factCol: {
+    flex: 1,
+    gap: 8,
+  },
+  factBox: {
+    backgroundColor: '#faf5eb',
+    borderRadius: 4,
+    padding: 8,
+  },
+  factLabel: {
+    color: '#6b6b6b',
+    fontFamily: FONTS.bodyBold,
+    fontSize: 11,
+    fontWeight: '600',
+    opacity: 0.8,
+    marginBottom: 2,
+    letterSpacing: 0.5,
+  },
+  factValue: {
+    color: '#2d2d2d',
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  description: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    opacity: 0.75,
+    lineHeight: 18,
+    marginTop: 12,
+    width: '100%',
+  },
+});
