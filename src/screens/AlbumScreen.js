@@ -90,16 +90,20 @@ function chunk(list, size) {
   return rows;
 }
 
-function AlbumCard({ dino }) {
+function AlbumCard({ dino, width }) {
   const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const rarityColor = RARITY_COLOR[normalizeRarity(dino.rarity || '').toLowerCase()];
   const length = dino.length_m_max ?? dino.length_m_min;
   const lengthStr = length ? `${length}m` : '—';
 
+  // Responsive image width: aim for 600px on desktop, scale down on mobile
+  const imageWidth = Math.min(width - 48, 600); // 48 = padding + gaps
+  const imageHeight = imageWidth * (9 / 16); // 16:9 aspect ratio
+
   return (
     <View style={styles.card}>
-      <View style={styles.cardContent}>
-        <View style={styles.cardImageWrapper}>
+      <View style={[styles.cardContent, { minHeight: imageHeight + 24 }]}>
+        <View style={[styles.cardImageWrapper, { width: imageWidth, height: imageHeight }]}>
           {imageSource ? (
             <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
           ) : (
@@ -319,7 +323,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
               cardRows.map((row, idx) => (
                 <View key={idx} style={styles.row}>
                   {row.map((dino) => (
-                    <AlbumCard key={dino.id} dino={dino} />
+                    <AlbumCard key={dino.id} dino={dino} width={width - 32} />
                   ))}
                 </View>
               ))
@@ -434,18 +438,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   cardContent: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 12,
     padding: 12,
   },
   cardImageWrapper: {
-    width: 140,
-    aspectRatio: 16 / 9,
     backgroundColor: '#1a1a1a',
     position: 'relative',
     borderRadius: RADIUS.card,
     overflow: 'hidden',
-    flexShrink: 0,
   },
   cardImage: {
     width: '100%',
