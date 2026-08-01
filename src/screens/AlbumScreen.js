@@ -19,7 +19,7 @@ import { FONTS } from '../constants/fonts';
 import { REGION_ORDER, EDU_LABELS } from '../utils/regionProgress';
 import { ALREND_HU } from '../utils/alrendHu';
 
-const NUM_COLUMNS = 2;
+const NUM_COLUMNS = 1;
 
 const EPOCH_ORDER = ['késő-kréta', 'kora-kréta', 'késő-jura', 'közép-jura', 'kora-jura', 'késő-triász'];
 const EPOCH_LABEL_HU = {
@@ -93,24 +93,66 @@ function chunk(list, size) {
 function AlbumCard({ dino }) {
   const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const rarityColor = RARITY_COLOR[normalizeRarity(dino.rarity || '').toLowerCase()];
+  const length = dino.length_m_max ?? dino.length_m_min;
+  const lengthStr = length ? `${length}m` : '—';
 
   return (
     <View style={styles.card}>
-      <View style={styles.cardImageWrapper}>
-        {imageSource ? (
-          <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
-        ) : (
-          <View style={[styles.cardImage, styles.cardImageFallback]}>
-            <Text style={styles.cardImageFallbackText}>🦴</Text>
+      <View style={styles.cardContent}>
+        <View style={styles.cardImageWrapper}>
+          {imageSource ? (
+            <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
+          ) : (
+            <View style={[styles.cardImage, styles.cardImageFallback]}>
+              <Text style={styles.cardImageFallbackText}>🦴</Text>
+            </View>
+          )}
+          {!!rarityColor && (
+            <View style={[styles.rarityBadge, { borderColor: rarityColor }]}>
+              <Text style={styles.rarityBadgeIcon}>💎</Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.cardInfo}>
+          <Text style={styles.cardName} numberOfLines={1}>{dino.name_hu}</Text>
+          <Text style={styles.cardLatin} numberOfLines={1}>{dino.name_latin}</Text>
+          <View style={styles.infoRow}>
+            <View style={styles.infoCellHalf}>
+              <Text style={styles.infoLabel}>Korszak</Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{dino.period || '—'}</Text>
+            </View>
+            <View style={styles.infoCellHalf}>
+              <Text style={styles.infoLabel}>Hossz</Text>
+              <Text style={styles.infoValue}>{lengthStr}</Text>
+            </View>
           </View>
-        )}
-        {!!rarityColor && (
-          <View style={[styles.rarityBadge, { borderColor: rarityColor }]}>
-            <Text style={styles.rarityBadgeIcon}>💎</Text>
+          <View style={styles.infoRow}>
+            <View style={styles.infoCellHalf}>
+              <Text style={styles.infoLabel}>Étrend</Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{dino.diet_hu || '—'}</Text>
+            </View>
+            <View style={styles.infoCellHalf}>
+              <Text style={styles.infoLabel}>Család</Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{dino.csalad_hu || '—'}</Text>
+            </View>
           </View>
-        )}
+          <View style={styles.infoRow}>
+            <View style={styles.infoCellFull}>
+              <Text style={styles.infoLabel}>Felfedezés</Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{dino.discoverer_name || '—'}</Text>
+            </View>
+          </View>
+          <View style={styles.infoRow}>
+            <View style={styles.infoCellFull}>
+              <Text style={styles.infoLabel}>Ország</Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{dino.discovered_country || '—'}</Text>
+            </View>
+          </View>
+          {dino.description_hu && (
+            <Text style={styles.cardDesc} numberOfLines={3}>{dino.description_hu}</Text>
+          )}
+        </View>
       </View>
-      <Text style={styles.cardName} numberOfLines={2}>{dino.name_hu}</Text>
     </View>
   );
 }
@@ -381,24 +423,29 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   row: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 12,
+    flexDirection: 'column',
   },
   card: {
-    flex: 1,
     backgroundColor: 'rgba(254,250,224,0.06)',
     borderWidth: 1,
     borderColor: 'rgba(221,161,94,0.5)',
     borderRadius: RADIUS.card,
     overflow: 'hidden',
-    paddingBottom: 8,
+    marginBottom: 12,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    gap: 12,
+    padding: 12,
   },
   cardImageWrapper: {
-    width: '100%',
+    width: 140,
     aspectRatio: 16 / 9,
     backgroundColor: '#1a1a1a',
     position: 'relative',
+    borderRadius: RADIUS.card,
+    overflow: 'hidden',
+    flexShrink: 0,
   },
   cardImage: {
     width: '100%',
@@ -409,7 +456,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardImageFallbackText: {
-    fontSize: 28,
+    fontSize: 24,
   },
   rarityBadge: {
     position: 'absolute',
@@ -426,14 +473,53 @@ const styles = StyleSheet.create({
   rarityBadgeIcon: {
     fontSize: 8,
   },
+  cardInfo: {
+    flex: 1,
+    minHeight: 0,
+  },
   cardName: {
     color: COLORS.cream,
     fontFamily: FONTS.bold,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
-    paddingHorizontal: 8,
-    paddingTop: 6,
-    textAlign: 'center',
+  },
+  cardLatin: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    opacity: 0.7,
+    marginBottom: 8,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 6,
+  },
+  infoCellHalf: {
+    flex: 1,
+  },
+  infoCellFull: {
+    flex: 1,
+  },
+  infoLabel: {
+    color: COLORS.accent,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 11,
+    opacity: 0.8,
+  },
+  infoValue: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    opacity: 0.9,
+  },
+  cardDesc: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 11,
+    opacity: 0.75,
+    marginTop: 8,
+    lineHeight: 16,
   },
   backBtn: {
     width: 32,
