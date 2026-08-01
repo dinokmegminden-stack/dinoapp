@@ -517,11 +517,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   optionsList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
     paddingHorizontal: 16,
     marginTop: 16,
   },
   optionBtn: {
+    width: '48%',
     paddingVertical: 14,
     paddingHorizontal: 14,
     borderRadius: 12,

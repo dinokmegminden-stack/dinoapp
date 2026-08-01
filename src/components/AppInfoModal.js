@@ -16,7 +16,7 @@ export default function AppInfoModal({ visible, onClose }) {
             <Text style={styles.text}>
               A Dínó Expedíció izgalmas világában hat különböző régióból — a
               Kárpát-medencétől kezdve Afrikán, Ázsián és mindkét amerikán át —
-              összesen 111 dínó és őslény vár felfedezésre, ahol egyedi becenév
+              rengeteg dínó és őslény vár felfedezésre, ahol egyedi becenév
               megadásával azonnal elindulhat a gyűjtés. A tartalmak áttekinthető
               csomagokra bontva épülnek fel, amelyek végén egy-egy záró kvíz
               teljesítése, legalább nyolcvan százalékos eredménnyel, nyitja meg a

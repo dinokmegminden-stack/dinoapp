@@ -1,12 +1,17 @@
 import { StyleSheet, Platform } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
+// Web-en a flex:1 lánc nem mindig nyúlik ki a teljes viewportig, ha a tartalom
+// alacsonyabb nála — 100vh minHeight ez ellen véd, mert a viewporthoz képest
+// számolódik, nem az ős lánc flex-viselkedéséhez (lásd Shell.js azonos mintáját).
+const webFullHeight = Platform.select({ web: { minHeight: '100vh' }, default: {} });
+
 export const s = StyleSheet.create({
   backText: { color: COLORS.gold || '#DDA15E', fontSize: 15, fontWeight: '800' },
   navRow: { flexDirection: 'row', gap: 10, padding: 14 },
   navBtnPrimary: { backgroundColor: 'rgba(221,161,94,0.16)', borderColor: COLORS.gold || '#DDA15E' },
   navBtnPrimaryText: { color: COLORS.gold || '#DDA15E', fontSize: 15, fontWeight: '800' },
-  outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center' },
+  outer: { flex: 1, width: '100%', minHeight: '100%', backgroundColor: COLORS.bg, alignItems: 'center', ...webFullHeight },
   inner: { flex: 1, width: '100%', maxWidth: 480, minHeight: '100%', paddingHorizontal: 16, paddingTop: 50 },
   innerWide: { maxWidth: 900 },
   innerExtraWide: { maxWidth: 1360 },
