@@ -171,11 +171,8 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
-  // 'enciklopedia' — mindenkinek elérhető, kép nélküli, kor szerinti névlista
-  // szűrőkkel; 'album' — csak regisztráltaknak, a saját kinyitott pakkjaik
-  // valódi kártyaképekkel (a korábbi Csomagok/Idővonal nézet). Vendégnél az
-  // "album" fül nem váltható át, csak regisztrációra buzdít.
-  const [mainTab, setMainTab] = useState(guest ? 'enciklopedia' : 'album');
+  // Katalógus — mindenkinek elérhető, kor szerinti névlista szűrőkkel.
+  // Saját Album egy külön menüpont (csak regisztrált felhasználók).
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
   const [filters, setFilters] = useState({}); // { [categoryKey]: Set<string> }
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' }); // testhossz (m), string mezők a TextInputhoz
@@ -304,163 +301,75 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
-          <Text style={styles.title}>🗂️ GYŰJTEMÉNY</Text>
-          <View style={styles.headerRight}>
-            {mainTab === 'album' && (
-              <View style={styles.progressPill}>
-                <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
-              </View>
-            )}
-            <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-              <Text style={styles.backBtnText}>✕</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.mainTabRow}>
-          <TouchableOpacity
-            style={[styles.mainTabBtn, mainTab === 'enciklopedia' && styles.mainTabBtnActive]}
-            onPress={() => setMainTab('enciklopedia')}
-          >
-            <Text style={[styles.mainTabText, mainTab === 'enciklopedia' && styles.mainTabTextActive]}>
-              📖 Enciklopédia
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.mainTabBtn, mainTab === 'album' && styles.mainTabBtnActive]}
-            onPress={() => (guest ? onNavigate?.('join') : setMainTab('album'))}
-          >
-            <Text style={[styles.mainTabText, mainTab === 'album' && styles.mainTabTextActive]}>
-              🖼️ Saját album{guest ? ' 🔒' : ''}
-            </Text>
+          <Text style={styles.title}>🗂️ KATALÓGUS</Text>
+          <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+            <Text style={styles.backBtnText}>✕</Text>
           </TouchableOpacity>
         </View>
 
         <Text style={styles.headerHint}>
-          {mainTab === 'enciklopedia'
-            ? 'Az összes felfedezhető lény, kor szerint csoportosítva, szűrőkkel.'
-            : `Egy csomag kártyái akkor oldódnak fel, ha a záró kvízt legalább ${Math.round(PASS_THRESHOLD * 100)}%-ra teljesíted.`}
+          Az összes felfedezhető lény, kor szerint csoportosítva, szűrőkkel.
         </Text>
 
-        {mainTab === 'enciklopedia' ? (
-          <>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.letterFilterScroll}
-              contentContainerStyle={styles.letterFilterContent}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.letterFilterScroll}
+          contentContainerStyle={styles.letterFilterContent}
+        >
+          <TouchableOpacity
+            style={[styles.letterBtn, !selectedLetter && styles.letterBtnActive]}
+            onPress={() => setSelectedLetter(null)}
+          >
+            <Text style={[styles.letterText, !selectedLetter && styles.letterTextActive]}>
+              Mind
+            </Text>
+          </TouchableOpacity>
+          {distinctLetters.map((letter) => (
+            <TouchableOpacity
+              key={letter}
+              style={[styles.letterBtn, selectedLetter === letter && styles.letterBtnActive]}
+              onPress={() => setSelectedLetter(letter === selectedLetter ? null : letter)}
             >
-              <TouchableOpacity
-                style={[styles.letterBtn, !selectedLetter && styles.letterBtnActive]}
-                onPress={() => setSelectedLetter(null)}
-              >
-                <Text style={[styles.letterText, !selectedLetter && styles.letterTextActive]}>
-                  Mind
-                </Text>
-              </TouchableOpacity>
-              {distinctLetters.map((letter) => (
-                <TouchableOpacity
-                  key={letter}
-                  style={[styles.letterBtn, selectedLetter === letter && styles.letterBtnActive]}
-                  onPress={() => setSelectedLetter(letter === selectedLetter ? null : letter)}
-                >
-                  <Text style={[styles.letterText, selectedLetter === letter && styles.letterTextActive]}>
-                    {letter}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <View style={[styles.guestBody, isNarrow && styles.guestBodyNarrow]}>
-              <CollectionFilterSidebar
-                categories={filterCategories}
-                selected={filters}
-                onToggle={handleToggleFilter}
-                onClear={handleClearFilters}
-                lengthRange={lengthRange}
-                onLengthRangeChange={handleLengthRangeChange}
-                style={isNarrow && styles.sidebarNarrow}
-              />
-            <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
-              {epochSections.length === 0 ? (
-                <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
-              ) : (
-                epochSections.map((section) => (
-                  <View key={section.key} style={styles.epochBlock}>
-                    <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
-                    <View style={styles.epochThumbRow}>
-                      {section.data.map((d) => {
-                        const imageSource = IMAGE_MAP[d.name_hu] || MISSING_IMAGE;
-                        return (
-                          <View key={d.id} style={styles.epochThumb}>
-                            <Image source={imageSource} style={styles.epochThumbImage} resizeMode="cover" />
-                            <Text style={styles.epochThumbName} numberOfLines={2}>{d.name_hu}</Text>
-                          </View>
-                        );
-                      })}
-                    </View>
-                  </View>
-                ))
-              )}
-            </ScrollView>
-            </View>
-          </>
-        ) : (
-          <>
-            <View style={styles.viewToggle}>
-              <TouchableOpacity
-                style={[styles.viewToggleBtn, viewMode === 'csomagok' && styles.viewToggleBtnActive]}
-                onPress={() => setViewMode('csomagok')}
-              >
-                <Text style={[styles.viewToggleText, viewMode === 'csomagok' && styles.viewToggleTextActive]}>
-                  Csomagok
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.viewToggleBtn, viewMode === 'idovonal' && styles.viewToggleBtnActive]}
-                onPress={() => setViewMode('idovonal')}
-              >
-                <Text style={[styles.viewToggleText, viewMode === 'idovonal' && styles.viewToggleTextActive]}>
-                  Idővonal
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {viewMode === 'csomagok' ? (
-          <SectionList
-            style={styles.list}
-            contentContainerStyle={styles.listContent}
-            sections={sections}
-            keyExtractor={(row) => row.map((d) => d.id).join('-')}
-            renderSectionHeader={({ section }) => (
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>{section.title}</Text>
-                {section.unlocked ? (
-                  <Text style={styles.sectionBadgeUnlocked}>✓</Text>
-                ) : (
-                  <Text style={styles.sectionBadgeLocked}>🔒</Text>
-                )}
-              </View>
-            )}
-            renderItem={({ item: row, section }) => (
-              <View style={styles.row}>
-                {row.map((dino) =>
-                  section.unlocked ? (
-                    <MiniDinoCard key={dino.id} dino={dino} />
-                  ) : (
-                    <LockedSlot key={dino.id} />
-                  )
-                )}
-              </View>
-            )}
-            stickySectionHeadersEnabled={false}
+              <Text style={[styles.letterText, selectedLetter === letter && styles.letterTextActive]}>
+                {letter}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <View style={[styles.guestBody, isNarrow && styles.guestBodyNarrow]}>
+          <CollectionFilterSidebar
+            categories={filterCategories}
+            selected={filters}
+            onToggle={handleToggleFilter}
+            onClear={handleClearFilters}
+            lengthRange={lengthRange}
+            onLengthRangeChange={handleLengthRangeChange}
+            style={isNarrow && styles.sidebarNarrow}
           />
+          <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
+            {epochSections.length === 0 ? (
+              <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
             ) : (
-              <View style={styles.timelineWrapper}>
-                <CollectionTimeline allDinos={allDinos} progress={progress} />
-              </View>
+              epochSections.map((section) => (
+                <View key={section.key} style={styles.epochBlock}>
+                  <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
+                  <View style={styles.epochThumbRow}>
+                    {section.data.map((d) => {
+                      const imageSource = IMAGE_MAP[d.name_hu] || MISSING_IMAGE;
+                      return (
+                        <View key={d.id} style={styles.epochThumb}>
+                          <Image source={imageSource} style={styles.epochThumbImage} resizeMode="cover" />
+                          <Text style={styles.epochThumbName} numberOfLines={2}>{d.name_hu}</Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                </View>
+              ))
             )}
-          </>
-        )}
+          </ScrollView>
+        </View>
       </View>
     </Shell>
   );
