@@ -4,11 +4,9 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { isGuestMode } from '../utils/guestMode';
-import { getRarityColor } from '../utils/rarity';
 
 export default function SpecimenCard({ dino, showDescription = true }) {
   const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
-  const rarityColor = getRarityColor(dino.rarity);
   const isGuest = isGuestMode();
 
   // Fact labels + values (6 boxes, 2 columns)
@@ -46,57 +44,52 @@ export default function SpecimenCard({ dino, showDescription = true }) {
 
   return (
     <View style={styles.card}>
-      <View style={styles.row}>
-        {/* Image: 33% width, full container height */}
-        <View style={styles.imageContainer}>
-          {imageSource ? (
-            <Image source={imageSource} style={styles.image} resizeMode="cover" />
-          ) : (
-            <View style={[styles.image, styles.imageFallback]}>
-              <Text style={styles.imageFallbackText}>🦴</Text>
-            </View>
-          )}
-          {!!rarityColor && (
-            <View style={[styles.rarityBadge, { borderColor: rarityColor }]}>
-              <Text style={styles.rarityBadgeIcon}>💎</Text>
-            </View>
+      {/* Kép: fix 16:9, teljes szélesség — "contain", hogy semmi (főleg a
+          teteje) ne vágódjon le, a klasszikus 33%-os oldalt-kép elrendezés
+          helyett is inkább ez, mert rács-nézetben (2 kártya egy sorban)
+          nincs elég vízszintes hely a régi 33/67 osztáshoz. */}
+      <View style={styles.imageContainer}>
+        {imageSource ? (
+          <Image source={imageSource} style={styles.image} resizeMode="contain" />
+        ) : (
+          <View style={[styles.image, styles.imageFallback]}>
+            <Text style={styles.imageFallbackText}>🦴</Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.content}>
+        <View style={styles.titleRow}>
+          <Text style={styles.commonName} numberOfLines={2}>
+            {dino.name_hu}
+          </Text>
+          {dino.name_latin && (
+            <Text style={styles.scientificName} numberOfLines={1}>
+              {dino.name_latin}
+            </Text>
           )}
         </View>
 
-        {/* Content: 2 columns, 33% each */}
-        <View style={styles.content}>
-          <View style={styles.titleRow}>
-            <Text style={styles.commonName} numberOfLines={2}>
-              {dino.name_hu}
-            </Text>
-            {dino.name_latin && (
-              <Text style={styles.scientificName} numberOfLines={1}>
-                {dino.name_latin}
-              </Text>
-            )}
+        <View style={styles.factsRow}>
+          <View style={styles.factCol}>
+            {factsCol1.map((fact, idx) => (
+              <View key={idx} style={styles.factBox}>
+                <Text style={styles.factLabel}>{fact.label}</Text>
+                <Text style={styles.factValue} numberOfLines={1}>
+                  {fact.value}
+                </Text>
+              </View>
+            ))}
           </View>
-
-          <View style={styles.factsRow}>
-            <View style={styles.factCol}>
-              {factsCol1.map((fact, idx) => (
-                <View key={idx} style={styles.factBox}>
-                  <Text style={styles.factLabel}>{fact.label}</Text>
-                  <Text style={styles.factValue} numberOfLines={1}>
-                    {fact.value}
-                  </Text>
-                </View>
-              ))}
-            </View>
-            <View style={styles.factCol}>
-              {factsCol2.map((fact, idx) => (
-                <View key={idx} style={styles.factBox}>
-                  <Text style={styles.factLabel}>{fact.label}</Text>
-                  <Text style={styles.factValue} numberOfLines={1}>
-                    {fact.value}
-                  </Text>
-                </View>
-              ))}
-            </View>
+          <View style={styles.factCol}>
+            {factsCol2.map((fact, idx) => (
+              <View key={idx} style={styles.factBox}>
+                <Text style={styles.factLabel}>{fact.label}</Text>
+                <Text style={styles.factValue} numberOfLines={1}>
+                  {fact.value}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
       </View>
@@ -117,18 +110,11 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.card,
     overflow: 'hidden',
     flexDirection: 'column',
-    padding: 12,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 16,
   },
   imageContainer: {
-    flex: 1,
-    position: 'relative',
+    width: '100%',
+    aspectRatio: 16 / 9,
     backgroundColor: '#1a1a1a',
-    borderRadius: RADIUS.card,
-    overflow: 'hidden',
   },
   image: {
     width: '100%',
@@ -141,25 +127,10 @@ const styles = StyleSheet.create({
   imageFallbackText: {
     fontSize: 48,
   },
-  rarityBadge: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 1.5,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rarityBadgeIcon: {
-    fontSize: 8,
-  },
   content: {
-    flex: 2,
     minHeight: 0,
     justifyContent: 'flex-start',
+    padding: 12,
   },
   titleRow: {
     marginBottom: 8,
@@ -212,7 +183,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.75,
     lineHeight: 18,
-    marginTop: 12,
-    width: '100%',
+    paddingHorizontal: 12,
+    paddingBottom: 12,
+    marginTop: -4,
   },
 });

@@ -3,7 +3,7 @@
 // kevesebb re-render buggal jár, mint a FlatList + manuális header-injektálás.
 // Zárolt (quiz még nem sikerült) csomagoknál placeholder slotok jelennek meg,
 // hogy a felhasználó lássa mennyi van még hátra — nem tűnnek el a listából.
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -64,6 +64,10 @@ const ALREND_ORDER = Object.values(ALREND_HU);
 // sem kategória-opcióként, sem dínó-tulajdonságként nem szabad megjelenniük.
 const NON_FILTERABLE_VALUES = new Set(['ismeretlen', '']);
 
+// Egyszerre 20 lény renderelődik (nem az összes ~111) — "További állatok"
+// gombbal bővíthető. Szűrő/betű-változáskor visszaáll az elejére.
+const PAGE_SIZE = 20;
+
 function sortByOrder(values, order) {
   const seen = new Set(values);
   const ordered = order.filter((v) => seen.has(v));
@@ -112,12 +116,15 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
+  // Telón (isNarrow) 1 kártya sorban, asztali/nagy nézetben 3 — lásd cardGridItem.
+  const cardColumns = isNarrow ? 1 : 3;
   // Katalógus — mindenkinek elérhető, kor szerinti névlista szűrőkkel.
   // Saját Album egy külön menüpont (csak regisztrált felhasználók).
   const [viewMode, setViewMode] = useState('csomagok'); // 'csomagok' | 'idovonal'
   const [filters, setFilters] = useState({}); // { [categoryKey]: Set<string> }
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' }); // testhossz (m), string mezők a TextInputhoz
   const [selectedLetter, setSelectedLetter] = useState(null); // Levelező szűrő
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const distinctLetters = useMemo(() => {
     const letters = new Set();
@@ -205,6 +212,28 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
     }));
   }, [filteredDinos]);
 
+  // Szűrő/betű változásnál vissza az elejére, különben a lapozás megzavarja
+  // a felhasználót (pl. 80-nál tartott, szűkít, de a lista üresen jelenne meg).
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filters, lengthRange, selectedLetter]);
+
+  // Csak az első `visibleCount` lényt rendereljük, a szekció-csoportosítást
+  // megtartva — a "További állatok" gomb bővíti.
+  const visibleEpochSections = useMemo(() => {
+    let remaining = visibleCount;
+    const result = [];
+    for (const section of epochSections) {
+      if (remaining <= 0) break;
+      const data = section.data.slice(0, remaining);
+      result.push({ ...section, data });
+      remaining -= data.length;
+    }
+    return result;
+  }, [epochSections, visibleCount]);
+
+  const hasMore = visibleCount < filteredDinos.length;
+
   return (
     <Shell
       header={<HeaderBar currentView="collection" nickname={nickname} progress={progress} onNavigate={onNavigate} />}
@@ -258,17 +287,30 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
             style={isNarrow && styles.sidebarNarrow}
           />
           <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
-            {epochSections.length === 0 ? (
+            {visibleEpochSections.length === 0 ? (
               <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
             ) : (
-              epochSections.map((section) => (
-                <View key={section.key} style={styles.epochBlock}>
-                  <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
-                  {section.data.map((d) => (
-                    <SpecimenCard key={d.id} dino={d} showDescription={false} />
-                  ))}
-                </View>
-              ))
+              <>
+                {visibleEpochSections.map((section) => (
+                  <View key={section.key} style={styles.epochBlock}>
+                    <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
+                    <View style={styles.cardGrid}>
+                      {section.data.map((d) => (
+                        <View key={d.id} style={[styles.cardGridItem, { width: cardColumns === 1 ? '100%' : cardColumns === 3 ? '31.5%' : '48%' }]}>
+                          <SpecimenCard dino={d} showDescription={false} />
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                ))}
+                {hasMore && (
+                  <TouchableOpacity style={styles.loadMoreBtn} onPress={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+                    <Text style={styles.loadMoreBtnText}>
+                      További állatok ({filteredDinos.length - visibleCount})
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
             )}
           </ScrollView>
         </View>
@@ -449,6 +491,31 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 1,
     marginBottom: 8,
+  },
+  // Mindig pontosan 2 kártya egy sorban, a képernyő méretétől függetlenül —
+  // a régi teljes szélességű, vízszintes SpecimenCard-lista helyett.
+  cardGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  cardGridItem: {},
+  loadMoreBtn: {
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(221,161,94,0.16)',
+    borderWidth: 1,
+    borderColor: COLORS.accent,
+  },
+  loadMoreBtnText: {
+    color: COLORS.accent,
+    fontFamily: FONTS.bold,
+    fontSize: 15,
+    fontWeight: '700',
   },
   epochBlockNames: {
     color: COLORS.cream,
