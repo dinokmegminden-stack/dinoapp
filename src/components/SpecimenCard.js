@@ -73,7 +73,7 @@ export default function SpecimenCard({ dino, showDescription = true }) {
         <View style={styles.factsRow}>
           <View style={styles.factCol}>
             {factsCol1.map((fact, idx) => (
-              <View key={idx} style={styles.factBox}>
+              <View key={idx} style={[styles.factRow, idx === factsCol1.length - 1 && styles.factRowLast]}>
                 <Text style={styles.factLabel}>{fact.label}</Text>
                 <Text style={styles.factValue} numberOfLines={1}>
                   {fact.value}
@@ -83,7 +83,7 @@ export default function SpecimenCard({ dino, showDescription = true }) {
           </View>
           <View style={styles.factCol}>
             {factsCol2.map((fact, idx) => (
-              <View key={idx} style={styles.factBox}>
+              <View key={idx} style={[styles.factRow, idx === factsCol2.length - 1 && styles.factRowLast]}>
                 <Text style={styles.factLabel}>{fact.label}</Text>
                 <Text style={styles.factValue} numberOfLines={1}>
                   {fact.value}
@@ -151,28 +151,30 @@ const styles = StyleSheet.create({
   },
   factsRow: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 16,
   },
   factCol: {
     flex: 1,
-    gap: 8,
   },
-  factBox: {
-    backgroundColor: '#faf5eb',
-    borderRadius: 4,
-    padding: 8,
+  factRow: {
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(254,250,224,0.1)',
+  },
+  factRowLast: {
+    borderBottomWidth: 0,
   },
   factLabel: {
-    color: '#6b6b6b',
+    color: COLORS.gold,
     fontFamily: FONTS.bodyBold,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '600',
-    opacity: 0.8,
-    marginBottom: 2,
+    opacity: 0.75,
     letterSpacing: 0.5,
+    marginBottom: 2,
   },
   factValue: {
-    color: '#2d2d2d',
+    color: COLORS.cream,
     fontFamily: FONTS.body,
     fontSize: 12,
     fontWeight: '400',
