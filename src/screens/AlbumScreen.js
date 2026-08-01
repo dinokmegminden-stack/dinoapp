@@ -96,14 +96,13 @@ function AlbumCard({ dino, width }) {
   const length = dino.length_m_max ?? dino.length_m_min;
   const lengthStr = length ? `${length}m` : '—';
 
-  // Responsive image width: aim for 600px on desktop, scale down on mobile
-  const imageWidth = Math.min(width - 48, 600); // 48 = padding + gaps
-  const imageHeight = imageWidth * (9 / 16); // 16:9 aspect ratio
+  const cardImageWidth = Math.min(width - 48, 600);
+  const cardImageHeight = cardImageWidth * (9 / 16);
 
   return (
     <View style={styles.card}>
-      <View style={[styles.cardContent, { minHeight: imageHeight + 24 }]}>
-        <View style={[styles.cardImageWrapper, { width: imageWidth, height: imageHeight }]}>
+      <View style={[styles.cardContent, { minHeight: cardImageHeight + 24 }]}>
+        <View style={[styles.cardImageWrapper, { width: cardImageWidth, height: cardImageHeight }]}>
           {imageSource ? (
             <Image source={imageSource} style={styles.cardImage} resizeMode="cover" />
           ) : (
@@ -438,15 +437,17 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   cardContent: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     gap: 12,
     padding: 12,
+    alignItems: 'flex-start',
   },
   cardImageWrapper: {
     backgroundColor: '#1a1a1a',
     position: 'relative',
     borderRadius: RADIUS.card,
     overflow: 'hidden',
+    flexShrink: 0,
   },
   cardImage: {
     width: '100%',

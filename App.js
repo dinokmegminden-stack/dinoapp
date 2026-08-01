@@ -304,6 +304,7 @@ export default function App() {
           onRetryLoadDinos={preloadCreatures}
           onEnterRegion={handleEnterRegion}
           onOpenGallery={handleOpenGallery}
+          onOpenAlbum={handleOpenAlbum}
           onOpenLeaderboard={handleOpenLeaderboard}
           onOpenDashboard={handleOpenDashboard}
           onOpenGaming={handleOpenGaming}
