@@ -652,11 +652,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   epochThumb: {
-    width: 200,
+    width: 300,
   },
   epochThumbImage: {
-    width: 200,
-    height: 112.5,
+    width: 300,
+    height: 168.75,
     borderRadius: RADIUS.card,
     backgroundColor: 'rgba(255,255,255,0.06)',
   },
