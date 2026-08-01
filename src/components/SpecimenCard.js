@@ -12,16 +12,8 @@ export default function SpecimenCard({ dino, showDescription = true }) {
   // Fact labels + values (6 boxes, 2 columns)
   const facts = [
     {
-      label: 'HOSSZ',
-      value: dino.length_m_max ?? dino.length_m_min ? `${dino.length_m_max ?? dino.length_m_min}m` : '—',
-    },
-    {
       label: 'KORSZAK',
       value: dino.period || dino.epoch || '—',
-    },
-    {
-      label: 'ÉTREND',
-      value: dino.diet_hu || '—',
     },
     {
       label: 'CSALÁD',
@@ -34,6 +26,14 @@ export default function SpecimenCard({ dino, showDescription = true }) {
     {
       label: 'FELFEDEZŐ',
       value: dino.discoverer_name || '—',
+    },
+    {
+      label: 'ÉTREND',
+      value: dino.diet_hu || '—',
+    },
+    {
+      label: 'HOSSZ',
+      value: dino.length_m_max ?? dino.length_m_min ? `${dino.length_m_max ?? dino.length_m_min}m` : '—',
     },
   ];
 
