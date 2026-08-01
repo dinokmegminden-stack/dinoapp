@@ -26,6 +26,7 @@ import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
 import { getPlayerIdByNickname } from './src/services/playersService';
 import { trackGameStart, trackGameComplete } from './src/services/gameEventsService';
+import { loadProgressFromServerByNickname } from './src/services/playerProgressService';
 import useAppFonts from './src/hooks/useAppFonts';
 
 export default function App() {
@@ -107,11 +108,25 @@ export default function App() {
   };
 
   useEffect(() => {
-    AsyncStorage.getItem(NICKNAME_STORAGE_KEY).then((saved) => {
+    (async () => {
+      const saved = await AsyncStorage.getItem(NICKNAME_STORAGE_KEY);
       if (saved) {
         setNickname(saved);
-        loadProgress(saved).then(setProgress);
-        getPlayerIdByNickname(saved).then(setPlayerId);
+
+        // Try loading progress from server first (source of truth)
+        const serverProgress = await loadProgressFromServerByNickname(saved);
+        if (serverProgress) {
+          setProgress(serverProgress);
+          // Also update AsyncStorage with server version
+          await saveProgress(saved, serverProgress);
+        } else {
+          // Fall back to AsyncStorage if not on server
+          const localProgress = await loadProgress(saved);
+          setProgress(localProgress);
+        }
+
+        const pid = await getPlayerIdByNickname(saved);
+        setPlayerId(pid);
         setView('landing');
       } else {
         // Első látogatáskor nem kérünk nevet — a NicknamePickerScreen csak
@@ -121,7 +136,7 @@ export default function App() {
         setProgress(createEmptyProgress());
         setView('landing');
       }
-    });
+    })();
 
     preloadCreatures();
   }, []);
@@ -271,7 +286,7 @@ export default function App() {
       setProgress((prev) => applyPackQuizResult({ ...prev }, eduLevel, csomag, score));
       return;
     }
-    const updated = await recordPackQuizResult(nickname, eduLevel, csomag, score);
+    const updated = await recordPackQuizResult(nickname, eduLevel, csomag, score, playerId);
     setProgress(updated);
   };
 

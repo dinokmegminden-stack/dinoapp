@@ -6,6 +6,7 @@
 // Amerika Dél-re (edu=5) és Észak-ra (edu=6) bontva.
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveProgressToServer } from '../services/playerProgressService';
 
 // --- EDU → Megjelenített régiónév map (UI-hoz) ------------------------------
 
@@ -123,10 +124,18 @@ export function applyPackQuizResult(progress, eduLevel, packNumber, scoreRatio) 
   return progress;
 }
 
-export async function recordPackQuizResult(nickname, eduLevel, packNumber, scoreRatio) {
+export async function recordPackQuizResult(nickname, eduLevel, packNumber, scoreRatio, playerId) {
   const progress = await loadProgress(nickname);
   applyPackQuizResult(progress, eduLevel, packNumber, scoreRatio);
   await saveProgress(nickname, progress);
+
+  // Sync to server if playerId available
+  if (playerId) {
+    saveProgressToServer(playerId, nickname, progress).catch(err => {
+      console.warn('Failed to sync progress to server:', err);
+    });
+  }
+
   return progress;
 }
 
