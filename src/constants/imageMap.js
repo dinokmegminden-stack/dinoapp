@@ -128,7 +128,7 @@ export const IMAGE_MAP = {
   // 
   "Psittacosaurus": require('../../assets/images/psittacosaurus.jpg'),
   "Buitreraptor": require('../../assets/images/buitreraptor.jpg'),
-  "Diamantinasaurus": require('../../assets/images/diamantisaurus.jpg'),
+  "Diamantinasaurus": require('../../assets/images/diamantinasaurus.png'),
   "Rhoetosaurus": require('../../assets/images/rhoetosaurus.jpg'),
   // 
   "Kunbarrasaurus": require('../../assets/images/kunbarrasaurus.jpg'),

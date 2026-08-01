@@ -14,6 +14,7 @@ import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import RunnerGameScreen from './src/screens/RunnerGameScreen';
 import HangmanScreen from './src/screens/HangmanScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
+import AlbumScreen from './src/screens/AlbumScreen';
 import GamingScreen from './src/screens/GamingScreen';
 import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
 import XPBar, { setActivePlayerId } from './src/components/XPBar';
@@ -207,6 +208,10 @@ export default function App() {
 
   const handleOpenGallery = () => {
     setView('collection');
+  };
+
+  const handleOpenAlbum = () => {
+    setView('album');
   };
 
   const handleOpenLeaderboard = () => {
@@ -405,6 +410,16 @@ export default function App() {
 
       {view === 'collection' && (
         <CollectionScreen
+          nickname={nickname}
+          allDinos={allDinos}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
+      )}
+
+      {view === 'album' && (
+        <AlbumScreen
           nickname={nickname}
           allDinos={allDinos}
           progress={progress}
