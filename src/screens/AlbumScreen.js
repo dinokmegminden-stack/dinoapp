@@ -11,7 +11,8 @@ import {
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
-import SpecimenCard from '../components/SpecimenCard';
+import DinoCard from '../components/DinoCard';
+import DinoCardModal from '../components/DinoCardModal';
 import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
@@ -88,9 +89,22 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
+  const numColumns = isNarrow ? 2 : isWide ? 4 : 3;
   const [filters, setFilters] = useState({});
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' });
   const [selectedLetter, setSelectedLetter] = useState(null);
+  const [selectedCreature, setSelectedCreature] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = (creature) => {
+    setSelectedCreature(creature);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedCreature(null);
+  };
 
   // Get only unlocked creatures from all dinos
   const unlockedDinos = useMemo(() => {
@@ -233,13 +247,19 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
             {filteredDinos.length === 0 ? (
               <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
             ) : (
-              filteredDinos.map((dino) => (
-                <SpecimenCard key={dino.id} dino={dino} showDescription={true} />
-              ))
+              <View style={styles.grid}>
+                {filteredDinos.map((dino) => (
+                  <View key={dino.id} style={[styles.gridItem, { width: `${100 / numColumns}%` }]}>
+                    <DinoCard creature={dino} onPress={() => openModal(dino)} />
+                  </View>
+                ))}
+              </View>
             )}
           </ScrollView>
         </View>
       </View>
+
+      <DinoCardModal visible={modalVisible} creature={selectedCreature} onClose={closeModal} />
     </Shell>
   );
 }
@@ -334,6 +354,15 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     opacity: 0.7,
     marginTop: 20,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -6,
+  },
+  gridItem: {
+    paddingHorizontal: 6,
+    paddingBottom: 12,
   },
   backBtn: {
     width: 32,

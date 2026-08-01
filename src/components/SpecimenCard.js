@@ -4,20 +4,11 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { isGuestMode } from '../utils/guestMode';
-
-const RARITY_COLOR = {
-  lelet: '#c8ccbe',
-  kincs: '#8ecbe6',
-  ereklye: COLORS.accent,
-};
-
-function normalizeRarity(raw) {
-  return String(raw || '').toLowerCase() === 'common' ? 'Lelet' : raw;
-}
+import { getRarityColor } from '../utils/rarity';
 
 export default function SpecimenCard({ dino, showDescription = true }) {
   const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
-  const rarityColor = RARITY_COLOR[normalizeRarity(dino.rarity || '').toLowerCase()];
+  const rarityColor = getRarityColor(dino.rarity);
   const isGuest = isGuestMode();
 
   // Fact labels + values (6 boxes, 2 columns)
