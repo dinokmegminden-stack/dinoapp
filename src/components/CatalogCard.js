@@ -5,7 +5,7 @@ import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { isGuestMode } from '../utils/guestMode';
 
-export default function SpecimenCard({ dino, showDescription = true }) {
+export default function CatalogCard({ dino, showDescription = true }) {
   const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const isGuest = isGuestMode();
 

@@ -11,7 +11,7 @@ import {
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
-import DinoCard from '../components/DinoCard';
+import AlbumCard from '../components/AlbumCard';
 import DinoCardModal from '../components/DinoCardModal';
 import ProgressRing from '../components/ProgressRing';
 import { isGuestMode } from '../utils/guestMode';
@@ -287,7 +287,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
                   <View style={styles.grid}>
                     {section.data.map((dino) => (
                       <View key={dino.id} style={[styles.gridItem, { width: `${100 / numColumns}%` }]}>
-                        <DinoCard creature={dino} onPress={() => openModal(dino)} />
+                        <AlbumCard creature={dino} onPress={() => openModal(dino)} />
                       </View>
                     ))}
                   </View>

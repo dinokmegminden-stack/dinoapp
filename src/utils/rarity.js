@@ -1,4 +1,4 @@
-// Közös ritkaság-logika a kártya-komponenseknek (SpecimenCard, DinoCard,
+// Közös ritkaság-logika a kártya-komponenseknek (CatalogCard, AlbumCard,
 // DinoCardModal) — korábban 3 helyen élt ugyanaz a map/normalizálás.
 // A valódi `creatures.rarity` 3 magyar tier: Lelet (leggyakoribb) < Kincs <
 // Ereklye (legritkább). Két rekordnál tévesen angol "Common" maradt egy

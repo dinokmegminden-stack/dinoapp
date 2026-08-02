@@ -17,7 +17,7 @@ import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionTimeline from '../components/CollectionTimeline';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
-import SpecimenCard from '../components/SpecimenCard';
+import CatalogCard from '../components/CatalogCard';
 import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
@@ -297,7 +297,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
                     <View style={styles.cardGrid}>
                       {section.data.map((d) => (
                         <View key={d.id} style={[styles.cardGridItem, { width: cardColumns === 1 ? '100%' : cardColumns === 3 ? '31.5%' : '48%' }]}>
-                          <SpecimenCard dino={d} showDescription={false} />
+                          <CatalogCard dino={d} showDescription={false} />
                         </View>
                       ))}
                     </View>

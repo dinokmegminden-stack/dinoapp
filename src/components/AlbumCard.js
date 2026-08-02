@@ -1,12 +1,16 @@
-// DinoCard — kompakt galéria-kártya az Albumod rács-nézetéhez, "focis kártya"
-// elrendezésben: 16:9 kép felül, alatta név/latin név sáv, majd egy nagyobb
-// infó-blokk. Koppintásra a DinoCardModal nyílik meg a teljes részletekkel.
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+// AlbumCard — kompakt galéria-kártya az Albumod rács-nézetéhez, "focis kártya"
+// elrendezésben: 16:9 kép felül, alatta egysoros tudományos név, egy nagyobb
+// infó-blokk, majd (regisztrált játékosnak) a leírás. Koppintásra a
+// DinoCardModal nyílik meg a teljes részletekkel. A csomagszám nem kártya-
+// mező többé, csak hoveren (webes egér fölé vitelkor) látszó infó, hogy a
+// névsor egy sorban elférjen és a leírásnak ne kelljen csonkolódnia.
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, Platform } from 'react-native';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { getRarityColor } from '../utils/rarity';
+import { isGuestMode } from '../utils/guestMode';
 
 function formatMeasure(min, max, unit) {
   if (min == null && max == null) return '—';
@@ -14,10 +18,13 @@ function formatMeasure(min, max, unit) {
   return `${v}${unit}`;
 }
 
-export default function DinoCard({ creature, onPress }) {
+export default function AlbumCard({ creature, onPress }) {
   const imageSource = IMAGE_MAP[creature.name_hu] || MISSING_IMAGE;
   const rarityColor = getRarityColor(creature.rarity);
   const length = formatMeasure(creature.length_m_min, creature.length_m_max, 'm');
+  const isGuest = isGuestMode();
+  const hasDescription = !isGuest && !!creature.description_hu;
+  const [packHovered, setPackHovered] = useState(false);
 
   return (
     <TouchableOpacity
@@ -25,7 +32,7 @@ export default function DinoCard({ creature, onPress }) {
       activeOpacity={0.85}
       onPress={() => onPress?.(creature.id)}
       accessibilityRole="button"
-      accessibilityLabel={`Dínókártya: ${creature.name_hu}`}
+      accessibilityLabel={`Dínókártya: ${creature.name_hu}, ${Number(creature.csomag || 1)}. csomag`}
     >
       <View style={styles.imageWrapper}>
         {imageSource ? (
@@ -37,16 +44,21 @@ export default function DinoCard({ creature, onPress }) {
         )}
       </View>
 
-      <View style={styles.nameBar}>
-        <Text style={styles.commonName} numberOfLines={1}>
-          {creature.name_hu}
+      <Pressable
+        style={styles.nameBar}
+        onPress={() => onPress?.(creature.id)}
+        onHoverIn={() => setPackHovered(true)}
+        onHoverOut={() => setPackHovered(false)}
+      >
+        <Text style={styles.scientificName} numberOfLines={1}>
+          {creature.name_latin || creature.name_hu}
         </Text>
-      </View>
-      <View style={styles.latinBar}>
-        <Text style={styles.epochText} numberOfLines={1}>
-          {creature.name_latin || ''}
-        </Text>
-      </View>
+        {packHovered && (
+          <View style={styles.packTooltip} pointerEvents="none">
+            <Text style={styles.packTooltipText}>{Number(creature.csomag || 1)}. csomag</Text>
+          </View>
+        )}
+      </Pressable>
 
       <View style={styles.infoBlock}>
         <View style={styles.statsGrid}>
@@ -88,11 +100,16 @@ export default function DinoCard({ creature, onPress }) {
           </View>
         </View>
 
-        <View style={styles.footer}>
-          {!!rarityColor && <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />}
-          <Text style={styles.packBadge}>{Number(creature.csomag || 1)}. csomag</Text>
-        </View>
+        {!!rarityColor && (
+          <View style={styles.footer}>
+            <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />
+          </View>
+        )}
       </View>
+
+      {hasDescription && (
+        <Text style={styles.description}>{creature.description_hu}</Text>
+      )}
     </TouchableOpacity>
   );
 }
@@ -127,28 +144,34 @@ const styles = StyleSheet.create({
   nameBar: {
     backgroundColor: '#1c2912',
     paddingHorizontal: 10,
-    paddingTop: 7,
-    paddingBottom: 3,
+    paddingVertical: 7,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(254,250,224,0.1)',
+    position: 'relative',
   },
-  commonName: {
+  scientificName: {
     color: COLORS.cream,
     fontFamily: FONTS.heading,
     fontSize: 15,
     fontWeight: '700',
-  },
-  latinBar: {
-    backgroundColor: '#1c2912',
-    paddingHorizontal: 10,
-    paddingBottom: 7,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(254,250,224,0.1)',
-  },
-  epochText: {
-    color: COLORS.cream,
-    fontFamily: FONTS.body,
-    fontSize: 11,
     fontStyle: 'italic',
-    opacity: 0.65,
+  },
+  packTooltip: {
+    position: 'absolute',
+    top: '100%',
+    left: 10,
+    marginTop: 4,
+    zIndex: 20,
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    ...Platform.select({ web: { whiteSpace: 'nowrap' } }),
+  },
+  packTooltipText: {
+    color: COLORS.bgDark,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 15,
   },
   infoBlock: {
     padding: 10,
@@ -166,7 +189,7 @@ const styles = StyleSheet.create({
   statLabel: {
     color: COLORS.gold,
     fontFamily: FONTS.bodyBold,
-    fontSize: 10,
+    fontSize: 15,
     fontWeight: '700',
     letterSpacing: 0.5,
     marginBottom: 2,
@@ -174,7 +197,7 @@ const styles = StyleSheet.create({
   statValue: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 13,
+    fontSize: 15,
   },
   footer: {
     flexDirection: 'row',
@@ -189,10 +212,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.4)',
   },
-  packBadge: {
+  description: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 11,
-    opacity: 0.6,
+    fontSize: 15,
+    opacity: 0.75,
+    lineHeight: 21,
+    paddingHorizontal: 12,
+    paddingBottom: 12,
   },
 });
