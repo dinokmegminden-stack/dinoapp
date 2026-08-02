@@ -155,6 +155,8 @@ export const IMAGE_MAP = {
   "Jobaria": require('../../assets/images/jobaria.jpg'),
   "Maip": require('../../assets/images/maip.jpg'),
   "Minmi": require('../../assets/images/minmi.jpg'),
+  "Microraptor": require('../../assets/images/microraptor.jpg'),
+  
   "Pachycephalosaurus": require('../../assets/images/pachycephalosaurus.jpg'),
   "Pycnonemosaurus": require('../../assets/images/pycnonemosaurus.jpg'),
   "Riojasaurus": require('../../assets/images/riojasaurus.jpg'),
