@@ -75,6 +75,11 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
       setSubmitting(false);
       return;
     }
+    if (result.error?.code === 'too_many_registrations') {
+      setErrorMessage('Túl sok fiók készült már erről a hálózatról. Próbáld később, vagy kérj segítséget egy szülőtől/tanártól.');
+      setSubmitting(false);
+      return;
+    }
     if (result.error) {
       setErrorMessage('Hiba történt, próbáld újra.');
       setSubmitting(false);

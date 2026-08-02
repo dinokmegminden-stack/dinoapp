@@ -40,28 +40,36 @@ export async function getPlayerIdByNickname(nickname) {
   return data?.id ?? null;
 }
 
-// Regisztráció — a `nickname` oszlop unique constraint-je véd a versenyhelyzet ellen
-// akkor is, ha két játékos majdnem egyszerre próbálja ugyanazt a kombinációt lefoglalni.
-// A `pin`-t a hívó generálja (lásd nicknameParts.js generatePin) — az oszlop
-// select-joga anon-tól el van véve, ezért explicit oszloplistával kérünk vissza
-// mindent RAJTA KÍVÜL, nem `.select()`-tel (az a `pin`-t is visszakérné, ami hibázna).
+// Regisztráció — a register-player Edge Function-ön keresztül megy (lásd
+// supabase/functions/register-player/index.ts), nem közvetlen tábla-INSERT-tel:
+// az Edge Function IP-alapú limitet tart (max 5 regisztráció / IP) a
+// registration_attempts tábla alapján, ezt kliensoldalon nem lehetne kikényszeríteni,
+// mert a böngésző-IP csak szerver oldalon látható megbízhatóan.
 // Visszatérés: { success, taken, error }.
 export async function registerPlayer(nickname, pin) {
-  const { data, error } = await supabase
-    .from('players')
-    .insert({ nickname, pin })
-    .select('id, nickname, created_at')
-    .single();
+  const { data, error } = await supabase.functions.invoke('register-player', {
+    body: { nickname, pin },
+  });
 
   if (error) {
-    if (error.code === '23505') {
-      return { success: false, taken: true, error: null };
-    }
     console.warn('registerPlayer hiba:', error);
     return { success: false, taken: false, error };
   }
 
-  return { success: true, taken: false, error: null, player: data };
+  if (data?.error === 'too_many_registrations') {
+    return { success: false, taken: false, error: { code: 'too_many_registrations' } };
+  }
+
+  if (data?.taken) {
+    return { success: false, taken: true, error: null };
+  }
+
+  if (data?.error) {
+    console.warn('registerPlayer hiba:', data.error);
+    return { success: false, taken: false, error: data.error };
+  }
+
+  return { success: true, taken: false, error: null, player: data.player };
 }
 
 // Eszközváltás után a játékos a becenevével + PIN-jével "folytathatja" a régi

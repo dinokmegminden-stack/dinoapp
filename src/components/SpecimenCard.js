@@ -20,12 +20,12 @@ export default function SpecimenCard({ dino, showDescription = true }) {
       value: dino.csalad_hu || '—',
     },
     {
-      label: 'FELFEDEZÉS ORSZÁGA',
-      value: dino.discovered_country || '—',
-    },
-    {
       label: 'FELFEDEZŐ',
       value: dino.discoverer_name || '—',
+    },
+    {
+      label: 'FELFEDEZÉS ORSZÁGA',
+      value: dino.discovered_country || '—',
     },
     {
       label: 'ÉTREND',

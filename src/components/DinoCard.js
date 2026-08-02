@@ -44,16 +44,28 @@ export default function DinoCard({ creature, onPress }) {
       </View>
       <View style={styles.latinBar}>
         <Text style={styles.epochText} numberOfLines={1}>
-          {creature.epoch || creature.period || 'Ismeretlen kor'}
+          {creature.name_latin || ''}
         </Text>
       </View>
 
       <View style={styles.infoBlock}>
         <View style={styles.statsGrid}>
           <View style={styles.statCell}>
-            <Text style={styles.statLabel}>HOSSZ</Text>
+            <Text style={styles.statLabel}>KORSZAK</Text>
             <Text style={styles.statValue} numberOfLines={1}>
-              {length}
+              {creature.period || creature.epoch || '—'}
+            </Text>
+          </View>
+          <View style={styles.statCell}>
+            <Text style={styles.statLabel}>CSALÁD</Text>
+            <Text style={styles.statValue} numberOfLines={1}>
+              {creature.csalad_hu || '—'}
+            </Text>
+          </View>
+          <View style={styles.statCell}>
+            <Text style={styles.statLabel}>FELFEDEZŐ</Text>
+            <Text style={styles.statValue} numberOfLines={1}>
+              {creature.discoverer_name || '—'}
             </Text>
           </View>
           <View style={styles.statCell}>
@@ -69,9 +81,9 @@ export default function DinoCard({ creature, onPress }) {
             </Text>
           </View>
           <View style={styles.statCell}>
-            <Text style={styles.statLabel}>CSALÁD</Text>
+            <Text style={styles.statLabel}>HOSSZ</Text>
             <Text style={styles.statValue} numberOfLines={1}>
-              {creature.csalad_hu || '—'}
+              {length}
             </Text>
           </View>
         </View>
@@ -141,7 +153,7 @@ const styles = StyleSheet.create({
   infoBlock: {
     padding: 10,
     justifyContent: 'space-between',
-    minHeight: 110,
+    minHeight: 160,
   },
   statsGrid: {
     flexDirection: 'row',

@@ -46,3 +46,4 @@ my_dataset0712.txt
 # generated native folders
 /ios
 /android
+supabase/.temp/
