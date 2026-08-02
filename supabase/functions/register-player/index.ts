@@ -9,21 +9,41 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const MAX_REGISTRATIONS_PER_IP = 5;
 
+// Webes kliens (Expo web, más origin) hívja — CORS preflight (OPTIONS) és a
+// tényleges válasz fejlécei nélkül a böngésző "Failed to fetch"-csel elnyeli
+// a hívást, mielőtt a válasz teste egyáltalán eljutna a hívóhoz.
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
+function json(body: unknown, status: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+  });
+}
+
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }
+
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'method_not_allowed' }), { status: 405 });
+    return json({ error: 'method_not_allowed' }, 405);
   }
 
   let body: { nickname?: string; pin?: string };
   try {
     body = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'invalid_json' }), { status: 400 });
+    return json({ error: 'invalid_json' }, 400);
   }
 
   const { nickname, pin } = body;
   if (!nickname || !pin) {
-    return new Response(JSON.stringify({ error: 'missing_fields' }), { status: 400 });
+    return json({ error: 'missing_fields' }, 400);
   }
 
   // Supabase Edge Functions mögött a Kong gateway rakja be az x-forwarded-for
@@ -42,11 +62,11 @@ Deno.serve(async (req: Request) => {
     .eq('ip', ip);
 
   if (countError) {
-    return new Response(JSON.stringify({ error: 'count_failed' }), { status: 500 });
+    return json({ error: 'count_failed' }, 500);
   }
 
   if ((count || 0) >= MAX_REGISTRATIONS_PER_IP) {
-    return new Response(JSON.stringify({ error: 'too_many_registrations' }), { status: 429 });
+    return json({ error: 'too_many_registrations' }, 429);
   }
 
   const { data, error } = await supabase
@@ -57,12 +77,12 @@ Deno.serve(async (req: Request) => {
 
   if (error) {
     if (error.code === '23505') {
-      return new Response(JSON.stringify({ taken: true }), { status: 200 });
+      return json({ taken: true }, 200);
     }
-    return new Response(JSON.stringify({ error: 'insert_failed' }), { status: 500 });
+    return json({ error: 'insert_failed' }, 500);
   }
 
   await supabase.from('registration_attempts').insert({ ip });
 
-  return new Response(JSON.stringify({ success: true, player: data }), { status: 200 });
+  return json({ success: true, player: data }, 200);
 });
