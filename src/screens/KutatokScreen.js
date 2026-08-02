@@ -117,15 +117,17 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
                 <Text style={styles.postTitle}>{item.title}</Text>
                 {!!item.author && <Text style={styles.author}>{item.author}</Text>}
 
-                {!!item.image_url && (
-                  <Image
-                    source={{ uri: item.image_url }}
-                    style={styles.articleImage}
-                    resizeMode="contain"
-                  />
-                )}
+                <View style={styles.wrapBlock}>
+                  {!!item.image_url && (
+                    <Image
+                      source={{ uri: item.image_url }}
+                      style={styles.articleImageFloat}
+                      resizeMode="contain"
+                    />
+                  )}
 
-                <ArticleBody text={item.body_text} />
+                  <ArticleBody text={item.body_text} />
+                </View>
 
                 {!!item.source_url && (
                   <TouchableOpacity
@@ -230,6 +232,23 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 14,
     backgroundColor: 'rgba(20,18,16,0.7)',
+  },
+  wrapBlock: {
+    marginTop: 14,
+    ...Platform.select({
+      web: { display: 'block' },
+    }),
+  },
+  articleImageFloat: {
+    width: 260,
+    height: 260,
+    borderRadius: 12,
+    marginLeft: 18,
+    marginBottom: 14,
+    backgroundColor: 'rgba(20,18,16,0.7)',
+    ...Platform.select({
+      web: { float: 'right', shapeOutside: 'margin-box' },
+    }),
   },
   articleBody: {
     marginTop: 14,

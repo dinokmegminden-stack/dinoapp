@@ -7,7 +7,7 @@ import { supabase } from './supabaseClient';
 export async function fetchResearchArticles(limit = 20) {
   const { data, error } = await supabase
     .from('research_articles')
-    .select('id, title, published_at, body_text, source_url, author')
+    .select('id, title, published_at, body_text, source_url, author, image_url')
     .eq('is_published', true)
     .order('published_at', { ascending: false })
     .limit(limit);
