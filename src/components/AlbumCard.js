@@ -9,7 +9,6 @@ import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, Platform } 
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
-import { getRarityColor } from '../utils/rarity';
 import { isGuestMode } from '../utils/guestMode';
 
 function formatMeasure(min, max, unit) {
@@ -18,9 +17,21 @@ function formatMeasure(min, max, unit) {
   return `${v}${unit}`;
 }
 
+// diet_hu néha összetett ("húsevő, mindenevő") — az ikonhoz az első
+// szóhoz tartozó jelölés dönt, a teljes szöveg nem fér el egy ikonban.
+const DIET_ICON = {
+  növényevő: '🌿',
+  húsevő: '🍖',
+  mindenevő: '🍽️',
+};
+
+function getDietIcon(dietHu) {
+  const first = String(dietHu || '').split(',')[0].trim();
+  return DIET_ICON[first] || '❓';
+}
+
 export default function AlbumCard({ creature, onPress }) {
   const imageSource = IMAGE_MAP[creature.name_hu] || MISSING_IMAGE;
-  const rarityColor = getRarityColor(creature.rarity);
   const length = formatMeasure(creature.length_m_min, creature.length_m_max, 'm');
   const isGuest = isGuestMode();
   const hasDescription = !isGuest && !!creature.description_hu;
@@ -94,11 +105,6 @@ export default function AlbumCard({ creature, onPress }) {
           </View>
         </View>
 
-        {!!rarityColor && (
-          <View style={styles.footer}>
-            <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />
-          </View>
-        )}
       </View>
 
       {hasDescription && (
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
   },
   scientificName: {
     color: COLORS.cream,
-    fontFamily: FONTS.heading,
+    fontFamily: FONTS.bodyBold,
     fontSize: 12,
     fontWeight: '700',
     fontStyle: 'italic',
@@ -184,19 +190,6 @@ const styles = StyleSheet.create({
     color: COLORS.cream,
     fontFamily: FONTS.body,
     fontSize: 12,
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 8,
-  },
-  rarityDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.4)',
   },
   description: {
     color: COLORS.cream,
