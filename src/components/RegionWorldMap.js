@@ -16,9 +16,7 @@ import ProgressRing from './ProgressRing';
 // méretezéstől (reszponzivitás) függetlenül mindig a helyükön maradjanak.
 const VIEWBOX = { x: 30.767, y: 241.591, w: 784.077, h: 458.627 };
 const ASPECT = VIEWBOX.w / VIEWBOX.h; // ~1.71
-// A konténer magassága 20%-kal csökken (szélesség változatlan) — a térkép
-// enyhén "megdől" (rotateX), ehhez illő, laposabb arány kell.
-const DISPLAY_ASPECT = ASPECT / 0.8;
+const DISPLAY_ASPECT = ASPECT;
 
 function toPct(x, y) {
   return {
@@ -37,6 +35,9 @@ const MARKERS = [
   { edu: 1, label: 'Kárpát-medence', ...toPct(458, 405) },
   { edu: 3, label: 'Afrika', ...toPct(468, 512) },
   { edu: 4, label: 'Ázsia', ...toPct(620, 415) },
+  // Ausztrália szárazföld-tömbje a worldMapSvg.js "au" csoportjában (mainland
+  // path) kb. x:665-745, y:570-675 — a horgonypont ennek nagyjából a közepe.
+  { edu: 7, label: 'Ausztrália', ...toPct(705, 610) },
 ];
 
 // Áttetsző térkép, narancs kontinens-körvonallal, országhatárok nélkül.
@@ -106,6 +107,7 @@ export default function RegionWorldMap({ onSelectRegion, regionCounts, regionRat
             style={[
               styles.marker,
               { left: m.left, top: m.top },
+              m.edu === 7 && styles.markerAusztraliaNudge,
               (isHovered || isFocused) && styles.markerHover,
               isFocused && styles.markerFocused,
             ]}
@@ -157,6 +159,12 @@ const styles = StyleSheet.create({
     marginTop: -MARKER_H / 2,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  // Finomhangolás: az Ausztrália-marker fix 15px-szel jobbra tolva a
+  // szárazföld sziluettjéhez igazodáshoz (a %-os left/top a konténer
+  // méretével skálázódna, ez a fix px-eltolás nem).
+  markerAusztraliaNudge: {
+    transform: [{ translateX: 15 }],
   },
   // Kis fehér kör + vékony narancs progresszió-gyűrű (ProgressRing) a szám
   // mögött — a régió pakk-teljesítési arányát mutatja, jól olvasható minden

@@ -18,9 +18,10 @@ export const EDU_LABELS = {
   4: 'Ázsia',
   5: 'Dél-Amerika',
   6: 'Észak-Amerika',
+  7: 'Ausztrália',
 };
 
-export const REGION_ORDER = [1, 2, 3, 4, 5, 6];
+export const REGION_ORDER = [1, 2, 3, 4, 5, 6, 7];
 export const STARTER_REGIONS = REGION_ORDER;
 
 // A 99-es "bónusz" csomag (creatures.pack_number = 99) minden régióban a
@@ -35,6 +36,7 @@ export const REGION_PACKS = {
   4: [1, 2, 3, 4, 5, BONUS_PACK],
   5: [1, 2, 3, 4, BONUS_PACK],
   6: [1, 2, 3, 4, 5, BONUS_PACK],
+  7: [1, 2],
 };
 
 
@@ -47,6 +49,7 @@ export const REGION_TO_EDU = {
   asia: 4,
   del_amerika: 5,
   eszak_amerika: 6,
+  ausztralia: 7,
 };
 
 const STORAGE_PREFIX = 'dino_progress_v2_';

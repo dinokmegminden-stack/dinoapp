@@ -776,6 +776,7 @@ const styles = StyleSheet.create({
   heroCtaWrap: {
     maxWidth: 320,
     marginTop: 14,
+    alignSelf: 'center',
   },
   brandText: {
     color: COLORS.cream,

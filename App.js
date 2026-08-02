@@ -92,7 +92,7 @@ export default function App() {
     setDinosError(false);
     try {
       const all = [];
-      for (let edu = 1; edu <= 6; edu++) {
+      for (let edu = 1; edu <= 7; edu++) {
         const dinos = await fetchCreaturesByEdu(edu);
         all.push(...dinos);
       }

@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: COLORS.heroYellow,
     borderRadius: RADIUS.button,
-    paddingVertical: 16,
+    paddingVertical: 8,
     paddingHorizontal: 20,
   },
   label: {
