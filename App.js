@@ -155,12 +155,24 @@ export default function App() {
     setGuestMode(isGuest);
   }, [isGuest]);
 
-  const handleNicknameChosen = (chosenNickname, chosenPlayerId) => {
+  const handleNicknameChosen = async (chosenNickname, chosenPlayerId) => {
     setIsGuest(false);
     setNickname(chosenNickname);
     setPlayerId(chosenPlayerId);
-    loadProgress(chosenNickname).then(setProgress);
     setView('landing');
+
+    // A boot-time betöltéshez hasonlóan (lásd fenti useEffect) a szerver a
+    // forrásigazság — "Folytatás" (nickname+PIN) módon más eszközön belépve
+    // enélkül a szerveren lévő haladás sosem került volna be, csak az adott
+    // eszköz AsyncStorage-a (lásd üres album hiba, más eszközön beállított
+    // progress_data-val).
+    const serverProgress = await loadProgressFromServerByNickname(chosenNickname);
+    if (serverProgress) {
+      setProgress(serverProgress);
+      await saveProgress(chosenNickname, serverProgress);
+    } else {
+      loadProgress(chosenNickname).then(setProgress);
+    }
   };
 
   // "Tovább regisztráció nélkül" — nincs nickname/playerId, a haladás csak a
