@@ -224,9 +224,9 @@ export default function HeaderBar({
         <View style={styles.headerIcons}>
           {/* "Vezérlőpult" csoport: haladás/XP/profil, egy közös keretben. */}
           <View style={styles.dashboardGroup}>
-            {!(isNarrow && guest) && <StreakPill days={streak} />}
-            {!(isNarrow && guest) && <XPPill onPress={handleOpenRank} />}
-            {!(isNarrow && guest) && (
+            {!guest && <StreakPill days={streak} />}
+            {!guest && <XPPill onPress={handleOpenRank} />}
+            {!guest && (
               <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
             )}
             {!guest && (

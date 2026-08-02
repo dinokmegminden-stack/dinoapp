@@ -4,7 +4,7 @@
 // de itt nincs egy adott lényhez kötött fotó — a cikkek egy-egy kutatóról,
 // expedícióról vagy korszakról szólnak, nem egy konkrét fajról.
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Linking, Platform, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
@@ -117,6 +117,14 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
                 <Text style={styles.postTitle}>{item.title}</Text>
                 {!!item.author && <Text style={styles.author}>{item.author}</Text>}
 
+                {!!item.image_url && (
+                  <Image
+                    source={{ uri: item.image_url }}
+                    style={styles.articleImage}
+                    resizeMode="contain"
+                  />
+                )}
+
                 <ArticleBody text={item.body_text} />
 
                 {!!item.source_url && (
@@ -214,6 +222,14 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     opacity: 0.6,
     marginTop: 4,
+  },
+  articleImage: {
+    width: '100%',
+    height: 300,
+    borderRadius: 12,
+    marginTop: 14,
+    marginBottom: 14,
+    backgroundColor: 'rgba(20,18,16,0.7)',
   },
   articleBody: {
     marginTop: 14,
