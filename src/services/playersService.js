@@ -46,9 +46,9 @@ export async function getPlayerIdByNickname(nickname) {
 // registration_attempts tábla alapján, ezt kliensoldalon nem lehetne kikényszeríteni,
 // mert a böngésző-IP csak szerver oldalon látható megbízhatóan.
 // Visszatérés: { success, taken, error }.
-export async function registerPlayer(nickname, pin) {
+export async function registerPlayer(nickname, pin, email = '') {
   const { data, error } = await supabase.functions.invoke('register-player', {
-    body: { nickname, pin },
+    body: { nickname, pin, email },
   });
 
   if (error) {

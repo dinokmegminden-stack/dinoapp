@@ -32,6 +32,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
   const [commonName, setCommonName] = useState('');
   const [number, setNumber] = useState(() => randomFrom(NICKNAME_NUMBER_OPTIONS));
   const [pin, setPin] = useState('');
+  const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -68,7 +69,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
       return;
     }
 
-    const result = await registerPlayer(nickname, pin);
+    const result = await registerPlayer(nickname, pin, email);
     if (result.taken) {
       setErrorMessage('Ez a név már foglalt — próbálj másik számot!');
       setNumber(randomFrom(NICKNAME_NUMBER_OPTIONS));
@@ -168,6 +169,23 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
               </View>
               <Text style={styles.pinHint}>
                 Ezt a PIN-t jegyezd meg — ezzel + a beceneveddel tudod majd más eszközön is folytatni a profilod.
+              </Text>
+
+              <View style={styles.inputField}>
+                <Text style={styles.fieldLabel}>Email (opcionális)</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="pl. szulo@email.hu"
+                  placeholderTextColor="rgba(254,250,224,0.35)"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+              <Text style={styles.pinHint}>
+                Nem kötelező — csak akkor add meg, ha szeretnéd, hogy elérhetők legyünk veled kapcsolatban.
               </Text>
             </View>
 

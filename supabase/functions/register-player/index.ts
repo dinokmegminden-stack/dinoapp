@@ -34,7 +34,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'method_not_allowed' }, 405);
   }
 
-  let body: { nickname?: string; pin?: string };
+  let body: { nickname?: string; pin?: string; email?: string };
   try {
     body = await req.json();
   } catch {
@@ -45,6 +45,11 @@ Deno.serve(async (req: Request) => {
   if (!nickname || !pin) {
     return json({ error: 'missing_fields' }, 400);
   }
+
+  // Opcionális mező — üresen hagyható, nincs rajta formátum-kényszer a
+  // szerveren (a kliens oldali TextInput keyboardType="email-address" segít
+  // elgépelés ellen, de ez nem validáció).
+  const email = typeof body.email === 'string' ? body.email.trim() || null : null;
 
   // Supabase Edge Functions mögött a Kong gateway rakja be az x-forwarded-for
   // fejlécet — az első érték a tényleges kliens-IP, a többi a proxy-lánc.
@@ -71,7 +76,7 @@ Deno.serve(async (req: Request) => {
 
   const { data, error } = await supabase
     .from('players')
-    .insert({ nickname, pin })
+    .insert({ nickname, pin, email })
     .select('id, nickname, created_at')
     .single();
 
