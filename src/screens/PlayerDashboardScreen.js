@@ -45,7 +45,7 @@ function buildMonthGrid(year, month) {
   return cells;
 }
 
-export default function PlayerDashboardScreen({ nickname, playerId, allDinos, progress, onBack }) {
+export default function PlayerDashboardScreen({ nickname, playerId, allDinos, progress, onBack, onNavigate, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [visitDateKeys, setVisitDateKeys] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = jelen hónap, -1 = előző, stb.
@@ -95,6 +95,11 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               <Text style={styles.xpPillText}>⭐ {xp} XP</Text>
             </View>
           </View>
+          {!!onLogout && (
+            <TouchableOpacity style={styles.logoutBtn} onPress={onLogout} accessibilityRole="button">
+              <Text style={styles.logoutBtnText}>Kijelentkezés</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {loading ? (
@@ -228,6 +233,19 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
     fontSize: 13,
     fontWeight: '800',
+  },
+  logoutBtn: {
+    borderWidth: 1.5,
+    borderColor: 'rgba(254,250,224,0.35)',
+    borderRadius: RADIUS.pill,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  logoutBtnText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bold,
+    fontSize: 13,
+    fontWeight: '700',
   },
   loadingBox: {
     flex: 1,

@@ -174,6 +174,18 @@ export default function App() {
     setView('landing');
   };
 
+  // Kijelentkezés — törli az AsyncStorage-ban tárolt nicknevet (lásd a
+  // bejelentkezés-visszaállítás logikáját fent), a játékos innentől vendégként
+  // folytatja, és bármikor újra beléphet a "Jelentkezz be" gombbal.
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem(NICKNAME_STORAGE_KEY);
+    setIsGuest(true);
+    setNickname(null);
+    setPlayerId(null);
+    setProgress(createEmptyProgress());
+    setView('landing');
+  };
+
   // Játékmód-indítás naplózása a game_events táblába — a visszaadott event id-t
   // eltároljuk, hogy a képernyőről kilépéskor (endActiveGame) le tudjuk zárni,
   // függetlenül attól, hogy a játékos végigjátszotta vagy félbehagyta.
@@ -477,6 +489,7 @@ export default function App() {
           playerId={playerId}
           allDinos={allDinos}
           progress={progress}
+          onLogout={handleLogout}
           onNavigate={(target) => setView(target)}
           onBack={() => setView('landing')}
         />
