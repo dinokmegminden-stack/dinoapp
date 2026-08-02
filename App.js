@@ -17,7 +17,7 @@ import CollectionScreen from './src/screens/CollectionScreen';
 import AlbumScreen from './src/screens/AlbumScreen';
 import GamingScreen from './src/screens/GamingScreen';
 import PlayerDashboardScreen from './src/screens/PlayerDashboardScreen';
-import XPBar, { setActivePlayerId } from './src/components/XPBar';
+import XPBar, { setActivePlayerId, syncXPFromServer } from './src/components/XPBar';
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import KutatokScreen from './src/screens/KutatokScreen';
@@ -127,6 +127,7 @@ export default function App() {
 
         const pid = await getPlayerIdByNickname(saved);
         setPlayerId(pid);
+        if (pid) await syncXPFromServer(pid);
         setView('landing');
       } else {
         // Első látogatáskor nem kérünk nevet — a NicknamePickerScreen csak
@@ -173,6 +174,8 @@ export default function App() {
     } else {
       loadProgress(chosenNickname).then(setProgress);
     }
+
+    if (chosenPlayerId) await syncXPFromServer(chosenPlayerId);
   };
 
   // "Tovább regisztráció nélkül" — nincs nickname/playerId, a haladás csak a

@@ -3,16 +3,19 @@ import { View, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FONTS } from '../constants/fonts';
 import { logXPMilestone } from '../services/xpMilestonesService';
+import { saveXPToServer, loadXPFromServer } from '../services/playerProgressService';
 
 const XP_STORAGE_KEY = 'dino_xp_total';
 const XP_MILESTONE_1000_LOGGED_KEY = 'dino_xp_milestone_1000_logged';
 const XP_MILESTONE = 1000;
 
-// Az XP jelenleg csak eszközön (AsyncStorage) él, nincs Supabase-ben tárolva —
-// az "1000 XP elérésének ideje" ranglistához viszont játékos-azonosító kell
-// a mérföldkő rögzítéséhez. Mivel az addXP()-t sok képernyő hívja anélkül,
-// hogy playerId-t adna át, App.js egyszer beállítja ezt (nickname betöltésekor/
-// regisztrációkor), és addXP() innen olvassa ki, amikor küszöbátlépést észlel.
+// Az XP elsődlegesen AsyncStorage-ban él (azonnali, offline-barát olvasás),
+// de addXP() minden híváskor a player_progress.xp oszlopba is menti (lásd
+// playerProgressService.saveXPToServer) — a szerver a forrásigazság a
+// syncXPFromServer()-t hívó App.js login/boot-logikának. Mivel az addXP()-t
+// sok képernyő hívja anélkül, hogy playerId-t adna át, App.js egyszer
+// beállítja ezt (nickname betöltésekor/regisztrációkor), és addXP() innen
+// olvassa ki, amikor küszöbátlépést észlel vagy szerverre menti az XP-t.
 let activePlayerId = null;
 
 export function setActivePlayerId(playerId) {
@@ -44,10 +47,22 @@ export async function addXP(amount) {
     const newTotal = current + amount;
     await AsyncStorage.setItem(XP_STORAGE_KEY, String(newTotal));
     checkXPMilestone(current, newTotal);
+    if (activePlayerId) saveXPToServer(activePlayerId, newTotal);
     return newTotal;
   } catch {
     return 0;
   }
+}
+
+// Bejelentkezéskor (App.js) hívjuk — a szerver a forrásigazság, hasonlóan a
+// region-progress betöltéshez: más eszközön beállított/megszerzett XP enélkül
+// sosem kerülne be, csak az adott eszköz AsyncStorage-a.
+export async function syncXPFromServer(playerId) {
+  const serverXP = await loadXPFromServer(playerId);
+  if (serverXP != null) {
+    await AsyncStorage.setItem(XP_STORAGE_KEY, String(serverXP));
+  }
+  return serverXP;
 }
 
 export default function XPBar() {

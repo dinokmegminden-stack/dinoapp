@@ -61,3 +61,50 @@ export async function loadProgressFromServerByNickname(nickname) {
   if (!playerId) return null;
   return loadProgressFromServer(playerId);
 }
+
+// Az XP eddig csak AsyncStorage-ban élt (eszközönként) — ez a player_progress
+// `xp` oszlopát írja, a saveProgressToServer-től függetlenül (upsert csak az
+// itt megadott oszlopokat érinti, a progress_data-t konfliktus esetén nem
+// írja felül, lásd data/sqls/add_player_progress_xp_column.sql).
+export async function saveXPToServer(playerId, xp) {
+  if (!playerId) return false;
+  try {
+    const { error } = await supabase
+      .from('player_progress')
+      .upsert(
+        { player_id: playerId, xp, updated_at: new Date().toISOString() },
+        { onConflict: 'player_id' }
+      );
+
+    if (error) {
+      console.warn('saveXPToServer error:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.warn('saveXPToServer exception:', err);
+    return false;
+  }
+}
+
+export async function loadXPFromServer(playerId) {
+  if (!playerId) return null;
+  try {
+    const { data, error } = await supabase
+      .from('player_progress')
+      .select('xp')
+      .eq('player_id', playerId)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      console.warn('loadXPFromServer error:', error);
+      return null;
+    }
+
+    return data?.xp ?? null;
+  } catch (err) {
+    console.warn('loadXPFromServer exception:', err);
+    return null;
+  }
+}
