@@ -35,13 +35,7 @@ export default function AlbumCard({ creature, onPress }) {
       accessibilityLabel={`Dínókártya: ${creature.name_hu}, ${Number(creature.csomag || 1)}. csomag`}
     >
       <View style={styles.imageWrapper}>
-        {imageSource ? (
-          <Image source={imageSource} style={styles.image} resizeMode="cover" />
-        ) : (
-          <View style={[styles.image, styles.imageFallback]}>
-            <Text style={styles.imageFallbackText}>🦴</Text>
-          </View>
-        )}
+        <Image source={imageSource} style={styles.image} resizeMode="cover" />
       </View>
 
       <Pressable
@@ -133,14 +127,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  imageFallback: {
-    backgroundColor: '#1a1a1a',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageFallbackText: {
-    fontSize: 32,
-  },
   nameBar: {
     backgroundColor: '#1c2912',
     paddingHorizontal: 10,
@@ -152,7 +138,7 @@ const styles = StyleSheet.create({
   scientificName: {
     color: COLORS.cream,
     fontFamily: FONTS.heading,
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: '700',
     fontStyle: 'italic',
   },
@@ -171,7 +157,7 @@ const styles = StyleSheet.create({
   packTooltipText: {
     color: COLORS.bgDark,
     fontFamily: FONTS.bodyBold,
-    fontSize: 15,
+    fontSize: 12,
   },
   infoBlock: {
     padding: 10,
@@ -189,7 +175,7 @@ const styles = StyleSheet.create({
   statLabel: {
     color: COLORS.gold,
     fontFamily: FONTS.bodyBold,
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0.5,
     marginBottom: 2,
@@ -197,7 +183,7 @@ const styles = StyleSheet.create({
   statValue: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 15,
+    fontSize: 12,
   },
   footer: {
     flexDirection: 'row',
@@ -215,7 +201,7 @@ const styles = StyleSheet.create({
   description: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
-    fontSize: 15,
+    fontSize: 12,
     opacity: 0.75,
     lineHeight: 21,
     paddingHorizontal: 12,
