@@ -150,6 +150,7 @@ export const IMAGE_MAP = {
   "Dacentrurus": require('../../assets/images/dacentrurus.jpg'),
   "Dilophosaurus": require('../../assets/images/dilophosaurus.jpg'),
   "Edmontonia": require('../../assets/images/edmontonia.jpg'),
+  "Elaphrosaurus": require('../../assets/images/elaphrosaurus.jpg'),
   "Herrerasaurus": require('../../assets/images/herrerasaurus.jpg'),
   "Jakapil": require('../../assets/images/jakapil.jpg'),
   "Jobaria": require('../../assets/images/jobaria.jpg'),
