@@ -28,6 +28,7 @@ import { getPlayerIdByNickname } from './src/services/playersService';
 import { trackGameStart, trackGameComplete } from './src/services/gameEventsService';
 import { loadProgressFromServerByNickname } from './src/services/playerProgressService';
 import useAppFonts from './src/hooks/useAppFonts';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   // Rokkitt + Inter központi betöltése — a család-nevek (theme FONTS) minden
@@ -320,6 +321,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
+      <Analytics />
       {/* A képernyő tetején nem jelenítünk meg XP-sávot (egy képernyőn/játéknál
           sem) — az XP-követés a háttérben (XPBar.js addXP/AsyncStorage) marad. */}
 
