@@ -1,6 +1,8 @@
 // LandingPage — redesign spec 3. pont: header sáv (XP pill + ikon gombok),
 // döntött logó blokk, majd a LandingMenu szekciói egyetlen oszlopban.
 import React, { useEffect, useMemo, useState } from 'react';
+//webanalytics
+import { Analytics } from "@vercel/analytics/next";
 import {
   View,
   Text,
