@@ -171,4 +171,5 @@ export const IMAGE_MAP = {
   "Yi qi": require('../../assets/images/yi_qi.jpg'),
   "Zhuchengtyrannus": require('../../assets/images/zhuchengtyrannus.jpg'),
   "Wintonotitan": require('../../assets/images/wintonotitan.jpg'),
+  "Kryptohadros": require('../../assets/images/kryptohadros.jpg'),
 };
