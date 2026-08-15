@@ -90,22 +90,29 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
 
   const picks = loading ? [] : pool.slice(0, Math.min(count, pool.length));
 
+  // Ha csak EGY fér ki (jellemzően telefon), a magányos, fix-szélességű
+  // thumbnail üres margóval "törött kép-slotnak" néz. Ilyenkor a lényből
+  // teljes szélességű, 16:9 hero-képet csinálunk — a dínó legyen a domináns
+  // elem, ne egy 100px-es dekor-csík.
+  const single = count === 1;
+  const singleImg = single ? { width: '100%', height: Math.round(availWidth * 9 / 16) } : null;
+
   return (
     <View style={styles.randomStrip}>
       {loading
         ? Array.from({ length: count }).map((_, i) => (
-            <View key={`sk-${i}`} style={styles.randomThumbSkeleton} />
+            <View key={`sk-${i}`} style={[styles.randomThumbSkeleton, singleImg]} />
           ))
         : picks.map((dino) => (
             <Pressable
               key={dino.id ?? dino.name_hu}
-              style={({ pressed }) => [styles.randomThumb, pressed && styles.randomThumbPressed]}
+              style={({ pressed }) => [styles.randomThumb, single && styles.randomThumbSingle, pressed && styles.randomThumbPressed]}
               onPress={() => onPress?.(dino)}
               accessibilityRole="button"
               accessibilityLabel={dino.name_hu}
             >
-              <Image source={IMAGE_MAP[dino.name_hu]} style={styles.randomThumbImg} resizeMode="cover" />
-              <Text style={styles.randomThumbName} numberOfLines={1}>{dino.name_hu}</Text>
+              <Image source={IMAGE_MAP[dino.name_hu]} style={[styles.randomThumbImg, singleImg]} resizeMode="cover" />
+              <Text style={[styles.randomThumbName, single && styles.randomThumbNameSingle]} numberOfLines={1}>{dino.name_hu}</Text>
             </Pressable>
           ))}
     </View>
@@ -291,7 +298,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
               {!!item.scientific_name && (
                 <Text style={styles.newsSci} numberOfLines={1}>{item.scientific_name}</Text>
               )}
-              <Text style={styles.newsBody} numberOfLines={4}>{item.news_text}</Text>
+              <Text style={styles.newsBody} numberOfLines={2}>{item.news_text}</Text>
             </Pressable>
           ))}
         </View>
@@ -325,7 +332,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           accessibilityRole="button"
         >
           <MaterialCommunityIcons name="rocket-launch" size={16} color={COLORS.bgDark} />
-          <Text style={styles.guestBtnText}>Csatlakozz</Text>
+          <Text style={styles.guestBtnText}>Válaszd ki a neved</Text>
         </Pressable>
       </View>
     </>
@@ -609,6 +616,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 3,
   },
+  // Egyetlen thumbnail (telefon): teljes szélességű 16:9 hero-kép — a dínó a
+  // domináns elem, nem egy magányos 178px-es csík üres margóval.
+  randomThumbSingle: {
+    width: '100%',
+  },
+  randomThumbNameSingle: {
+    fontSize: 13,
+    textAlign: 'left',
+    marginTop: 6,
+  },
   // Skeleton helyőrző (adatbetöltés alatt) — a kép slotjával azonos méret, hogy
   // ne ugorjon a layout, amint az igazi kártyák beérnek.
   randomThumbSkeleton: {
@@ -647,10 +664,13 @@ const styles = StyleSheet.create({
     maxWidth: 560,
   },
   heroCtaWrap: {
+    // Balra igazítva, egy tengelyen a bal-igazított címmel/alcímmel — a
+    // korábbi középre-igazítás átlós szemugrást okozott (cím balra, CTA
+    // középen), ami befejezetlennek olvasott.
     maxWidth: 320,
     marginTop: 14,
-    alignSelf: 'center',
-    alignItems: 'center',
+    alignSelf: 'flex-start',
+    alignItems: 'flex-start',
   },
   // A CTA alatti finom "or" híd a régiótérképhez — a másodlagos utat jelzi,
   // hogy a CTA maradjon az egyetlen domináns primary.
