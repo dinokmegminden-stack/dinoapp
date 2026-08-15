@@ -49,9 +49,10 @@ function formatTimePeriod(dino) {
     .filter(Boolean)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
-  const min = dino.mya_min;
-  const max = dino.mya_max;
-  const suffix = min != null && max != null ? ` (${min}–${max} MÉE)` : '';
+  // A nagyobb (korábbi) évszám előre: pl. (68–66 MÉE), nem (66–68).
+  const lo = dino.mya_min;
+  const hi = dino.mya_max;
+  const suffix = lo != null && hi != null ? ` (${Math.max(lo, hi)}–${Math.min(lo, hi)} MÉE)` : '';
   return `${base}${suffix}`.trim();
 }
 
