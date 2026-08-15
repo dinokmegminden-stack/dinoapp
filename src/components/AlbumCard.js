@@ -72,10 +72,11 @@ export default function AlbumCard({ creature, onPress }) {
             </Text>
           </View>
 
-          {/* Description added directly below Család */}
+          {/* Description placement */}
           {hasDescription && (
             <View style={styles.fullWidthCell}>
-              <Text style={styles.description}>{creature.description_hu}</Text>
+              <Text style={styles.descriptionLabel}>LEÍRÁS</Text>
+              <Text style={styles.descriptionText}>{creature.description_hu}</Text>
             </View>
           )}
 
@@ -162,15 +163,15 @@ const styles = StyleSheet.create({
   },
   infoBlock: {
     padding: 10,
-    justifyContent: 'space-between',
   },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    justifyContent: 'space-between',
+    rowGap: 8,
   },
   statCell: {
-    width: '47%',
+    width: '48%',
   },
   fullWidthCell: {
     width: '100%',
@@ -189,11 +190,18 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontSize: 12,
   },
-  description: {
+  descriptionLabel: {
+    color: COLORS.gold,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  descriptionText: {
     color: COLORS.cream,
     fontFamily: FONTS.body,
     fontSize: 12,
-    opacity: 0.85,
-    lineHeight: 18,
+    lineHeight: 16,
   },
 });
