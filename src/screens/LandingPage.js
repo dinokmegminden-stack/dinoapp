@@ -85,24 +85,37 @@ function RandomDinoStrip({ allDinos, onPress }) {
     setCount(fits);
   };
 
-  if (pool.length === 0) return null;
+  // "Betöltés" = még nincs adat (allDinos üres/null). Ilyenkor NEM omlasztjuk
+  // össze a slotot, hanem fix magasságú skeleton-sort mutatunk, hogy a hero
+  // első paintje ne csupasz cím legyen és ne ugorjon a layout, amint az adat
+  // beér. Ha az adat már betöltött, de a pool üres (name_hu ↔ IMAGE_MAP nem
+  // illik egy lényre sem), akkor viszont nincs mit mutatni → null.
+  const loading = !allDinos || allDinos.length === 0;
+  if (!loading && pool.length === 0) return null;
 
-  const picks = count > 0 ? pool.slice(0, Math.min(count, pool.length)) : [];
+  // Amíg a szélesség nincs megmérve (count === 0), 1 helyőrzőt feltételezünk,
+  // hogy a skeleton már az első kereten látszódjon.
+  const slots = count > 0 ? count : 1;
+  const picks = loading ? [] : pool.slice(0, Math.min(slots, pool.length));
 
   return (
     <View style={styles.randomStrip} onLayout={handleLayout}>
-      {picks.map((dino) => (
-        <Pressable
-          key={dino.id ?? dino.name_hu}
-          style={styles.randomThumb}
-          onPress={() => onPress?.(dino)}
-          accessibilityRole="button"
-          accessibilityLabel={dino.name_hu}
-        >
-          <Image source={IMAGE_MAP[dino.name_hu]} style={styles.randomThumbImg} resizeMode="cover" />
-          <Text style={styles.randomThumbName} numberOfLines={1}>{dino.name_hu}</Text>
-        </Pressable>
-      ))}
+      {loading
+        ? Array.from({ length: slots }).map((_, i) => (
+            <View key={`sk-${i}`} style={styles.randomThumbSkeleton} />
+          ))
+        : picks.map((dino) => (
+            <Pressable
+              key={dino.id ?? dino.name_hu}
+              style={styles.randomThumb}
+              onPress={() => onPress?.(dino)}
+              accessibilityRole="button"
+              accessibilityLabel={dino.name_hu}
+            >
+              <Image source={IMAGE_MAP[dino.name_hu]} style={styles.randomThumbImg} resizeMode="cover" />
+              <Text style={styles.randomThumbName} numberOfLines={1}>{dino.name_hu}</Text>
+            </Pressable>
+          ))}
     </View>
   );
 }
@@ -110,13 +123,9 @@ function RandomDinoStrip({ allDinos, onPress }) {
 export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onRequireRegister, onOpenJoin, onOpenLogin }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
-  // 700–1023px: még egy oszlopos elrendezés, de a tartalom ne ragadjon a
-  // mobilra szabott 520px-es korlátnál — levegősebb, tablet-méretű teret kap.
-  const isTablet = width >= 700 && width < 1024;
   const [infoOpen, setInfoOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [xp, setXp] = useState(0);
-  const [streak, setStreak] = useState(null);
   // A térkép-marker és az alsó "Gyűjtési előrehaladás" kártyák közti hover-
   // szinkronhoz (spec 4. pont): amelyiken az egér áll, a másikon is felvillan.
   const [hoveredRegion, setHoveredRegion] = useState(null);
@@ -292,22 +301,9 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     </>
   );
 
-  const sidebarBlock = isWide ? (
-    <ScrollView
-      style={[styles.sidebar, styles.sidebarWide]}
-      contentContainerStyle={styles.sidebarWideContent}
-      showsVerticalScrollIndicator={false}
-    >
-      {sidebarInner}
-    </ScrollView>
-  ) : (
-    <View style={styles.sidebar}>{sidebarInner}</View>
-  );
-
-  // Jobb oldali sáv (spec: 3-oszlopos elrendezés) — saját haladás (XP, széria,
-  // régiónkénti gyűjtési arány), vendégnek regisztrációs CTA. A régió-sorok
-  // hoverje ugyanazt a hoveredRegion state-et vezérli, mint a térkép/kártyák.
-  const progressSidebarInner = (
+  // Jobb oldali sáv: bejelentkezve a közösségi üzenőfal; vendégnek NEM zárolt
+  // fal (hideg kapu), hanem meleg belépő-csali — "válassz dínó-nevet és kezdd".
+  const progressSidebarInner = nickname ? (
     <>
       <Text style={styles.sidebarHeading}>KÖZÖSSÉG</Text>
       <MessageBoard
@@ -316,22 +312,29 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         onRequireRegister={onRequireRegister}
       />
     </>
-  );
-
-  const progressSidebarBlock = isWide ? (
-    <ScrollView
-      style={[styles.sidebar, styles.sidebarWide, styles.sidebarRight]}
-      contentContainerStyle={styles.sidebarWideContent}
-      showsVerticalScrollIndicator={false}
-    >
-      {progressSidebarInner}
-    </ScrollView>
   ) : (
-    <View style={styles.sidebar}>{progressSidebarInner}</View>
+    <>
+      <Text style={styles.sidebarHeading}>CSATLAKOZZ</Text>
+      <View style={styles.guestCard}>
+        <Text style={styles.guestTitle}>Válassz dínó-nevet és kezdd!</Text>
+        <Text style={styles.guestBody}>
+          Gyűjts kártyákat, szerezz XP-t és mászd meg a ranglistákat — pár
+          másodperc az egész, jelszó nélkül.
+        </Text>
+        <Pressable
+          style={styles.guestBtn}
+          onPress={() => { playSound('click'); onOpenJoin?.(); }}
+          accessibilityRole="button"
+        >
+          <MaterialCommunityIcons name="rocket-launch" size={16} color={COLORS.bgDark} />
+          <Text style={styles.guestBtnText}>Csatlakozz</Text>
+        </Pressable>
+      </View>
+    </>
   );
 
-  // Jobb oldali (tágas) tartalom: a T-rex háttér fölött lebegő helyőrző szöveg,
-  // RÉGIÓK térkép és a gyűjtés-dashboard.
+  // Hero-blokk (a T-rex háttér fölött): figyelem-csali képsáv, headline + CTA,
+  // RÉGIÓK térkép. Ez a landing egyetlen dolga — full-width felső sávban él.
   const rightBlock = (
     <>
       {dinosError && (
@@ -389,21 +392,23 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
       <RankModal visible={rankOpen} onClose={() => setRankOpen(false)} xp={xp} />
 
       {isWide ? (
-        // Asztali/Full HD: fix bal sáv (teljes magasság) + tágas, görgethető jobb oldal.
-        <View style={styles.bodyRow}>
-          {sidebarBlock}
-          <ScrollView style={styles.rightArea} contentContainerStyle={styles.rightContent}>
-            {rightBlock}
-          </ScrollView>
-          {progressSidebarBlock}
-        </View>
+        // Asztali/Full HD: a hero full-width felső sávban dominál, alatta a
+        // hajtás alá kerül a másodlagos tartalom (Napi Dínó + Hírek | Közösség).
+        <ScrollView style={styles.pageScroll} contentContainerStyle={styles.pageContent}>
+          <View style={styles.heroBand}>{rightBlock}</View>
+          <View style={styles.belowFoldRow}>
+            <View style={styles.belowCol}>{sidebarInner}</View>
+            <View style={styles.belowCol}>{progressSidebarInner}</View>
+          </View>
+        </ScrollView>
       ) : (
-        // Mobil/tablet: egy oszlopban egymás alatt, közös görgetéssel.
+        // Mobil/tablet: egy oszlopban, a HERO legfelül (ő a figyelem-horog),
+        // utána Napi Dínó + Hírek, végül a közösség/csatlakozás.
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
           <View style={styles.columnNarrow}>
-            {sidebarBlock}
             {rightBlock}
-            <View style={styles.narrowProgressBlock}>{progressSidebarInner}</View>
+            <View style={styles.narrowBelowBlock}>{sidebarInner}</View>
+            <View style={styles.narrowBelowBlock}>{progressSidebarInner}</View>
           </View>
         </ScrollView>
       )}
@@ -422,7 +427,78 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 32,
   },
-  // ── Új, sidebaros elrendezés ──────────────────────────────────────────────
+  // ── Hero-domináns elrendezés (wide) ───────────────────────────────────────
+  // A hero full-width felső sávban, alatta a hajtás alá kerülő másodlagos sor.
+  pageScroll: {
+    flex: 1,
+    width: '100%',
+  },
+  pageContent: {
+    flexGrow: 1,
+    paddingBottom: 48,
+  },
+  heroBand: {
+    width: '100%',
+    paddingHorizontal: 48,
+    paddingTop: 20,
+    paddingBottom: 28,
+  },
+  belowFoldRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 32,
+    paddingHorizontal: 48,
+  },
+  belowCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  narrowBelowBlock: {
+    width: '100%',
+    marginTop: 20,
+  },
+  // Vendég belépő-csali kártya (a zárolt üzenőfal helyett).
+  guestCard: {
+    padding: 18,
+    borderRadius: RADIUS.cardLarge,
+    backgroundColor: 'rgba(20,18,16,0.5)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.10)',
+    gap: 10,
+  },
+  guestTitle: {
+    color: COLORS.cream,
+    fontSize: 18,
+    fontFamily: FONTS.heading,
+    opacity: TEXT_OPACITY.primary,
+  },
+  guestBody: {
+    color: COLORS.cream,
+    fontSize: 13.5,
+    lineHeight: 20,
+    fontFamily: FONTS.body,
+    opacity: TEXT_OPACITY.secondary,
+  },
+  guestBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 7,
+    marginTop: 2,
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 9,
+    paddingHorizontal: 18,
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  guestBtnText: {
+    color: COLORS.bgDark,
+    fontSize: 15,
+    fontFamily: FONTS.bodyBold,
+    letterSpacing: 0.4,
+  },
+  // ── Régi, sidebaros elrendezés (mobil is használ pár darabot) ─────────────
   bodyRow: {
     flex: 1,
     flexDirection: 'row',
@@ -646,6 +722,16 @@ const styles = StyleSheet.create({
     opacity: TEXT_OPACITY.secondary,
     textAlign: 'center',
     marginTop: 3,
+  },
+  // Skeleton helyőrző (adatbetöltés alatt) — a kép slotjával azonos méret, hogy
+  // ne ugorjon a layout, amint az igazi kártyák beérnek.
+  randomThumbSkeleton: {
+    width: 178,
+    height: 100,
+    borderRadius: RADIUS.card,
+    backgroundColor: 'rgba(254,250,224,0.07)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(254,250,224,0.10)',
   },
   // Hero-headline a térkép fölött (spec 2. pont) — rövid, cselekvésorientált
   // cím + alcím, a korábbi hosszabb "loremText" bekezdés helyett.
