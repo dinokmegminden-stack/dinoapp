@@ -31,7 +31,7 @@ import { getTotalXP } from '../components/XPBar';
 import { recordAndGetStreak } from '../utils/dailyStreak';
 import { isAdminNickname } from '../constants/admins';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
-import { findNextPack, overallCompletionRatio, regionCollectionStats } from '../utils/regionProgress';
+import { findNextPack, overallCompletionRatio, regionCollectionStats, EDU_LABELS } from '../utils/regionProgress';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
@@ -95,7 +95,9 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
   // teljes szélességű, 16:9 hero-képet csinálunk — a dínó legyen a domináns
   // elem, ne egy 100px-es dekor-csík.
   const single = count === 1;
-  const singleImg = single ? { width: '100%', height: Math.round(availWidth * 9 / 16) } : null;
+  // Magasság-clamp: tranziens 0/negatív availWidth-nél (pl. első paint,
+  // forgatás) a kép NE essen 0 magasra (eltűnő hero-kép) — legalább 120px.
+  const singleImg = single ? { width: '100%', height: Math.max(120, Math.round(availWidth * 9 / 16)) } : null;
 
   return (
     <View style={styles.randomStrip}>
@@ -125,9 +127,10 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // A hero-képsáv rendelkezésre álló szélessége a viewportból (a heroBand
   // ph 48*2, ill. mobilon a columnNarrow maxWidth 680 / ph 20*2 alapján) — a
   // RandomDinoStrip ebből számolja a férőhelyek számát.
-  const stripAvailWidth = isWide
-    ? Math.min(width, 1920) - 96
-    : Math.min(width, 680) - 40;
+  const stripAvailWidth = Math.max(
+    THUMB_W,
+    isWide ? Math.min(width, 1920) - 96 : Math.min(width, 680) - 40,
+  );
   const [infoOpen, setInfoOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [xp, setXp] = useState(0);
@@ -207,8 +210,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
 
   const handleStartAdventure = () => {
     playSound('click');
-    const next = findNextPack(progress || {});
-    onEnterRegion(next ? next.eduLevel : 1);
+    onEnterRegion(nextPack ? nextPack.eduLevel : 1);
   };
 
   const handleDailyDinoPress = (dino) => {
@@ -217,6 +219,14 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   };
 
   const collectionRatio = overallCompletionRatio(progress || {});
+
+  // A hero CTA mondja meg, hova visz (H7): visszatérő játékosnál a soron
+  // következő, még nem teljesített régió nevével ("Folytasd: Afrika →"),
+  // új játékosnál (nincs haladás) a generikus "Kezdd el a felfedezést!".
+  const nextPack = findNextPack(progress || {});
+  const ctaLabel = nextPack && collectionRatio > 0
+    ? `Folytasd: ${EDU_LABELS[nextPack.eduLevel]} →`
+    : 'Kezdd el a felfedezést!';
 
   // Régiónkénti fajszám az allDinos (App.js már betölti mind a 6 edu-t egyszer)
   // csoportosításából — így az összeg mindig pontosan egyezik a hero-ban írt
@@ -369,7 +379,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           Fedezd fel a mélyidő őslényeit, gyűjts kártyákat, és válj a legnagyobb szakértővé!
         </Text>
         <View style={styles.heroCtaWrap}>
-          <PrimaryCTA onPress={handleStartAdventure} label="Kezdd el a felfedezést!" />
+          <PrimaryCTA onPress={handleStartAdventure} label={ctaLabel} />
           {/* A CTA az elsődleges út; a térkép az "or" alternatíva — így a kettő
               egy egységként olvas, nem két versengő primary döntésként. */}
           <Text style={styles.heroCtaHint}>…vagy válassz régiót a térképen ↓</Text>

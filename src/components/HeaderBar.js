@@ -19,7 +19,10 @@ import { getTotalXP } from './XPBar';
 import { recordAndGetStreak } from '../utils/dailyStreak';
 import { rankForXP } from '../utils/ranks';
 import { overallCompletionRatio } from '../utils/regionProgress';
-import { playSound } from '../audio/audioSystem';
+import { playSound, getSoundMuted, setSoundMuted } from '../audio/audioSystem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const MUTE_KEY = 'dmm_sound_muted';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 import { isGuestMode } from '../utils/guestMode';
 
@@ -97,6 +100,8 @@ function RoundIconButton({ icon, onPress, tooltip, secondary }) {
         onPressOut={() => setPressed(false)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        accessibilityRole="button"
+        accessibilityLabel={tooltip}
       >
         <MaterialCommunityIcons name={icon} size={secondary ? 15 : 18} color={COLORS.cream} style={secondary && styles.roundBtnIconSecondary} />
       </Pressable>
@@ -165,6 +170,22 @@ export default function HeaderBar({
   const [rankOpen, setRankOpen] = useState(false);
   const [xp, setXp] = useState(0);
   const [streak, setStreak] = useState(null);
+  const [muted, setMuted] = useState(getSoundMuted());
+
+  // Némítás-állapot betöltése induláskor (perzisztens, eszközön belül).
+  useEffect(() => {
+    AsyncStorage.getItem(MUTE_KEY).then((v) => {
+      if (v === '1') { setSoundMuted(true); setMuted(true); }
+    }).catch(() => {});
+  }, []);
+
+  const handleToggleMute = () => {
+    const next = !muted;
+    setSoundMuted(next);
+    setMuted(next);
+    if (!next) playSound('click'); // csak visszakapcsoláskor van értelme hangnak
+    AsyncStorage.setItem(MUTE_KEY, next ? '1' : '0').catch(() => {});
+  };
 
   useEffect(() => {
     getTotalXP().then(setXp);
@@ -236,6 +257,11 @@ export default function HeaderBar({
                 tooltip={nickname}
               />
             )}
+            <RoundIconButton
+              icon={muted ? 'volume-off' : 'volume-high'}
+              onPress={handleToggleMute}
+              tooltip={muted ? 'Hang be' : 'Hang ki'}
+            />
             {!isNarrow && <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />}
             {!isNarrow && <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />}
           </View>
