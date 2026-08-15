@@ -47,3 +47,9 @@ my_dataset0712.txt
 /ios
 /android
 supabase/.temp/
+
+# local agent tooling — not project code, keep out of the repo
+.claude/skills/impeccable/
+.agents/skills/impeccable/
+.codex/
+.impeccable/
