@@ -51,7 +51,7 @@ export default function Footer({ onOpenInfo }) {
     <View style={styles.wrap}>
       <View style={styles.inner}>
         <View style={styles.brandCol}>
-          <Text style={styles.brandText}>Dínók Meg Minden</Text>
+          <Text style={styles.brandText}>DMM Lexikon</Text>
           <Text style={styles.tagline}>Fedezd fel a mélyidő őslényeit.</Text>
         </View>
 

@@ -60,11 +60,14 @@ const THUMB_W = 178;   // 16:9 kép szélessége (100px magassághoz)
 const THUMB_GAP = 10;  // randomStrip gap
 const MAX_THUMBS = 8;  // felső korlát (nagyon széles kijelzőn se legyen túl sok)
 
-function RandomDinoStrip({ allDinos, onPress }) {
-  const [count, setCount] = useState(0);
+function RandomDinoStrip({ allDinos, onPress, availWidth }) {
+  // Hány thumbnail fér el a rendelkezésre álló sávszélességbe (min. 1). A
+  // szélességet a szülő számolja ki a viewportból (availWidth) — megbízhatóbb,
+  // mint a flexWrap-es sáv onLayout-ja, ami RN-weben a becsomagolt tartalom
+  // szélességét adja vissza, nem a rendelkezésre állót.
+  const count = Math.max(1, Math.floor((availWidth + THUMB_GAP) / (THUMB_W + THUMB_GAP)));
 
-  // Egyszer sorsolt pool (a maximális darabszámig), ebből vágunk annyit,
-  // amennyi a mért szélességbe belefér.
+  // Sorsolt pool (a férőhelyek számáig), mount-kor egyszer.
   const pool = useMemo(() => {
     const withImg = (allDinos || []).filter((d) => IMAGE_MAP[d.name_hu]);
     if (withImg.length === 0) return [];
@@ -77,14 +80,6 @@ function RandomDinoStrip({ allDinos, onPress }) {
     return out;
   }, [allDinos]);
 
-  // A sáv szélességéből: hány (THUMB_W + gap) egység fér el, min. 1.
-  const handleLayout = (e) => {
-    const w = e.nativeEvent.layout.width;
-    if (!w) return;
-    const fits = Math.max(1, Math.floor((w + THUMB_GAP) / (THUMB_W + THUMB_GAP)));
-    setCount(fits);
-  };
-
   // "Betöltés" = még nincs adat (allDinos üres/null). Ilyenkor NEM omlasztjuk
   // össze a slotot, hanem fix magasságú skeleton-sort mutatunk, hogy a hero
   // első paintje ne csupasz cím legyen és ne ugorjon a layout, amint az adat
@@ -93,21 +88,18 @@ function RandomDinoStrip({ allDinos, onPress }) {
   const loading = !allDinos || allDinos.length === 0;
   if (!loading && pool.length === 0) return null;
 
-  // Amíg a szélesség nincs megmérve (count === 0), 1 helyőrzőt feltételezünk,
-  // hogy a skeleton már az első kereten látszódjon.
-  const slots = count > 0 ? count : 1;
-  const picks = loading ? [] : pool.slice(0, Math.min(slots, pool.length));
+  const picks = loading ? [] : pool.slice(0, Math.min(count, pool.length));
 
   return (
-    <View style={styles.randomStrip} onLayout={handleLayout}>
+    <View style={styles.randomStrip}>
       {loading
-        ? Array.from({ length: slots }).map((_, i) => (
+        ? Array.from({ length: count }).map((_, i) => (
             <View key={`sk-${i}`} style={styles.randomThumbSkeleton} />
           ))
         : picks.map((dino) => (
             <Pressable
               key={dino.id ?? dino.name_hu}
-              style={styles.randomThumb}
+              style={({ pressed }) => [styles.randomThumb, pressed && styles.randomThumbPressed]}
               onPress={() => onPress?.(dino)}
               accessibilityRole="button"
               accessibilityLabel={dino.name_hu}
@@ -123,6 +115,12 @@ function RandomDinoStrip({ allDinos, onPress }) {
 export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onRequireRegister, onOpenJoin, onOpenLogin }) {
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
+  // A hero-képsáv rendelkezésre álló szélessége a viewportból (a heroBand
+  // ph 48*2, ill. mobilon a columnNarrow maxWidth 680 / ph 20*2 alapján) — a
+  // RandomDinoStrip ebből számolja a férőhelyek számát.
+  const stripAvailWidth = isWide
+    ? Math.min(width, 1920) - 96
+    : Math.min(width, 680) - 40;
   const [infoOpen, setInfoOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [xp, setXp] = useState(0);
@@ -322,7 +320,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           másodperc az egész, jelszó nélkül.
         </Text>
         <Pressable
-          style={styles.guestBtn}
+          style={({ pressed }) => [styles.guestBtn, pressed && styles.guestBtnPressed]}
           onPress={() => { playSound('click'); onOpenJoin?.(); }}
           accessibilityRole="button"
         >
@@ -356,7 +354,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </View>
       )}
 
-      <RandomDinoStrip allDinos={allDinos} onPress={handleDailyDinoPress} />
+      <RandomDinoStrip allDinos={allDinos} onPress={handleDailyDinoPress} availWidth={stripAvailWidth} />
 
       <View style={styles.heroCopy}>
         <Text style={styles.heroTitle}>Légy Te a Dínó Professzor!</Text>
@@ -365,6 +363,9 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </Text>
         <View style={styles.heroCtaWrap}>
           <PrimaryCTA onPress={handleStartAdventure} label="Kezdd el a felfedezést!" />
+          {/* A CTA az elsődleges út; a térkép az "or" alternatíva — így a kettő
+              egy egységként olvas, nem két versengő primary döntésként. */}
+          <Text style={styles.heroCtaHint}>…vagy válassz régiót a térképen ↓</Text>
         </View>
       </View>
 
@@ -492,47 +493,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     ...Platform.select({ web: { cursor: 'pointer' } }),
   },
+  guestBtnPressed: {
+    backgroundColor: COLORS.accentDark,
+    transform: [{ scale: 0.97 }],
+  },
   guestBtnText: {
     color: COLORS.bgDark,
     fontSize: 15,
     fontFamily: FONTS.bodyBold,
     letterSpacing: 0.4,
-  },
-  // ── Régi, sidebaros elrendezés (mobil is használ pár darabot) ─────────────
-  bodyRow: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    width: '100%',
-    // RN-web flex-lánc nem mindig nyúlik a viewportig (lásd Shell komment) —
-    // a fejléc-sáv (~96px) alatti teljes magasságot 100vh-ból számoljuk, hogy a
-    // bal sáv tényleg a képernyő aljáig érjen.
-    ...Platform.select({ web: { minHeight: 'calc(100vh - 96px)' } }),
-  },
-  sidebar: {
-    width: '100%',
-  },
-  // Wide: fix szélességű, teljes magasságú, belül GÖRGETHETŐ üveghatású sáv.
-  // A fix magasság (100vh - fejléc) korlátozza a ScrollView-t, hogy a hosszú
-  // tartalom (hírek + napi dínó + üzenőfal) a sávon belül görögjön.
-  sidebarWide: {
-    width: 360,
-    flexGrow: 0,
-    flexShrink: 0,
-    backgroundColor: 'rgba(16,14,12,0.55)',
-    borderRightWidth: 1,
-    borderRightColor: 'rgba(254,250,224,0.10)',
-    ...Platform.select({
-      web: {
-        height: 'calc(100vh - 96px)',
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
-      },
-    }),
-  },
-  sidebarWideContent: {
-    paddingHorizontal: 22,
-    paddingVertical: 24,
   },
   sidebarHeading: {
     color: COLORS.accent,
@@ -542,18 +511,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     opacity: 0.9,
     marginBottom: 10,
-  },
-  // Jobb oldali sáv: azonos szélesség és stílus, mint a bal (spec: 3-oszlopos
-  // elrendezés) — a "Te haladásod" panelt tartalmazza, bal szegély helyett
-  // jobb szegéllyel (a középső tartalom felé néz), tükrözve a bal sávot.
-  sidebarRight: {
-    borderRightWidth: 0,
-    borderLeftWidth: 1,
-    borderLeftColor: 'rgba(254,250,224,0.10)',
-  },
-  narrowProgressBlock: {
-    width: '100%',
-    marginTop: 8,
   },
   sidebarHeadingSpaced: { marginTop: 20 },
   newsPlaceholder: {
@@ -589,6 +546,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: 4,
     opacity: TEXT_OPACITY.meta,
+    // Dátumok azonos szélességű számjegyekkel — nem "táncolnak" a hírsorban.
+    fontVariant: ['tabular-nums'],
   },
   newsTitle: {
     color: COLORS.cream,
@@ -612,91 +571,15 @@ const styles = StyleSheet.create({
     opacity: TEXT_OPACITY.secondary,
     marginTop: 4,
   },
-  sidebarSpacer: { flex: 1, minHeight: 24 },
-  rightArea: {
-    flex: 1,
-    width: '100%',
-  },
-  rightContent: {
-    paddingHorizontal: 40,
-    paddingVertical: 24,
-    paddingBottom: 40,
-  },
   columnNarrow: {
     width: '100%',
     maxWidth: 680,
     paddingHorizontal: 20,
     alignSelf: 'center',
   },
-  column: {
-    width: '100%',
-    maxWidth: 520,
-    paddingHorizontal: 20,
-  },
-  // 700–1023px: se a mobil 520px-es korlát, se a desktop kétoszlopos 1280px —
-  // egy oszlop marad, de a tartalom (térkép, kártyák) számára levegősebb teret ad.
-  columnTablet: {
-    maxWidth: 680,
-    paddingHorizontal: 28,
-  },
-  columnWide: {
-    maxWidth: 1280,
-    paddingHorizontal: 32,
-  },
-  mainArea: {
-    width: '100%',
-  },
-  mainAreaWide: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: 32,
-  },
-  leftCol: {
-    width: '100%',
-  },
-  leftColWide: {
-    // 2:3 helyett 11:14 — a bal oszlop részesedése 40%-ról 44%-ra nő
-    // (pontosan 10%-os relatív növekedés), a jobb oszlop 56%-ra csökken.
-    flex: 11,
-  },
-  rightCol: {
-    width: '100%',
-    position: 'relative',
-  },
-  rightColWide: {
-    flex: 14,
-  },
-  headerBar: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 16,
-    paddingBottom: 12,
-    paddingHorizontal: 20,
-    gap: 16,
-  },
-  headerBarWide: {
-    paddingHorizontal: 40,
-    paddingTop: 20,
-    paddingBottom: 16,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 28,
-  },
-  brand: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  brandLogo: {
-    width: 38,
-    height: 38,
-  },
   // A hero tetején lévő 3 random dínó mini-fotó sávja.
   randomStrip: {
+    width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
@@ -706,6 +589,9 @@ const styles = StyleSheet.create({
   randomThumb: {
     width: 178,
     ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  randomThumbPressed: {
+    transform: [{ scale: 0.96 }],
   },
   randomThumbImg: {
     width: 178,
@@ -741,13 +627,16 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     color: COLORS.cream,
-    fontSize: 30,
+    fontSize: 34,
+    lineHeight: 38,
     fontFamily: FONTS.headingXBold,
+    // Nagy címnél szorosabb tracking — súlyosabb, szándékosabb hatás.
+    letterSpacing: -0.5,
     opacity: TEXT_OPACITY.primary,
     textShadowColor: 'rgba(0,0,0,0.5)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   heroSubtitle: {
     color: COLORS.cream,
@@ -761,33 +650,17 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     marginTop: 14,
     alignSelf: 'center',
-  },
-  brandText: {
-    color: COLORS.cream,
-    fontSize: 20,
-    fontFamily: FONTS.heading,
-    opacity: TEXT_OPACITY.primary,
-  },
-  navLinks: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 22,
   },
-  navLink: {
+  // A CTA alatti finom "or" híd a régiótérképhez — a másodlagos utat jelzi,
+  // hogy a CTA maradjon az egyetlen domináns primary.
+  heroCtaHint: {
     color: COLORS.cream,
-    fontSize: 14.5,
-    fontFamily: FONTS.bodyBold,
-    opacity: TEXT_OPACITY.secondary,
-    ...Platform.select({ web: { cursor: 'pointer' } }),
-  },
-  navLinkActive: {
-    color: COLORS.accent,
-    opacity: TEXT_OPACITY.primary,
-  },
-  progressCircleText: {
-    color: COLORS.cream,
-    fontSize: 12,
-    fontFamily: FONTS.bodyBold,
+    fontSize: 12.5,
+    fontFamily: FONTS.body,
+    opacity: TEXT_OPACITY.meta,
+    letterSpacing: 0.3,
+    marginTop: 10,
   },
   errorBanner: {
     flexDirection: 'row',
@@ -815,184 +688,5 @@ const styles = StyleSheet.create({
     color: COLORS.bgDark,
     fontSize: 13,
     fontFamily: FONTS.bodyBold,
-  },
-  streakPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(139,86,48,0.55)',
-    borderRadius: RADIUS.pill,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-  },
-  streakPillText: {
-    color: COLORS.cream,
-    fontSize: 14,
-    fontFamily: FONTS.bodyBold,
-    letterSpacing: 0.3,
-  },
-  xpPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(20,18,16,0.7)',
-    borderRadius: RADIUS.pill,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    ...Platform.select({
-      web: {
-        transitionProperty: 'background-color, transform',
-        transitionDuration: '120ms',
-        cursor: 'pointer',
-      },
-    }),
-  },
-  xpPillHovered: {
-    backgroundColor: COLORS.bgMidLight,
-  },
-  xpPillPressed: {
-    transform: [{ scale: 0.94 }],
-  },
-  xpPillIcon: {
-    fontSize: 15,
-  },
-  xpPillText: {
-    color: COLORS.cream,
-    fontSize: 14,
-    fontFamily: FONTS.bodyBold,
-    letterSpacing: 0.3,
-  },
-  progressCircleBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({ web: { cursor: 'pointer' } }),
-  },
-  gamingBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: COLORS.accent,
-    borderRadius: RADIUS.pill,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    ...Platform.select({
-      web: {
-        transitionProperty: 'background-color, transform',
-        transitionDuration: '120ms',
-        cursor: 'pointer',
-      },
-    }),
-  },
-  gamingBtnHovered: {
-    backgroundColor: COLORS.accentDark,
-  },
-  gamingBtnText: {
-    color: COLORS.bgDark,
-    fontSize: 15,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-  },
-  headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  headerIconGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  headerDivider: {
-    width: 1,
-    height: 22,
-    backgroundColor: 'rgba(254,250,224,0.18)',
-    marginHorizontal: 2,
-  },
-  collectionIconWrap: {
-    position: 'relative',
-  },
-  collectionBadge: {
-    position: 'absolute',
-    top: -6,
-    left: -8,
-    minWidth: 20,
-    alignItems: 'center',
-    backgroundColor: COLORS.accent,
-    borderRadius: RADIUS.pill,
-    borderWidth: 1.5,
-    borderColor: COLORS.bgDark,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-  },
-  collectionBadgeText: {
-    color: COLORS.bgDark,
-    fontSize: 9,
-    fontWeight: '800',
-  },
-  roundBtnWrap: {
-    position: 'relative',
-  },
-  accountTooltip: {
-    position: 'absolute',
-    top: 48,
-    right: 0,
-    zIndex: 20,
-    backgroundColor: COLORS.cream,
-    borderRadius: RADIUS.pill,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    ...Platform.select({ web: { whiteSpace: 'nowrap' } }),
-  },
-  accountTooltipText: {
-    color: COLORS.bgDark,
-    fontSize: 13,
-    fontFamily: FONTS.bodyBold,
-  },
-  roundBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: RADIUS.pill,
-    backgroundColor: 'rgba(20,18,16,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      web: {
-        transitionProperty: 'background-color, transform',
-        transitionDuration: '120ms',
-        cursor: 'pointer',
-      },
-    }),
-  },
-  roundBtnHovered: {
-    backgroundColor: COLORS.bgMidLight,
-  },
-  roundBtnPressed: {
-    transform: [{ scale: 0.9 }],
-  },
-  // Billentyűzetes navigációhoz (Tab) látható fókusz-gyűrű webes nézetben.
-  roundBtnFocused: {
-    ...Platform.select({
-      web: {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: COLORS.accent,
-        outlineOffset: 2,
-      },
-    }),
-  },
-  roundBtnIcon: {
-    fontSize: 18,
-  },
-  // Másodlagos (nem-fő navigációs) fejléc-gombok — YouTube, Info — kisebbek és
-  // halványabbak, hogy vizuálisan alárendeltek legyenek a fő navigációnak
-  // (Ranglista/Gyűjtemény/Profil).
-  roundBtnSecondary: {
-    width: 32,
-    height: 32,
-    backgroundColor: 'transparent',
-    opacity: 0.65,
-  },
-  roundBtnIconSecondary: {
-    opacity: 0.9,
   },
 });

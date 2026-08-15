@@ -46,12 +46,15 @@ export const TEXT_OPACITY = {
 };
 
 // ---------------------------------------------------------------------------
-// ORGANIC — a claude.ai/design "Organic" rendszer sötét változata, ahogy a
-// "Dino Tudos Home" terv felülírja a világos alapot:
+// ORGANIC — a claude.ai/design "Organic" rendszer sötét változata, a
+// "Dino Tudos Home" terv terrakotta/zsálya paletta-javaslata:
 //   --color-bg #1a1712 · --color-surface #2a251d · --color-text #f3e7d2
 // Meleg, lekerekített rendszer terrakotta (accent) és zsálya (accent2) hanggal,
-// Caprasimo címekkel Figtree kenyérszöveg fölött. Csak a landing használja —
-// a többi képernyő a fenti COLORS/RADIUS tokeneken marad.
+// Caprasimo címekkel Figtree kenyérszöveg fölött.
+// FIGYELEM: ez jelenleg NEM AKTÍV — a landing (és minden képernyő) a fenti
+// teal/amber COLORS + Rokkitt/Cinzel/Inter rendszeren fut. Ezek a tokenek egy
+// korábbi, félbehagyott redesign-irány maradványai; megtartva referenciának,
+// de amíg nincs importálva, ne hivatkozz rá "a landing paletta"-ként.
 // ---------------------------------------------------------------------------
 export const ORGANIC = {
   bg: '#1a1712',
