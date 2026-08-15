@@ -16,15 +16,12 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const dinoLogo = require('../../assets/images/dino_logo.png');
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
-import HeroTop from '../components/HeroTop';
 import PrimaryCTA from '../components/PrimaryCTA';
 import DailyDinoCard from '../components/DailyDinoCard';
 import AppInfoModal from '../components/AppInfoModal';
 import RankModal from '../components/RankModal';
-import ProgressRing from '../components/ProgressRing';
 import MessageBoard from '../components/MessageBoard';
 import Footer from '../components/Footer';
 import LandingMenu from './LandingMenu';
@@ -32,7 +29,6 @@ import { IMAGE_MAP } from '../constants/imageMap';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { recordAndGetStreak } from '../utils/dailyStreak';
-import { rankForXP } from '../utils/ranks';
 import { isAdminNickname } from '../constants/admins';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
 import { findNextPack, overallCompletionRatio, regionCollectionStats } from '../utils/regionProgress';
@@ -52,194 +48,6 @@ function formatNewsDate(iso) {
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${d.getFullYear()}. ${m}. ${day}.`;
-}
-
-function XPPill({ onPress }) {
-  const [xp, setXP] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const [focused, setFocused] = useState(false);
-
-  useEffect(() => {
-    getTotalXP().then(setXP);
-    const interval = setInterval(() => {
-      getTotalXP().then(setXP);
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
-
-  const { rank } = rankForXP(xp);
-
-  return (
-    <Pressable
-      style={[
-        styles.xpPill,
-        hovered && styles.xpPillHovered,
-        pressed && styles.xpPillPressed,
-        focused && styles.roundBtnFocused,
-      ]}
-      onPress={onPress}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      accessibilityRole="button"
-      accessibilityLabel={`XP Ranglétrák: ${xp} XP`}
-    >
-      <Text style={styles.xpPillIcon}>{rank.icon}</Text>
-      <Text style={styles.xpPillText}>{xp} XP</Text>
-    </Pressable>
-  );
-}
-
-// Napi belépési széria (lokális, AsyncStorage) — barnás pill láng-ikonnal.
-function StreakPill({ days }) {
-  if (days == null) return null;
-  return (
-    <View style={styles.streakPill}>
-      <MaterialCommunityIcons name="fire" size={15} color={COLORS.accent} />
-      <Text style={styles.streakPillText}>{days} nap</Text>
-    </View>
-  );
-}
-
-// Az XP mellett élő, egyetlen belépési pont az összes játékmódhoz — a korábbi
-// 6 külön landing-gomb helyett a GamingScreen-t nyitja meg (lásd App.js).
-function GamingButton({ onPress }) {
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const [focused, setFocused] = useState(false);
-
-  return (
-    <Pressable
-      style={[
-        styles.gamingBtn,
-        hovered && styles.gamingBtnHovered,
-        pressed && styles.roundBtnPressed,
-        focused && styles.roundBtnFocused,
-      ]}
-      onPress={onPress}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-    >
-      <MaterialCommunityIcons name="gamepad-variant" size={16} color={COLORS.bgDark} />
-      <Text style={styles.gamingBtnText}>Játékok</Text>
-    </Pressable>
-  );
-}
-
-// tooltip: opcionális — ha van, hoverre egy kis buborékban megjelenik alatta
-// (pl. a fiók-ikonnál a játékos neve, aminek eddig nem volt semmi funkciója).
-function RoundIconButton({ icon, onPress, tooltip, secondary }) {
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const [focused, setFocused] = useState(false);
-
-  return (
-    <View style={styles.roundBtnWrap}>
-      <Pressable
-        style={[
-          styles.roundBtn,
-          secondary && styles.roundBtnSecondary,
-          hovered && styles.roundBtnHovered,
-          pressed && styles.roundBtnPressed,
-          focused && styles.roundBtnFocused,
-        ]}
-        onPress={onPress}
-        onHoverIn={() => setHovered(true)}
-        onHoverOut={() => setHovered(false)}
-        onPressIn={() => setPressed(true)}
-        onPressOut={() => setPressed(false)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-      >
-        <MaterialCommunityIcons name={icon} size={secondary ? 15 : 18} color={COLORS.cream} style={secondary && styles.roundBtnIconSecondary} />
-      </Pressable>
-      {!!tooltip && hovered && (
-        <View style={styles.accountTooltip} pointerEvents="none">
-          <Text style={styles.accountTooltipText} numberOfLines={1}>{tooltip}</Text>
-        </View>
-      )}
-    </View>
-  );
-}
-
-// A gyűjtemény korábban egy külön, teljes szélességű sávban élt a menüben —
-// most a fejlécben, a ranglista-ikon mellett kapott helyet, a már kinyitott
-// kártyák arányával egy jelvényként az ikon elülső (bal felső) sarkán, rajta.
-function CollectionIconButton({ ratio, onPress }) {
-  const [hovered, setHovered] = useState(false);
-  const [pressed, setPressed] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const pct = Math.round((ratio || 0) * 100);
-
-  return (
-    <View style={styles.collectionIconWrap}>
-      <Pressable
-        style={[
-          styles.roundBtn,
-          hovered && styles.roundBtnHovered,
-          pressed && styles.roundBtnPressed,
-          focused && styles.roundBtnFocused,
-        ]}
-        onPress={onPress}
-        onHoverIn={() => setHovered(true)}
-        onHoverOut={() => setHovered(false)}
-        onPressIn={() => setPressed(true)}
-        onPressOut={() => setPressed(false)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-      >
-        <MaterialCommunityIcons name="image-multiple" size={18} color={COLORS.cream} />
-      </Pressable>
-      <View style={styles.collectionBadge} pointerEvents="none">
-        <Text style={styles.collectionBadgeText}>{pct}%</Text>
-      </View>
-    </View>
-  );
-}
-
-// Szöveges fő-navigációs link a fejléc bal oldalán (Kezdőlap/Játékok/…),
-// hoverre és aktív állapotban accent-színnel kiemelve.
-function NavLink({ label, active, onPress }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <Pressable
-      onPress={onPress}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      accessibilityRole="button"
-    >
-      <Text style={[styles.navLink, (active || hovered) && styles.navLinkActive]}>{label}</Text>
-    </Pressable>
-  );
-}
-
-// Kör alakú haladásjelző a fejléc jobb oldalán — a gyűjtemény kinyitott
-// arányát mutatja zöld SVG-gyűrűvel + százalékkal, a gyűjtemény-nézetet nyitja.
-function ProgressCircle({ ratio, onPress }) {
-  const [focused, setFocused] = useState(false);
-  const pct = Math.round((ratio || 0) * 100);
-  return (
-    <Pressable
-      style={[styles.progressCircleBtn, focused && styles.roundBtnFocused]}
-      onPress={onPress}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      accessibilityRole="button"
-      accessibilityLabel={`Gyűjtemény ${pct}%`}
-    >
-      <ProgressRing size={40} stroke={3.5} ratio={ratio || 0} color="#a9cf6b" trackColor="rgba(254,250,224,0.18)">
-        <Text style={styles.progressCircleText}>{pct}%</Text>
-      </ProgressRing>
-    </Pressable>
-  );
 }
 
 // A hero tetején minden betöltéskor véletlen (képpel rendelkező) őslények
@@ -320,9 +128,10 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     return () => clearInterval(t);
   }, []);
 
-  // Lokális napi belépési széria — megnyitáskor regisztráljuk és kiírjuk.
+  // Lokális napi belépési széria — megnyitáskor regisztráljuk (side effect;
+  // a visszaadott értéket a landing jelenleg nem jeleníti meg).
   useEffect(() => {
-    recordAndGetStreak().then(setStreak);
+    recordAndGetStreak();
   }, []);
 
   // Betöltéskor dínóbőgés (mute-aware; weben az autoplay-tiltás miatt csak
