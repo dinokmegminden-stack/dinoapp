@@ -1,9 +1,3 @@
-// AlbumCard — kompakt galéria-kártya az Albumod rács-nézetéhez, "focis kártya"
-// elrendezésben: 16:9 kép felül, alatta egysoros tudományos név, egy nagyobb
-// infó-blokk, majd (regisztrált játékosnak) a leírás. Koppintásra a
-// DinoCardModal nyílik meg a teljes részletekkel. A csomagszám nem kártya-
-// mező többé, csak hoveren (webes egér fölé vitelkor) látszó infó, hogy a
-// névsor egy sorban elférjen és a leírásnak ne kelljen csonkolódnia.
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, Platform } from 'react-native';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -17,8 +11,6 @@ function formatMeasure(min, max, unit) {
   return `${v}${unit}`;
 }
 
-// diet_hu néha összetett ("húsevő, mindenevő") — az ikonhoz az első
-// szóhoz tartozó jelölés dönt, a teljes szöveg nem fér el egy ikonban.
 const DIET_ICON = {
   növényevő: '🌿',
   húsevő: '🍖',
@@ -79,6 +71,14 @@ export default function AlbumCard({ creature, onPress }) {
               {creature.csalad_hu || '—'}
             </Text>
           </View>
+
+          {/* Description added directly below Család */}
+          {hasDescription && (
+            <View style={styles.fullWidthCell}>
+              <Text style={styles.description}>{creature.description_hu}</Text>
+            </View>
+          )}
+
           <View style={styles.statCell}>
             <Text style={styles.statLabel}>FELFEDEZŐ</Text>
             <Text style={styles.statValue} numberOfLines={1}>
@@ -104,12 +104,7 @@ export default function AlbumCard({ creature, onPress }) {
             </Text>
           </View>
         </View>
-
       </View>
-
-      {hasDescription && (
-        <Text style={styles.description}>{creature.description_hu}</Text>
-      )}
     </TouchableOpacity>
   );
 }
@@ -168,7 +163,6 @@ const styles = StyleSheet.create({
   infoBlock: {
     padding: 10,
     justifyContent: 'space-between',
-    minHeight: 160,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -177,6 +171,10 @@ const styles = StyleSheet.create({
   },
   statCell: {
     width: '47%',
+  },
+  fullWidthCell: {
+    width: '100%',
+    marginVertical: 4,
   },
   statLabel: {
     color: COLORS.gold,
@@ -195,9 +193,7 @@ const styles = StyleSheet.create({
     color: COLORS.cream,
     fontFamily: FONTS.body,
     fontSize: 12,
-    opacity: 0.75,
-    lineHeight: 21,
-    paddingHorizontal: 12,
-    paddingBottom: 12,
+    opacity: 0.85,
+    lineHeight: 18,
   },
 });
