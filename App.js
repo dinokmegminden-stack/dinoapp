@@ -21,7 +21,7 @@ import XPBar, { setActivePlayerId, syncXPFromServer } from './src/components/XPB
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import KutatokScreen from './src/screens/KutatokScreen';
-import { loadProgress, recordPackQuizResult, saveProgress, createEmptyProgress, applyPackQuizResult } from './src/utils/regionProgress';
+import { loadProgress, recordPackQuizResult, saveProgress, createEmptyProgress, applyPackQuizResult, mergeProgress } from './src/utils/regionProgress';
 import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
 import { getPlayerIdByNickname } from './src/services/playersService';
@@ -123,9 +123,11 @@ export default function App() {
           // Try loading progress from server first (source of truth)
           const serverProgress = await loadProgressFromServerByNickname(saved);
           if (serverProgress) {
-            setProgress(serverProgress);
+            // Teljes alakúra egészítjük (hiányos szerver-progress → render-crash).
+            const normalized = mergeProgress(serverProgress);
+            setProgress(normalized);
             // Also update AsyncStorage with server version
-            await saveProgress(saved, serverProgress);
+            await saveProgress(saved, normalized);
           } else {
             // Fall back to AsyncStorage if not on server
             const localProgress = await loadProgress(saved);
@@ -185,8 +187,9 @@ export default function App() {
     // progress_data-val).
     const serverProgress = await loadProgressFromServerByNickname(chosenNickname);
     if (serverProgress) {
-      setProgress(serverProgress);
-      await saveProgress(chosenNickname, serverProgress);
+      const normalized = mergeProgress(serverProgress);
+      setProgress(normalized);
+      await saveProgress(chosenNickname, normalized);
     } else {
       loadProgress(chosenNickname).then(setProgress);
     }

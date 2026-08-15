@@ -76,21 +76,29 @@ export function createEmptyProgress() {
 
 // --- Betöltés / mentés --------------------------------------------------------
 
+// Tetszőleges (esetleg HIÁNYOS) progress objektumot teljes kulcs-készletűre
+// egészít ki (minden edu + pakk jelen). MINDEN progress-fogyasztó (findNextPack,
+// overallCompletionRatio, regionCollectionStats, …) teljes alakot feltételez —
+// a szerverről jövő nyers progress_data viszont lehet régi/hiányos, ezért mielőtt
+// state-be tesszük, ezen átengedjük (különben render-időben elszáll → üres app).
+export function mergeProgress(raw) {
+  const parsed = raw || {};
+  const merged = createEmptyProgress();
+  REGION_ORDER.forEach((edu) => {
+    REGION_PACKS[edu].forEach((packNum) => {
+      if (parsed[edu]?.[packNum]) {
+        merged[edu][packNum] = parsed[edu][packNum];
+      }
+    });
+  });
+  return merged;
+}
+
 export async function loadProgress(nickname) {
   try {
     const raw = await AsyncStorage.getItem(storageKey(nickname));
     if (!raw) return createEmptyProgress();
-
-    const parsed = JSON.parse(raw);
-    const merged = createEmptyProgress();
-    REGION_ORDER.forEach((edu) => {
-      REGION_PACKS[edu].forEach((packNum) => {
-        if (parsed[edu]?.[packNum]) {
-          merged[edu][packNum] = parsed[edu][packNum];
-        }
-      });
-    });
-    return merged;
+    return mergeProgress(JSON.parse(raw));
   } catch (e) {
     console.warn('loadProgress hiba, üres progress visszaadva:', e);
     return createEmptyProgress();
@@ -219,10 +227,15 @@ export function regionCollectionStats(allDinos, progress) {
 }
 
 export function findNextPack(progress) {
+  const p = progress || {};
   for (const edu of REGION_ORDER) {
-    if (!isRegionUnlocked(edu, progress)) continue;
+    if (!isRegionUnlocked(edu, p)) continue;
     for (const packNum of REGION_PACKS[edu]) {
-      if (!progress[edu][packNum].quizPassed && isPackUnlocked(edu, packNum, progress)) {
+      // Optional chaining: a szerverről jövő progress hiányos lehet (egy edu
+      // vagy pakk kulcs nélkül) — ilyenkor a pakk "még nem teljesített", NEM
+      // dobunk. (Enélkül a LandingPage render-időben hívott findNextPack
+      // elszállt egy bejelentkezett usernél → üres képernyő.)
+      if (!p[edu]?.[packNum]?.quizPassed && isPackUnlocked(edu, packNum, p)) {
         return { eduLevel: edu, packNumber: packNum };
       }
     }
