@@ -242,5 +242,10 @@
     "dur_min": "%{m} perc",
     "dur_hour": "%{h} óra %{m} perc",
     "dur_day": "%{d} nap %{h} óra"
+  },
+  "info": {
+    "title": "🦕 Mi ez az app?",
+    "body": "Hat régió, több mint száz dínó és őslény vár, hogy összegyűjtsd őket — csak választasz egy becenevet, és indulhat a kaland. Csomagonként haladsz, mindegyik végén egy kvíz nyitja a következő pakkt, a lényeket pedig albumba gyűjtöd! Hat játékmód, rengeteg XP, ranglisták és tűzijáték a rekordokért. Fedezd fel a mélyidőt, és légy Te a legjobb dínó-tudós!",
+    "close": "Bezárás"
   }
 }

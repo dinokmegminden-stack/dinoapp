@@ -5,39 +5,22 @@ import React from 'react';
 import { Modal, Pressable, ScrollView, Text, View, StyleSheet } from 'react-native';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
+import { useT } from '../i18n';
 
 export default function AppInfoModal({ visible, onClose }) {
+  const { t } = useT();
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
         <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
-          <Text style={styles.title}>🦕 Mi ez az app?</Text>
+          <Text style={styles.title}>{t('info.title')}</Text>
           <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
             <Text style={styles.text}>
-              A Dínó Expedíció izgalmas világában hat különböző régióból — a
-              Kárpát-medencétől kezdve Afrikán, Ázsián és mindkét amerikán át —
-              rengeteg dínó és őslény vár felfedezésre, ahol egyedi becenév
-              megadásával azonnal elindulhat a gyűjtés. A tartalmak áttekinthető
-              csomagokra bontva épülnek fel, amelyek végén egy-egy záró kvíz
-              teljesítése, legalább nyolcvan százalékos eredménnyel, nyitja meg a
-              következő szinteket. A megszerzett lényeket a hagyományos
-              régió-csomag rács mellett egy különleges törzsfa idővonalon is
-              böngészhetjük, ahol minden élőlény a saját földtörténeti kora és
-              rokonsági szálai szerint kap helyet. A hat különböző játékmód — a
-              három nehézségi fokozatú párok memóriajáték, a Ki vagyok én?
-              tippelős kvíz, az ötmásodperces villámkvíz gyors képfelismeréssel,
-              az egyre nehezedő XP Milliomos, az ügyességi dínófutam és az
-              akasztófa szókitalálós játék — garantálja a változatos
-              szórakozást. Minden helyes válasz és győzelem tapasztalati
-              pontokat hoz, amelyekkel játékmódonként haladhatunk feljebb a
-              ranglistákon, beleértve egy különleges sebességi versenyt is az
-              ezer XP eléréséért, miközben az új rekordokat látványos tűzijáték
-              ünnepli. Fedezd fel a múlt rejtélyeit, gyűjtsd össze az összes
-              őslényt, és bizonyítsd be, hogy te vagy a legjobb dínó-tudós!
+              {t('info.body')}
             </Text>
           </ScrollView>
           <Pressable style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>Bezárás</Text>
+            <Text style={styles.closeBtnText}>{t('info.close')}</Text>
           </Pressable>
         </Pressable>
       </Pressable>

@@ -242,5 +242,10 @@
     "dur_min": "%{m} min",
     "dur_hour": "%{h} h %{m} min",
     "dur_day": "%{d} d %{h} h"
+  },
+  "info": {
+    "title": "🦕 What is this app?",
+    "body": "Six regions and over a hundred dinos and ancient creatures are waiting to be collected — just pick a nickname and the adventure begins. You progress pack by pack, each ending in a quiz that unlocks the next one, and you collect the creatures into your album! Six game modes, loads of XP, leaderboards, and fireworks for every record. Explore deep time and become the greatest dino expert!",
+    "close": "Close"
   }
 }
