@@ -11,8 +11,7 @@ import {
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
-import DinoCard from '../components/DinoCard';
-import DinoCardModal from '../components/DinoCardModal';
+import AlbumCard from '../components/AlbumCard';
 import ProgressRing from '../components/ProgressRing';
 import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -93,18 +92,6 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
   const [filters, setFilters] = useState({});
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' });
   const [selectedLetter, setSelectedLetter] = useState(null);
-  const [selectedCreature, setSelectedCreature] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const openModal = (creature) => {
-    setSelectedCreature(creature);
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setSelectedCreature(null);
-  };
 
   // Get only unlocked creatures from all dinos
   const unlockedDinos = useMemo(() => {
@@ -285,7 +272,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
                   <Text style={styles.regionBlockTitle}>{section.title.toUpperCase()}</Text>
                   <View style={styles.grid}>
                     {section.data.map((dino) => (
-                      <DinoCard key={dino.id} dino={dino} onPress={() => openModal(dino)} />
+                      <AlbumCard key={dino.id} dino={dino} />
                     ))}
                   </View>
                 </View>
@@ -294,8 +281,6 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
           </ScrollView>
         </View>
       </View>
-
-      <DinoCardModal visible={modalVisible} creature={selectedCreature} onClose={closeModal} />
     </Shell>
   );
 }

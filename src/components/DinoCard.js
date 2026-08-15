@@ -1,28 +1,28 @@
-// DinoCard — a DínóTudós újratervezett, portré (9:16) gyűjtőkártyája múzeumi
-// tábla-esztétikával. Újrafelhasználható: bárhol renderelhető egy `dino`
-// objektummal (Supabase creatures sor / adaptCreature kimenet) + onPress-szel.
+// DinoCard — a DínóTudós újratervezett gyűjtőkártyája múzeumi tábla-esztétikával.
+// Két mód egyetlen forrásból:
+//   showDescription=false → DinoCard: NINCS leírás (kompakt rács-kártya).
+//   showDescription=true  → AlbumCard: a TELJES leírás megjelenik (lásd AlbumCard.js).
+// Mindkét módban 16:9 a kép. Kattintásra a kártya egy képernyő-magasságú
+// modálban nyílik ki (teljes leírással, görgethetően).
 //
 // Használat:
-//   import DinoCard from '../components/DinoCard';
-//   <DinoCard dino={creature} onPress={(d) => openDetail(d)} />
+//   <DinoCard dino={creature} onPress={(d) => ...} />                // leírás nélkül
+//   <DinoCard dino={creature} showDescription />                    // = AlbumCard
 //
-// Mezőleképezés (a briefből): name_latin, epoch + mya_min/mya_max, étrend,
-// length_m_min/length_m_max, imageUrl || IMAGE_MAP[name_hu], description_hu,
-// család, rarity (1–5). A közös nevet (name_hu), a súlyt és a felfedező-
-// mezőket SZÁNDÉKOSAN nem jeleníti meg.
+// Mezőleképezés: name_latin, epoch(_hu) + mya_min/mya_max, diet(_hu),
+// length_m_min/max, image_url || IMAGE_MAP[name_hu], description_hu, csalad(_hu),
+// rarity (1–5). A közös nevet (name_hu), súlyt, felfedezőt NEM jeleníti meg.
 //
-// Megjegyzés a betűkről: a projekt jelenleg NEM tölt be Fredoka-t (lásd
-// constants/fonts.js), a brief pedig „Fredoka vagy Inter"-t enged — így Inter
-// fut (FONTS.body / FONTS.bold), hogy tényleg rendereljen, ne néma fallbackre
-// essen. Ha később betöltöd a Fredoka-t az App.js useAppFonts-ában, csak a lenti
-// FONT_HEADER konstanst kell átírni.
-import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet, Platform } from 'react-native';
+// Betűk: a projekt nem tölt Fredoka-t (lásd constants/fonts.js), a brief „Fredoka
+// vagy Inter"-t enged → Inter fut (FONTS.body/bold). Ha betöltöd a Fredoka-t,
+// csak a FONT_HEADER konstanst kell átírni.
+import React, { useState } from 'react';
+import { View, Text, Image, Pressable, StyleSheet, Platform, Modal, ScrollView, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FONTS } from '../constants/theme';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 
-// ── Paletta (a brief szerint, explicit hexek — nem a globális COLORS) ──────────
+// ── Paletta (a brief explicit hexei) ─────────────────────────────────────────
 const C = {
   headerBg: '#283618',   // sötétzöld fejléc
   cardBg: '#FEFAE0',     // krém kártyaháttér
@@ -38,41 +38,24 @@ const C = {
 const FONT_HEADER = FONTS.bold; // Inter 700 (Fredoka helyett, míg az nincs betöltve)
 const FONT_BODY = FONTS.body;   // Inter 400
 
-// ── Kor (epoch) → angol időszaknév + MYA-utótag ──────────────────────────────
-// A valós Supabase `epoch_hu` granulált magyar értékeket ad (késő-kréta,
-// kora-jura, …) — ezeket a brief „Late Cretaceous" formátumára fordítjuk. A
-// durva trias/jura/kréta kulcsok fallbackként maradnak.
-const EPOCH_MAP = {
-  'késő-kréta': 'Late Cretaceous',
-  'kora-kréta': 'Early Cretaceous',
-  'késő-jura': 'Late Jurassic',
-  'közép-jura': 'Middle Jurassic',
-  'középső-jura': 'Middle Jurassic',
-  'kora-jura': 'Early Jurassic',
-  'késő-triász': 'Late Triassic',
-  'közép-triász': 'Middle Triassic',
-  'középső-triász': 'Middle Triassic',
-  'kora-triász': 'Early Triassic',
-  trias: 'Triassic',
-  triász: 'Triassic',
-  jura: 'Jurassic',
-  krétakori: 'Cretaceous',
-  kreta: 'Cretaceous',
-  kréta: 'Cretaceous',
-};
-
+// ── Kor (epoch) → MAGYAR időszaknév + „Ma" utótag ────────────────────────────
+// A valós `epoch_hu` már magyar (pl. „késő-kréta") — csak szépen formázzuk:
+// kötőjel → szóköz, szavak nagybetűvel („Késő Kréta"), a MYA magyarul „MÉE"
+// (Millió Évvel Ezelőtt).
 function formatTimePeriod(dino) {
-  const key = String(dino.epoch || '').trim().toLowerCase();
-  const base = EPOCH_MAP[key] || dino.epoch || '';
+  const raw = String(dino.epoch || dino.epoch_hu || '').trim();
+  const base = raw
+    .split(/[-\s]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
   const min = dino.mya_min;
   const max = dino.mya_max;
-  const suffix = min != null && max != null ? ` (${min}–${max} MYA)` : '';
+  const suffix = min != null && max != null ? ` (${min}–${max} MÉE)` : '';
   return `${base}${suffix}`.trim();
 }
 
-// ── Étrend → diet-ikon (a briefből) ──────────────────────────────────────────
-// A brief `dino.étrend`-et mond; a valós adaptCreature `diet_hu`/`diet_eng`-et ad
-// (nincs `étrend` oszlop). Mindkettőt elfogadjuk, magyar ÉS angol kulcsszóra.
+// ── Étrend → diet-ikon ───────────────────────────────────────────────────────
 function dietValue(dino) {
   return dino.étrend ?? dino.diet_hu ?? dino.diet_eng ?? '';
 }
@@ -89,8 +72,8 @@ const RARITY = {
   1: { label: 'Gyakori', color: C.sage },
   2: { label: 'Ritka', color: C.terracotta },
   3: { label: 'Nagyon Ritka', color: C.darkOrange },
-  4: { label: 'Epikus', color: '#8a5a3c' },      // mély terrakotta-barna (palettából levezetve)
-  5: { label: 'Legendás', color: '#c9a227' },    // múzeumi arany (palettából levezetve)
+  4: { label: 'Epikus', color: '#8a5a3c' },
+  5: { label: 'Legendás', color: '#c9a227' },
 };
 
 function rarityInfo(rarity) {
@@ -98,16 +81,33 @@ function rarityInfo(rarity) {
 }
 
 function imageSource(dino) {
-  // Brief: dino.imageUrl; valós adapter: dino.image_url. Mindkettőt elfogadjuk,
-  // különben a lokális IMAGE_MAP (name_hu kulccsal), végül a MISSING placeholder.
   const url = dino.imageUrl || dino.image_url;
   if (url) return { uri: url };
   return IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
 }
 
 function familyValue(dino) {
-  // Brief: dino.család; valós adapter: csalad_hu / csalad.
   return dino.család || dino.csalad_hu || dino.csalad || '';
+}
+
+function countryValue(dino) {
+  return dino.discovered_country || dino.country || '';
+}
+
+// Kinyitott kártya mérete: a legnagyobb ~0.7 (szélesség/magasság) arányú doboz,
+// ami befér a viewportba (padinggel). A 16:9 kép így a nagyobb kártyaszélességen
+// automatikusan nagyobb lesz.
+const EXPANDED_RATIO = 0.7; // width / height
+function expandedSize(winW, winH) {
+  const availW = winW - 32;
+  const availH = winH - 48;
+  let h = availH;
+  let w = h * EXPANDED_RATIO;
+  if (w > availW) {
+    w = availW;
+    h = w / EXPANDED_RATIO;
+  }
+  return { width: Math.round(w), height: Math.round(h) };
 }
 
 function lengthLabel(dino) {
@@ -119,11 +119,9 @@ function lengthLabel(dino) {
   return null;
 }
 
-// showDescription:
-//   false (alap) → DinoCard: NINCS leírás, fix 9:16 arány.
-//   true → AlbumCard-mód: a TELJES leírás megjelenik (nincs sorlimit), a kártya
-//          magassága automatikus (a szöveg hosszához nő), a képzóna fix magas.
 export default function DinoCard({ dino, onPress, showDescription = false }) {
+  const [expanded, setExpanded] = useState(false);
+  const { width: winW, height: winH } = useWindowDimensions();
   if (!dino) return null;
 
   const period = formatTimePeriod(dino);
@@ -131,58 +129,96 @@ export default function DinoCard({ dino, onPress, showDescription = false }) {
   const length = lengthLabel(dino);
   const rarity = rarityInfo(dino.rarity);
   const family = familyValue(dino);
+  const country = countryValue(dino);
+  const desc = dino.description_hu;
+  const expSize = expandedSize(winW, winH);
+
+  const handlePress = () => {
+    onPress?.(dino);
+    setExpanded(true);
+  };
+
+  // ── Megosztott darabok (rács-kártya ÉS kinyitott modál is ezeket használja) ──
+  const Header = (
+    <View style={styles.header}>
+      <Text style={styles.sciName} numberOfLines={1}>{dino.name_latin}</Text>
+      {!!period && <Text style={styles.period} numberOfLines={1}>{period}</Text>}
+    </View>
+  );
+
+  const ImageZone = (
+    <View style={styles.imageZone}>
+      <Image source={imageSource(dino)} style={styles.image} resizeMode="cover" />
+      <View style={styles.dietBadge} pointerEvents="none">
+        <MaterialCommunityIcons name={diet} size={18} color={C.onDark} />
+      </View>
+      {!!length && (
+        <View style={styles.lengthBadge} pointerEvents="none">
+          <MaterialCommunityIcons name="ruler" size={12} color={C.onDark} />
+          <Text style={styles.lengthText}>{length}</Text>
+        </View>
+      )}
+    </View>
+  );
+
+  const Meta = (!!family || !!country) && (
+    <View style={styles.metaBlock}>
+      {!!family && (
+        <View style={styles.metaRow}>
+          <Text style={styles.metaLabel}>CSALÁD</Text>
+          <Text style={styles.metaValue} numberOfLines={1}>{family}</Text>
+        </View>
+      )}
+      {!!country && (
+        <View style={styles.metaRow}>
+          <Text style={styles.metaLabel}>ORSZÁG</Text>
+          <Text style={styles.metaValue} numberOfLines={1}>{country}</Text>
+        </View>
+      )}
+    </View>
+  );
+
+  const Footer = (
+    <View style={[styles.rarityFooter, { backgroundColor: rarity.color }]}>
+      <Text style={styles.rarityText}>{rarity.label}</Text>
+    </View>
+  );
 
   return (
-    <Pressable
-      onPress={() => onPress?.(dino)}
-      accessibilityRole="button"
-      accessibilityLabel={`${dino.name_latin || ''}${period ? `, ${period}` : ''}`}
-      style={({ pressed }) => [
-        styles.card,
-        showDescription ? styles.cardAuto : styles.cardRatio,
-        pressed && styles.cardPressed,
-      ]}
-    >
-      {/* Fejléc — csak tudományos név (dőlt) + időszak */}
-      <View style={styles.header}>
-        <Text style={styles.sciName} numberOfLines={1}>{dino.name_latin}</Text>
-        {!!period && <Text style={styles.period} numberOfLines={1}>{period}</Text>}
-      </View>
-
-      {/* Képzóna — diet-badge (jobb-fent), hossz-badge (bal-lent) */}
-      <View style={[styles.imageZone, showDescription ? styles.imageZoneFixed : styles.imageZoneRatio]}>
-        <Image source={imageSource(dino)} style={styles.image} resizeMode="cover" />
-
-        <View style={styles.dietBadge} pointerEvents="none">
-          <MaterialCommunityIcons name={diet} size={18} color={C.onDark} />
+    <>
+      {/* Rács-kártya */}
+      <Pressable
+        onPress={handlePress}
+        accessibilityRole="button"
+        accessibilityLabel={`${dino.name_latin || ''}${period ? `, ${period}` : ''}`}
+        style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      >
+        {Header}
+        {ImageZone}
+        <View style={styles.info}>
+          {showDescription && !!desc && <Text style={styles.desc}>{desc}</Text>}
+          {Meta}
         </View>
+        {Footer}
+      </Pressable>
 
-        {!!length && (
-          <View style={styles.lengthBadge} pointerEvents="none">
-            <MaterialCommunityIcons name="ruler" size={12} color={C.onDark} />
-            <Text style={styles.lengthText}>{length}</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Infó — (AlbumCard-módban) teljes leírás, majd kompakt metaadat (család) */}
-      <View style={styles.info}>
-        {showDescription && !!dino.description_hu && (
-          <Text style={styles.desc}>{dino.description_hu}</Text>
-        )}
-        {!!family && (
-          <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>CSALÁD</Text>
-            <Text style={styles.metaValue} numberOfLines={1}>{family}</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Ritkaság-lábléc — színes sáv + címke */}
-      <View style={[styles.rarityFooter, { backgroundColor: rarity.color }]}>
-        <Text style={styles.rarityText}>{rarity.label}</Text>
-      </View>
-    </Pressable>
+      {/* Kinyitva: képernyő-magasságú kártya, teljes leírással (görgethető) */}
+      <Modal visible={expanded} transparent animationType="fade" onRequestClose={() => setExpanded(false)}>
+        <Pressable style={styles.backdrop} onPress={() => setExpanded(false)}>
+          {/* belső Pressable: elnyeli a kattintást, hogy a kártyán belül ne záruljon.
+              Fix ~0.7 (szélesség/magasság) arány, a viewportba illesztve. */}
+          <Pressable style={[styles.expandedCard, { width: expSize.width, height: expSize.height }]} onPress={() => {}}>
+            {Header}
+            {ImageZone}
+            <ScrollView style={styles.expandedScroll} contentContainerStyle={styles.expandedScrollContent}>
+              {!!desc && <Text style={styles.descExpanded}>{desc}</Text>}
+              {Meta}
+            </ScrollView>
+            {Footer}
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </>
   );
 }
 
@@ -191,11 +227,9 @@ const CARD_W = 280;
 const styles = StyleSheet.create({
   card: {
     width: CARD_W,
-    aspectRatio: 9 / 16,
     borderRadius: 12,
     backgroundColor: C.cardBg,
     overflow: 'hidden',
-    // Finom, tónusba illő árnyék (nem tiszta fekete).
     shadowColor: '#283618',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
@@ -229,10 +263,10 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
 
-  // ── Képzóna ─────────────────────────────────────────────────────────────────
+  // ── Képzóna (16:9 mindkét kártyatípuson) ────────────────────────────────────
   imageZone: {
-    height: '45%',
     width: '100%',
+    aspectRatio: 16 / 9,
     backgroundColor: C.headerBg,
   },
   image: {
@@ -256,7 +290,7 @@ const styles = StyleSheet.create({
   lengthBadge: {
     position: 'absolute',
     bottom: 10,
-    left: 10,
+    right: 10,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -273,13 +307,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 
-  // ── Infó ─────────────────────────────────────────────────────────────────
+  // ── Infó (rács-kártya) ──────────────────────────────────────────────────────
+  // flex:1 → a kártya (sorban egyenlő magasra nyúlva) alján marad a ritkaság-
+  // lábléc: a leírás+meta felül, az üres hely alul, a footer a kártya alján.
   info: {
     flex: 1,
     paddingHorizontal: 14,
     paddingTop: 12,
     paddingBottom: 10,
-    justifyContent: 'space-between',
   },
   desc: {
     color: C.onLightMuted,
@@ -287,14 +322,17 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
   },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  metaBlock: {
     marginTop: 10,
     paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: 'rgba(96,108,56,0.22)',
+    gap: 4,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   metaLabel: {
     color: C.sage,
@@ -321,5 +359,37 @@ const styles = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 1.5,
     textTransform: 'uppercase',
+  },
+
+  // ── Kinyitott (képernyő-magasságú) modál ────────────────────────────────────
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.72)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  expandedCard: {
+    // A méret (fix ~0.7 arány) inline jön (expandedSize) — itt csak a többi.
+    borderRadius: 16,
+    backgroundColor: C.cardBg,
+    overflow: 'hidden',
+    ...Platform.select({ web: { cursor: 'auto' } }),
+  },
+  expandedScroll: {
+    flex: 1,             // a leírás tölti ki a maradék magasságot, görgethetően
+  },
+  expandedScrollContent: {
+    paddingHorizontal: 18,
+    paddingTop: 16,
+    paddingBottom: 18,
+  },
+  descExpanded: {
+    color: C.onLightMuted,
+    fontFamily: FONT_BODY,
+    fontSize: 14,
+    lineHeight: 21,
   },
 });
