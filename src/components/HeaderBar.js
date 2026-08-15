@@ -141,6 +141,8 @@ function NavLink({ label, active, onPress }) {
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ selected: active }}
       style={[styles.navLinkWrap, hovered && styles.navLinkWrapHovered]}
     >
       <Text

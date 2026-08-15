@@ -13,6 +13,7 @@ import {
   StatusBar,
   useWindowDimensions,
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionTimeline from '../components/CollectionTimeline';
@@ -243,7 +244,10 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
-          <Text style={styles.title}>🗂️ KATALÓGUS</Text>
+          <View style={styles.titleRow}>
+            <MaterialCommunityIcons name="archive-outline" size={20} color={COLORS.accent} />
+            <Text style={styles.title}>KATALÓGUS</Text>
+          </View>
         </View>
 
         <Text style={styles.headerHint}>
@@ -331,6 +335,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 14,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   title: {
     color: COLORS.accent,

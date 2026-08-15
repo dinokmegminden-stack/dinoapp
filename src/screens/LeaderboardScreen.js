@@ -4,6 +4,7 @@
 // Az idő-alapú listák percy:másodperc formátumban, növekvő sorrendben (leggyorsabb elöl).
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import { COLORS, RADIUS } from '../constants/theme';
@@ -73,7 +74,10 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
-          <Text style={styles.title}>🏆 RANGLISTA</Text>
+          <View style={styles.titleRow}>
+            <MaterialCommunityIcons name="trophy" size={20} color={COLORS.accent} />
+            <Text style={styles.title}>RANGLISTA</Text>
+          </View>
         </View>
 
         <View style={styles.periodToggle}>
@@ -156,6 +160,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 14,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   title: {
     color: COLORS.accent,

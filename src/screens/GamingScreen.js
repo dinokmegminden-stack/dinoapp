@@ -48,7 +48,10 @@ const TILE_IMAGE_MAP = {
 function TierBadge({ tier }) {
   return (
     <View style={styles.tierBadge}>
-      <Text style={styles.tierBadgeText}>{'⭐'.repeat(tier)} {TIER_LABEL[tier]}</Text>
+      {Array.from({ length: tier }).map((_, i) => (
+        <MaterialCommunityIcons key={i} name="star" size={11} color={COLORS.accent} />
+      ))}
+      <Text style={styles.tierBadgeText}>{TIER_LABEL[tier]}</Text>
     </View>
   );
 }
@@ -70,7 +73,8 @@ function GameCard({ game, onPress, isToday, playCount, cardWidth }) {
 
         {isToday && (
           <View style={styles.todayBadge}>
-            <Text style={styles.todayBadgeText}>⚡ MA</Text>
+            <MaterialCommunityIcons name="lightning-bolt" size={11} color={COLORS.bgDark} />
+            <Text style={styles.todayBadgeText}>MA</Text>
           </View>
         )}
 
@@ -99,7 +103,10 @@ function DailyChallengeBanner({ game, claimed, onPress }) {
       <ImageBackground source={imgSource} style={styles.bannerImage} imageStyle={styles.bannerImageInner}>
         <View style={styles.bannerOverlay} />
         <View style={styles.bannerContent}>
-          <Text style={styles.bannerEyebrow}>⚡ A NAP KIHÍVÁSA</Text>
+          <View style={styles.bannerEyebrowRow}>
+            <MaterialCommunityIcons name="lightning-bolt" size={12} color={COLORS.accent} />
+            <Text style={styles.bannerEyebrow}>A NAP KIHÍVÁSA</Text>
+          </View>
           <Text style={styles.bannerTitle}>{game.label}</Text>
           <Text style={styles.bannerSub}>
             {claimed ? 'Teljesítve mára ✓' : 'Teljesítsd ma, és +50% bónusz XP jár érte!'}
@@ -149,7 +156,10 @@ export default function GamingScreen({ nickname, playerId, progress, onNavigate,
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
-          <Text style={styles.title}>🎮 JÁTÉKMÓDOK</Text>
+          <View style={styles.titleRow}>
+            <MaterialCommunityIcons name="gamepad-variant" size={20} color={COLORS.accent} />
+            <Text style={styles.title}>JÁTÉKMÓDOK</Text>
+          </View>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -188,6 +198,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 14,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   title: {
     color: COLORS.accent,
     fontFamily: FONTS.bold,
@@ -221,12 +236,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
   },
+  bannerEyebrowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 4,
+  },
   bannerEyebrow: {
     color: COLORS.accent,
     fontFamily: FONTS.bold,
     fontSize: 13,
     letterSpacing: 2,
-    marginBottom: 4,
   },
   bannerTitle: {
     color: COLORS.cream,
@@ -295,6 +315,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
     backgroundColor: 'rgba(0,10,14,0.7)',
     borderRadius: RADIUS.pill,
     paddingVertical: 4,
@@ -309,6 +332,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     backgroundColor: COLORS.accent,
     borderRadius: RADIUS.pill,
     paddingVertical: 4,
