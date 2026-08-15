@@ -28,6 +28,7 @@ import ProgressRing from '../components/ProgressRing';
 import MessageBoard from '../components/MessageBoard';
 import Footer from '../components/Footer';
 import LandingMenu from './LandingMenu';
+import { IMAGE_MAP } from '../constants/imageMap';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
 import { recordAndGetStreak } from '../utils/dailyStreak';
@@ -238,6 +239,63 @@ function ProgressCircle({ ratio, onPress }) {
         <Text style={styles.progressCircleText}>{pct}%</Text>
       </ProgressRing>
     </Pressable>
+  );
+}
+
+// A hero tetején minden betöltéskor véletlen (képpel rendelkező) őslények
+// kicsi 16:9-es fotói — csak dekoráció/kedvcsináló. Hány fér ki, azt a sáv
+// tényleges szélessége dönti el (onLayout): full HD desktopon több (max 8),
+// telefonon akár csak 1. A random pool mount-kor egyszer sorsolódik (useMemo
+// []), a látható darabszám a szélességből számolódik. Képre kattintva a lény
+// régiójába lép.
+const THUMB_W = 178;   // 16:9 kép szélessége (100px magassághoz)
+const THUMB_GAP = 10;  // randomStrip gap
+const MAX_THUMBS = 8;  // felső korlát (nagyon széles kijelzőn se legyen túl sok)
+
+function RandomDinoStrip({ allDinos, onPress }) {
+  const [count, setCount] = useState(0);
+
+  // Egyszer sorsolt pool (a maximális darabszámig), ebből vágunk annyit,
+  // amennyi a mért szélességbe belefér.
+  const pool = useMemo(() => {
+    const withImg = (allDinos || []).filter((d) => IMAGE_MAP[d.name_hu]);
+    if (withImg.length === 0) return [];
+    const rest = [...withImg];
+    const out = [];
+    for (let i = 0; i < MAX_THUMBS && rest.length > 0; i++) {
+      const idx = Math.floor(Math.random() * rest.length);
+      out.push(rest.splice(idx, 1)[0]);
+    }
+    return out;
+  }, [allDinos]);
+
+  // A sáv szélességéből: hány (THUMB_W + gap) egység fér el, min. 1.
+  const handleLayout = (e) => {
+    const w = e.nativeEvent.layout.width;
+    if (!w) return;
+    const fits = Math.max(1, Math.floor((w + THUMB_GAP) / (THUMB_W + THUMB_GAP)));
+    setCount(fits);
+  };
+
+  if (pool.length === 0) return null;
+
+  const picks = count > 0 ? pool.slice(0, Math.min(count, pool.length)) : [];
+
+  return (
+    <View style={styles.randomStrip} onLayout={handleLayout}>
+      {picks.map((dino) => (
+        <Pressable
+          key={dino.id ?? dino.name_hu}
+          style={styles.randomThumb}
+          onPress={() => onPress?.(dino)}
+          accessibilityRole="button"
+          accessibilityLabel={dino.name_hu}
+        >
+          <Image source={IMAGE_MAP[dino.name_hu]} style={styles.randomThumbImg} resizeMode="cover" />
+          <Text style={styles.randomThumbName} numberOfLines={1}>{dino.name_hu}</Text>
+        </Pressable>
+      ))}
+    </View>
   );
 }
 
@@ -485,6 +543,8 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           </Pressable>
         </View>
       )}
+
+      <RandomDinoStrip allDinos={allDinos} onPress={handleDailyDinoPress} />
 
       <View style={styles.heroCopy}>
         <Text style={styles.heroTitle}>Légy Te a Dínó Professzor!</Text>
@@ -749,6 +809,34 @@ const styles = StyleSheet.create({
   brandLogo: {
     width: 38,
     height: 38,
+  },
+  // A hero tetején lévő 3 random dínó mini-fotó sávja.
+  randomStrip: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  randomThumb: {
+    width: 178,
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  randomThumbImg: {
+    width: 178,
+    height: 100,
+    borderRadius: RADIUS.card,
+    borderWidth: 1.5,
+    borderColor: 'rgba(254,250,224,0.25)',
+    backgroundColor: COLORS.darkGreen,
+  },
+  randomThumbName: {
+    color: COLORS.cream,
+    fontSize: 10.5,
+    fontFamily: FONTS.bodyBold,
+    opacity: TEXT_OPACITY.secondary,
+    textAlign: 'center',
+    marginTop: 3,
   },
   // Hero-headline a térkép fölött (spec 2. pont) — rövid, cselekvésorientált
   // cím + alcím, a korábbi hosszabb "loremText" bekezdés helyett.
