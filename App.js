@@ -114,21 +114,36 @@ export default function App() {
       if (saved) {
         setNickname(saved);
 
-        // Try loading progress from server first (source of truth)
-        const serverProgress = await loadProgressFromServerByNickname(saved);
-        if (serverProgress) {
-          setProgress(serverProgress);
-          // Also update AsyncStorage with server version
-          await saveProgress(saved, serverProgress);
-        } else {
-          // Fall back to AsyncStorage if not on server
-          const localProgress = await loadProgress(saved);
-          setProgress(localProgress);
-        }
+        // A szerver-hívások (progress + playerId + XP-szinkron) hibáját NEM
+        // szabad felúszni hagyni: enélkül a `setView('landing')` sosem futna,
+        // és az app a kezdő 'checking' nézeten ragadna → üres képernyő egy
+        // bejelentkezett usernek (hálózat/RLS/rossz adat esetén). Ezért
+        // try/catch, lokális fallback-kel, és a landing-re váltás MINDIG lefut.
+        try {
+          // Try loading progress from server first (source of truth)
+          const serverProgress = await loadProgressFromServerByNickname(saved);
+          if (serverProgress) {
+            setProgress(serverProgress);
+            // Also update AsyncStorage with server version
+            await saveProgress(saved, serverProgress);
+          } else {
+            // Fall back to AsyncStorage if not on server
+            const localProgress = await loadProgress(saved);
+            setProgress(localProgress);
+          }
 
-        const pid = await getPlayerIdByNickname(saved);
-        setPlayerId(pid);
-        if (pid) await syncXPFromServer(pid);
+          const pid = await getPlayerIdByNickname(saved);
+          setPlayerId(pid);
+          if (pid) await syncXPFromServer(pid);
+        } catch (err) {
+          console.warn('Session restore (szerver) hiba, lokális fallback:', err);
+          try {
+            setProgress(await loadProgress(saved));
+          } catch (localErr) {
+            console.warn('Lokális progress betöltés is hibázott:', localErr);
+            setProgress(createEmptyProgress());
+          }
+        }
         setView('landing');
       } else {
         // Első látogatáskor nem kérünk nevet — a NicknamePickerScreen csak
