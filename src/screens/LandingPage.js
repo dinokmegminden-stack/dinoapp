@@ -375,7 +375,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
       <View style={styles.heroCopy}>
         <Text style={styles.heroTitle}>Légy Te a Dínó Professzor!</Text>
         <Text style={styles.heroSubtitle}>
-          Fedezd fel a mélyidő őslényeit, gyűjts kártyákat, és válj a legnagyobb szakértővé!
+          {'Fedezd fel a mélyidő őslényeit, gyűjts kártyákat, és válj a legnagyobb szakértővé!'}
         </Text>
         <View style={styles.heroCtaWrap}>
           <PrimaryCTA onPress={handleStartAdventure} label={ctaLabel} />
