@@ -6,7 +6,7 @@ const SCENE_CSS = `
 .dmm-scene-img { animation: dmm-kenburns 34s ease-in-out infinite; will-change: transform; }
 .dmm-scene-fog1 { animation: dmm-fogdrift1 41s ease-in-out infinite alternate; }
 .dmm-scene-fog2 { animation: dmm-fogdrift2 57s ease-in-out infinite alternate; }
-@keyframes dmm-kenburns { 0%,100% { transform: scale(1.06) translate(0,0); } 50% { transform: scale(1.11) translate(-1.4%,-.8%); } }
+@keyframes dmm-kenburns { 0%,100% { transform: scale(1.03) translate(0,0); } 50% { transform: scale(1.06) translate(-1.2%,-.6%); } }
 @keyframes dmm-fogdrift1 { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
 @keyframes dmm-fogdrift2 { from { transform: translateX(6%); } to { transform: translateX(-6%); } }
 @media (prefers-reduced-motion: reduce) {
@@ -115,14 +115,21 @@ export default function AnimatedLandingBg({ source, dim = false }) {
 
 const styles = {
   scene: {
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+    // Viewporthoz kötve (fixed 100vh) — NEM a teljes, görgethető oldal-
+    // magasságra. Különben a magas landing-tartalmon a `cover` egy 16:9 képet
+    // a több ezer px magas konténerre húzva óriásira zoomol, és levágja a
+    // dínó szemét. Fixed + 100vh: a 16:9 kép ~kifér, a szem látszik, és
+    // finom parallaxot ad görgetéskor.
+    position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
     overflow: 'hidden', background: '#05070c', pointerEvents: 'none',
   },
   pan: {
     position: 'absolute', inset: '-4%',
   },
   imgWrap: { position: 'absolute', inset: 0 },
-  imgFill: { width: '100%', height: '100%' },
+  // objectPosition a szemre húzza a fókuszt (jobb-felső harmad), hogy más
+  // képarányú kijelzőn (pl. ultrawide) a levágás se vegye ki a szemet.
+  imgFill: { width: '100%', height: '100%', objectPosition: '65% 30%' },
   fog: { position: 'absolute', left: '-10%', right: '-10%', mixBlendMode: 'screen', pointerEvents: 'none' },
   fog1: {
     bottom: 0, height: '56%', filter: 'blur(14px)',

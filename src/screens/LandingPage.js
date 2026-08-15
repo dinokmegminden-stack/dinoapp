@@ -19,7 +19,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import PrimaryCTA from '../components/PrimaryCTA';
-import DailyDinoCard from '../components/DailyDinoCard';
 import AppInfoModal from '../components/AppInfoModal';
 import RankModal from '../components/RankModal';
 import MessageBoard from '../components/MessageBoard';
@@ -59,6 +58,10 @@ function formatNewsDate(iso) {
 const THUMB_W = 178;   // 16:9 kép szélessége (100px magassághoz)
 const THUMB_GAP = 10;  // randomStrip gap
 const MAX_THUMBS = 8;  // felső korlát (nagyon széles kijelzőn se legyen túl sok)
+// A hero-sáv és a hajtás-alatti sor tartalmi max-szélessége (wide). Full HD-n a
+// teljes szélességű RÉGIÓK-térkép indokolatlanul elnyúlt — ez középre fogja a
+// tartalmat, esztétikus whitespace-szel mindkét oldalon.
+const HERO_MAX_WIDTH = 1180;
 
 function RandomDinoStrip({ allDinos, onPress, availWidth }) {
   // Hány thumbnail fér el a rendelkezésre álló sávszélességbe (min. 1). A
@@ -129,7 +132,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // RandomDinoStrip ebből számolja a férőhelyek számát.
   const stripAvailWidth = Math.max(
     THUMB_W,
-    isWide ? Math.min(width, 1920) - 96 : Math.min(width, 680) - 40,
+    isWide ? Math.min(width, HERO_MAX_WIDTH) - 96 : Math.min(width, 680) - 40,
   );
   const [infoOpen, setInfoOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
@@ -277,14 +280,10 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     />
   );
 
-  // Bal oldali sáv tartalma: Dínós Hírek → Napi Dínó → Üzenőfal. Wide nézetben a
-  // sáv fix magasságú és belül görgethető (a tartalom túlnyúlhat a viewporton).
+  // Bal oldali sáv tartalma: Dínós Hírek (a Napi Dínó blokkot eltávolítottuk).
   const sidebarInner = (
     <>
-      <Text style={styles.sidebarHeading}>NAPI DÍNÓ</Text>
-      <DailyDinoCard allDinos={allDinos} onPress={handleDailyDinoPress} isWide={false} />
-
-      <Text style={[styles.sidebarHeading, styles.sidebarHeadingSpaced]}>DÍNÓS HÍREK</Text>
+      <Text style={styles.sidebarHeading}>DÍNÓS HÍREK</Text>
       {news.length === 0 ? (
         <View style={styles.newsPlaceholder}>
           <MaterialCommunityIcons name="newspaper-variant-outline" size={22} color={COLORS.accent} />
@@ -457,12 +456,16 @@ const styles = StyleSheet.create({
   },
   heroBand: {
     width: '100%',
+    maxWidth: HERO_MAX_WIDTH,
+    alignSelf: 'center',
     paddingHorizontal: 48,
     paddingTop: 20,
     paddingBottom: 28,
   },
   belowFoldRow: {
     width: '100%',
+    maxWidth: HERO_MAX_WIDTH,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 32,
@@ -529,7 +532,6 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginBottom: 10,
   },
-  sidebarHeadingSpaced: { marginTop: 20 },
   newsPlaceholder: {
     flexDirection: 'row',
     alignItems: 'flex-start',
