@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "home": "Kezdőlap",
+    "games": "Játékok",
+    "catalog": "Katalógus",
+    "album": "Albumod",
+    "news": "Hírek",
+    "researchers": "Kutatók"
+  },
+  "auth": {
+    "login": "Jelentkezz be",
+    "join": "Csatlakozz"
+  },
+  "header": {
+    "streak": "%{days} nap",
+    "sound_on": "Hang be",
+    "sound_off": "Hang ki",
+    "youtube": "YouTube",
+    "info": "Info"
+  },
+  "lang": {
+    "label": "Nyelv",
+    "hu": "Magyar",
+    "en": "English"
+  }
+}

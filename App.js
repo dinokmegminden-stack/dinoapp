@@ -3,6 +3,7 @@ console.log("APP STARTED");
 import { useEffect, useRef, useState } from 'react';
 import { View, StatusBar, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LanguageProvider } from './src/i18n';
 
 import LandingPage from './src/screens/LandingPage';
 import NicknamePickerScreen, { NICKNAME_STORAGE_KEY } from './src/screens/NicknamePickerScreen';
@@ -30,7 +31,7 @@ import { loadProgressFromServerByNickname } from './src/services/playerProgressS
 import useAppFonts from './src/hooks/useAppFonts';
 import { Analytics } from '@vercel/analytics/react';
 
-export default function App() {
+function AppInner() {
   // Rokkitt + Inter központi betöltése — a család-nevek (theme FONTS) minden
   // képernyőn elérhetők, betöltésig a komponensek a rendszer-fontra esnek vissza.
   useAppFonts();
@@ -530,5 +531,14 @@ export default function App() {
         />
       )}
     </View>
+  );
+}
+
+// A nyelvi kontextus a teljes fát burkolja, hogy minden képernyő t()-t kapjon.
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppInner />
+    </LanguageProvider>
   );
 }

@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "home": "Home",
+    "games": "Games",
+    "catalog": "Catalogue",
+    "album": "Your Album",
+    "news": "News",
+    "researchers": "Researchers"
+  },
+  "auth": {
+    "login": "Log in",
+    "join": "Join"
+  },
+  "header": {
+    "streak": "%{days} days",
+    "sound_on": "Sound on",
+    "sound_off": "Sound off",
+    "youtube": "YouTube",
+    "info": "Info"
+  },
+  "lang": {
+    "label": "Language",
+    "hu": "Magyar",
+    "en": "English"
+  }
+}

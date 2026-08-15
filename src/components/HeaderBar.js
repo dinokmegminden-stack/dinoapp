@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const MUTE_KEY = 'dmm_sound_muted';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 import { isGuestMode } from '../utils/guestMode';
+import { useT } from '../i18n';
 
 const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
 
@@ -164,6 +165,7 @@ export default function HeaderBar({
   currentView = 'landing',
   onNavigate,
 }) {
+  const { t, lang, setLanguage } = useT();
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   const isNarrow = width < 700;
@@ -233,12 +235,12 @@ export default function HeaderBar({
 
           {isWide && (
             <View style={styles.navLinks}>
-              <NavLink label="Kezdőlap" active={currentView === 'landing'} onPress={() => handleNav('landing')} />
-              <NavLink label="Játékok" active={currentView === 'gaming'} onPress={() => handleNav('gaming')} />
-              <NavLink label="Katalógus" active={currentView === 'collection'} onPress={() => handleNav('collection')} />
-              {!guest && <NavLink label="Albumod" active={currentView === 'album'} onPress={() => handleNav('album')} />}
-              <NavLink label="Hírek" active={currentView === 'news'} onPress={() => handleNav('news')} />
-              <NavLink label="Kutatók" active={currentView === 'kutatok'} onPress={() => handleNav('kutatok')} />
+              <NavLink label={t('nav.home')} active={currentView === 'landing'} onPress={() => handleNav('landing')} />
+              <NavLink label={t('nav.games')} active={currentView === 'gaming'} onPress={() => handleNav('gaming')} />
+              <NavLink label={t('nav.catalog')} active={currentView === 'collection'} onPress={() => handleNav('collection')} />
+              {!guest && <NavLink label={t('nav.album')} active={currentView === 'album'} onPress={() => handleNav('album')} />}
+              <NavLink label={t('nav.news')} active={currentView === 'news'} onPress={() => handleNav('news')} />
+              <NavLink label={t('nav.researchers')} active={currentView === 'kutatok'} onPress={() => handleNav('kutatok')} />
             </View>
           )}
         </View>
@@ -261,18 +263,28 @@ export default function HeaderBar({
             <RoundIconButton
               icon={muted ? 'volume-off' : 'volume-high'}
               onPress={handleToggleMute}
-              tooltip={muted ? 'Hang be' : 'Hang ki'}
+              tooltip={muted ? t('header.sound_on') : t('header.sound_off')}
             />
+            {/* Nyelvváltó: HU ↔ EN (2 nyelvnél elég egy pill, ami a MÁSIK
+                nyelvet mutatja és arra vált). */}
+            <Pressable
+              style={styles.langBtn}
+              onPress={() => setLanguage(lang === 'hu' ? 'en' : 'hu')}
+              accessibilityRole="button"
+              accessibilityLabel={t('lang.label')}
+            >
+              <Text style={styles.langBtnText}>{lang === 'hu' ? 'EN' : 'HU'}</Text>
+            </Pressable>
             {!isNarrow && <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />}
             {!isNarrow && <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />}
           </View>
           {guest && (
             <View style={styles.authButtons}>
               <Pressable style={styles.loginBtn} onPress={() => handleNav('login')} accessibilityRole="button">
-                <Text style={styles.loginBtnText}>Jelentkezz be</Text>
+                <Text style={styles.loginBtnText}>{t('auth.login')}</Text>
               </Pressable>
               <Pressable style={styles.joinBtn} onPress={() => handleNav('join')} accessibilityRole="button">
-                <Text style={styles.joinBtnText}>Csatlakozz</Text>
+                <Text style={styles.joinBtnText}>{t('auth.join')}</Text>
               </Pressable>
             </View>
           )}
@@ -402,6 +414,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     marginLeft: 4,
+  },
+  langBtn: {
+    minWidth: 40,
+    height: 40,
+    borderRadius: RADIUS.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: 'rgba(20,18,16,0.7)',
+    ...Platform.select({ web: { cursor: 'pointer' } }),
+  },
+  langBtnText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.bodyBold,
+    fontSize: 13,
+    letterSpacing: 0.5,
   },
   joinBtn: {
     backgroundColor: COLORS.accent,
