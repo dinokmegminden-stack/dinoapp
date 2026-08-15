@@ -11,7 +11,7 @@ import {
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import CollectionFilterSidebar from '../components/CollectionFilterSidebar';
-import AlbumCard from '../components/AlbumCard';
+import DinoCard from '../components/DinoCard';
 import DinoCardModal from '../components/DinoCardModal';
 import ProgressRing from '../components/ProgressRing';
 import { isGuestMode } from '../utils/guestMode';
@@ -90,7 +90,6 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
-  const numColumns = isNarrow ? 2 : 4;
   const [filters, setFilters] = useState({});
   const [lengthRange, setLengthRange] = useState({ min: '', max: '' });
   const [selectedLetter, setSelectedLetter] = useState(null);
@@ -286,9 +285,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
                   <Text style={styles.regionBlockTitle}>{section.title.toUpperCase()}</Text>
                   <View style={styles.grid}>
                     {section.data.map((dino) => (
-                      <View key={dino.id} style={[styles.gridItem, { width: `${100 / numColumns}%` }]}>
-                        <AlbumCard creature={dino} onPress={() => openModal(dino)} />
-                      </View>
+                      <DinoCard key={dino.id} dino={dino} onPress={() => openModal(dino)} />
                     ))}
                   </View>
                 </View>
@@ -435,10 +432,6 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -6,
-  },
-  gridItem: {
-    paddingHorizontal: 6,
-    paddingBottom: 12,
+    gap: 16,
   },
 });
