@@ -160,6 +160,10 @@ export default function GamingScreen({ nickname, playerId, progress, onNavigate,
             <MaterialCommunityIcons name="gamepad-variant" size={20} color={COLORS.accent} />
             <Text style={styles.title}>JÁTÉKMÓDOK</Text>
           </View>
+          <TouchableOpacity style={styles.rankBtn} onPress={() => onNavigate?.('leaderboard')} accessibilityRole="button" accessibilityLabel="Ranglista">
+            <MaterialCommunityIcons name="trophy" size={16} color={COLORS.bgDark} />
+            <Text style={styles.rankBtnText}>Ranglista</Text>
+          </TouchableOpacity>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -202,6 +206,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  rankBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+  },
+  rankBtnText: {
+    color: COLORS.bgDark,
+    fontFamily: FONTS.bold,
+    fontSize: 13,
+    fontWeight: '700',
   },
   title: {
     color: COLORS.accent,
