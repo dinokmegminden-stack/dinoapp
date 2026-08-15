@@ -1,4 +1,4 @@
-// LandingPage — redesign spec 3. pont: header sáv (XP pill + ikon gombok),
+﻿// LandingPage — redesign spec 3. pont: header sáv (XP pill + ikon gombok),
 // döntött logó blokk, majd a LandingMenu szekciói egyetlen oszlopban.
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -32,6 +32,7 @@ import { isAdminNickname } from '../constants/admins';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
 import { findNextPack, overallCompletionRatio, regionCollectionStats, EDU_LABELS } from '../utils/regionProgress';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
+import { useT } from '../i18n';
 
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
 // (lásd Shell.js backgroundImage prop), sötét overlay-jel a gombok olvashatóságáért.
@@ -125,6 +126,7 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
 }
 
 export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onRequireRegister, onOpenJoin, onOpenLogin }) {
+  const { t } = useT();
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   // A hero-képsáv rendelkezésre álló szélessége a viewportból (a heroBand
@@ -144,8 +146,8 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // XP a rang-modálhoz (a fejléc XP-pilljével azonos forrás, könnyű pollozással).
   useEffect(() => {
     getTotalXP().then(setXp);
-    const t = setInterval(() => getTotalXP().then(setXp), 1000);
-    return () => clearInterval(t);
+    const timer = setInterval(() => getTotalXP().then(setXp), 1000);
+    return () => clearInterval(timer);
   }, []);
 
   // Lokális napi belépési széria — megnyitáskor regisztráljuk (side effect;
@@ -228,8 +230,8 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // új játékosnál (nincs haladás) a generikus "Kezdd el a felfedezést!".
   const nextPack = findNextPack(progress || {});
   const ctaLabel = nextPack && collectionRatio > 0
-    ? `Folytasd: ${EDU_LABELS[nextPack.eduLevel]} →`
-    : 'Kezdd el a felfedezést!';
+    ? t('landing.cta_continue', { region: EDU_LABELS[nextPack.eduLevel] })
+    : t('landing.cta_start');
 
   // Régiónkénti fajszám az allDinos (App.js már betölti mind a 6 edu-t egyszer)
   // csoportosításából — így az összeg mindig pontosan egyezik a hero-ban írt
@@ -283,12 +285,12 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // Bal oldali sáv tartalma: Dínós Hírek (a Napi Dínó blokkot eltávolítottuk).
   const sidebarInner = (
     <>
-      <Text style={styles.sidebarHeading}>DÍNÓS HÍREK</Text>
+      <Text style={styles.sidebarHeading}>{t('landing.news_heading')}</Text>
       {news.length === 0 ? (
         <View style={styles.newsPlaceholder}>
           <MaterialCommunityIcons name="newspaper-variant-outline" size={22} color={COLORS.accent} />
           <Text style={styles.newsText}>
-            Hamarosan: friss dínós hírek, felfedezések és app-frissítések.
+            {t('landing.news_placeholder')}
           </Text>
         </View>
       ) : (
@@ -319,7 +321,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
   // fal (hideg kapu), hanem meleg belépő-csali — "válassz dínó-nevet és kezdd".
   const progressSidebarInner = nickname ? (
     <>
-      <Text style={styles.sidebarHeading}>KÖZÖSSÉG</Text>
+      <Text style={styles.sidebarHeading}>{t('landing.community_heading')}</Text>
       <MessageBoard
         nickname={nickname}
         isAdmin={isAdminNickname(nickname)}
@@ -328,12 +330,11 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     </>
   ) : (
     <>
-      <Text style={styles.sidebarHeading}>CSATLAKOZZ</Text>
+      <Text style={styles.sidebarHeading}>{t('landing.join_heading')}</Text>
       <View style={styles.guestCard}>
-        <Text style={styles.guestTitle}>Válassz dínó-nevet és kezdd!</Text>
+        <Text style={styles.guestTitle}>{t('landing.guest_title')}</Text>
         <Text style={styles.guestBody}>
-          Gyűjts kártyákat, szerezz XP-t és mászd meg a ranglistákat — pár
-          másodperc az egész, jelszó nélkül.
+          {t('landing.guest_body')}
         </Text>
         <Pressable
           style={({ pressed }) => [styles.guestBtn, pressed && styles.guestBtnPressed]}
@@ -341,7 +342,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           accessibilityRole="button"
         >
           <MaterialCommunityIcons name="rocket-launch" size={16} color={COLORS.bgDark} />
-          <Text style={styles.guestBtnText}>Válaszd ki a neved</Text>
+          <Text style={styles.guestBtnText}>{t('landing.guest_btn')}</Text>
         </Pressable>
       </View>
     </>
@@ -355,7 +356,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         <View style={styles.errorBanner}>
           <MaterialCommunityIcons name="wifi-off" size={16} color={COLORS.cream} />
           <Text style={styles.errorBannerText}>
-            Nem sikerült betölteni a lényeket. Ellenőrizd az internetkapcsolatot.
+            {t('landing.load_error')}
           </Text>
           <Pressable
             style={styles.errorRetryBtn}
@@ -364,7 +365,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
             accessibilityRole="button"
           >
             <Text style={styles.errorRetryText}>
-              {dinosLoading ? 'Töltés…' : 'Újra'}
+              {dinosLoading ? t('common.loading') : t('common.retry')}
             </Text>
           </Pressable>
         </View>
@@ -373,15 +374,15 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
       <RandomDinoStrip allDinos={allDinos} onPress={handleDailyDinoPress} availWidth={stripAvailWidth} />
 
       <View style={styles.heroCopy}>
-        <Text style={styles.heroTitle}>Légy Te a Dínó Professzor!</Text>
+        <Text style={styles.heroTitle}>{t('landing.hero_title')}</Text>
         <Text style={styles.heroSubtitle}>
-          {'Fedezd fel a mélyidő őslényeit, gyűjts kártyákat, és válj a legnagyobb szakértővé!'}
+          {t('landing.hero_subtitle')}
         </Text>
         <View style={styles.heroCtaWrap}>
           <PrimaryCTA onPress={handleStartAdventure} label={ctaLabel} />
           {/* A CTA az elsődleges út; a térkép az "or" alternatíva — így a kettő
               egy egységként olvas, nem két versengő primary döntésként. */}
-          <Text style={styles.heroCtaHint}>…vagy válassz régiót a térképen ↓</Text>
+          <Text style={styles.heroCtaHint}>{t('landing.hero_cta_hint')}</Text>
         </View>
       </View>
 

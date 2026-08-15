@@ -22,6 +22,7 @@ import { saveMemoryResult } from '../services/memoryResultsService';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 import GameTitleTag from '../components/GameTitleTag';
+import { useT } from '../i18n';
 
 // Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
 // asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
@@ -33,9 +34,9 @@ const BOARD_HORIZONTAL_PADDING = 10; // egyeznie kell a boardWrapper paddingHori
 
 // level: 1/2/3 — ez kerül a memory_results táblába (lásd memoryResultsService.js).
 const DIFFICULTIES = [
-  { key: 'easy', label: '🐣 KEZDŐ', cols: 4, rows: 3, xp: 3, level: 1 },
-  { key: 'medium', label: '🦕 HALADÓ', cols: 6, rows: 4, xp: 6, level: 2 },
-  { key: 'hard', label: '🦖 PROFI', cols: 10, rows: 6, xp: 50, level: 3 },
+  { key: 'easy', cols: 4, rows: 3, xp: 3, level: 1 },
+  { key: 'medium', cols: 6, rows: 4, xp: 6, level: 2 },
+  { key: 'hard', cols: 10, rows: 6, xp: 50, level: 3 },
 ];
 
 const PAIR_EMOJIS = [
@@ -140,6 +141,7 @@ function MemoryCard({ card, width, height, left, top, onPress }) {
 }
 
 export default function MemoryGameScreen({ nickname, playerId, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const { width: winWidth } = useWindowDimensions();
   const [imageKey, setImageKey] = useState(() => pickImageKey());
   const [difficulty, setDifficulty] = useState(null);
@@ -316,8 +318,8 @@ export default function MemoryGameScreen({ nickname, playerId, progress, onNavig
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <View style={styles.selectContent}>
-            <Text style={styles.selectTitle}>🧩 KÉPKIRAKÓ MEMÓRIA</Text>
-            <Text style={styles.selectSubtitle}>Válassz nehézséget!</Text>
+            <Text style={styles.selectTitle}>{t('games.memory.title')}</Text>
+            <Text style={styles.selectSubtitle}>{t('games.memory.choose_difficulty')}</Text>
             <View style={styles.buttonGroup}>
               {DIFFICULTIES.map((d) => (
                 <TouchableOpacity
@@ -325,14 +327,14 @@ export default function MemoryGameScreen({ nickname, playerId, progress, onNavig
                   style={styles.diffBtn}
                   onPress={() => handleSelectDifficulty(d)}
                 >
-                  <Text style={styles.diffBtnText}>{d.label}</Text>
+                  <Text style={styles.diffBtnText}>{t(`games.memory.diff_${d.key}`)}</Text>
                   <Text style={styles.diffBtnSub}>
-                    {d.cols} × {d.rows} — {(d.cols * d.rows) / 2} pár · +{d.xp} XP
+                    {t('games.memory.diff_sub', { cols: d.cols, rows: d.rows, pairs: (d.cols * d.rows) / 2, xp: d.xp })}
                   </Text>
                 </TouchableOpacity>
               ))}
               <TouchableOpacity style={styles.exitBtn} onPress={onBack}>
-                <Text style={styles.exitBtnText}>← VISSZA</Text>
+                <Text style={styles.exitBtnText}>{t('games.memory.back')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -345,13 +347,13 @@ export default function MemoryGameScreen({ nickname, playerId, progress, onNavig
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
-        <GameTitleTag title="PÁROK" />
+        <GameTitleTag title={t('games.mode_memory')} />
 
         {/* Fejléc: párok + lépések + idő */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>🧩 {matchedPairs}/{pairCount} pár</Text>
-          <Text style={styles.headerText}>👣 {moves} lépés</Text>
-          <Text style={styles.headerText}>⏱️ {won ? finalSeconds : elapsedSeconds}s</Text>
+          <Text style={styles.headerText}>{t('games.memory.hud_pairs', { matched: matchedPairs, total: pairCount })}</Text>
+          <Text style={styles.headerText}>{t('games.memory.hud_moves', { moves })}</Text>
+          <Text style={styles.headerText}>{t('games.memory.hud_time', { s: won ? finalSeconds : elapsedSeconds })}</Text>
         </View>
 
         {/* 16:9 tábla — a kép alatta, a lapok rajta */}
@@ -391,7 +393,7 @@ export default function MemoryGameScreen({ nickname, playerId, progress, onNavig
         {/* Győzelmi panel */}
         {won ? (
           <View style={styles.victoryBox}>
-            <Text style={styles.victoryTitle}>🎉 KÉP FELFEDVE!</Text>
+            <Text style={styles.victoryTitle}>{t('games.memory.win_title')}</Text>
             <Text style={styles.victoryDino}>{imageKey}</Text>
             <Animated.Text
               style={[
@@ -401,26 +403,26 @@ export default function MemoryGameScreen({ nickname, playerId, progress, onNavig
             >
               +{difficulty.xp} XP ⭐
             </Animated.Text>
-            <Text style={styles.victoryStats}>{moves} lépésből, {finalSeconds} másodperc alatt sikerült</Text>
+            <Text style={styles.victoryStats}>{t('games.memory.win_stats', { moves, seconds: finalSeconds })}</Text>
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.nextBtn} onPress={startNewGame}>
-                <Text style={styles.nextBtnText}>🔄 KÖVETKEZŐ KÉP</Text>
+                <Text style={styles.nextBtnText}>{t('games.memory.next_image')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.diffChangeBtn} onPress={handleChangeDifficulty}>
-                <Text style={styles.diffChangeBtnText}>🎚️ MÁS NEHÉZSÉG</Text>
+                <Text style={styles.diffChangeBtnText}>{t('games.memory.change_diff')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.exitBtn} onPress={onBack}>
-                <Text style={styles.exitBtnText}>← KILÉPÉS</Text>
+                <Text style={styles.exitBtnText}>{t('games.memory.exit')}</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : (
           <View style={styles.hintBox}>
             <Text style={styles.hintText}>
-              Találd meg a párokat, és fedezd fel, melyik őslény rejtőzik a lapok alatt!
+              {t('games.memory.hint')}
             </Text>
             <TouchableOpacity style={styles.resetBtn} onPress={startNewGame}>
-              <Text style={styles.resetBtnText}>🔄 ÚJ JÁTÉK</Text>
+              <Text style={styles.resetBtnText}>{t('games.memory.new_game')}</Text>
             </TouchableOpacity>
           </View>
         )}

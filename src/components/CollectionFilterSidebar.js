@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, ScrollView, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
+import { useT } from '../i18n';
 
 function capitalize(text) {
   const s = String(text || '');
@@ -66,6 +67,7 @@ function FilterSection({ title, options, selectedSet, onToggle, defaultExpanded 
 // Numerikus tartomány-szűrő (testhossz, méterben) — nem checkbox-lista, mint
 // a többi kategória, hanem két szám-mező (min/max), ezért külön komponens.
 function LengthRangeSection({ range, onChange, defaultExpanded = false }) {
+  const { t } = useT();
   const [expanded, setExpanded] = useState(defaultExpanded);
   const active = range.min !== '' || range.max !== '';
 
@@ -73,7 +75,7 @@ function LengthRangeSection({ range, onChange, defaultExpanded = false }) {
     <View style={styles.section}>
       <Pressable style={styles.sectionHeader} onPress={() => setExpanded((e) => !e)}>
         <View style={styles.sectionHeaderLeft}>
-          <Text style={styles.sectionTitle}>Testhossz (m)</Text>
+          <Text style={styles.sectionTitle}>{t('collection.length')}</Text>
           {active && (
             <View style={styles.countBadge}>
               <Text style={styles.countBadgeText}>1</Text>
@@ -89,21 +91,21 @@ function LengthRangeSection({ range, onChange, defaultExpanded = false }) {
 
       {expanded && (
         <View style={styles.lengthRangeCol}>
-          <Text style={styles.lengthFieldLabel}>Testhossz min</Text>
+          <Text style={styles.lengthFieldLabel}>{t('collection.length_min')}</Text>
           <TextInput
             style={styles.lengthInput}
             value={range.min}
             onChangeText={(v) => onChange('min', v.replace(/[^0-9.]/g, ''))}
-            placeholder="pl. 2"
+            placeholder={t('collection.length_ph_min')}
             placeholderTextColor="rgba(254,250,224,0.35)"
             keyboardType="decimal-pad"
           />
-          <Text style={styles.lengthFieldLabel}>Testhossz max</Text>
+          <Text style={styles.lengthFieldLabel}>{t('collection.length_max')}</Text>
           <TextInput
             style={styles.lengthInput}
             value={range.max}
             onChangeText={(v) => onChange('max', v.replace(/[^0-9.]/g, ''))}
-            placeholder="pl. 15"
+            placeholder={t('collection.length_ph_max')}
             placeholderTextColor="rgba(254,250,224,0.35)"
             keyboardType="decimal-pad"
           />
@@ -117,6 +119,7 @@ function LengthRangeSection({ range, onChange, defaultExpanded = false }) {
 // `selected`: { [key]: Set<string> }. `onToggle(key, value)`.
 // `lengthRange`: { min, max } (string). `onLengthRangeChange(field, value)`.
 export default function CollectionFilterSidebar({ categories, selected, onToggle, onClear, lengthRange, onLengthRangeChange, style }) {
+  const { t } = useT();
   const totalSelected =
     Object.values(selected).reduce((sum, s) => sum + s.size, 0) +
     (lengthRange && (lengthRange.min !== '' || lengthRange.max !== '') ? 1 : 0);
@@ -124,10 +127,10 @@ export default function CollectionFilterSidebar({ categories, selected, onToggle
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>SZŰRŐK</Text>
+        <Text style={styles.headerTitle}>{t('collection.filters')}</Text>
         {totalSelected > 0 && (
           <Pressable onPress={onClear}>
-            <Text style={styles.clearText}>Törlés</Text>
+            <Text style={styles.clearText}>{t('collection.clear')}</Text>
           </Pressable>
         )}
       </View>

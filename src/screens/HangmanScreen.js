@@ -20,6 +20,7 @@ import { playSound, playQuizSfx } from '../audio/audioSystem';
 import { addXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import GameTitleTag from '../components/GameTitleTag';
+import { useT } from '../i18n';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
@@ -49,6 +50,7 @@ function pickPuzzleCreature(allDinos) {
 }
 
 export default function HangmanScreen({ allDinos, nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const [cinzelLoaded] = useCinzel({ Cinzel_700Bold });
   const letterFont = cinzelLoaded ? 'Cinzel_700Bold' : 'System';
 
@@ -124,13 +126,13 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <ScrollView contentContainerStyle={styles.centerContent}>
-            <Text style={styles.title}>🦴 Akasztófa</Text>
+            <Text style={styles.title}>{t('games.hangman.title')}</Text>
             <View style={styles.rulesBox}>
-              <RuleRow text="A feladvány mindig egy dínó tudományos neve" />
-              <RuleRow text="Válassz betűket, hogy kitaláld a nevet" />
-              <RuleRow text={`${MAX_MISTAKES} hibalehetőséged van — minden hibánál egy lépéssel közelebb kerül a becsapódás`} />
-              <RuleRow text="Ha az aszteroida becsapódik, elvesztetted a játékot" />
-              <RuleRow text={`Ha kitalálod a nevet, +${XP_REWARD} XP jár`} />
+              <RuleRow text={t('games.hangman.rule_sciname')} />
+              <RuleRow text={t('games.hangman.rule_letters')} />
+              <RuleRow text={t('games.hangman.rule_mistakes', { max: MAX_MISTAKES })} />
+              <RuleRow text={t('games.hangman.rule_impact')} />
+              <RuleRow text={t('games.hangman.rule_xp', { xp: XP_REWARD })} />
             </View>
             <TouchableOpacity
               style={[styles.primaryBtn, !puzzleAvailable && styles.primaryBtnDisabled]}
@@ -138,11 +140,11 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
               disabled={!puzzleAvailable}
             >
               <Text style={styles.primaryBtnText}>
-                {puzzleAvailable ? '▶ KEZDÉS' : 'Dínók betöltése sikertelen'}
+                {puzzleAvailable ? t('games.hangman.start') : t('games.hangman.load_fail')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.backLink} onPress={onBack}>
-              <Text style={styles.backLinkText}>← Vissza a menübe</Text>
+              <Text style={styles.backLinkText}>{t('games.hangman.back_menu')}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -159,21 +161,21 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <ScrollView contentContainerStyle={styles.centerContent}>
             <Text style={styles.badgeEmoji}>{won ? '🏆' : '💀'}</Text>
-            <Text style={styles.title}>{won ? 'Eltaláltad!' : 'Kihaltál!'}</Text>
+            <Text style={styles.title}>{won ? t('games.hangman.won') : t('games.hangman.lost')}</Text>
             <Text style={[styles.answerLatin, { fontFamily: letterFont }]}>{word}</Text>
             {!!creature?.name_hu && <Text style={styles.answerHu}>{creature.name_hu}</Text>}
             {won && (
               <View style={styles.statsBox}>
-                <Text style={styles.statLabel}>Megszerzett XP:</Text>
+                <Text style={styles.statLabel}>{t('games.hangman.earned_xp')}</Text>
                 <Text style={styles.statValue}>{XP_REWARD} XP</Text>
               </View>
             )}
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
-                <Text style={styles.primaryBtnText}>🔄 ÚJRA</Text>
+                <Text style={styles.primaryBtnText}>{t('games.hangman.again')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.exitBtn} onPress={onBack}>
-                <Text style={styles.exitBtnText}>← KILÉPÉS</Text>
+                <Text style={styles.exitBtnText}>{t('games.hangman.exit')}</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -187,12 +189,12 @@ export default function HangmanScreen({ allDinos, nickname, progress, onNavigate
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-        <GameTitleTag title="AKASZTÓFA" />
+        <GameTitleTag title={t('games.mode_hangman')} />
 
         <View style={styles.header}>
-          <Text style={styles.headerMistakes}>Hibák: {wrongCount} / {MAX_MISTAKES}</Text>
+          <Text style={styles.headerMistakes}>{t('games.hangman.mistakes', { count: wrongCount, max: MAX_MISTAKES })}</Text>
           <TouchableOpacity onPress={handleQuit}>
-            <Text style={styles.backLinkText}>✕ Feladom</Text>
+            <Text style={styles.backLinkText}>{t('games.hangman.quit')}</Text>
           </TouchableOpacity>
         </View>
 

@@ -11,6 +11,7 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { getLeaderboard, getRunnerLeaderboard } from '../services/leaderboardService';
 import { getXPMilestoneLeaderboard } from '../services/xpMilestonesService';
+import { useT } from '../i18n';
 
 const XP_MILESTONE = 1000;
 
@@ -21,14 +22,14 @@ const MEDAL_STYLES = {
 };
 
 const TABS = [
-  { key: 'memory_1', label: 'Párok · Kezdő' },
-  { key: 'memory_2', label: 'Párok · Haladó' },
-  { key: 'memory_3', label: 'Párok · Profi' },
-  { key: 'whoami', label: 'Ki vagyok én?' },
-  { key: 'lightning', label: '5mp Képkvíz' },
-  { key: 'millionaire', label: 'XP Milliomos' },
-  { key: 'runner', label: 'Dínófutam' },
-  { key: 'xp1000', label: `${XP_MILESTONE} XP elérése` },
+  { key: 'memory_1', labelKey: 'leaderboard.tab_memory_1' },
+  { key: 'memory_2', labelKey: 'leaderboard.tab_memory_2' },
+  { key: 'memory_3', labelKey: 'leaderboard.tab_memory_3' },
+  { key: 'whoami', labelKey: 'leaderboard.tab_whoami' },
+  { key: 'lightning', labelKey: 'leaderboard.tab_lightning' },
+  { key: 'millionaire', labelKey: 'leaderboard.tab_millionaire' },
+  { key: 'runner', labelKey: 'leaderboard.tab_runner' },
+  { key: 'xp1000', labelKey: 'leaderboard.tab_xp1000' },
 ];
 
 function formatMinSec(ms) {
@@ -38,16 +39,17 @@ function formatMinSec(ms) {
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
-function formatDuration(ms) {
+function formatDuration(ms, t) {
   const totalMinutes = Math.round(ms / 60000);
-  if (totalMinutes < 60) return `${totalMinutes} perc`;
+  if (totalMinutes < 60) return t('leaderboard.dur_min', { m: totalMinutes });
   const totalHours = Math.floor(totalMinutes / 60);
-  if (totalHours < 24) return `${totalHours} óra ${totalMinutes % 60} perc`;
+  if (totalHours < 24) return t('leaderboard.dur_hour', { h: totalHours, m: totalMinutes % 60 });
   const days = Math.floor(totalHours / 24);
-  return `${days} nap ${totalHours % 24} óra`;
+  return t('leaderboard.dur_day', { d: days, h: totalHours % 24 });
 }
 
 export default function LeaderboardScreen({ nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const [activeTab, setActiveTab] = useState('memory_1');
   const [period, setPeriod] = useState('all'); // 'all' | 'week'
   const [entries, setEntries] = useState([]);
@@ -76,7 +78,7 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
         <View style={styles.header}>
           <View style={styles.titleRow}>
             <MaterialCommunityIcons name="trophy" size={20} color={COLORS.accent} />
-            <Text style={styles.title}>RANGLISTA</Text>
+            <Text style={styles.title}>{t('leaderboard.title')}</Text>
           </View>
         </View>
 
@@ -86,7 +88,7 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
             onPress={() => setPeriod('all')}
           >
             <Text style={[styles.periodBtnText, period === 'all' && styles.periodBtnTextActive]}>
-              Összes idő
+              {t('leaderboard.period_all')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -94,7 +96,7 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
             onPress={() => setPeriod('week')}
           >
             <Text style={[styles.periodBtnText, period === 'week' && styles.periodBtnTextActive]}>
-              Heti
+              {t('leaderboard.period_week')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -107,7 +109,7 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
               onPress={() => setActiveTab(tab.key)}
             >
               <Text style={[styles.tabBtnText, activeTab === tab.key && styles.tabBtnTextActive]} numberOfLines={1}>
-                {tab.label}
+                {t(tab.labelKey, tab.key === 'xp1000' ? { xp: XP_MILESTONE } : undefined)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -119,8 +121,8 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
           ) : entries.length === 0 ? (
             <Text style={styles.emptyText}>
               {activeTab === 'runner'
-                ? 'Még senki nem futott ide fel — legyél te az első!'
-                : 'Még senki nem került fel ide — legyél te az első hibátlan játékos!'}
+                ? t('leaderboard.empty_runner')
+                : t('leaderboard.empty_default')}
             </Text>
           ) : (
             <ScrollView contentContainerStyle={styles.listContent}>
@@ -135,7 +137,7 @@ export default function LeaderboardScreen({ nickname, progress, onNavigate, onBa
                     <Text style={styles.nickname} numberOfLines={1}>{entry.nickname}</Text>
                     <Text style={styles.time}>
                       {activeTab === 'xp1000'
-                        ? formatDuration(entry.elapsedMs)
+                        ? formatDuration(entry.elapsedMs, t)
                         : activeTab === 'runner'
                           ? `${entry.score} XP`
                           : formatMinSec(entry.completionTimeMs)}

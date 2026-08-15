@@ -69,12 +69,12 @@ function XPPill({ onPress }) {
   );
 }
 
-function StreakPill({ days }) {
+function StreakPill({ days, t }) {
   if (days == null) return null;
   return (
     <View style={styles.streakPill}>
       <MaterialCommunityIcons name="fire" size={15} color={COLORS.accent} />
-      <Text style={styles.streakPillText}>{days} nap</Text>
+      <Text style={styles.streakPillText}>{t('header.streak', { days })}</Text>
     </View>
   );
 }
@@ -248,7 +248,7 @@ export default function HeaderBar({
         <View style={styles.headerIcons}>
           {/* "Vezérlőpult" csoport: haladás/XP/profil, egy közös keretben. */}
           <View style={styles.dashboardGroup}>
-            {!guest && <StreakPill days={streak} />}
+            {!guest && <StreakPill days={streak} t={t} />}
             {!guest && <XPPill onPress={handleOpenRank} />}
             {!guest && (
               <ProgressCircle ratio={collectionRatio} onPress={() => handleNav('collection')} />
@@ -265,16 +265,28 @@ export default function HeaderBar({
               onPress={handleToggleMute}
               tooltip={muted ? t('header.sound_on') : t('header.sound_off')}
             />
-            {/* Nyelvváltó: HU ↔ EN (2 nyelvnél elég egy pill, ami a MÁSIK
-                nyelvet mutatja és arra vált). */}
-            <Pressable
-              style={styles.langBtn}
-              onPress={() => setLanguage(lang === 'hu' ? 'en' : 'hu')}
-              accessibilityRole="button"
-              accessibilityLabel={t('lang.label')}
-            >
-              <Text style={styles.langBtnText}>{lang === 'hu' ? 'EN' : 'HU'}</Text>
-            </Pressable>
+            {/* Nyelvváltó: szegmentált HUN | ENG kapcsoló — mindkét nyelv
+                látszik, az aktív kiemelve. */}
+            <View style={styles.langToggle} accessibilityRole="radiogroup" accessibilityLabel={t('lang.label')}>
+              <Pressable
+                style={[styles.langSeg, lang === 'hu' && styles.langSegActive]}
+                onPress={() => { if (lang !== 'hu') { playSound('click'); setLanguage('hu'); } }}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: lang === 'hu' }}
+                accessibilityLabel="Magyar"
+              >
+                <Text style={[styles.langSegText, lang === 'hu' && styles.langSegTextActive]}>HUN</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.langSeg, lang === 'en' && styles.langSegActive]}
+                onPress={() => { if (lang !== 'en') { playSound('click'); setLanguage('en'); } }}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: lang === 'en' }}
+                accessibilityLabel="English"
+              >
+                <Text style={[styles.langSegText, lang === 'en' && styles.langSegTextActive]}>ENG</Text>
+              </Pressable>
+            </View>
             {!isNarrow && <RoundIconButton icon="youtube" onPress={handleOpenYoutube} tooltip="YouTube" />}
             {!isNarrow && <RoundIconButton icon="information" onPress={handleOpenInfo} tooltip="Info" />}
           </View>
@@ -415,21 +427,39 @@ const styles = StyleSheet.create({
     gap: 8,
     marginLeft: 4,
   },
-  langBtn: {
-    minWidth: 40,
+  langToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
     height: 40,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(20,18,16,0.7)',
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.10)',
+    padding: 3,
+    gap: 2,
+  },
+  langSeg: {
+    height: '100%',
+    minWidth: 34,
     borderRadius: RADIUS.pill,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
-    backgroundColor: 'rgba(20,18,16,0.7)',
     ...Platform.select({ web: { cursor: 'pointer' } }),
   },
-  langBtnText: {
+  langSegActive: {
+    backgroundColor: COLORS.accent,
+  },
+  langSegText: {
     color: COLORS.cream,
     fontFamily: FONTS.bodyBold,
-    fontSize: 13,
+    fontSize: 12,
     letterSpacing: 0.5,
+    opacity: TEXT_OPACITY.secondary,
+  },
+  langSegTextActive: {
+    color: COLORS.bgDark,
+    opacity: 1,
   },
   joinBtn: {
     backgroundColor: COLORS.accent,

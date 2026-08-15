@@ -19,6 +19,7 @@ import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 import GameTitleTag from '../components/GameTitleTag';
+import { useT } from '../i18n';
 
 // Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
 // asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
@@ -31,6 +32,7 @@ const XP_PER_CORRECT = 5;
 const MAX_LIVES = 3;
 
 export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'finished'
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -145,14 +147,14 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
           <ScrollView contentContainerStyle={styles.centerContent}>
-            <Text style={styles.title}>🔍 Ki vagyok én?</Text>
+            <Text style={styles.title}>{t('games.whoami.title')}</Text>
 
             <View style={styles.rulesBox}>
-              <RuleRow text="A dínó elárul pár tényt magáról" />
-              <RuleRow text="4 név közül kell kitalálnod, kiről van szó" />
-              <RuleRow text={`Helyes válaszonként +${XP_PER_CORRECT} XP`} />
-              <RuleRow text={`${MAX_LIVES} szív — ennyit hibázhatsz`} />
-              <RuleRow text={`${QUESTION_COUNT} kérdés kör`} />
+              <RuleRow text={t('games.whoami.rule_facts')} />
+              <RuleRow text={t('games.whoami.rule_guess')} />
+              <RuleRow text={t('games.whoami.rule_xp', { xp: XP_PER_CORRECT })} />
+              <RuleRow text={t('games.whoami.rule_lives', { lives: MAX_LIVES })} />
+              <RuleRow text={t('games.whoami.rule_questions', { count: QUESTION_COUNT })} />
             </View>
 
             <TouchableOpacity
@@ -161,12 +163,12 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
               disabled={!quizAvailable}
             >
               <Text style={styles.primaryBtnText}>
-                {quizAvailable ? '▶ KEZDÉS' : 'Kérdések betöltése sikertelen'}
+                {quizAvailable ? t('games.whoami.start') : t('games.whoami.load_fail')}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.backLink} onPress={onBack}>
-              <Text style={styles.backLinkText}>← Vissza a menübe</Text>
+              <Text style={styles.backLinkText}>{t('games.whoami.back_menu')}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -187,24 +189,24 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
           />
           <View style={styles.centerContent}>
             <Text style={styles.badgeEmoji}>{correctCount === questions.length ? '🏆' : lives <= 0 ? '💔' : '🦴'}</Text>
-            <Text style={styles.title}>{lives <= 0 ? 'Elfogytak a szíveid!' : 'Vége a körnek!'}</Text>
+            <Text style={styles.title}>{lives <= 0 ? t('games.whoami.out_of_lives') : t('games.whoami.round_over')}</Text>
             <Text style={styles.resultSubtitle}>
-              {correctCount}/{questions.length} helyes megfejtés
+              {t('games.whoami.result_sub', { correct: correctCount, total: questions.length })}
             </Text>
 
             <View style={styles.statsBox}>
               <View style={styles.statRow}>
-                <Text style={styles.statLabel}>Megszerzett XP:</Text>
+                <Text style={styles.statLabel}>{t('games.whoami.earned_xp')}</Text>
                 <Text style={styles.statValue}>{xpEarned} XP</Text>
               </View>
             </View>
 
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
-                <Text style={styles.primaryBtnText}>🔄 ÚJRA</Text>
+                <Text style={styles.primaryBtnText}>{t('games.whoami.again')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.exitBtn} onPress={onBack}>
-                <Text style={styles.exitBtnText}>← KILÉPÉS</Text>
+                <Text style={styles.exitBtnText}>{t('games.whoami.exit')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -220,11 +222,11 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
-        <GameTitleTag title="KI VAGYOK ÉN?" />
+        <GameTitleTag title={t('games.mode_whoami')} />
 
         <View style={styles.header}>
           <Text style={styles.headerCounter}>
-            Kérdés {currentQuestionIndex + 1} / {questions.length}
+            {t('games.whoami.q_counter', { n: currentQuestionIndex + 1, total: questions.length })}
           </Text>
           <Text style={styles.headerLives}>{'❤️'.repeat(lives)}{'🖤'.repeat(MAX_LIVES - lives)}</Text>
         </View>
@@ -240,7 +242,7 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
         </View>
 
         <View style={styles.questionBox}>
-          <Text style={styles.questionText}>Ki vagyok én?</Text>
+          <Text style={styles.questionText}>{t('games.whoami.q_prompt')}</Text>
         </View>
 
         <View style={styles.optionsGrid}>
@@ -264,7 +266,7 @@ export default function WhoAmIScreen({ allDinos, playerId, nickname, progress, o
         </View>
 
         <TouchableOpacity style={styles.backLink} onPress={handleQuitMidGame}>
-          <Text style={styles.backLinkText}>✕ Feladom</Text>
+          <Text style={styles.backLinkText}>{t('games.whoami.quit')}</Text>
         </TouchableOpacity>
       </View>
     </Shell>

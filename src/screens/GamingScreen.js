@@ -13,19 +13,19 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { getGamePlayCounts } from '../services/gameEventsService';
 import { getDailyChallengeGameKey, isDailyChallengeClaimedToday } from '../utils/dailyChallenge';
+import { useT } from '../i18n';
 
 // Nehézség/jutalom EGY közös jelvényként (grill-me döntés): nincs nyers
 // XP-szám a kártyán, csak a szint — a tényleges XP a játékban derül ki.
 const TIER = { KEZDO: 1, HALADO: 2, PROFI: 3 };
-const TIER_LABEL = { [TIER.KEZDO]: 'Kezdő', [TIER.HALADO]: 'Haladó', [TIER.PROFI]: 'Profi' };
 
 const GAMES = [
-  { key: 'memory', label: 'PÁROK', icon: 'cards', dino: 'Ankylosaurus', tier: TIER.HALADO },
-  { key: 'whoami', label: 'KI VAGYOK ÉN?', icon: 'help-circle', dino: 'Velociraptor', tier: TIER.HALADO },
-  { key: 'lightning', label: '5MP KÉPKVÍZ', icon: 'flash', dino: 'Compsognathus', tier: TIER.HALADO },
-  { key: 'millionaire', label: 'XP MILLIOMOS', icon: 'trophy', dino: 'Tyrannosaurus', tier: TIER.PROFI },
-  { key: 'runner', label: 'DÍNÓFUTAM', icon: 'run-fast', dino: 'Gallimimus', tier: TIER.HALADO },
-  { key: 'hangman', label: 'AKASZTÓFA', icon: 'bone', dino: 'Triceratops', tier: TIER.KEZDO },
+  { key: 'memory', icon: 'cards', dino: 'Ankylosaurus', tier: TIER.HALADO },
+  { key: 'whoami', icon: 'help-circle', dino: 'Velociraptor', tier: TIER.HALADO },
+  { key: 'lightning', icon: 'flash', dino: 'Compsognathus', tier: TIER.HALADO },
+  { key: 'millionaire', icon: 'trophy', dino: 'Tyrannosaurus', tier: TIER.PROFI },
+  { key: 'runner', icon: 'run-fast', dino: 'Gallimimus', tier: TIER.HALADO },
+  { key: 'hangman', icon: 'bone', dino: 'Triceratops', tier: TIER.KEZDO },
 ];
 
 const GAMES_BY_KEY = Object.fromEntries(GAMES.map((g) => [g.key, g]));
@@ -46,17 +46,19 @@ const TILE_IMAGE_MAP = {
 };
 
 function TierBadge({ tier }) {
+  const { t } = useT();
   return (
     <View style={styles.tierBadge}>
       {Array.from({ length: tier }).map((_, i) => (
         <MaterialCommunityIcons key={i} name="star" size={11} color={COLORS.accent} />
       ))}
-      <Text style={styles.tierBadgeText}>{TIER_LABEL[tier]}</Text>
+      <Text style={styles.tierBadgeText}>{t(`games.tier_${tier}`)}</Text>
     </View>
   );
 }
 
 function GameCard({ game, onPress, isToday, playCount, cardWidth }) {
+  const { t } = useT();
   const [hovered, setHovered] = useState(false);
   const imgSource = TILE_IMAGE_MAP[game.dino] || IMAGE_MAP[game.dino];
 
@@ -74,7 +76,7 @@ function GameCard({ game, onPress, isToday, playCount, cardWidth }) {
         {isToday && (
           <View style={styles.todayBadge}>
             <MaterialCommunityIcons name="lightning-bolt" size={11} color={COLORS.bgDark} />
-            <Text style={styles.todayBadgeText}>MA</Text>
+            <Text style={styles.todayBadgeText}>{t('games.today')}</Text>
           </View>
         )}
 
@@ -82,13 +84,13 @@ function GameCard({ game, onPress, isToday, playCount, cardWidth }) {
 
         <View style={styles.cardBody}>
           <MaterialCommunityIcons name={game.icon} size={26} color={COLORS.cream} />
-          <Text style={styles.cardLabel}>{game.label}</Text>
+          <Text style={styles.cardLabel}>{t(`games.mode_${game.key}`)}</Text>
         </View>
 
         {playCount > 0 && (
           <View style={styles.playCountBadge}>
             <MaterialCommunityIcons name="repeat" size={12} color={COLORS.cream} />
-            <Text style={styles.playCountText}>{playCount}× játszva</Text>
+            <Text style={styles.playCountText}>{t('games.play_count', { count: playCount })}</Text>
           </View>
         )}
       </ImageBackground>
@@ -97,6 +99,7 @@ function GameCard({ game, onPress, isToday, playCount, cardWidth }) {
 }
 
 function DailyChallengeBanner({ game, claimed, onPress }) {
+  const { t } = useT();
   const imgSource = IMAGE_MAP[game.dino];
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={claimed ? undefined : onPress} disabled={claimed} style={styles.banner}>
@@ -105,16 +108,16 @@ function DailyChallengeBanner({ game, claimed, onPress }) {
         <View style={styles.bannerContent}>
           <View style={styles.bannerEyebrowRow}>
             <MaterialCommunityIcons name="lightning-bolt" size={12} color={COLORS.accent} />
-            <Text style={styles.bannerEyebrow}>A NAP KIHÍVÁSA</Text>
+            <Text style={styles.bannerEyebrow}>{t('games.daily_eyebrow')}</Text>
           </View>
-          <Text style={styles.bannerTitle}>{game.label}</Text>
+          <Text style={styles.bannerTitle}>{t(`games.mode_${game.key}`)}</Text>
           <Text style={styles.bannerSub}>
-            {claimed ? 'Teljesítve mára ✓' : 'Teljesítsd ma, és +50% bónusz XP jár érte!'}
+            {claimed ? t('games.daily_done') : t('games.daily_sub')}
           </Text>
         </View>
         {!claimed && (
           <View style={styles.bannerCta}>
-            <Text style={styles.bannerCtaText}>Kezdés →</Text>
+            <Text style={styles.bannerCtaText}>{t('games.daily_cta')}</Text>
           </View>
         )}
       </ImageBackground>
@@ -123,6 +126,7 @@ function DailyChallengeBanner({ game, claimed, onPress }) {
 }
 
 export default function GamingScreen({ nickname, playerId, progress, onNavigate, onMemory, onWhoAmI, onLightningQuiz, onMillionaire, onRunner, onHangman, onBack }) {
+  const { t } = useT();
   const { width } = useWindowDimensions();
   const cols = width >= 1024 ? 3 : width >= 700 ? 2 : 1;
   const GAP = 16;
@@ -158,11 +162,11 @@ export default function GamingScreen({ nickname, playerId, progress, onNavigate,
         <View style={styles.header}>
           <View style={styles.titleRow}>
             <MaterialCommunityIcons name="gamepad-variant" size={20} color={COLORS.accent} />
-            <Text style={styles.title}>JÁTÉKMÓDOK</Text>
+            <Text style={styles.title}>{t('games.hub_title')}</Text>
           </View>
-          <TouchableOpacity style={styles.rankBtn} onPress={() => onNavigate?.('leaderboard')} accessibilityRole="button" accessibilityLabel="Ranglista">
+          <TouchableOpacity style={styles.rankBtn} onPress={() => onNavigate?.('leaderboard')} accessibilityRole="button" accessibilityLabel={t('games.leaderboard')}>
             <MaterialCommunityIcons name="trophy" size={16} color={COLORS.bgDark} />
-            <Text style={styles.rankBtnText}>Ranglista</Text>
+            <Text style={styles.rankBtnText}>{t('games.leaderboard')}</Text>
           </TouchableOpacity>
         </View>
 

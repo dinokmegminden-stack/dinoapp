@@ -21,6 +21,7 @@ import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitRunnerScore, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 import GameTitleTag from '../components/GameTitleTag';
+import { useT } from '../i18n';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
@@ -80,6 +81,7 @@ let nextItemId = 1;
 let nextTerrainId = 1;
 
 export default function RunnerGameScreen({ playerId, nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'over'
   const [lane, setLane] = useState(1);
   const [renderTick, setRenderTick] = useState(0);
@@ -277,18 +279,18 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <View style={styles.centerContent}>
-            <Text style={styles.title}>🦕 Dínófutam</Text>
+            <Text style={styles.title}>{t('games.runner.title')}</Text>
             <View style={styles.rulesBox}>
-              <RuleRow text="A 3 középső sávon futsz, válts fel/le, kerüld ki a sziklákat és a skorpiókat" />
-              <RuleRow text="Kapd be a húsdarabokat — mindegyik +5 XP" />
-              <RuleRow text="A pálya egyre gyorsul, minél tovább bírod, annál több XP" />
-              <RuleRow text="Egy ütközés — vége a futamnak, az addigi XP megmarad" />
+              <RuleRow text={t('games.runner.rule_lanes')} />
+              <RuleRow text={t('games.runner.rule_meat')} />
+              <RuleRow text={t('games.runner.rule_speed')} />
+              <RuleRow text={t('games.runner.rule_crash')} />
             </View>
             <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
-              <Text style={styles.primaryBtnText}>▶ KEZDÉS</Text>
+              <Text style={styles.primaryBtnText}>{t('games.runner.start')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.backLink} onPress={onBack}>
-              <Text style={styles.backLinkText}>← Vissza a menübe</Text>
+              <Text style={styles.backLinkText}>{t('games.runner.back_menu')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -309,17 +311,17 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
           />
           <View style={styles.centerContent}>
             <Text style={styles.badgeEmoji}>💥</Text>
-            <Text style={styles.title}>Ütköztél!</Text>
+            <Text style={styles.title}>{t('games.runner.crashed')}</Text>
             <View style={styles.statsBox}>
-              <Text style={styles.statLabel}>Megszerzett XP:</Text>
+              <Text style={styles.statLabel}>{t('games.runner.earned_xp')}</Text>
               <Text style={styles.statValue}>{score} XP</Text>
             </View>
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
-                <Text style={styles.primaryBtnText}>🔄 ÚJRA</Text>
+                <Text style={styles.primaryBtnText}>{t('games.runner.again')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.exitBtn} onPress={onBack}>
-                <Text style={styles.exitBtnText}>← KILÉPÉS</Text>
+                <Text style={styles.exitBtnText}>{t('games.runner.exit')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -333,13 +335,13 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-        <GameTitleTag title="DÍNÓFUTAM" />
+        <GameTitleTag title={t('games.mode_runner')} />
 
         <View style={styles.header}>
           <View style={styles.headerRight}>
-            <Text style={styles.levelText}>{level}. szint</Text>
+            <Text style={styles.levelText}>{t('games.runner.level', { level })}</Text>
             <TouchableOpacity onPress={handleQuit}>
-              <Text style={styles.backLinkText}>✕ Kilépés</Text>
+              <Text style={styles.backLinkText}>{t('games.runner.quit')}</Text>
             </TouchableOpacity>
           </View>
         </View>

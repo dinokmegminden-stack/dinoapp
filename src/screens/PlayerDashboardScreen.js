@@ -14,18 +14,13 @@ import { FONTS } from '../constants/fonts';
 import { getVisitDates } from '../services/gameEventsService';
 import { toDateKey, computeStreak } from '../utils/visitStats';
 import { creatureCollectionStats } from '../utils/regionProgress';
+import { useT } from '../i18n';
 
 // Az irányítópult idővonala a dínókártyán látott sávot folytatja a kréta
 // végétől (66M) egészen máig (0M), hogy a jégkorszaki emlősök (pl. Kárpát-medence
 // régió) is kontextusba kerüljenek, nem csak a Mezozoikum.
 const FULL_TIMELINE_ERAS = [...MESOZOIC_ERAS, ...CENOZOIC_ERAS];
 const FULL_TIMELINE_EPOCHS = [...MESOZOIC_EPOCH_STAGES, ...CENOZOIC_EPOCH_STAGES];
-
-const WEEKDAY_LABELS = ['H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'];
-const MONTH_LABELS = [
-  'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
-  'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December',
-];
 
 // Hétfővel kezdődő hét — a JS getDay() vasárnappal (0) kezd, ezt toljuk el.
 function mondayIndex(jsDay) {
@@ -46,6 +41,9 @@ function buildMonthGrid(year, month) {
 }
 
 export default function PlayerDashboardScreen({ nickname, playerId, allDinos, progress, onBack, onNavigate, onLogout }) {
+  const { t } = useT();
+  const weekdayLabels = t('dashboard.weekdays');
+  const monthLabels = t('dashboard.months');
   const [loading, setLoading] = useState(true);
   const [visitDateKeys, setVisitDateKeys] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = jelen hónap, -1 = előző, stb.
@@ -97,7 +95,7 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
           </View>
           {!!onLogout && (
             <TouchableOpacity style={styles.logoutBtn} onPress={onLogout} accessibilityRole="button">
-              <Text style={styles.logoutBtnText}>Kijelentkezés</Text>
+              <Text style={styles.logoutBtnText}>{t('dashboard.logout')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -112,12 +110,12 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               <View style={styles.statCard}>
                 <Text style={styles.statEmoji}>🔥</Text>
                 <Text style={styles.statValue}>{streak}</Text>
-                <Text style={styles.statLabel}>{streak === 1 ? 'napos széria' : 'napos széria'}</Text>
+                <Text style={styles.statLabel}>{t('dashboard.streak_label')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statEmoji}>🗂️</Text>
                 <Text style={styles.statValue}>{collectionPct}%</Text>
-                <Text style={styles.statLabel}>{collected} / {total} dínó</Text>
+                <Text style={styles.statLabel}>{t('dashboard.collection_count', { collected, total })}</Text>
               </View>
             </View>
 
@@ -132,7 +130,7 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
                 eras={FULL_TIMELINE_ERAS}
                 epochStages={FULL_TIMELINE_EPOCHS}
                 startLabel="250M"
-                endLabel="Ma"
+                endLabel={t('dashboard.timeline_now')}
                 boldFont={FONTS.bold}
                 bodyFont={FONTS.body}
                 showRange={false}
@@ -145,7 +143,7 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
                 <TouchableOpacity onPress={() => setMonthOffset((m) => m - 1)} style={styles.monthNavBtn}>
                   <Text style={styles.monthNavText}>‹</Text>
                 </TouchableOpacity>
-                <Text style={styles.monthLabel}>{MONTH_LABELS[month]} {year}</Text>
+                <Text style={styles.monthLabel}>{monthLabels[month]} {year}</Text>
                 <TouchableOpacity
                   onPress={() => setMonthOffset((m) => Math.min(0, m + 1))}
                   style={styles.monthNavBtn}
@@ -156,7 +154,7 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               </View>
 
               <View style={styles.weekdayRow}>
-                {WEEKDAY_LABELS.map((label) => (
+                {weekdayLabels.map((label) => (
                   <Text key={label} style={styles.weekdayLabel}>{label}</Text>
                 ))}
               </View>
@@ -182,7 +180,7 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               </View>
 
               <Text style={styles.calendarHint}>
-                Kiemelve azok a napok, amikor játszottál valamelyik játékmóddal.
+                {t('dashboard.calendar_hint')}
               </Text>
             </View>
           </ScrollView>

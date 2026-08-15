@@ -18,6 +18,7 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { REGION_ORDER, EDU_LABELS, regionCollectionStats } from '../utils/regionProgress';
 import { ALREND_HU } from '../utils/alrendHu';
+import { useT } from '../i18n';
 
 
 const EPOCH_ORDER = ['késő-kréta', 'kora-kréta', 'késő-jura', 'közép-jura', 'kora-jura', 'késő-triász'];
@@ -77,15 +78,16 @@ function buildFilterCategory(dinos, field, order, title, transform = (v) => v) {
 
 
 const FILTER_FIELDS = [
-  { key: 'epoch', field: 'epoch', title: 'Kor', order: EPOCH_ORDER, transform: normalizeEpoch },
-  { key: 'region', field: 'region', title: 'Régió', order: REGION_LABEL_ORDER },
-  { key: 'country', field: 'discovered_country', title: 'Felfedezés országa', order: [] },
-  { key: 'diet', field: 'diet_hu', title: 'Étrend', order: [], transform: normalizeDiet },
-  { key: 'alrend', field: 'alrend', title: 'Dinoszaurusz-csoport', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
-  { key: 'csalad', field: 'csalad_hu', title: 'Család', order: [] },
+  { key: 'epoch', field: 'epoch', titleKey: 'collection.filter_epoch', order: EPOCH_ORDER, transform: normalizeEpoch },
+  { key: 'region', field: 'region', titleKey: 'collection.filter_region', order: REGION_LABEL_ORDER },
+  { key: 'country', field: 'discovered_country', titleKey: 'collection.filter_country', order: [] },
+  { key: 'diet', field: 'diet_hu', titleKey: 'collection.filter_diet', order: [], transform: normalizeDiet },
+  { key: 'alrend', field: 'alrend', titleKey: 'collection.filter_group', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
+  { key: 'csalad', field: 'csalad_hu', titleKey: 'collection.filter_family', order: [] },
 ];
 
 export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, onBack }) {
+  const { t, lang } = useT();
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
   const isWide = width >= 1024;
@@ -116,11 +118,11 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
   }, [unlockedDinos]);
 
   const filterCategories = useMemo(() => {
-    return FILTER_FIELDS.map(({ key, field, title, order, transform }) => ({
+    return FILTER_FIELDS.map(({ key, field, titleKey, order, transform }) => ({
       key,
-      ...buildFilterCategory(unlockedDinos || [], field, order, title, transform),
+      ...buildFilterCategory(unlockedDinos || [], field, order, t(titleKey), transform),
     }));
-  }, [unlockedDinos]);
+  }, [unlockedDinos, lang]);
 
   const handleToggleFilter = (categoryKey, value) => {
     setFilters((prev) => {
@@ -202,7 +204,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
 
         <View style={styles.header}>
-          <Text style={styles.title}>📖 ALBUMOD</Text>
+          <Text style={styles.title}>{t('collection.album_title')}</Text>
         </View>
 
         <View style={styles.kpiRow}>
@@ -223,7 +225,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
         </View>
 
         <Text style={styles.headerHint}>
-          A felnyitott csomagaid lényei, kereshetően.
+          {t('collection.album_hint')}
         </Text>
 
         <ScrollView
@@ -237,7 +239,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
             onPress={() => setSelectedLetter(null)}
           >
             <Text style={[styles.letterText, !selectedLetter && styles.letterTextActive]}>
-              Mind
+              {t('collection.all')}
             </Text>
           </TouchableOpacity>
           {distinctLetters.map((letter) => (
@@ -265,7 +267,7 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
           />
           <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
             {regionSections.length === 0 ? (
-              <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
+              <Text style={styles.empty}>{t('collection.empty')}</Text>
             ) : (
               regionSections.map((section) => (
                 <View key={section.key} style={styles.regionBlock}>

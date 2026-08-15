@@ -20,6 +20,7 @@ import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
 import Fireworks from '../components/Fireworks';
 import GameTitleTag from '../components/GameTitleTag';
+import { useT } from '../i18n';
 
 // Ugyanaz a háttérkép, ami a landing hero-t is adja (Shell animálja web-
 // asztali nézetben) — a játékmódok mögött is megmarad, hogy ne váltson
@@ -33,6 +34,7 @@ const XP_PER_CORRECT = 5;
 const BONUS_XP = 10;
 
 export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const { width } = useWindowDimensions();
   const isMobile = width < 700;
   const [isLoading, setIsLoading] = useState(!regionDinos.length || !allDinos.length);
@@ -248,21 +250,21 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
           />
           <View style={styles.finishedContent}>
             <Text style={styles.finishedTitle}>
-              {isPerfect ? '🎉 TÖKÉLETES!' : '🏁 KÖR VÉGE'}
+              {isPerfect ? t('games.lightning.perfect') : t('games.lightning.round_end')}
             </Text>
 
             <View style={styles.statsBox}>
               <View style={styles.statRow}>
-                <Text style={styles.statLabel}>Helyes válaszok:</Text>
+                <Text style={styles.statLabel}>{t('games.lightning.correct_answers')}</Text>
                 <Text style={styles.statValue}>{correctCount}/{MAX_QUESTIONS}</Text>
               </View>
               <View style={styles.statRow}>
-                <Text style={styles.statLabel}>Szerzett XP:</Text>
+                <Text style={styles.statLabel}>{t('games.lightning.earned_xp')}</Text>
                 <Text style={styles.statValue}>+{xpEarned}</Text>
               </View>
               {isPerfect && (
                 <View style={styles.statRow}>
-                  <Text style={styles.bonusLabel}>Bónusz:</Text>
+                  <Text style={styles.bonusLabel}>{t('games.lightning.bonus')}</Text>
                   <Text style={styles.bonusValue}>+{BONUS_XP} XP ⭐</Text>
                 </View>
               )}
@@ -270,10 +272,10 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
 
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.retryBtn} onPress={handleRetry}>
-                <Text style={styles.retryBtnText}>🔄 ÚJRA</Text>
+                <Text style={styles.retryBtnText}>{t('games.lightning.again')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.exitBtn} onPress={handleExit}>
-                <Text style={styles.exitBtnText}>← KILÉPÉS</Text>
+                <Text style={styles.exitBtnText}>{t('games.lightning.exit')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -287,7 +289,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
     return (
       <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
-          <Text style={styles.loadingText}>Dínók betöltése...</Text>
+          <Text style={styles.loadingText}>{t('games.lightning.loading_dinos')}</Text>
         </View>
       </Shell>
     );
@@ -298,7 +300,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
     return (
       <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
-          <Text style={styles.loadingText}>Kérdés generálása...</Text>
+          <Text style={styles.loadingText}>{t('games.lightning.generating')}</Text>
         </View>
       </Shell>
     );
@@ -315,7 +317,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
-        <GameTitleTag title="5MP KÉPKVÍZ" />
+        <GameTitleTag title={t('games.mode_lightning')} />
 
         {/* Lives indicator */}
         <View style={styles.livesBar}>
@@ -339,7 +341,7 @@ export default function VillamkvizScreen({ regionDinos, allDinos, playerId, nick
             </View>
           ) : (
             <View style={[styles.imageWrapper, { height: imageHeight, width: imageWidth, alignSelf: 'center' }]}>
-              <Text style={styles.noImageText}>Nincs kép</Text>
+              <Text style={styles.noImageText}>{t('games.lightning.no_image')}</Text>
             </View>
           )}
           {/* Timer overlay centered above image */}

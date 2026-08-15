@@ -24,6 +24,7 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { REGION_ORDER, REGION_PACKS, EDU_LABELS, PASS_THRESHOLD } from '../utils/regionProgress';
 import { ALREND_HU } from '../utils/alrendHu';
+import { useT } from '../i18n';
 
 // Vendégeknek nincs kép a kártyákon (isGuestMode), így a csomagos rács- és
 // idővonal-nézet helyett egy tiszta, csak-név listát kapnak, kor szerint
@@ -34,13 +35,14 @@ import { ALREND_HU } from '../utils/alrendHu';
 // (lásd data/sqls/normalize_epoch_hu_kozep_jura.sql) — itt védekezésből
 // kliensoldalon is egységesítjük, ha a javítás még nem futott le.
 const EPOCH_ORDER = ['késő-kréta', 'kora-kréta', 'késő-jura', 'közép-jura', 'kora-jura', 'késő-triász'];
-const EPOCH_LABEL_HU = {
-  'késő-kréta': 'Késő-kréta',
-  'kora-kréta': 'Kora-kréta',
-  'késő-jura': 'Késő-jura',
-  'közép-jura': 'Közép-jura',
-  'kora-jura': 'Kora-jura',
-  'késő-triász': 'Késő-triász',
+// Nyers HU epoch-érték → i18n-slug (a szekció-címek fordításához).
+const EPOCH_SLUG = {
+  'késő-kréta': 'late_cretaceous',
+  'kora-kréta': 'early_cretaceous',
+  'késő-jura': 'late_jurassic',
+  'közép-jura': 'mid_jurassic',
+  'kora-jura': 'early_jurassic',
+  'késő-triász': 'late_triassic',
 };
 
 function normalizeEpoch(epoch) {
@@ -104,15 +106,16 @@ function buildFilterCategory(dinos, field, order, title, transform = (v) => v) {
 
 
 const FILTER_FIELDS = [
-  { key: 'epoch', field: 'epoch', title: 'Kor', order: EPOCH_ORDER, transform: normalizeEpoch },
-  { key: 'region', field: 'region', title: 'Régió', order: REGION_LABEL_ORDER },
-  { key: 'country', field: 'discovered_country', title: 'Felfedezés országa', order: [] },
-  { key: 'diet', field: 'diet_hu', title: 'Étrend', order: [], transform: normalizeDiet },
-  { key: 'alrend', field: 'alrend', title: 'Dinoszaurusz-csoport', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
-  { key: 'csalad', field: 'csalad_hu', title: 'Család', order: [] },
+  { key: 'epoch', field: 'epoch', titleKey: 'collection.filter_epoch', order: EPOCH_ORDER, transform: normalizeEpoch },
+  { key: 'region', field: 'region', titleKey: 'collection.filter_region', order: REGION_LABEL_ORDER },
+  { key: 'country', field: 'discovered_country', titleKey: 'collection.filter_country', order: [] },
+  { key: 'diet', field: 'diet_hu', titleKey: 'collection.filter_diet', order: [], transform: normalizeDiet },
+  { key: 'alrend', field: 'alrend', titleKey: 'collection.filter_group', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
+  { key: 'csalad', field: 'csalad_hu', titleKey: 'collection.filter_family', order: [] },
 ];
 
 export default function CollectionScreen({ nickname, allDinos, progress, onNavigate, onBack }) {
+  const { t, lang } = useT();
   const guest = isGuestMode();
   const { width } = useWindowDimensions();
   const isNarrow = width < 700;
@@ -137,11 +140,11 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
   }, [allDinos]);
 
   const filterCategories = useMemo(() => {
-    return FILTER_FIELDS.map(({ key, field, title, order, transform }) => ({
+    return FILTER_FIELDS.map(({ key, field, titleKey, order, transform }) => ({
       key,
-      ...buildFilterCategory(allDinos || [], field, order, title, transform),
+      ...buildFilterCategory(allDinos || [], field, order, t(titleKey), transform),
     }));
-  }, [allDinos]);
+  }, [allDinos, lang]);
 
   const handleToggleFilter = (categoryKey, value) => {
     setFilters((prev) => {
@@ -208,7 +211,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
 
     return EPOCH_ORDER.filter((key) => byEpoch.has(key)).map((key) => ({
       key,
-      title: EPOCH_LABEL_HU[key] || key,
+      slug: EPOCH_SLUG[key],
       data: [...byEpoch.get(key)].sort((a, b) => a.name_hu.localeCompare(b.name_hu, 'hu')),
     }));
   }, [filteredDinos]);
@@ -246,12 +249,12 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
         <View style={styles.header}>
           <View style={styles.titleRow}>
             <MaterialCommunityIcons name="archive-outline" size={20} color={COLORS.accent} />
-            <Text style={styles.title}>KATALÓGUS</Text>
+            <Text style={styles.title}>{t('collection.title')}</Text>
           </View>
         </View>
 
         <Text style={styles.headerHint}>
-          Az összes felfedezhető lény, kor szerint csoportosítva, szűrőkkel.
+          {t('collection.hint')}
         </Text>
 
         <ScrollView
@@ -265,7 +268,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
             onPress={() => setSelectedLetter(null)}
           >
             <Text style={[styles.letterText, !selectedLetter && styles.letterTextActive]}>
-              Mind
+              {t('collection.all')}
             </Text>
           </TouchableOpacity>
           {distinctLetters.map((letter) => (
@@ -292,12 +295,12 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
           />
           <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
             {visibleEpochSections.length === 0 ? (
-              <Text style={styles.empty}>Nincs a szűrőknek megfelelő lény.</Text>
+              <Text style={styles.empty}>{t('collection.empty')}</Text>
             ) : (
               <>
                 {visibleEpochSections.map((section) => (
                   <View key={section.key} style={styles.epochBlock}>
-                    <Text style={styles.epochBlockTitle}>{section.title.toUpperCase()}</Text>
+                    <Text style={styles.epochBlockTitle}>{t(`collection.epoch.${section.slug}`).toUpperCase()}</Text>
                     <View style={styles.cardGrid}>
                       {section.data.map((d) => (
                         <View key={d.id} style={[styles.cardGridItem, { width: cardColumns === 1 ? '100%' : cardColumns === 3 ? '31.5%' : '48%' }]}>
@@ -310,7 +313,7 @@ export default function CollectionScreen({ nickname, allDinos, progress, onNavig
                 {hasMore && (
                   <TouchableOpacity style={styles.loadMoreBtn} onPress={() => setVisibleCount((c) => c + PAGE_SIZE)}>
                     <Text style={styles.loadMoreBtnText}>
-                      További állatok ({filteredDinos.length - visibleCount})
+                      {t('collection.load_more', { count: filteredDinos.length - visibleCount })}
                     </Text>
                   </TouchableOpacity>
                 )}

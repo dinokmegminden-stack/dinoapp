@@ -4,35 +4,37 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { isGuestMode } from '../utils/guestMode';
+import { useT, pickLocalized } from '../i18n';
 
 export default function CatalogCard({ dino, showDescription = true }) {
+  const { t, lang } = useT();
   const imageSource = IMAGE_MAP[dino.name_hu] || MISSING_IMAGE;
   const isGuest = isGuestMode();
 
   // Fact labels + values (6 boxes, 2 columns)
   const facts = [
     {
-      label: 'KORSZAK',
+      label: t('card.fact_epoch'),
       value: dino.period || dino.epoch || '—',
     },
     {
-      label: 'CSALÁD',
+      label: t('card.fact_family'),
       value: dino.csalad_hu || '—',
     },
     {
-      label: 'FELFEDEZŐ',
+      label: t('card.fact_discoverer'),
       value: dino.discoverer_name || '—',
     },
     {
-      label: 'FELFEDEZÉS ORSZÁGA',
+      label: t('card.fact_country'),
       value: dino.discovered_country || '—',
     },
     {
-      label: 'ÉTREND',
+      label: t('card.fact_diet'),
       value: dino.diet_hu || '—',
     },
     {
-      label: 'HOSSZ',
+      label: t('card.fact_length'),
       value: dino.length_m_max ?? dino.length_m_min ? `${dino.length_m_max ?? dino.length_m_min}m` : '—',
     },
   ];
@@ -40,7 +42,8 @@ export default function CatalogCard({ dino, showDescription = true }) {
   const factsCol1 = facts.slice(0, 3);
   const factsCol2 = facts.slice(3, 6);
 
-  const hasDescription = showDescription && !isGuest && !!dino.description_hu;
+  const description = pickLocalized(dino, 'description', lang);
+  const hasDescription = showDescription && !isGuest && !!description;
 
   return (
     <View style={styles.card}>
@@ -96,7 +99,7 @@ export default function CatalogCard({ dino, showDescription = true }) {
 
       {/* Description: registered players only, full card width, below image */}
       {hasDescription && (
-        <Text style={styles.description}>{dino.description_hu}</Text>
+        <Text style={styles.description}>{description}</Text>
       )}
     </View>
   );

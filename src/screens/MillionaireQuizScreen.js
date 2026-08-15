@@ -19,8 +19,8 @@ import { buildMillionaireQuiz } from '../utils/millionaireQuizGenerator';
 import {
   MILLIONAIRE_XP_TABLE,
   MILLIONAIRE_MAX_XP,
-  DIFFICULTY_LABELS,
 } from '../constants/millionaireXP';
+import { useT } from '../i18n';
 import { addXP, getTotalXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import { submitLeaderboardEntry, getCelebrationMessage } from '../services/leaderboardService';
@@ -46,6 +46,7 @@ const DIFFICULTY_COLORS = {
 };
 
 export default function MillionaireQuizScreen({ playerId, nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'won' | 'lost'
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -166,14 +167,14 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
           <ScrollView contentContainerStyle={styles.centerContent}>
-            <Text style={styles.title}>💰 Legyen Ön is XP Milliomos!</Text>
+            <Text style={styles.title}>{t('games.millionaire.title')}</Text>
 
             <View style={styles.rulesBox}>
-              <RuleRow text={`${MILLIONAIRE_XP_TABLE.length} kérdés, egyre nehezebbek`} />
-              <RuleRow text={`Egyszer használható 50:50 (-${FIFTY_FIFTY_COST} XP)`} />
-              <RuleRow text="Egy rossz válasz — vége a játéknak" />
-              <RuleRow text="A megszerzett XP hibánál is megmarad" />
-              <RuleRow text={`Mind a ${MILLIONAIRE_XP_TABLE.length} helyes: ${MILLIONAIRE_MAX_XP} XP + XP Milliomos cím`} />
+              <RuleRow text={t('games.millionaire.rule_questions', { count: MILLIONAIRE_XP_TABLE.length })} />
+              <RuleRow text={t('games.millionaire.rule_5050', { cost: FIFTY_FIFTY_COST })} />
+              <RuleRow text={t('games.millionaire.rule_onewrong')} />
+              <RuleRow text={t('games.millionaire.rule_keepxp')} />
+              <RuleRow text={t('games.millionaire.rule_allcorrect', { count: MILLIONAIRE_XP_TABLE.length, max: MILLIONAIRE_MAX_XP })} />
             </View>
 
             <View style={styles.ladderBox}>
@@ -181,7 +182,7 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
                 <View key={row.question} style={styles.ladderRow}>
                   <Text style={styles.ladderQuestion}>{row.question}.</Text>
                   <Text style={[styles.ladderDifficulty, { color: DIFFICULTY_COLORS[row.difficulty] }]}>
-                    {DIFFICULTY_LABELS[row.difficulty]}
+                    {t(`games.millionaire.diff_${row.difficulty}`)}
                   </Text>
                   <Text style={styles.ladderXP}>+{row.xp} XP</Text>
                 </View>
@@ -194,12 +195,12 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
               disabled={!quizAvailable}
             >
               <Text style={styles.primaryBtnText}>
-                {quizAvailable ? '▶ KEZDÉS' : 'Kérdések betöltése sikertelen'}
+                {quizAvailable ? t('games.millionaire.start') : t('games.millionaire.load_fail')}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.backLink} onPress={onBack}>
-              <Text style={styles.backLinkText}>← Vissza a menübe</Text>
+              <Text style={styles.backLinkText}>{t('games.millionaire.back_menu')}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -224,30 +225,30 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
             {isMillionaire ? (
               <>
                 <Text style={styles.badgeEmoji}>🏆</Text>
-                <Text style={styles.title}>XP MILLIOMOS!</Text>
-                <Text style={styles.resultSubtitle}>Mind a {MILLIONAIRE_XP_TABLE.length} kérdésre helyesen válaszoltál!</Text>
+                <Text style={styles.title}>{t('games.millionaire.won_title')}</Text>
+                <Text style={styles.resultSubtitle}>{t('games.millionaire.won_sub', { count: MILLIONAIRE_XP_TABLE.length })}</Text>
               </>
             ) : (
               <>
                 <Text style={styles.badgeEmoji}>😕</Text>
-                <Text style={styles.title}>Vége a játéknak</Text>
-                <Text style={styles.resultSubtitle}>{reachedQuestion}/{MILLIONAIRE_XP_TABLE.length} kérdésig jutottál.</Text>
+                <Text style={styles.title}>{t('games.millionaire.lost_title')}</Text>
+                <Text style={styles.resultSubtitle}>{t('games.millionaire.lost_sub', { reached: reachedQuestion, total: MILLIONAIRE_XP_TABLE.length })}</Text>
               </>
             )}
 
             <View style={styles.statsBox}>
               <View style={styles.statRow}>
-                <Text style={styles.statLabel}>Megszerzett XP:</Text>
+                <Text style={styles.statLabel}>{t('games.millionaire.earned_xp')}</Text>
                 <Text style={styles.statValue}>{earnedXP} / {MILLIONAIRE_MAX_XP}</Text>
               </View>
             </View>
 
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
-                <Text style={styles.primaryBtnText}>🔄 ÚJRA</Text>
+                <Text style={styles.primaryBtnText}>{t('games.millionaire.again')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.exitBtn} onPress={onBack}>
-                <Text style={styles.exitBtnText}>← KILÉPÉS</Text>
+                <Text style={styles.exitBtnText}>{t('games.millionaire.exit')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -271,12 +272,12 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg || '#283618'} />
 
-        <GameTitleTag title="XP MILLIOMOS" />
+        <GameTitleTag title={t('games.mode_millionaire')} />
 
         <View style={styles.header}>
-          <Text style={styles.headerCounter}>Kérdés {currentQuestionIndex + 1} / {questions.length}</Text>
+          <Text style={styles.headerCounter}>{t('games.millionaire.q_counter', { n: currentQuestionIndex + 1, total: questions.length })}</Text>
           <Text style={[styles.headerDifficulty, { color: difficultyColor }]}>
-            {DIFFICULTY_LABELS[tableRow.difficulty]} · +{tableRow.xp} XP
+            {t('games.millionaire.header_diff', { label: t(`games.millionaire.diff_${tableRow.difficulty}`), xp: tableRow.xp })}
           </Text>
         </View>
 
@@ -315,11 +316,11 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
               onPress={handleFiftyFifty}
               disabled={revealed || fiftyFiftyUsed || totalXP < FIFTY_FIFTY_COST}
             >
-              <Text style={styles.fiftyFiftyBtnText}>50:50 (-{FIFTY_FIFTY_COST} XP)</Text>
+              <Text style={styles.fiftyFiftyBtnText}>{t('games.millionaire.fifty', { cost: FIFTY_FIFTY_COST })}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.backLink} onPress={handleQuitMidGame}>
-              <Text style={styles.backLinkText}>✕ Feladom (XP nem kerül jóváírásra)</Text>
+              <Text style={styles.backLinkText}>{t('games.millionaire.quit')}</Text>
             </TouchableOpacity>
           </View>
 

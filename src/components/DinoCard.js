@@ -21,6 +21,7 @@ import { View, Text, Image, Pressable, StyleSheet, Platform, Modal, ScrollView, 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FONTS } from '../constants/theme';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
+import { useT, pickLocalized } from '../i18n';
 
 // ── Paletta (a brief explicit hexei) ─────────────────────────────────────────
 const C = {
@@ -42,7 +43,7 @@ const FONT_BODY = FONTS.body;   // Inter 400
 // A valós `epoch_hu` már magyar (pl. „késő-kréta") — csak szépen formázzuk:
 // kötőjel → szóköz, szavak nagybetűvel („Késő Kréta"), a MYA magyarul „MÉE"
 // (Millió Évvel Ezelőtt).
-function formatTimePeriod(dino) {
+function formatTimePeriod(dino, myaLabel = 'MÉE') {
   const raw = String(dino.epoch || dino.epoch_hu || '').trim();
   const base = raw
     .split(/[-\s]+/)
@@ -52,7 +53,7 @@ function formatTimePeriod(dino) {
   // A nagyobb (korábbi) évszám előre: pl. (68–66 MÉE), nem (66–68).
   const lo = dino.mya_min;
   const hi = dino.mya_max;
-  const suffix = lo != null && hi != null ? ` (${Math.max(lo, hi)}–${Math.min(lo, hi)} MÉE)` : '';
+  const suffix = lo != null && hi != null ? ` (${Math.max(lo, hi)}–${Math.min(lo, hi)} ${myaLabel})` : '';
   return `${base}${suffix}`.trim();
 }
 
@@ -68,17 +69,18 @@ function dietIconName(dino) {
   return 'dna'; // omnivore / ismeretlen
 }
 
-// ── Ritkaság (1–5) → szín + magyar címke ─────────────────────────────────────
-const RARITY = {
-  1: { label: 'Gyakori', color: C.sage },
-  2: { label: 'Ritka', color: C.terracotta },
-  3: { label: 'Nagyon Ritka', color: C.darkOrange },
-  4: { label: 'Epikus', color: '#8a5a3c' },
-  5: { label: 'Legendás', color: '#c9a227' },
+// ── Ritkaság (1–5) → szín (a címke i18n-ből: card.rarity_N) ──────────────────
+const RARITY_COLOR = {
+  1: C.sage,
+  2: C.terracotta,
+  3: C.darkOrange,
+  4: '#8a5a3c',
+  5: '#c9a227',
 };
 
-function rarityInfo(rarity) {
-  return RARITY[Number(rarity)] || RARITY[1];
+function rarityLevel(rarity) {
+  const n = Number(rarity);
+  return RARITY_COLOR[n] ? n : 1;
 }
 
 function imageSource(dino) {
@@ -121,17 +123,19 @@ function lengthLabel(dino) {
 }
 
 export default function DinoCard({ dino, onPress, showDescription = false }) {
+  const { t, lang } = useT();
   const [expanded, setExpanded] = useState(false);
   const { width: winW, height: winH } = useWindowDimensions();
   if (!dino) return null;
 
-  const period = formatTimePeriod(dino);
+  const period = formatTimePeriod(dino, t('card.mya'));
   const diet = dietIconName(dino);
   const length = lengthLabel(dino);
-  const rarity = rarityInfo(dino.rarity);
+  const rarityLvl = rarityLevel(dino.rarity);
+  const rarityColor = RARITY_COLOR[rarityLvl];
   const family = familyValue(dino);
   const country = countryValue(dino);
-  const desc = dino.description_hu;
+  const desc = pickLocalized(dino, 'description', lang);
   const expSize = expandedSize(winW, winH);
 
   const handlePress = () => {
@@ -166,13 +170,13 @@ export default function DinoCard({ dino, onPress, showDescription = false }) {
     <View style={styles.metaBlock}>
       {!!family && (
         <View style={styles.metaRow}>
-          <Text style={styles.metaLabel}>CSALÁD</Text>
+          <Text style={styles.metaLabel}>{t('card.meta_family')}</Text>
           <Text style={styles.metaValue} numberOfLines={1}>{family}</Text>
         </View>
       )}
       {!!country && (
         <View style={styles.metaRow}>
-          <Text style={styles.metaLabel}>ORSZÁG</Text>
+          <Text style={styles.metaLabel}>{t('card.meta_country')}</Text>
           <Text style={styles.metaValue} numberOfLines={1}>{country}</Text>
         </View>
       )}
@@ -180,8 +184,8 @@ export default function DinoCard({ dino, onPress, showDescription = false }) {
   );
 
   const Footer = (
-    <View style={[styles.rarityFooter, { backgroundColor: rarity.color }]}>
-      <Text style={styles.rarityText}>{rarity.label}</Text>
+    <View style={[styles.rarityFooter, { backgroundColor: rarityColor }]}>
+      <Text style={styles.rarityText}>{t(`card.rarity_${rarityLvl}`)}</Text>
     </View>
   );
 

@@ -37,6 +37,9 @@ function lookup(lang, key) {
 function translate(lang, key, opts) {
   let val = lookup(lang, key);
   if (val == null && lang !== DEFAULT_LANGUAGE) val = lookup(DEFAULT_LANGUAGE, key);
+  // Nem-string katalógusérték (pl. hónap/hétköznap tömb) változatlanul megy vissza —
+  // a hívó tömbként használja (t('dashboard.months')[m]).
+  if (val != null && typeof val !== 'string') return val;
   let str = val == null ? key : String(val);
   if (opts) {
     str = str.replace(/%\{(\w+)\}/g, (_, k) => (opts[k] != null ? String(opts[k]) : `%{${k}}`));
