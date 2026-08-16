@@ -229,8 +229,8 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
         <View style={styles.stage}>
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
           <View style={styles.stageRow}>
-            <HumanFigure pxPerMeter={pxPerMeter} />
             <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} />
+            <HumanFigure pxPerMeter={pxPerMeter} />
             <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} />
           </View>
           <View style={styles.groundLine} />
