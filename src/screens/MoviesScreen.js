@@ -32,6 +32,11 @@ const MOVIES = [
   { title: 'Jurassic Park III', year: 2001, genre: 'cinema', rating: 6.0, url: 'https://www.imdb.com/title/tt0163025/' },
   { title: 'Jurassic World: Dominion', year: 2022, genre: 'cinema', rating: 5.6, url: 'https://www.imdb.com/title/tt8041270/' },
   { title: 'Walking with Dinosaurs 3D', year: 2013, genre: 'cinema', rating: 5.2, url: 'https://www.imdb.com/title/tt1272018/' },
+  { title: "We're Back! A Dinosaur's Story", year: 1993, genre: 'cartoon', rating: 6.0, url: 'https://www.imdb.com/title/tt0108526/' },
+  { title: 'The Valley of Gwangi', year: 1969, genre: 'cinema', rating: 6.2, url: 'https://www.imdb.com/title/tt0065163/' },
+  { title: 'One Million Years B.C.', year: 1966, genre: 'cinema', rating: 5.7, url: 'https://www.imdb.com/title/tt0060782/' },
+  { title: 'Primitive War', year: 2025, genre: 'cinema', rating: 5.3, url: 'https://www.imdb.com/title/tt18312380/' },
+  { title: 'The VelociPastor', year: 2017, genre: 'cinema', rating: 5.1, url: 'https://www.imdb.com/title/tt1843303/' },
 ];
 
 // Oszloponkénti alap rendezési irány első kattintásra: a szöveges/év oszlopok
