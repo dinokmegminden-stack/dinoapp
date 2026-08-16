@@ -235,14 +235,12 @@ export default function HeaderBar({
 
           {isWide && (
             <View style={styles.navLinks}>
-              <NavLink label={t('nav.home')} active={currentView === 'landing'} onPress={() => handleNav('landing')} />
               <NavLink label={t('nav.games')} active={currentView === 'gaming'} onPress={() => handleNav('gaming')} />
               <NavLink label={t('nav.catalog')} active={currentView === 'collection'} onPress={() => handleNav('collection')} />
               {!guest && <NavLink label={t('nav.album')} active={currentView === 'album'} onPress={() => handleNav('album')} />}
-              <NavLink label={t('nav.news')} active={currentView === 'news'} onPress={() => handleNav('news')} />
-              <NavLink label={t('nav.researchers')} active={currentView === 'kutatok'} onPress={() => handleNav('kutatok')} />
-              <NavLink label={t('nav.movies')} active={currentView === 'movies'} onPress={() => handleNav('movies')} />
               <NavLink label={t('nav.evolution')} active={currentView === 'evolution'} onPress={() => handleNav('evolution')} />
+              <NavLink label={t('nav.movies')} active={currentView === 'movies'} onPress={() => handleNav('movies')} />
+              <NavLink label={t('nav.news')} active={currentView === 'news'} onPress={() => handleNav('news')} />
             </View>
           )}
         </View>

@@ -33,6 +33,7 @@ export function adaptCreature(row) {
     edu: Number(row.edu || row.education_level || 1),
     image_url: row.image_url || null,
     description_hu: safe(row.description_hu),
+    description_en: safe(row.description_en),
     period: safe(row.period_hu),
     region: safe(row.region_hu),
     rarity: safe(row.rarity),
