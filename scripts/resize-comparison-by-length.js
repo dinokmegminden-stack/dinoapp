@@ -67,8 +67,12 @@ async function main() {
       console.error(`HIBA: nincs length_m adat "${name}"-hoz, kihagyva`);
       continue;
     }
+    // Előbb a valódi tartalom-bbox-ra vágunk (átlátszó margó eltávolítása) —
+    // enélkül a fajonként eltérő üres szegély miatt a lábak nem ugyanarra a
+    // pixel-magasságra esnének a dobozon belül, hiába egyezik a doboz alja.
+    const trimmed = await sharp(filePath).trim().toBuffer();
     const targetWidth = Math.round(lengthM * PX_PER_METER);
-    const buf = await sharp(filePath).resize({ width: targetWidth }).png().toBuffer();
+    const buf = await sharp(trimmed).resize({ width: targetWidth }).png().toBuffer();
     fs.writeFileSync(filePath, buf);
     const meta = await sharp(buf).metadata();
     console.log(`${name}: ${lengthM} m -> ${meta.width}x${meta.height}px`);
