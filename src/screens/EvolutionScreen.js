@@ -34,13 +34,13 @@ const MARKER_GAP_PX = 88; // két címke középpontja között ennyi hely kell,
 // collection.epoch.* namespace-ből jön, hogy ne duplikáljuk a fordítást),
 // kiegészítve egy paleogén sávval a domain (245–50 MÉE) alsó végéhez.
 const EPOCHS = [
-  { key: 'late_triassic', ns: 'collection', start: 245, end: 201.4 },
-  { key: 'early_jurassic', ns: 'collection', start: 201.4, end: 174.7 },
-  { key: 'mid_jurassic', ns: 'collection', start: 174.7, end: 163.5 },
-  { key: 'late_jurassic', ns: 'collection', start: 163.5, end: 145 },
-  { key: 'early_cretaceous', ns: 'collection', start: 145, end: 100.5 },
-  { key: 'late_cretaceous', ns: 'collection', start: 100.5, end: 66 },
-  { key: 'paleogene', ns: 'evolution', start: 66, end: 50 },
+  { key: 'late_triassic', labelKey: 'collection.epoch.late_triassic', start: 245, end: 201.4 },
+  { key: 'early_jurassic', labelKey: 'collection.epoch.early_jurassic', start: 201.4, end: 174.7 },
+  { key: 'mid_jurassic', labelKey: 'collection.epoch.mid_jurassic', start: 174.7, end: 163.5 },
+  { key: 'late_jurassic', labelKey: 'collection.epoch.late_jurassic', start: 163.5, end: 145 },
+  { key: 'early_cretaceous', labelKey: 'collection.epoch.early_cretaceous', start: 145, end: 100.5 },
+  { key: 'late_cretaceous', labelKey: 'collection.epoch.late_cretaceous', start: 100.5, end: 66 },
+  { key: 'paleogene', labelKey: 'evolution.epoch_paleogene', start: 66, end: 50 },
 ];
 
 // A fix EDU-sorrend (1..7) — ugyanaz, mint a régióválasztóban (regionProgress.js
@@ -73,29 +73,27 @@ function xForMya(mya) {
 // egy távoli, sűrű klaszter csak azért, mert az is ugyanabban a sorban van.
 function packRow(items) {
   const sorted = [...items].sort((a, b) => a.xPx - b.xPx);
-  const slotLastX = new Map();
+  const slotLastX = {};
+  let minSlot = 0;
+  let maxSlot = 0;
   const placed = sorted.map((item) => {
-    let chosen = null;
-    for (let k = 0; chosen === null && k < sorted.length; k++) {
+    let chosen = 0;
+    for (let k = 0; k < sorted.length; k++) {
       const candidates = k === 0 ? [0] : [k, -k];
-      for (const slot of candidates) {
-        const lastX = slotLastX.has(slot) ? slotLastX.get(slot) : -Infinity;
-        if (item.xPx - lastX >= MARKER_GAP_PX) {
-          chosen = slot;
-          break;
-        }
+      const fit = candidates.find((slot) => item.xPx - (slotLastX[slot] ?? -Infinity) >= MARKER_GAP_PX);
+      if (fit !== undefined) {
+        chosen = fit;
+        break;
       }
     }
-    if (chosen === null) chosen = 0;
-    slotLastX.set(chosen, item.xPx);
+    slotLastX[chosen] = item.xPx;
+    if (chosen < minSlot) minSlot = chosen;
+    if (chosen > maxSlot) maxSlot = chosen;
     return { ...item, subRow: chosen };
   });
 
-  const slots = placed.map((p) => p.subRow);
-  const minSlot = Math.min(0, ...slots);
-  const maxSlot = Math.max(0, ...slots);
   const normalized = placed.map((p) => ({ ...p, subRow: p.subRow - minSlot }));
-  return { placed: normalized, subRowCount: Math.max(1, maxSlot - minSlot + 1) };
+  return { placed: normalized, subRowCount: maxSlot - minSlot + 1 };
 }
 
 function EvoMarker({ dino, xPx, subRow, topOffset }) {
@@ -176,9 +174,7 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
                   if (start <= end) return null;
                   const left = xForMya(start);
                   const width = xForMya(end) - left;
-                  const label = epoch.ns === 'collection'
-                    ? t(`collection.epoch.${epoch.key}`)
-                    : t(`evolution.epoch_${epoch.key}`);
+                  const label = t(epoch.labelKey);
                   return (
                     <View key={epoch.key} style={[styles.epochBand, { left, width }]}>
                       <Text style={styles.epochText} numberOfLines={1}>{label}</Text>
