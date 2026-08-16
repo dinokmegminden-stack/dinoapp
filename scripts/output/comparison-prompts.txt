@@ -1,3 +1,8 @@
+FONTOS: Gemini a "transparent background" kérésre gyakran nem valódi alfát
+ad, csak egy sík világosszürke hátteret fest a pixelekbe. A mentett kép után
+mindig futtasd:  node scripts/strip-bg.js assets/images/comparison/<Név>.png
+Ez flood-fill-lel eltávolítja a háttért, alpha=0-ra állítva.
+
 ### 1. Tyrannosaurus (Tyrannosaurus rex)
 Fájlnév: assets/images/comparison/Tyrannosaurus.png (transparent PNG)
 Wikipedia referencia-kép URL: https://upload.wikimedia.org/wikipedia/commons/7/7c/Tyrannosaurus-rex-Profile-steveoc86_%28coloured%29%28mirror%29.png
