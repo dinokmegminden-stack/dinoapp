@@ -66,9 +66,9 @@ function DinoPicker({ names, byName, activeName, onPick, otherName }) {
 // talajvonalon állva a hossz ÉS a magasság is valós arányban látszik.
 // A natív arányt onLoad-ból olvassuk (Image.resolveAssetSource nem elérhető
 // react-native-web-en) — betöltésig egy hosszúkás alapértelmezés van.
-function StageFigure({ dino, progress, pxPerMeter }) {
+function StageFigure({ dino, progress, pxPerMeter, zIndex }) {
   const [aspect, setAspect] = useState(2);
-  if (!dino) return <View style={styles.stageFigureSlot} />;
+  if (!dino) return null;
   const collected = isCollected(dino, progress);
   const heightM = getScaleHeightM(dino);
   const source = COMPARISON_IMAGE_MAP[dino.name_hu];
@@ -76,7 +76,7 @@ function StageFigure({ dino, progress, pxPerMeter }) {
   const renderWidth = renderHeight * aspect;
 
   return (
-    <View style={styles.stageFigureSlot}>
+    <View style={[styles.stackFigure, { zIndex }]}>
       <Image
         source={source}
         style={[{ width: renderWidth, height: renderHeight }, !collected && styles.dinoImageLocked]}
@@ -101,7 +101,7 @@ function HumanFigure({ pxPerMeter }) {
   const renderWidth = renderHeight * aspect;
 
   return (
-    <View style={styles.stageFigureSlot}>
+    <View style={styles.humanBox}>
       <Image
         source={COMPARISON_HUMAN_IMAGE}
         style={{ width: renderWidth, height: renderHeight, opacity: 0.7 }}
@@ -189,12 +189,18 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
   const leftDino = byName.get(leftName);
   const rightDino = byName.get(rightName);
 
+  const leftHeightM = leftDino ? getScaleHeightM(leftDino) : 0;
+  const rightHeightM = rightDino ? getScaleHeightM(rightDino) : 0;
+
   const pxPerMeter = useMemo(() => {
-    const leftH = leftDino ? getScaleHeightM(leftDino) : 0;
-    const rightH = rightDino ? getScaleHeightM(rightDino) : 0;
-    const maxH = Math.max(leftH, rightH, HUMAN_HEIGHT_M);
+    const maxH = Math.max(leftHeightM, rightHeightM, HUMAN_HEIGHT_M);
     return (STAGE_HEIGHT - STAGE_TOP_PAD) / maxH;
-  }, [leftDino, rightDino]);
+  }, [leftHeightM, rightHeightM]);
+
+  // A nagyobb dínó kerül hátra (kisebb zIndex), a kisebb elé — így mindkettő
+  // körvonala látszik az egymásra vetített, bal- és talajvonal-igazított
+  // sziluetteknél.
+  const leftBehind = leftHeightM >= rightHeightM;
 
   const handleRandom = () => {
     if (availableNames.length < 2) return;
@@ -225,9 +231,11 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
         <View style={styles.stage}>
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
           <View style={styles.stageRow}>
-            <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} />
             <HumanFigure pxPerMeter={pxPerMeter} />
-            <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} />
+            <View style={styles.stackZone}>
+              <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} zIndex={leftBehind ? 1 : 2} />
+              <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} zIndex={leftBehind ? 2 : 1} />
+            </View>
           </View>
           <View style={styles.groundLine} />
         </View>
@@ -312,12 +320,28 @@ const styles = StyleSheet.create({
   stageRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'center',
-    gap: 24,
+    justifyContent: 'flex-start',
+    paddingLeft: 20,
+    gap: 4,
     height: STAGE_HEIGHT - STAGE_TOP_PAD,
   },
-  stageFigureSlot: {
+  humanBox: {
     alignItems: 'center',
+    justifyContent: 'flex-end',
+    height: '100%',
+    paddingRight: 4,
+    borderRightWidth: 1,
+    borderRightColor: 'rgba(254,250,224,0.15)',
+  },
+  stackZone: {
+    flex: 1,
+    height: '100%',
+    position: 'relative',
+  },
+  stackFigure: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
   },
   groundLine: {
     height: 2,
