@@ -42,7 +42,7 @@ function loadEnv(envPath) {
 
 function buildPrompt(row) {
   const name = row.scientific_name || row.common_name || row.name_hu;
-  return `Photorealistic, full-body lateral (side) view of ${name}, standing in a neutral walking or standing pose on a plain flat ground line, facing left. Naturalistic skin/feather texture and coloring based on current paleoart consensus, accurate anatomy and proportions. Isolated on a transparent background — no scenery, no plants, no other animals, no text, no watermark. Even, soft studio-style lighting, no harsh shadows. Same rendering style, lighting, and camera framing as the rest of this series so the images can be placed side by side and compared by size.`;
+  return `Photorealistic, full-body lateral (side) view of ${name}, standing in a neutral walking or standing pose on a plain flat ground line, facing left. Naturalistic skin/feather texture and coloring based on current paleoart consensus, accurate anatomy and proportions. Background: a single flat solid pure white background (#FFFFFF), completely uniform edge to edge — no gradient, no vignette, no soft shadow, no floor reflection, no texture, no scenery, no plants, no other animals, no text, no watermark. Even, shadowless studio lighting on the subject only, nothing on the background. Same rendering style, lighting, camera framing, and exact same flat white background as the rest of this series so the images can be placed side by side and compared by size.`;
 }
 
 async function main() {
