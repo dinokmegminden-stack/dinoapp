@@ -6,7 +6,8 @@
     "album": "Albumod",
     "news": "Hírek",
     "researchers": "Kutatók",
-    "movies": "Filmek"
+    "movies": "Filmek",
+    "evolution": "Evolúció"
   },
   "auth": {
     "login": "Jelentkezz be",
@@ -99,6 +100,18 @@
     "genre_docu": "Doku",
     "genre_cartoon": "Rajzfilm",
     "watch_link": "Megnézem az IMDB-n"
+  },
+  "evolution": {
+    "title": "DÍNÓ EVOLÚCIÓ IDŐVONAL",
+    "hint": "Régiónként, mikor jelentek meg először a lények — húzd vízszintesen, vagy vidd rájuk az egeret a képért.",
+    "region_carpathian": "Kárpát-medence",
+    "region_europe": "Európa",
+    "region_africa": "Afrika",
+    "region_asia": "Ázsia",
+    "region_south_america": "Dél-Amerika",
+    "region_north_america": "Észak-Amerika",
+    "region_australia": "Ausztrália",
+    "epoch_paleogene": "Paleogén"
   },
   "dashboard": {
     "logout": "Kijelentkezés",

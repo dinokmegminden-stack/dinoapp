@@ -242,6 +242,7 @@ export default function HeaderBar({
               <NavLink label={t('nav.news')} active={currentView === 'news'} onPress={() => handleNav('news')} />
               <NavLink label={t('nav.researchers')} active={currentView === 'kutatok'} onPress={() => handleNav('kutatok')} />
               <NavLink label={t('nav.movies')} active={currentView === 'movies'} onPress={() => handleNav('movies')} />
+              <NavLink label={t('nav.evolution')} active={currentView === 'evolution'} onPress={() => handleNav('evolution')} />
             </View>
           )}
         </View>

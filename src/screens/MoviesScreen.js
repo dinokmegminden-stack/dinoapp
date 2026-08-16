@@ -26,6 +26,7 @@ const MOVIES = [
   { title: 'The End of Oak Street', year: 2026, genre: 'cinema', rating: 7.0, approx: true, url: 'https://www.imdb.com/title/tt27165187/' },
   { title: 'The Lost World: Jurassic Park', year: 1997, genre: 'cinema', rating: 6.5, url: 'https://www.imdb.com/title/tt0119567/' },
   { title: 'Dinosaur (Disney)', year: 2000, genre: 'cartoon', rating: 6.4, url: 'https://www.imdb.com/title/tt0130623/' },
+  { title: 'Denver, the Last Dinosaur', year: 1988, yearLabel: '1988–1990', genre: 'cartoon', rating: 6.4, url: 'https://www.imdb.com/title/tt0190178/' },
   { title: 'Jurassic World: Fallen Kingdom', year: 2018, genre: 'cinema', rating: 6.1, url: 'https://www.imdb.com/title/tt4881806/' },
   { title: 'When Dinosaurs Ruled the Earth', year: 2017, genre: 'docu', rating: 6.1, url: 'https://www.imdb.com/title/tt6863036/' },
   { title: 'Jurassic Park III', year: 2001, genre: 'cinema', rating: 6.0, url: 'https://www.imdb.com/title/tt0163025/' },

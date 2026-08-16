@@ -6,7 +6,8 @@
     "album": "Your Album",
     "news": "News",
     "researchers": "Researchers",
-    "movies": "Movies"
+    "movies": "Movies",
+    "evolution": "Evolution"
   },
   "auth": {
     "login": "Log in",
@@ -99,6 +100,18 @@
     "genre_docu": "Docu",
     "genre_cartoon": "Cartoon",
     "watch_link": "View on IMDB"
+  },
+  "evolution": {
+    "title": "DINOSAUR EVOLUTION TIMELINE",
+    "hint": "When each creature first appeared, by region — scroll sideways, or hover a name for its picture.",
+    "region_carpathian": "Carpathian Basin",
+    "region_europe": "Europe",
+    "region_africa": "Africa",
+    "region_asia": "Asia",
+    "region_south_america": "South America",
+    "region_north_america": "North America",
+    "region_australia": "Australia",
+    "epoch_paleogene": "Paleogene"
   },
   "dashboard": {
     "logout": "Log out",

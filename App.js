@@ -23,6 +23,7 @@ import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import KutatokScreen from './src/screens/KutatokScreen';
 import MoviesScreen from './src/screens/MoviesScreen';
+import EvolutionScreen from './src/screens/EvolutionScreen';
 import { loadProgress, recordPackQuizResult, saveProgress, createEmptyProgress, applyPackQuizResult, mergeProgress } from './src/utils/regionProgress';
 import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
@@ -301,6 +302,10 @@ function AppInner() {
     setView('movies');
   };
 
+  const handleOpenEvolution = () => {
+    setView('evolution');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -379,6 +384,7 @@ function AppInner() {
           onOpenNews={handleOpenNews}
           onOpenKutatok={handleOpenKutatok}
           onOpenMovies={handleOpenMovies}
+          onOpenEvolution={handleOpenEvolution}
           onRequireRegister={() => setView('nicknamePicker')}
           onOpenJoin={() => setView('join')}
           onOpenLogin={() => setView('login')}
@@ -529,6 +535,16 @@ function AppInner() {
         <MoviesScreen
           nickname={nickname}
           progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
+      )}
+
+      {view === 'evolution' && (
+        <EvolutionScreen
+          nickname={nickname}
+          progress={progress}
+          allDinos={allDinos}
           onNavigate={(target) => setView(target)}
           onBack={() => setView('landing')}
         />
