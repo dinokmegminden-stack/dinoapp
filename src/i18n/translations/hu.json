@@ -7,7 +7,8 @@
     "news": "Hírek",
     "researchers": "Kutatók",
     "movies": "Filmek",
-    "evolution": "Evolúció"
+    "evolution": "Evolúció",
+    "comparison": "Összehasonlítás"
   },
   "auth": {
     "login": "Jelentkezz be",
@@ -112,6 +113,19 @@
     "region_north_america": "Észak-Amerika",
     "region_australia": "Ausztrália",
     "epoch_paleogene": "Paleogén"
+  },
+  "comparison": {
+    "title": "MÉRETÖSSZEHASONLÍTÓ",
+    "hint": "Válassz ki két dínót, és hasonlítsd össze a méretüket valós arányban.",
+    "random": "Véletlen páros",
+    "locked_name": "???",
+    "locked_hint": "Oldd fel a Gyűjteményben",
+    "stat_length": "Hossz",
+    "stat_height": "Magasság",
+    "stat_weight": "Súly",
+    "stat_era": "Kor",
+    "stat_diet": "Étrend",
+    "mya": "%{mya} millió éve"
   },
   "dashboard": {
     "logout": "Kijelentkezés",

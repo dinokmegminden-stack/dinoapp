@@ -7,7 +7,8 @@
     "news": "News",
     "researchers": "Researchers",
     "movies": "Movies",
-    "evolution": "Evolution"
+    "evolution": "Evolution",
+    "comparison": "Compare"
   },
   "auth": {
     "login": "Log in",
@@ -112,6 +113,19 @@
     "region_north_america": "North America",
     "region_australia": "Australia",
     "epoch_paleogene": "Paleogene"
+  },
+  "comparison": {
+    "title": "SIZE COMPARISON",
+    "hint": "Pick two dinosaurs and compare their size at true relative scale.",
+    "random": "Random matchup",
+    "locked_name": "???",
+    "locked_hint": "Unlock in the Catalogue",
+    "stat_length": "Length",
+    "stat_height": "Height",
+    "stat_weight": "Weight",
+    "stat_era": "Era",
+    "stat_diet": "Diet",
+    "mya": "%{mya} million years ago"
   },
   "dashboard": {
     "logout": "Log out",
