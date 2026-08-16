@@ -14,7 +14,7 @@ import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
 const STAGE_HEIGHT = 260;
-const STAGE_TOP_PAD = 30; // hely a legmagasabb alaknak a plafon alatt
+const MAX_FIGURE_FRACTION = 0.7; // a legmagasabb alak se lépje túl a színpad 70%-át
 const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
 const DEFAULT_RIGHT = 'Velociraptor';
@@ -66,9 +66,9 @@ function DinoPicker({ names, byName, activeName, onPick, otherName }) {
 // talajvonalon állva a hossz ÉS a magasság is valós arányban látszik.
 // A natív arányt onLoad-ból olvassuk (Image.resolveAssetSource nem elérhető
 // react-native-web-en) — betöltésig egy hosszúkás alapértelmezés van.
-function StageFigure({ dino, progress, pxPerMeter, zIndex }) {
+function StageFigure({ dino, progress, pxPerMeter }) {
   const [aspect, setAspect] = useState(2);
-  if (!dino) return null;
+  if (!dino) return <View style={styles.stageColumn} />;
   const collected = isCollected(dino, progress);
   const heightM = getScaleHeightM(dino);
   const source = COMPARISON_IMAGE_MAP[dino.name_hu];
@@ -76,7 +76,7 @@ function StageFigure({ dino, progress, pxPerMeter, zIndex }) {
   const renderWidth = renderHeight * aspect;
 
   return (
-    <View style={[styles.stackFigure, { zIndex }]}>
+    <View style={styles.stageColumn}>
       <Image
         source={source}
         style={[{ width: renderWidth, height: renderHeight }, !collected && styles.dinoImageLocked]}
@@ -101,7 +101,7 @@ function HumanFigure({ pxPerMeter }) {
   const renderWidth = renderHeight * aspect;
 
   return (
-    <View style={styles.humanBox}>
+    <View style={styles.stageColumn}>
       <Image
         source={COMPARISON_HUMAN_IMAGE}
         style={{ width: renderWidth, height: renderHeight, opacity: 0.7 }}
@@ -192,15 +192,13 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
   const leftHeightM = leftDino ? getScaleHeightM(leftDino) : 0;
   const rightHeightM = rightDino ? getScaleHeightM(rightDino) : 0;
 
+  // Közös léptékszorzó: kizárólag a DB valós height_m adataiból, úgy hogy a
+  // legmagasabb alak (a három közül: két dínó + 1.8 m ember) se lépje túl a
+  // színpad magasságának MAX_FIGURE_FRACTION (70%) hányadát.
   const pxPerMeter = useMemo(() => {
     const maxH = Math.max(leftHeightM, rightHeightM, HUMAN_HEIGHT_M);
-    return (STAGE_HEIGHT - STAGE_TOP_PAD) / maxH;
+    return (STAGE_HEIGHT * MAX_FIGURE_FRACTION) / maxH;
   }, [leftHeightM, rightHeightM]);
-
-  // A nagyobb dínó kerül hátra (kisebb zIndex), a kisebb elé — így mindkettő
-  // körvonala látszik az egymásra vetített, bal- és talajvonal-igazított
-  // sziluetteknél.
-  const leftBehind = leftHeightM >= rightHeightM;
 
   const handleRandom = () => {
     if (availableNames.length < 2) return;
@@ -232,10 +230,8 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
           <View style={styles.stageRow}>
             <HumanFigure pxPerMeter={pxPerMeter} />
-            <View style={styles.stackZone}>
-              <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} zIndex={leftBehind ? 1 : 2} />
-              <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} zIndex={leftBehind ? 2 : 1} />
-            </View>
+            <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} />
+            <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} />
           </View>
           <View style={styles.groundLine} />
         </View>
@@ -320,28 +316,15 @@ const styles = StyleSheet.create({
   stageRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-start',
-    paddingLeft: 20,
-    gap: 4,
-    height: STAGE_HEIGHT - STAGE_TOP_PAD,
+    height: STAGE_HEIGHT,
   },
-  humanBox: {
+  // Ember + két dínó egyenlő szélességű oszlopban — egyik dínó se dominálja
+  // vizuálisan a színpadot, mindegyik ugyanannyi vízszintes helyet kap.
+  stageColumn: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
     height: '100%',
-    paddingRight: 4,
-    borderRightWidth: 1,
-    borderRightColor: 'rgba(254,250,224,0.15)',
-  },
-  stackZone: {
-    flex: 1,
-    height: '100%',
-    position: 'relative',
-  },
-  stackFigure: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
   },
   groundLine: {
     height: 2,
