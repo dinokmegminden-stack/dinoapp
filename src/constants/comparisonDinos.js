@@ -27,6 +27,9 @@ export const COMPARISON_NAMES = [
   'Pachycephalosaurus',
 ];
 
+// Referencia-emberalak a színpadi léptékhez (lásd ComparisonScreen HUMAN_HEIGHT_M).
+export const COMPARISON_HUMAN_IMAGE = require('../../assets/images/comparison/human.png');
+
 export const COMPARISON_IMAGE_MAP = {
   Tyrannosaurus: require('../../assets/images/comparison/Tyrannosaurus.png'),
   Velociraptor: require('../../assets/images/comparison/Velociraptor.png'),

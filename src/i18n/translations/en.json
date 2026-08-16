@@ -125,7 +125,8 @@
     "stat_weight": "Weight",
     "stat_era": "Era",
     "stat_diet": "Diet",
-    "mya": "%{mya} million years ago"
+    "mya": "%{mya} million years ago",
+    "human_reference": "Reference: %{m} m tall human"
   },
   "dashboard": {
     "logout": "Log out",

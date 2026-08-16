@@ -125,7 +125,8 @@
     "stat_weight": "Súly",
     "stat_era": "Kor",
     "stat_diet": "Étrend",
-    "mya": "%{mya} millió éve"
+    "mya": "%{mya} millió éve",
+    "human_reference": "Referencia: %{m} m magas ember"
   },
   "dashboard": {
     "logout": "Kijelentkezés",

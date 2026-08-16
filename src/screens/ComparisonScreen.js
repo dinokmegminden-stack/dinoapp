@@ -9,12 +9,13 @@ import { View, Text, Image, StyleSheet, ScrollView, Pressable } from 'react-nati
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
-import { COMPARISON_NAMES, COMPARISON_IMAGE_MAP } from '../constants/comparisonDinos';
+import { COMPARISON_NAMES, COMPARISON_IMAGE_MAP, COMPARISON_HUMAN_IMAGE } from '../constants/comparisonDinos';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
-const MAX_IMAGE_WIDTH = 220;
-const IMAGE_HEIGHT = 160;
+const STAGE_HEIGHT = 260;
+const STAGE_TOP_PAD = 30; // hely a legmagasabb alaknak a plafon alatt
+const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
 const DEFAULT_RIGHT = 'Velociraptor';
 
@@ -25,6 +26,14 @@ function isCollected(dino, progress) {
 function formatWeight(kg) {
   if (kg == null) return '?';
   return kg >= 1000 ? `${(kg / 1000).toFixed(1)} t` : `${kg} kg`;
+}
+
+// A sziluett-magasság a valódi méretösszehasonlításhoz: a dínó álló
+// magassága, ennek híján a hossza (négylábú, alacsony testű fajoknál ez a
+// jobb közelítés). Zárolt dínónál is a valós DB-értéket használjuk a
+// léptékhez — csak a kiírt szám marad "???", a sziluett aránya valós marad.
+function getScaleHeightM(dino) {
+  return dino?.height_m_max ?? dino?.height_m_min ?? dino?.length_m_max ?? dino?.length_m_min ?? 2;
 }
 
 function DinoPicker({ names, byName, activeName, onPick, otherName }) {
@@ -51,11 +60,65 @@ function DinoPicker({ names, byName, activeName, onPick, otherName }) {
   );
 }
 
-function DinoPanel({ dino, progress, pxPerMeter, t }) {
+// Egy dínó a közös színpadon: a kép szélessége/magassága EGYSÉGESEN
+// (torzítás nélkül) van felskálázva a kép saját natív arányából és a
+// valós magasságból számolt közös pxPerMeter-ből — ezért ugyanazon a
+// talajvonalon állva a hossz ÉS a magasság is valós arányban látszik.
+// A natív arányt onLoad-ból olvassuk (Image.resolveAssetSource nem elérhető
+// react-native-web-en) — betöltésig egy hosszúkás alapértelmezés van.
+function StageFigure({ dino, progress, pxPerMeter }) {
+  const [aspect, setAspect] = useState(2);
+  if (!dino) return <View style={styles.stageFigureSlot} />;
+  const collected = isCollected(dino, progress);
+  const heightM = getScaleHeightM(dino);
+  const source = COMPARISON_IMAGE_MAP[dino.name_hu];
+  const renderHeight = Math.max(20, heightM * pxPerMeter);
+  const renderWidth = renderHeight * aspect;
+
+  return (
+    <View style={styles.stageFigureSlot}>
+      <Image
+        source={source}
+        style={[{ width: renderWidth, height: renderHeight }, !collected && styles.dinoImageLocked]}
+        resizeMode="contain"
+        onLoad={(e) => {
+          const { width, height } = e.nativeEvent?.source || {};
+          if (width && height) setAspect(width / height);
+        }}
+      />
+      {!collected && (
+        <MaterialCommunityIcons name="lock" size={20} color={COLORS.cream} style={styles.lockIcon} />
+      )}
+    </View>
+  );
+}
+
+// A referencia emberalak — ugyanaz az onLoad-alapú arány-kiszámítás, mint
+// a StageFigure-nél, csak fix 1.8 m magassággal és zárolás nélkül.
+function HumanFigure({ pxPerMeter }) {
+  const [aspect, setAspect] = useState(0.5);
+  const renderHeight = Math.max(20, HUMAN_HEIGHT_M * pxPerMeter);
+  const renderWidth = renderHeight * aspect;
+
+  return (
+    <View style={styles.stageFigureSlot}>
+      <Image
+        source={COMPARISON_HUMAN_IMAGE}
+        style={{ width: renderWidth, height: renderHeight, opacity: 0.7 }}
+        resizeMode="contain"
+        onLoad={(e) => {
+          const { width, height } = e.nativeEvent?.source || {};
+          if (width && height) setAspect(width / height);
+        }}
+      />
+    </View>
+  );
+}
+
+function DinoStats({ dino, progress, t }) {
   if (!dino) return <View style={styles.panel} />;
   const collected = isCollected(dino, progress);
-  const lengthM = dino.length_m_max ?? dino.length_m_min ?? 0;
-  const renderWidth = Math.max(28, lengthM * pxPerMeter);
+  const lengthM = dino.length_m_max ?? dino.length_m_min;
   const heightM = dino.height_m_max ?? dino.height_m_min;
   const weightKg = dino.weight_kg_max ?? dino.weight_kg_min;
   const myaMax = dino.mya_max;
@@ -67,27 +130,10 @@ function DinoPanel({ dino, progress, pxPerMeter, t }) {
         {collected ? dino.name_hu : t('comparison.locked_name')}
       </Text>
 
-      <View style={styles.imageWell}>
-        <Image
-          source={COMPARISON_IMAGE_MAP[dino.name_hu]}
-          style={[
-            styles.dinoImage,
-            { width: renderWidth, height: IMAGE_HEIGHT },
-            !collected && styles.dinoImageLocked,
-          ]}
-          resizeMode="contain"
-        />
-        {!collected && (
-          <MaterialCommunityIcons name="lock" size={22} color={COLORS.cream} style={styles.lockIcon} />
-        )}
+      <View style={styles.statRow}>
+        <Text style={styles.statLabel}>{t('comparison.stat_length')}</Text>
+        <Text style={styles.statValue}>{collected ? (lengthM != null ? `${lengthM} m` : '—') : '???'}</Text>
       </View>
-
-      <View style={[styles.scaleBar, { width: renderWidth }]}>
-        <View style={styles.scaleTick} />
-        <Text style={styles.scaleLabel}>{collected ? `${lengthM} m` : '?'}</Text>
-        <View style={styles.scaleTick} />
-      </View>
-
       <View style={styles.statRow}>
         <Text style={styles.statLabel}>{t('comparison.stat_height')}</Text>
         <Text style={styles.statValue}>{collected ? (heightM != null ? `${heightM} m` : '—') : '???'}</Text>
@@ -144,10 +190,10 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
   const rightDino = byName.get(rightName);
 
   const pxPerMeter = useMemo(() => {
-    const leftLen = leftDino ? (leftDino.length_m_max ?? leftDino.length_m_min ?? 0) : 0;
-    const rightLen = rightDino ? (rightDino.length_m_max ?? rightDino.length_m_min ?? 0) : 0;
-    const maxLen = Math.max(leftLen, rightLen, 1);
-    return MAX_IMAGE_WIDTH / maxLen;
+    const leftH = leftDino ? getScaleHeightM(leftDino) : 0;
+    const rightH = rightDino ? getScaleHeightM(rightDino) : 0;
+    const maxH = Math.max(leftH, rightH, HUMAN_HEIGHT_M);
+    return (STAGE_HEIGHT - STAGE_TOP_PAD) / maxH;
   }, [leftDino, rightDino]);
 
   const handleRandom = () => {
@@ -176,10 +222,20 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
           </Pressable>
         </View>
 
+        <View style={styles.stage}>
+          <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
+          <View style={styles.stageRow}>
+            <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} />
+            <HumanFigure pxPerMeter={pxPerMeter} />
+            <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} />
+          </View>
+          <View style={styles.groundLine} />
+        </View>
+
         <View style={styles.compareRow}>
-          <DinoPanel dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} t={t} />
+          <DinoStats dino={leftDino} progress={progress} t={t} />
           <Text style={styles.vs}>VS</Text>
-          <DinoPanel dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} t={t} />
+          <DinoStats dino={rightDino} progress={progress} t={t} />
         </View>
 
         <View style={styles.pickers}>
@@ -234,9 +290,43 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
     fontSize: 13,
   },
-  compareRow: {
+  stage: {
+    marginHorizontal: 20,
+    marginTop: 8,
+    paddingTop: 28,
+    backgroundColor: 'rgba(16,14,12,0.6)',
+    borderRadius: RADIUS.cardLarge,
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.10)',
+    overflow: 'hidden',
+  },
+  humanCaption: {
+    position: 'absolute',
+    top: 8,
+    left: 14,
+    color: COLORS.cream,
+    opacity: 0.5,
+    fontFamily: FONTS.body,
+    fontSize: 11,
+  },
+  stageRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    justifyContent: 'center',
+    gap: 24,
+    height: STAGE_HEIGHT - STAGE_TOP_PAD,
+  },
+  stageFigureSlot: {
+    alignItems: 'center',
+  },
+  groundLine: {
+    height: 2,
+    backgroundColor: COLORS.accent,
+    opacity: 0.6,
+  },
+  compareRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     gap: 16,
     paddingHorizontal: 20,
@@ -246,18 +336,17 @@ const styles = StyleSheet.create({
     color: COLORS.accent,
     fontFamily: FONTS.heading,
     fontSize: 18,
-    marginBottom: 60,
+    marginTop: 20,
   },
   panel: {
     flex: 1,
     maxWidth: 320,
-    alignItems: 'center',
     backgroundColor: 'rgba(16,14,12,0.6)',
     borderRadius: RADIUS.cardLarge,
     borderWidth: 1,
     borderColor: 'rgba(254,250,224,0.10)',
     paddingVertical: 16,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
   },
   dinoName: {
     color: COLORS.cream,
@@ -265,42 +354,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
-  imageWell: {
-    height: IMAGE_HEIGHT,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  dinoImage: {
-    alignSelf: 'center',
-  },
   dinoImageLocked: {
     opacity: 0.25,
     tintColor: COLORS.bgDark,
   },
   lockIcon: {
     position: 'absolute',
-    top: 4,
+    top: '40%',
     alignSelf: 'center',
-  },
-  scaleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopWidth: 2,
-    borderTopColor: COLORS.accent,
-    marginTop: 6,
-    paddingTop: 4,
-  },
-  scaleTick: {
-    width: 2,
-    height: 8,
-    backgroundColor: COLORS.accent,
-  },
-  scaleLabel: {
-    color: COLORS.accent,
-    fontFamily: FONTS.bold,
-    fontSize: 13,
   },
   statRow: {
     flexDirection: 'row',
