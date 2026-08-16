@@ -8,8 +8,10 @@ import { csomagToPackId } from '../../utils/regionHelpers';
 import LevelShell from './LevelShell';
 import HeaderBar from '../../components/HeaderBar';
 import { s } from './RegionLevel.styles';
+import { useT } from '../../i18n';
 
 export default function PackageQuizScreen({ eduLevel, csomag, packages, creatures, onPassed, onRetry, onBack, nickname, progress, onNavigate }) {
+  const { t } = useT();
   const pack = packages.find((p) => p.csomag === csomag);
   const questions = useRef(buildQuiz(pack ? pack.dinos : [], creatures)).current;
 
@@ -69,23 +71,23 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
         <View style={s.resultWrap}>
           <Text style={s.resultEmoji}>{passed ? '🏆' : '😕'}</Text>
-          <Text style={s.resultTitle}>{correctCount} / {questions.length} helyes válasz</Text>
+          <Text style={s.resultTitle}>{t('packageQuiz.result_title', { correct: correctCount, total: questions.length })}</Text>
           <Text style={s.resultDesc}>
             {passed
-              ? 'Szép munka! A következő csomag kinyílt.'
-              : `A csomag kinyitásához legalább ${Math.round(PASS_THRESHOLD * 100)}% helyes válasz szükséges. Próbáld újra!`}
+              ? t('packageQuiz.passed_desc')
+              : t('packageQuiz.failed_desc', { pct: Math.round(PASS_THRESHOLD * 100) })}
           </Text>
           {passed ? (
             <TouchableOpacity style={s.primaryBtn} onPress={onBack}>
-              <Text style={s.primaryBtnText}>Tovább a csomagokhoz →</Text>
+              <Text style={s.primaryBtnText}>{t('packageQuiz.continue')}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={s.primaryBtn} onPress={onRetry}>
-              <Text style={s.primaryBtnText}>Újrapróbálom</Text>
+              <Text style={s.primaryBtnText}>{t('packageQuiz.retry')}</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity style={s.backLink} onPress={onBack}>
-            <Text style={s.backLinkText}>← Vissza a csomagokhoz</Text>
+            <Text style={s.backLinkText}>{t('packageQuiz.back_to_packages')}</Text>
           </TouchableOpacity>
         </View>
       </LevelShell>
@@ -97,7 +99,7 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
       <View style={s.quizContentFlex}>
         <View style={s.browseCounterRow}>
-          <Text style={s.browseCounter}>Kérdés {qIndex + 1} / {questions.length}</Text>
+          <Text style={s.browseCounter}>{t('games.millionaire.q_counter', { n: qIndex + 1, total: questions.length })}</Text>
         </View>
 
         <View style={s.quizQuestionBox}>
@@ -123,7 +125,7 @@ export default function PackageQuizScreen({ eduLevel, csomag, packages, creature
       </View>
 
       <TouchableOpacity onPress={onBack} style={s.bottomBackLink}>
-        <Text style={s.backLinkText}>← Vissza</Text>
+        <Text style={s.backLinkText}>← {t('common.back')}</Text>
       </TouchableOpacity>
     </LevelShell>
   );

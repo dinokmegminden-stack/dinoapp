@@ -10,6 +10,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
+import { useT } from '../i18n';
 
 const DOT_SIZE = 10;
 const STEM_LENGTH = 20;
@@ -68,6 +69,7 @@ function PersonColumn({ person, selected, onPress, above }) {
 }
 
 export default function PaleontologistTimeline({ people, selectedId, onSelect }) {
+  const { t } = useT();
   const positioned = useMemo(() => {
     const withYear = (people || []).filter((p) => p.born_year != null);
     if (withYear.length === 0) return [];
@@ -86,7 +88,7 @@ export default function PaleontologistTimeline({ people, selectedId, onSelect })
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>KUTATÓK IDŐVONALA</Text>
+      <Text style={styles.title}>{t('paleontologists.timeline_title')}</Text>
       <View style={styles.track}>
         <View style={styles.baseline} />
         {positioned.map((p, i) => (

@@ -22,6 +22,7 @@ import XPBar, { setActivePlayerId, syncXPFromServer } from './src/components/XPB
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import KutatokScreen from './src/screens/KutatokScreen';
+import MoviesScreen from './src/screens/MoviesScreen';
 import { loadProgress, recordPackQuizResult, saveProgress, createEmptyProgress, applyPackQuizResult, mergeProgress } from './src/utils/regionProgress';
 import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
@@ -296,6 +297,10 @@ function AppInner() {
     setView('kutatok');
   };
 
+  const handleOpenMovies = () => {
+    setView('movies');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -373,6 +378,7 @@ function AppInner() {
           onOpenGaming={handleOpenGaming}
           onOpenNews={handleOpenNews}
           onOpenKutatok={handleOpenKutatok}
+          onOpenMovies={handleOpenMovies}
           onRequireRegister={() => setView('nicknamePicker')}
           onOpenJoin={() => setView('join')}
           onOpenLogin={() => setView('login')}
@@ -512,6 +518,15 @@ function AppInner() {
 
       {view === 'kutatok' && (
         <KutatokScreen
+          nickname={nickname}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
+      )}
+
+      {view === 'movies' && (
+        <MoviesScreen
           nickname={nickname}
           progress={progress}
           onNavigate={(target) => setView(target)}

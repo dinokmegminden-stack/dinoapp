@@ -14,6 +14,7 @@ import { isGuestMode } from '../utils/guestMode';
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { TIMELINE_BRANCHES, getTimelineBranchKey } from '../utils/dinoTaxonomy';
+import { useT } from '../i18n';
 
 const MYA_MAX = 237;
 const MYA_SPAN = MYA_MAX - 66;
@@ -33,12 +34,12 @@ const AXIS_TICKS = [220, 200, 180, 160, 140, 120, 100, 80];
 // kréta-paleogén határ, így minden szegmens a domain-en belül marad.
 const EPOCH_COL_WIDTH = 16;
 const EPOCHS = [
-  { label: 'Késő-triász', start: 237, end: 201.4 },
-  { label: 'Kora-jura', start: 201.4, end: 174.7 },
-  { label: 'Közép-jura', start: 174.7, end: 163.5 },
-  { label: 'Késő-jura', start: 163.5, end: 145 },
-  { label: 'Kora-kréta', start: 145, end: 100.5 },
-  { label: 'Késő-kréta', start: 100.5, end: 66 },
+  { key: 'late_triassic', start: 237, end: 201.4 },
+  { key: 'early_jurassic', start: 201.4, end: 174.7 },
+  { key: 'mid_jurassic', start: 174.7, end: 163.5 },
+  { key: 'late_jurassic', start: 163.5, end: 145 },
+  { key: 'early_cretaceous', start: 145, end: 100.5 },
+  { key: 'late_cretaceous', start: 100.5, end: 66 },
 ];
 const EPOCH_BOUNDARIES = EPOCHS.slice(1).map((e) => e.start);
 
@@ -110,6 +111,7 @@ function TimelineMarker({ dino, unlocked, color, yPx, subCol }) {
 }
 
 export default function CollectionTimeline({ allDinos, progress }) {
+  const { t } = useT();
   // RN Web-en a View onLayout megbízhatatlanul (gyakran 0 szélességgel) sül el,
   // ezért useWindowDimensions + a Shell.js/CollectionScreen.js ismert
   // szélesség-szabályai (isWideWeb töréspont, innerWide/inner max-width,
@@ -155,7 +157,7 @@ export default function CollectionTimeline({ allDinos, progress }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>Törzsfa idővonal</Text>
+        <Text style={styles.headerTitle}>{t('timeline.title')}</Text>
         <View style={styles.progressPill}>
           <Text style={styles.progressPillText}>{collectedCount} / {totalCount}</Text>
         </View>
@@ -190,11 +192,11 @@ export default function CollectionTimeline({ allDinos, progress }) {
               const bandHeight = mToY(epoch.end) - mToY(epoch.start);
               return (
                 <View
-                  key={epoch.label}
+                  key={epoch.key}
                   style={[styles.epochLabelWrap, { top: mToY(epoch.start), height: bandHeight, width: EPOCH_COL_WIDTH }]}
                 >
                   <Text style={[styles.epochLabelText, { width: bandHeight }]} numberOfLines={1}>
-                    {epoch.label}
+                    {t(`collection.epoch.${epoch.key}`)}
                   </Text>
                 </View>
               );

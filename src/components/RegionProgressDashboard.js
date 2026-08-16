@@ -6,8 +6,9 @@ import { View, Text, Pressable, StyleSheet, useWindowDimensions, Platform } from
 import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { EDU_LABELS, REGION_ORDER, regionCollectionStats } from '../utils/regionProgress';
+import { useT } from '../i18n';
 
-function RegionCard({ name, collected, total, width, highlighted, onHoverIn, onHoverOut }) {
+function RegionCard({ name, collected, total, width, highlighted, onHoverIn, onHoverOut, t }) {
   const ratio = total > 0 ? collected / total : 0;
   return (
     <Pressable
@@ -16,7 +17,7 @@ function RegionCard({ name, collected, total, width, highlighted, onHoverIn, onH
       onHoverOut={onHoverOut}
     >
       <Text style={styles.name} numberOfLines={1}>{name}</Text>
-      <Text style={styles.count}>{collected} / {total} faj</Text>
+      <Text style={styles.count}>{t('regionDashboard.count', { collected, total })}</Text>
       <View style={styles.track}>
         <View style={[styles.fill, { width: `${Math.round(ratio * 100)}%` }]} />
       </View>
@@ -25,6 +26,7 @@ function RegionCard({ name, collected, total, width, highlighted, onHoverIn, onH
 }
 
 export default function RegionProgressDashboard({ allDinos, progress, highlightEdu, onHoverRegion }) {
+  const { t } = useT();
   const { width } = useWindowDimensions();
   const stats = regionCollectionStats(allDinos, progress);
 
@@ -36,7 +38,7 @@ export default function RegionProgressDashboard({ allDinos, progress, highlightE
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.heading}>GYŰJTÉSI ELŐREHALADÁS</Text>
+      <Text style={styles.heading}>{t('regionDashboard.heading')}</Text>
       <View style={[styles.grid, { gap: GAP }]}>
         {REGION_ORDER.map((edu) => (
           <RegionCard
@@ -48,6 +50,7 @@ export default function RegionProgressDashboard({ allDinos, progress, highlightE
             highlighted={highlightEdu === edu}
             onHoverIn={() => onHoverRegion?.(edu)}
             onHoverOut={() => onHoverRegion?.(null)}
+            t={t}
           />
         ))}
       </View>

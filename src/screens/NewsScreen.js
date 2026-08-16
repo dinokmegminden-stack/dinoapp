@@ -11,6 +11,7 @@ import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { fetchDinoNews, genusOf } from '../services/dinoNewsService';
+import { useT } from '../i18n';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -22,6 +23,7 @@ function formatDate(iso) {
 }
 
 export default function NewsScreen({ nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const { width } = useWindowDimensions();
   const isWide = width >= 900;
   const [news, setNews] = useState(null); // null = töltés alatt
@@ -34,17 +36,17 @@ export default function NewsScreen({ nickname, progress, onNavigate, onBack }) {
     <Shell header={<HeaderBar currentView="news" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack} accessibilityRole="button" accessibilityLabel="Vissza">
+          <TouchableOpacity style={styles.backBtn} onPress={onBack} accessibilityRole="button" accessibilityLabel={t('common.back')}>
             <MaterialCommunityIcons name="arrow-left" size={20} color={COLORS.cream} />
           </TouchableOpacity>
-          <Text style={styles.title}>DÍNÓS HÍREK</Text>
+          <Text style={styles.title}>{t('news.title')}</Text>
         </View>
 
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
           {news === null ? (
             <ActivityIndicator color={COLORS.accent} style={{ marginTop: 40 }} />
           ) : news.length === 0 ? (
-            <Text style={styles.empty}>Egyelőre nincs hír.</Text>
+            <Text style={styles.empty}>{t('news.empty')}</Text>
           ) : (
             news.map((item) => {
               const genus = genusOf(item.scientific_name);
@@ -68,7 +70,7 @@ export default function NewsScreen({ nickname, progress, onNavigate, onBack }) {
                         accessibilityRole="link"
                       >
                         <MaterialCommunityIcons name="link-variant" size={14} color={COLORS.accent} />
-                        <Text style={styles.sourceText} numberOfLines={1}>Forrás megtekintése</Text>
+                        <Text style={styles.sourceText} numberOfLines={1}>{t('common.view_source')}</Text>
                       </TouchableOpacity>
                     )}
                   </View>

@@ -6,16 +6,18 @@ import { csomagToPackId } from '../../utils/regionHelpers';
 import LevelShell from './LevelShell';
 import HeaderBar from '../../components/HeaderBar';
 import { s } from './RegionLevel.styles';
+import { useT } from '../../i18n';
 
 export default function PackagesScreen({ eduLevel, progress, packages, onOpenPackage, onBack, nickname, onNavigate }) {
+  const { t } = useT();
   return (
     <LevelShell header={<HeaderBar currentView="region" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
       <ScrollView style={s.packagesScrollFlex} contentContainerStyle={s.packagesScroll}>
-        <Text style={s.levelTitle}>FELFEDEZÉS</Text>
+        <Text style={s.levelTitle}>{t('packages.title')}</Text>
         <Text style={s.levelSubtitle}>{EDU_LABELS[eduLevel] || eduLevel}</Text>
         <Text style={s.levelDesc}>
-          Minden csomag végén teszt vár — legalább {Math.round(PASS_THRESHOLD * 100)}%-os eredmény kell a következő csomag kinyitásához.
+          {t('packages.desc', { pct: Math.round(PASS_THRESHOLD * 100) })}
         </Text>
 
         {packages.map(({ csomag, dinos }) => {
@@ -34,18 +36,18 @@ export default function PackagesScreen({ eduLevel, progress, packages, onOpenPac
                 <Text style={s.packageIcon}>{unlocked ? (passed ? '✅' : '🦴') : '🔒'}</Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={s.packageName}>{csomag === BONUS_PACK ? '⭐ Bónusz csomag' : `${csomag}. csomag`}</Text>
+                <Text style={s.packageName}>{csomag === BONUS_PACK ? t('packages.bonus_pack') : t('card.pack_label', { n: csomag })}</Text>
                 <Text style={s.packageMeta}>
-                  {dinos.length} dínó · {dinos.map((d) => d.nev_koznapi).join(', ')}
+                  {t('packages.meta', { count: dinos.length, names: dinos.map((d) => d.nev_koznapi).join(', ') })}
                 </Text>
                 {!unlocked && (
                   <Text style={s.packageLockedHint}>
                     {csomag === BONUS_PACK
-                      ? 'Nyitáshoz teljesítsd a régió összes rendes csomagját'
-                      : 'Nyitáshoz teljesítsd az előző csomag tesztjét'}
+                      ? t('packages.locked_bonus_hint')
+                      : t('packages.locked_hint')}
                   </Text>
                 )}
-                {passed && <Text style={s.packagePassedHint}>Teszt teljesítve ✓</Text>}
+                {passed && <Text style={s.packagePassedHint}>{t('packages.passed_hint')}</Text>}
               </View>
             </TouchableOpacity>
           );
@@ -53,7 +55,7 @@ export default function PackagesScreen({ eduLevel, progress, packages, onOpenPac
       </ScrollView>
 
       <TouchableOpacity onPress={onBack} style={s.bottomBackLink}>
-        <Text style={s.backLinkText}>← FŐMENÜ</Text>
+        <Text style={s.backLinkText}>{t('packages.back_home')}</Text>
       </TouchableOpacity>
     </LevelShell>
   );

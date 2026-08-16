@@ -13,6 +13,7 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { fetchResearchArticles } from '../services/researchArticlesService';
 import { fetchPaleontologists, fetchArticlePaleontologistLinks } from '../services/paleontologistsService';
+import { useT } from '../i18n';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -46,6 +47,7 @@ function ArticleBody({ text }) {
 }
 
 export default function KutatokScreen({ nickname, progress, onNavigate, onBack }) {
+  const { t } = useT();
   const [articles, setArticles] = useState(null); // null = töltés alatt
   const [people, setPeople] = useState([]);
   const [links, setLinks] = useState([]); // { article_id, paleontologist_id }[]
@@ -80,10 +82,10 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
     <Shell header={<HeaderBar currentView="kutatok" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={onBack} accessibilityRole="button" accessibilityLabel="Vissza">
+          <TouchableOpacity style={styles.backBtn} onPress={onBack} accessibilityRole="button" accessibilityLabel={t('common.back')}>
             <MaterialCommunityIcons name="arrow-left" size={20} color={COLORS.cream} />
           </TouchableOpacity>
-          <Text style={styles.title}>KUTATÓK</Text>
+          <Text style={styles.title}>{t('researchers.title')}</Text>
         </View>
 
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
@@ -96,7 +98,7 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
           {!!selectedPerson && (
             <TouchableOpacity style={styles.filterChip} onPress={() => setSelectedPersonId(null)}>
               <Text style={styles.filterChipText}>
-                {selectedPerson.emoji} {selectedPerson.name} cikkei
+                {t('researchers.articles_of', { emoji: selectedPerson.emoji, name: selectedPerson.name })}
               </Text>
               <MaterialCommunityIcons name="close" size={16} color={COLORS.bgDark} />
             </TouchableOpacity>
@@ -107,8 +109,8 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
           ) : visibleArticles.length === 0 ? (
             <Text style={styles.empty}>
               {selectedPerson
-                ? `${selectedPerson.name}-hoz még nincs kapcsolódó cikk.`
-                : 'Egyelőre nincs cikk.'}
+                ? t('researchers.empty_person', { name: selectedPerson.name })
+                : t('researchers.empty')}
             </Text>
           ) : (
             visibleArticles.map((item) => (
@@ -136,7 +138,7 @@ export default function KutatokScreen({ nickname, progress, onNavigate, onBack }
                     accessibilityRole="link"
                   >
                     <MaterialCommunityIcons name="link-variant" size={14} color={COLORS.accent} />
-                    <Text style={styles.sourceText} numberOfLines={1}>Forrás megtekintése</Text>
+                    <Text style={styles.sourceText} numberOfLines={1}>{t('common.view_source')}</Text>
                   </TouchableOpacity>
                 )}
               </View>

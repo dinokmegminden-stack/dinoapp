@@ -18,12 +18,14 @@ import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { NICKNAME_ADJECTIVES, getCommonNameOptions, NICKNAME_NUMBER_OPTIONS, randomFrom, buildNickname } from '../constants/nicknameParts';
 import { isNicknameTaken, registerPlayer, resumePlayerWithPin } from '../services/playersService';
+import { useT } from '../i18n';
 
 const PIN_LENGTH = 4;
 
 export const NICKNAME_STORAGE_KEY = 'dino_player_nickname';
 
 export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGuestContinue, initialMode = 'new' }) {
+  const { t } = useT();
   const commonNameOptions = useMemo(() => getCommonNameOptions(allDinos), [allDinos]);
 
   const [mode, setMode] = useState(initialMode); // 'new' | 'resume'
@@ -54,7 +56,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
 
   const handleConfirm = async () => {
     if (pin.length !== PIN_LENGTH) {
-      setErrorMessage(`A PIN-kód pontosan ${PIN_LENGTH} számjegyből álljon!`);
+      setErrorMessage(t('onboarding.err_pin_length', { n: PIN_LENGTH }));
       return;
     }
 
@@ -63,7 +65,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
 
     const taken = await isNicknameTaken(nickname);
     if (taken) {
-      setErrorMessage('Ez a név már foglalt — próbálj másik számot!');
+      setErrorMessage(t('onboarding.err_taken'));
       setNumber(randomFrom(NICKNAME_NUMBER_OPTIONS));
       setSubmitting(false);
       return;
@@ -71,18 +73,18 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
 
     const result = await registerPlayer(nickname, pin, email);
     if (result.taken) {
-      setErrorMessage('Ez a név már foglalt — próbálj másik számot!');
+      setErrorMessage(t('onboarding.err_taken'));
       setNumber(randomFrom(NICKNAME_NUMBER_OPTIONS));
       setSubmitting(false);
       return;
     }
     if (result.error?.code === 'too_many_registrations') {
-      setErrorMessage('Túl sok fiók készült már erről a hálózatról. Próbáld később, vagy kérj segítséget egy szülőtől/tanártól.');
+      setErrorMessage(t('onboarding.err_too_many'));
       setSubmitting(false);
       return;
     }
     if (result.error) {
-      setErrorMessage('Hiba történt, próbáld újra.');
+      setErrorMessage(t('onboarding.err_generic'));
       setSubmitting(false);
       return;
     }
@@ -96,7 +98,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
     const cleanNickname = resumeNickname.trim().toLowerCase();
     const cleanPin = resumePin.trim();
     if (!cleanNickname || !cleanPin) {
-      setResumeError('Add meg a becenevet és a PIN-t is!');
+      setResumeError(t('onboarding.err_resume_empty'));
       return;
     }
 
@@ -107,7 +109,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
     setResumeSubmitting(false);
 
     if (!playerId) {
-      setResumeError('Nem egyezik a becenév és a PIN.');
+      setResumeError(t('onboarding.err_resume_mismatch'));
       return;
     }
 
@@ -119,11 +121,9 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
     <Shell gradientColors={[COLORS.bgDark, COLORS.bgMid]}>
       <ScrollView contentContainerStyle={styles.centerContent}>
         <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
-        <Text style={styles.title}>🦖 {mode === 'new' ? 'Válaszd ki a neved!' : 'Folytasd a profilod!'}</Text>
+        <Text style={styles.title}>🦖 {mode === 'new' ? t('onboarding.title_new') : t('onboarding.title_resume')}</Text>
         <Text style={styles.subtitle}>
-          {mode === 'new'
-            ? 'Ez a neved jelenik majd meg a ranglistákon.'
-            : 'Add meg a becenevedet és a regisztrációkor választott PIN-t.'}
+          {mode === 'new' ? t('onboarding.sub_new') : t('onboarding.sub_resume')}
         </Text>
 
         <View style={styles.modeToggle}>
@@ -131,53 +131,53 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
             style={[styles.modeToggleBtn, mode === 'new' && styles.modeToggleBtnActive]}
             onPress={() => setMode('new')}
           >
-            <Text style={[styles.modeToggleText, mode === 'new' && styles.modeToggleTextActive]}>Új becenév</Text>
+            <Text style={[styles.modeToggleText, mode === 'new' && styles.modeToggleTextActive]}>{t('onboarding.tab_new')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.modeToggleBtn, mode === 'resume' && styles.modeToggleBtnActive]}
             onPress={() => setMode('resume')}
           >
-            <Text style={[styles.modeToggleText, mode === 'resume' && styles.modeToggleTextActive]}>Folytatás</Text>
+            <Text style={[styles.modeToggleText, mode === 'resume' && styles.modeToggleTextActive]}>{t('onboarding.tab_resume')}</Text>
           </TouchableOpacity>
         </View>
 
         {mode === 'new' ? (
           <>
             <View style={styles.previewBox}>
-              <Text style={styles.previewText}>{isReady ? nickname : 'Dínók betöltése…'}</Text>
+              <Text style={styles.previewText}>{isReady ? nickname : t('onboarding.loading_dinos')}</Text>
             </View>
 
             <View style={styles.pickerGroup}>
-              <OptionPicker label="Jelző" value={adjective} options={NICKNAME_ADJECTIVES} onSelect={setAdjective} />
+              <OptionPicker label={t('onboarding.pick_adjective')} value={adjective} options={NICKNAME_ADJECTIVES} onSelect={setAdjective} />
               {isReady && (
-                <OptionPicker label="Dínó" value={commonName} options={commonNameOptions} onSelect={setCommonName} />
+                <OptionPicker label={t('onboarding.pick_dino')} value={commonName} options={commonNameOptions} onSelect={setCommonName} />
               )}
 
-              <OptionPicker label="Szám" value={number} options={NICKNAME_NUMBER_OPTIONS} onSelect={setNumber} />
+              <OptionPicker label={t('onboarding.pick_number')} value={number} options={NICKNAME_NUMBER_OPTIONS} onSelect={setNumber} />
 
               <View style={styles.inputField}>
-                <Text style={styles.fieldLabel}>PIN-kód (4 számjegy)</Text>
+                <Text style={styles.fieldLabel}>{t('onboarding.pin_label')}</Text>
                 <TextInput
                   style={styles.textInput}
                   value={pin}
                   onChangeText={(text) => setPin(text.replace(/[^0-9]/g, '').slice(0, PIN_LENGTH))}
-                  placeholder="pl. 1234"
+                  placeholder={t('onboarding.pin_ph')}
                   placeholderTextColor="rgba(254,250,224,0.35)"
                   keyboardType="number-pad"
                   maxLength={PIN_LENGTH}
                 />
               </View>
               <Text style={styles.pinHint}>
-                Ezt a PIN-t jegyezd meg — ezzel + a beceneveddel tudod majd más eszközön is folytatni a profilod.
+                {t('onboarding.pin_hint')}
               </Text>
 
               <View style={styles.inputField}>
-                <Text style={styles.fieldLabel}>Email (opcionális)</Text>
+                <Text style={styles.fieldLabel}>{t('onboarding.email_label')}</Text>
                 <TextInput
                   style={styles.textInput}
                   value={email}
                   onChangeText={setEmail}
-                  placeholder="pl. szulo@email.hu"
+                  placeholder={t('onboarding.email_ph')}
                   placeholderTextColor="rgba(254,250,224,0.35)"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -185,7 +185,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
                 />
               </View>
               <Text style={styles.pinHint}>
-                Nem kötelező — csak akkor add meg, ha szeretnéd, hogy elérhetők legyünk veled kapcsolatban.
+                {t('onboarding.email_hint')}
               </Text>
             </View>
 
@@ -197,7 +197,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
               disabled={submitting || !isReady || pin.length !== PIN_LENGTH}
             >
               <Text style={styles.confirmBtnText}>
-                {submitting ? 'Egy pillanat…' : '✔ MEGERŐSÍTÉS'}
+                {submitting ? t('onboarding.submitting') : t('onboarding.confirm')}
               </Text>
             </TouchableOpacity>
           </>
@@ -205,12 +205,12 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
           <>
             <View style={styles.resumeForm}>
               <View style={styles.inputField}>
-                <Text style={styles.fieldLabel}>Becenév</Text>
+                <Text style={styles.fieldLabel}>{t('onboarding.nickname_label')}</Text>
                 <TextInput
                   style={styles.textInput}
                   value={resumeNickname}
                   onChangeText={setResumeNickname}
-                  placeholder="pl. tyrannosaurus_eger_18"
+                  placeholder={t('onboarding.nickname_ph')}
                   placeholderTextColor="rgba(254,250,224,0.35)"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -222,7 +222,7 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
                   style={styles.textInput}
                   value={resumePin}
                   onChangeText={(text) => setResumePin(text.replace(/[^0-9]/g, '').slice(0, PIN_LENGTH))}
-                  placeholder="4 jegyű PIN"
+                  placeholder={t('onboarding.resume_pin_ph')}
                   placeholderTextColor="rgba(254,250,224,0.35)"
                   keyboardType="number-pad"
                   maxLength={PIN_LENGTH}
@@ -239,18 +239,17 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
               disabled={resumeSubmitting}
             >
               <Text style={styles.confirmBtnText}>
-                {resumeSubmitting ? 'Egy pillanat…' : '✔ FOLYTATÁS'}
+                {resumeSubmitting ? t('onboarding.submitting') : t('onboarding.resume_confirm')}
               </Text>
             </TouchableOpacity>
           </>
         )}
 
         <TouchableOpacity style={styles.guestLink} onPress={onGuestContinue}>
-          <Text style={styles.guestLinkText}>Tovább regisztráció nélkül →</Text>
+          <Text style={styles.guestLinkText}>{t('onboarding.guest_link')}</Text>
         </TouchableOpacity>
         <Text style={styles.guestHint}>
-          Vendégként megnézheted az oldalt, de a haladásod (régiók, gyűjtemény,
-          ranglisták) nem mentődik, és a dínókártyákon nem látszik kép.
+          {t('onboarding.guest_hint')}
         </Text>
       </ScrollView>
     </Shell>

@@ -5,7 +5,8 @@
     "catalog": "Catalogue",
     "album": "Your Album",
     "news": "News",
-    "researchers": "Researchers"
+    "researchers": "Researchers",
+    "movies": "Movies"
   },
   "auth": {
     "login": "Log in",
@@ -25,7 +26,9 @@
   },
   "common": {
     "loading": "Loading…",
-    "retry": "Retry"
+    "retry": "Retry",
+    "back": "Back",
+    "view_source": "View source"
   },
   "landing": {
     "cta_continue": "Continue: %{region} →",
@@ -40,7 +43,62 @@
     "guest_title": "Pick a dino name and start!",
     "guest_body": "Collect cards, earn XP and climb the leaderboards — it takes seconds, no password.",
     "guest_btn": "Choose your name",
-    "load_error": "Couldn't load the creatures. Check your internet connection."
+    "load_error": "Couldn't load the creatures. Check your internet connection.",
+    "regions_label": "REGIONS"
+  },
+  "onboarding": {
+    "title_new": "Pick your name!",
+    "title_resume": "Continue your profile!",
+    "sub_new": "This is the name that will show up on the leaderboards.",
+    "sub_resume": "Enter your nickname and the PIN you chose when you registered.",
+    "tab_new": "New nickname",
+    "tab_resume": "Continue",
+    "loading_dinos": "Loading dinos…",
+    "pick_adjective": "Adjective",
+    "pick_dino": "Dino",
+    "pick_number": "Number",
+    "pin_label": "PIN code (4 digits)",
+    "pin_ph": "e.g. 1234",
+    "pin_hint": "Remember this PIN — with it plus your nickname you can continue your profile on another device.",
+    "email_label": "Email (optional)",
+    "email_ph": "e.g. parent@email.com",
+    "email_hint": "Optional — only add it if you'd like us to be able to reach you.",
+    "confirm": "✔ CONFIRM",
+    "submitting": "One moment…",
+    "nickname_label": "Nickname",
+    "nickname_ph": "e.g. tyrannosaurus_mouse_18",
+    "resume_pin_ph": "4-digit PIN",
+    "resume_confirm": "✔ CONTINUE",
+    "guest_link": "Continue without registering →",
+    "guest_hint": "As a guest you can browse the site, but your progress (regions, collection, leaderboards) won't be saved, and no image shows on the dino cards.",
+    "err_pin_length": "The PIN code must be exactly %{n} digits!",
+    "err_taken": "That name is already taken — try another number!",
+    "err_too_many": "Too many accounts have been created from this network. Try again later, or ask a parent/teacher for help.",
+    "err_generic": "Something went wrong, please try again.",
+    "err_resume_empty": "Enter both the nickname and the PIN!",
+    "err_resume_mismatch": "The nickname and PIN don't match."
+  },
+  "news": {
+    "title": "DINO NEWS",
+    "empty": "No news yet."
+  },
+  "researchers": {
+    "title": "RESEARCHERS",
+    "empty": "No articles yet.",
+    "empty_person": "No articles linked to %{name} yet.",
+    "articles_of": "%{emoji} %{name}'s articles"
+  },
+  "movies": {
+    "title": "DINO MOVIES",
+    "hint": "Movies about dinosaurs and prehistoric creatures, with IMDB ratings.",
+    "col_title": "Title",
+    "col_year": "Year",
+    "col_genre": "Genre",
+    "col_rating": "IMDB",
+    "genre_cinema": "Film",
+    "genre_docu": "Docu",
+    "genre_cartoon": "Cartoon",
+    "watch_link": "View on IMDB"
   },
   "dashboard": {
     "logout": "Log out",
@@ -223,7 +281,17 @@
     "rarity_2": "Rare",
     "rarity_3": "Very Rare",
     "rarity_4": "Epic",
-    "rarity_5": "Legendary"
+    "rarity_5": "Legendary",
+    "weight": "WEIGHT",
+    "region": "REGION",
+    "discovery_year": "YEAR OF DISCOVERY",
+    "artifact_fallback": "Artifact",
+    "modal_details_a11y": "%{name} details",
+    "unknown_epoch": "Unknown era",
+    "description_label": "DESCRIPTION",
+    "pack_label": "Pack %{n}",
+    "mya_range": "%{a}–%{b} million years ago",
+    "mya_single": "%{n} million years ago"
   },
   "leaderboard": {
     "title": "LEADERBOARD",
@@ -247,5 +315,79 @@
     "title": "🦕 What is this app?",
     "body": "Six regions and over a hundred dinos and ancient creatures are waiting to be collected — just pick a nickname and the adventure begins. You progress pack by pack, each ending in a quiz that unlocks the next one, and you collect the creatures into your album! Six game modes, loads of XP, leaderboards, and fireworks for every record. Explore deep time and become the greatest dino expert!",
     "close": "Close"
+  },
+  "footer": {
+    "tagline": "Discover the creatures of deep time.",
+    "youtube_channel": "YouTube channel",
+    "imprint": "Imprint",
+    "privacy": "Privacy policy",
+    "copyright": "© %{year} Dínók Meg Minden"
+  },
+  "packageQuiz": {
+    "result_title": "%{correct} / %{total} correct answers",
+    "passed_desc": "Great job! The next pack has unlocked.",
+    "failed_desc": "You need at least %{pct}% correct to unlock the pack. Try again!",
+    "continue": "Continue to packs →",
+    "retry": "Try again",
+    "back_to_packages": "← Back to packs"
+  },
+  "regionLevel": {
+    "loading": "Loading dinos from the %{region} region...",
+    "error": "Something went wrong loading the data."
+  },
+  "packages": {
+    "title": "EXPLORATION",
+    "desc": "A test awaits at the end of every pack — at least %{pct}% correct is needed to unlock the next pack.",
+    "bonus_pack": "⭐ Bonus pack",
+    "meta": "%{count} dinos · %{names}",
+    "locked_bonus_hint": "Complete all regular packs in this region to unlock",
+    "locked_hint": "Complete the previous pack's test to unlock",
+    "passed_hint": "Test passed ✓",
+    "back_home": "← MAIN MENU"
+  },
+  "progress": {
+    "heading": "YOUR PROGRESS",
+    "guest_title": "Register to save your progress!",
+    "guest_body": "As a guest, your progress only lives on this device. Register so your XP, leaderboard spots and collection never get lost.",
+    "overall_label": "TOTAL COLLECTION",
+    "by_region": "BY REGION"
+  },
+  "messageBoard": {
+    "just_now": "just now",
+    "minutes_ago": "%{n} min ago",
+    "hours_ago": "%{n} h ago",
+    "days_ago": "%{n} d ago",
+    "login_to_post": "Log in to post a message",
+    "placeholder": "Write a message…",
+    "placeholder_named": "Write a message – %{nickname}…",
+    "sending": "Sending…",
+    "send": "Send",
+    "empty": "No messages yet — be the first!",
+    "anonymous": "Anonymous",
+    "restore": "↩ Restore",
+    "hide": "✕ Hide"
+  },
+  "dailyDino": {
+    "loading": "Loading daily dino…",
+    "default_fact": "Tap to explore!",
+    "tap_hint_front": "Tap for a fact ↻",
+    "fact_label": "DID YOU KNOW?",
+    "more": "Learn more →",
+    "tap_hint_back": "Tap to flip back ↻"
+  },
+  "regionDashboard": {
+    "heading": "COLLECTION PROGRESS",
+    "count": "%{collected} / %{total} species"
+  },
+  "paleontologists": {
+    "timeline_title": "RESEARCHERS TIMELINE"
+  },
+  "timeline": {
+    "title": "Family tree timeline"
+  },
+  "rankModal": {
+    "title": "🏅 Ranks",
+    "next": "%{xp} XP to go until \"%{name}\"",
+    "max_rank": "You've reached the highest rank! 🎓"
   }
 }

@@ -6,15 +6,17 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RegionWorldMap from '../components/RegionWorldMap';
 import { COLORS, FONTS } from '../constants/theme';
+import { useT } from '../i18n';
 
 function SectionLabel({ children }) {
   return <Text style={styles.sectionLabel}>{children}</Text>;
 }
 
 export default function LandingMenu({ onSelectRegion, regionCounts, regionRatios, highlightEdu, onHoverRegion }) {
+  const { t } = useT();
   return (
     <View style={styles.menuContainer}>
-      <SectionLabel>RÉGIÓK</SectionLabel>
+      <SectionLabel>{t('landing.regions_label')}</SectionLabel>
       <RegionWorldMap
         onSelectRegion={onSelectRegion}
         regionCounts={regionCounts}

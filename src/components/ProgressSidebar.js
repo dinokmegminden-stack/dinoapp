@@ -8,6 +8,7 @@ import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, RADIUS, FONTS, TEXT_OPACITY } from '../constants/theme';
 import { EDU_LABELS, REGION_ORDER } from '../utils/regionProgress';
+import { useT } from '../i18n';
 
 function RegionRow({ edu, ratio, count, highlighted, onHoverIn, onHoverOut, onPress }) {
   const pct = Math.round((ratio || 0) * 100);
@@ -42,19 +43,19 @@ export default function ProgressSidebar({
   onSelectRegion,
   onOpenJoin,
 }) {
+  const { t } = useT();
   const [ctaHovered, setCtaHovered] = useState(false);
   const overallPct = Math.round((overallRatio || 0) * 100);
 
   if (guest) {
     return (
       <View style={styles.wrap}>
-        <Text style={styles.heading}>TE HALADÁSOD</Text>
+        <Text style={styles.heading}>{t('progress.heading')}</Text>
         <View style={styles.guestCard}>
           <MaterialCommunityIcons name="shield-star-outline" size={30} color={COLORS.accent} />
-          <Text style={styles.guestTitle}>Regisztrálj a haladásod mentéséhez!</Text>
+          <Text style={styles.guestTitle}>{t('progress.guest_title')}</Text>
           <Text style={styles.guestBody}>
-            Vendégként a haladásod csak ezen az eszközön él. Regisztrálj, hogy XP-d, ranglista-helyezéseid
-            és gyűjteményed sose vesszen el.
+            {t('progress.guest_body')}
           </Text>
           <Pressable
             style={[styles.ctaBtn, ctaHovered && styles.ctaBtnHovered]}
@@ -63,7 +64,7 @@ export default function ProgressSidebar({
             onHoverOut={() => setCtaHovered(false)}
             accessibilityRole="button"
           >
-            <Text style={styles.ctaBtnText}>Csatlakozz</Text>
+            <Text style={styles.ctaBtnText}>{t('auth.join')}</Text>
           </Pressable>
         </View>
       </View>
@@ -72,7 +73,7 @@ export default function ProgressSidebar({
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.heading}>TE HALADÁSOD</Text>
+      <Text style={styles.heading}>{t('progress.heading')}</Text>
 
       <View style={styles.statsRow}>
         <View style={styles.statPill}>
@@ -82,20 +83,20 @@ export default function ProgressSidebar({
         {streak != null && (
           <View style={styles.statPill}>
             <MaterialCommunityIcons name="fire" size={15} color={COLORS.accent} />
-            <Text style={styles.statPillText}>{streak} nap</Text>
+            <Text style={styles.statPillText}>{t('header.streak', { days: streak })}</Text>
           </View>
         )}
       </View>
 
       <View style={styles.overallCard}>
-        <Text style={styles.overallLabel}>ÖSSZES GYŰJTEMÉNY</Text>
+        <Text style={styles.overallLabel}>{t('progress.overall_label')}</Text>
         <Text style={styles.overallPct}>{overallPct}%</Text>
         <View style={styles.track}>
           <View style={[styles.fill, { width: `${overallPct}%` }]} />
         </View>
       </View>
 
-      <Text style={[styles.heading, styles.headingSpaced]}>RÉGIÓNKÉNT</Text>
+      <Text style={[styles.heading, styles.headingSpaced]}>{t('progress.by_region')}</Text>
       <View style={styles.regionList}>
         {REGION_ORDER.map((edu) => (
           <RegionRow

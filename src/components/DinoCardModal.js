@@ -9,6 +9,7 @@ import { FONTS } from '../constants/fonts';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
 import { getRarityColor, normalizeRarity } from '../utils/rarity';
 import { EDU_LABELS } from '../utils/regionProgress';
+import { useT } from '../i18n';
 
 function formatMeasure(min, max, unit) {
   if (min == null && max == null) return '—';
@@ -18,31 +19,32 @@ function formatMeasure(min, max, unit) {
   return `${max ?? min}${unit}`;
 }
 
-function formatAge(min, max) {
+function formatAge(min, max, t) {
   if (min == null && max == null) return '—';
   if (min != null && max != null && min !== max) {
-    return `${Math.max(min, max)}–${Math.min(min, max)} millió éve`;
+    return t('card.mya_range', { a: Math.max(min, max), b: Math.min(min, max) });
   }
-  return `${max ?? min} millió éve`;
+  return t('card.mya_single', { n: max ?? min });
 }
 
 export default function DinoCardModal({ visible, creature, onClose }) {
+  const { t } = useT();
   if (!creature) return null;
 
   const imageSource = IMAGE_MAP[creature.name_hu] || MISSING_IMAGE;
   const rarityColor = getRarityColor(creature.rarity);
-  const rarityLabel = normalizeRarity(creature.rarity) || 'Lelet';
+  const rarityLabel = normalizeRarity(creature.rarity) || t('card.artifact_fallback');
 
   const stats = [
-    { label: 'HOSSZ', value: formatMeasure(creature.length_m_min, creature.length_m_max, 'm') },
-    { label: 'TÖMEG', value: formatMeasure(creature.weight_kg_min, creature.weight_kg_max, ' kg') },
-    { label: 'ÉTREND', value: creature.diet_hu || '—' },
-    { label: 'CSALÁD', value: creature.csalad_hu || '—' },
-    { label: 'KORSZAK', value: formatAge(creature.mya_min, creature.mya_max) },
-    { label: 'RÉGIÓ', value: EDU_LABELS[creature.edu] || '—' },
-    { label: 'FELFEDEZÉS ORSZÁGA', value: creature.discovered_country || '—' },
-    { label: 'FELFEDEZŐ', value: creature.discoverer_name || '—' },
-    { label: 'FELFEDEZÉS ÉVE', value: creature.discovery_year != null ? String(creature.discovery_year) : '—' },
+    { label: t('card.fact_length'), value: formatMeasure(creature.length_m_min, creature.length_m_max, 'm') },
+    { label: t('card.weight'), value: formatMeasure(creature.weight_kg_min, creature.weight_kg_max, ' kg') },
+    { label: t('card.fact_diet'), value: creature.diet_hu || '—' },
+    { label: t('card.fact_family'), value: creature.csalad_hu || '—' },
+    { label: t('card.fact_epoch'), value: formatAge(creature.mya_min, creature.mya_max, t) },
+    { label: t('card.region'), value: EDU_LABELS[creature.edu] || '—' },
+    { label: t('card.fact_country'), value: creature.discovered_country || '—' },
+    { label: t('card.fact_discoverer'), value: creature.discoverer_name || '—' },
+    { label: t('card.discovery_year'), value: creature.discovery_year != null ? String(creature.discovery_year) : '—' },
   ];
 
   return (
@@ -50,7 +52,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
       <View
         style={styles.sheet}
         accessibilityRole="none"
-        accessibilityLabel={`${creature.name_hu} részletei`}
+        accessibilityLabel={t('card.modal_details_a11y', { name: creature.name_hu })}
       >
         <View style={styles.imageWrapper}>
           {imageSource ? (
@@ -64,7 +66,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
             style={styles.closeBtn}
             onPress={onClose}
             accessibilityRole="button"
-            accessibilityLabel="Bezárás"
+            accessibilityLabel={t('info.close')}
           >
             <Text style={styles.closeBtnText}>✕</Text>
           </TouchableOpacity>
@@ -73,7 +75,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
               {creature.name_hu}
             </Text>
             <Text style={styles.titleEpoch} numberOfLines={1}>
-              {creature.epoch || creature.period || 'Ismeretlen kor'}
+              {creature.epoch || creature.period || t('card.unknown_epoch')}
             </Text>
           </LinearGradient>
         </View>
@@ -81,7 +83,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
         <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
           {!!creature.description_hu && (
             <View style={styles.descBlock}>
-              <Text style={styles.sectionLabel}>LEÍRÁS</Text>
+              <Text style={styles.sectionLabel}>{t('card.description_label')}</Text>
               <Text style={styles.description}>{creature.description_hu.slice(0, 300)}</Text>
             </View>
           )}
@@ -103,7 +105,7 @@ export default function DinoCardModal({ visible, creature, onClose }) {
             {!!rarityColor && <View style={[styles.rarityDot, { backgroundColor: rarityColor }]} />}
             <Text style={styles.rarityLabelText}>{rarityLabel}</Text>
           </View>
-          <Text style={styles.packLabel}>{Number(creature.csomag || 1)}. csomag</Text>
+          <Text style={styles.packLabel}>{t('card.pack_label', { n: Number(creature.csomag || 1) })}</Text>
         </View>
       </View>
     </Modal>

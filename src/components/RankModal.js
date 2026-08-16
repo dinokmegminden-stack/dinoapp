@@ -6,15 +6,17 @@ import { Modal, Pressable, ScrollView, Text, View, StyleSheet } from 'react-nati
 import { COLORS, RADIUS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { RANKS, rankForXP } from '../utils/ranks';
+import { useT } from '../i18n';
 
 export default function RankModal({ visible, onClose, xp = 0 }) {
+  const { t } = useT();
   const { index, rank, next, toNext, progress } = rankForXP(xp);
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
         <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
-          <Text style={styles.title}>🏅 Rangok</Text>
+          <Text style={styles.title}>{t('rankModal.title')}</Text>
 
           {/* Aktuális rang + haladás a következőig */}
           <View style={styles.current}>
@@ -26,7 +28,7 @@ export default function RankModal({ visible, onClose, xp = 0 }) {
                 <View style={[styles.fill, { width: `${Math.round(progress * 100)}%` }]} />
               </View>
               <Text style={styles.nextInfo}>
-                {next ? `Még ${toNext} XP a(z) „${next.name}" rangig` : 'Elérted a legmagasabb rangot! 🎓'}
+                {next ? t('rankModal.next', { xp: toNext, name: next.name }) : t('rankModal.max_rank')}
               </Text>
             </View>
           </View>
@@ -47,7 +49,7 @@ export default function RankModal({ visible, onClose, xp = 0 }) {
           </ScrollView>
 
           <Pressable style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>Bezárás</Text>
+            <Text style={styles.closeBtnText}>{t('info.close')}</Text>
           </Pressable>
         </Pressable>
       </Pressable>

@@ -5,7 +5,8 @@
     "catalog": "Katalógus",
     "album": "Albumod",
     "news": "Hírek",
-    "researchers": "Kutatók"
+    "researchers": "Kutatók",
+    "movies": "Filmek"
   },
   "auth": {
     "login": "Jelentkezz be",
@@ -25,7 +26,9 @@
   },
   "common": {
     "loading": "Töltés…",
-    "retry": "Újra"
+    "retry": "Újra",
+    "back": "Vissza",
+    "view_source": "Forrás megtekintése"
   },
   "landing": {
     "cta_continue": "Folytasd: %{region} →",
@@ -40,7 +43,62 @@
     "guest_title": "Válassz dínó-nevet és kezdd!",
     "guest_body": "Gyűjts kártyákat, szerezz XP-t és mászd meg a ranglistákat — pár másodperc az egész, jelszó nélkül.",
     "guest_btn": "Válaszd ki a neved",
-    "load_error": "Nem sikerült betölteni a lényeket. Ellenőrizd az internetkapcsolatot."
+    "load_error": "Nem sikerült betölteni a lényeket. Ellenőrizd az internetkapcsolatot.",
+    "regions_label": "RÉGIÓK"
+  },
+  "onboarding": {
+    "title_new": "Válaszd ki a neved!",
+    "title_resume": "Folytasd a profilod!",
+    "sub_new": "Ez a neved jelenik majd meg a ranglistákon.",
+    "sub_resume": "Add meg a becenevedet és a regisztrációkor választott PIN-t.",
+    "tab_new": "Új becenév",
+    "tab_resume": "Folytatás",
+    "loading_dinos": "Dínók betöltése…",
+    "pick_adjective": "Jelző",
+    "pick_dino": "Dínó",
+    "pick_number": "Szám",
+    "pin_label": "PIN-kód (4 számjegy)",
+    "pin_ph": "pl. 1234",
+    "pin_hint": "Ezt a PIN-t jegyezd meg — ezzel + a beceneveddel tudod majd más eszközön is folytatni a profilod.",
+    "email_label": "Email (opcionális)",
+    "email_ph": "pl. szulo@email.hu",
+    "email_hint": "Nem kötelező — csak akkor add meg, ha szeretnéd, hogy elérhetők legyünk veled kapcsolatban.",
+    "confirm": "✔ MEGERŐSÍTÉS",
+    "submitting": "Egy pillanat…",
+    "nickname_label": "Becenév",
+    "nickname_ph": "pl. tyrannosaurus_eger_18",
+    "resume_pin_ph": "4 jegyű PIN",
+    "resume_confirm": "✔ FOLYTATÁS",
+    "guest_link": "Tovább regisztráció nélkül →",
+    "guest_hint": "Vendégként megnézheted az oldalt, de a haladásod (régiók, gyűjtemény, ranglisták) nem mentődik, és a dínókártyákon nem látszik kép.",
+    "err_pin_length": "A PIN-kód pontosan %{n} számjegyből álljon!",
+    "err_taken": "Ez a név már foglalt — próbálj másik számot!",
+    "err_too_many": "Túl sok fiók készült már erről a hálózatról. Próbáld később, vagy kérj segítséget egy szülőtől/tanártól.",
+    "err_generic": "Hiba történt, próbáld újra.",
+    "err_resume_empty": "Add meg a becenevet és a PIN-t is!",
+    "err_resume_mismatch": "Nem egyezik a becenév és a PIN."
+  },
+  "news": {
+    "title": "DÍNÓS HÍREK",
+    "empty": "Egyelőre nincs hír."
+  },
+  "researchers": {
+    "title": "KUTATÓK",
+    "empty": "Egyelőre nincs cikk.",
+    "empty_person": "%{name}-hoz még nincs kapcsolódó cikk.",
+    "articles_of": "%{emoji} %{name} cikkei"
+  },
+  "movies": {
+    "title": "DÍNÓS FILMEK",
+    "hint": "Dínókról és őslényekről szóló filmek, IMDB-értékeléssel.",
+    "col_title": "Cím",
+    "col_year": "Év",
+    "col_genre": "Műfaj",
+    "col_rating": "IMDB",
+    "genre_cinema": "Film",
+    "genre_docu": "Doku",
+    "genre_cartoon": "Rajzfilm",
+    "watch_link": "Megnézem az IMDB-n"
   },
   "dashboard": {
     "logout": "Kijelentkezés",
@@ -223,7 +281,17 @@
     "rarity_2": "Ritka",
     "rarity_3": "Nagyon Ritka",
     "rarity_4": "Epikus",
-    "rarity_5": "Legendás"
+    "rarity_5": "Legendás",
+    "weight": "TÖMEG",
+    "region": "RÉGIÓ",
+    "discovery_year": "FELFEDEZÉS ÉVE",
+    "artifact_fallback": "Lelet",
+    "modal_details_a11y": "%{name} részletei",
+    "unknown_epoch": "Ismeretlen kor",
+    "description_label": "LEÍRÁS",
+    "pack_label": "%{n}. csomag",
+    "mya_range": "%{a}–%{b} millió éve",
+    "mya_single": "%{n} millió éve"
   },
   "leaderboard": {
     "title": "RANGLISTA",
@@ -247,5 +315,79 @@
     "title": "🦕 Mi ez az app?",
     "body": "Hat régió, több mint száz dínó és őslény vár, hogy összegyűjtsd őket — csak választasz egy becenevet, és indulhat a kaland. Csomagonként haladsz, mindegyik végén egy kvíz nyitja a következő pakkt, a lényeket pedig albumba gyűjtöd! Hat játékmód, rengeteg XP, ranglisták és tűzijáték a rekordokért. Fedezd fel a mélyidőt, és légy Te a legjobb dínó-tudós!",
     "close": "Bezárás"
+  },
+  "footer": {
+    "tagline": "Fedezd fel a mélyidő őslényeit.",
+    "youtube_channel": "YouTube csatorna",
+    "imprint": "Impresszum",
+    "privacy": "Adatvédelmi nyilatkozat",
+    "copyright": "© %{year} Dínók Meg Minden"
+  },
+  "packageQuiz": {
+    "result_title": "%{correct} / %{total} helyes válasz",
+    "passed_desc": "Szép munka! A következő csomag kinyílt.",
+    "failed_desc": "A csomag kinyitásához legalább %{pct}% helyes válasz szükséges. Próbáld újra!",
+    "continue": "Tovább a csomagokhoz →",
+    "retry": "Újrapróbálom",
+    "back_to_packages": "← Vissza a csomagokhoz"
+  },
+  "regionLevel": {
+    "loading": "Dínók betöltése a(z) %{region} régióból...",
+    "error": "Hiba történt az adatok betöltésekor."
+  },
+  "packages": {
+    "title": "FELFEDEZÉS",
+    "desc": "Minden csomag végén teszt vár — legalább %{pct}%-os eredmény kell a következő csomag kinyitásához.",
+    "bonus_pack": "⭐ Bónusz csomag",
+    "meta": "%{count} dínó · %{names}",
+    "locked_bonus_hint": "Nyitáshoz teljesítsd a régió összes rendes csomagját",
+    "locked_hint": "Nyitáshoz teljesítsd az előző csomag tesztjét",
+    "passed_hint": "Teszt teljesítve ✓",
+    "back_home": "← FŐMENÜ"
+  },
+  "progress": {
+    "heading": "TE HALADÁSOD",
+    "guest_title": "Regisztrálj a haladásod mentéséhez!",
+    "guest_body": "Vendégként a haladásod csak ezen az eszközön él. Regisztrálj, hogy XP-d, ranglista-helyezéseid és gyűjteményed sose vesszen el.",
+    "overall_label": "ÖSSZES GYŰJTEMÉNY",
+    "by_region": "RÉGIÓNKÉNT"
+  },
+  "messageBoard": {
+    "just_now": "most",
+    "minutes_ago": "%{n} perce",
+    "hours_ago": "%{n} órája",
+    "days_ago": "%{n} napja",
+    "login_to_post": "Hozzászóláshoz jelentkezz be",
+    "placeholder": "Üzenet írása…",
+    "placeholder_named": "Üzenet írása – %{nickname}…",
+    "sending": "Küldés…",
+    "send": "Küldés",
+    "empty": "Még nincs hozzászólás — legyél te az első!",
+    "anonymous": "Névtelen",
+    "restore": "↩ Visszaállítás",
+    "hide": "✕ Elrejtés"
+  },
+  "dailyDino": {
+    "loading": "Napi dínó betöltése…",
+    "default_fact": "Kattints a felfedezéshez!",
+    "tap_hint_front": "Koppints a tényért ↻",
+    "fact_label": "TUDTAD?",
+    "more": "Tudj meg többet →",
+    "tap_hint_back": "Koppints vissza ↻"
+  },
+  "regionDashboard": {
+    "heading": "GYŰJTÉSI ELŐREHALADÁS",
+    "count": "%{collected} / %{total} faj"
+  },
+  "paleontologists": {
+    "timeline_title": "KUTATÓK IDŐVONALA"
+  },
+  "timeline": {
+    "title": "Törzsfa idővonal"
+  },
+  "rankModal": {
+    "title": "🏅 Rangok",
+    "next": "Még %{xp} XP a(z) „%{name}\" rangig",
+    "max_rank": "Elérted a legmagasabb rangot! 🎓"
   }
 }

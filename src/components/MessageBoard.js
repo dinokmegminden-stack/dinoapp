@@ -9,19 +9,21 @@ import { COLORS } from '../constants/theme';
 import { FONTS } from '../constants/fonts';
 import { fetchMessages, postMessage, setMessageHidden, MESSAGE_MAX_LEN } from '../services/messagesService';
 import { isGuestMode } from '../utils/guestMode';
+import { useT } from '../i18n';
 
-function timeAgo(iso) {
+function timeAgo(iso, t) {
   if (!iso) return '';
   const d = new Date(iso);
   if (isNaN(d)) return '';
   const s = Math.floor((Date.now() - d.getTime()) / 1000);
-  if (s < 60) return 'most';
-  if (s < 3600) return `${Math.floor(s / 60)} perce`;
-  if (s < 86400) return `${Math.floor(s / 3600)} órája`;
-  return `${Math.floor(s / 86400)} napja`;
+  if (s < 60) return t('messageBoard.just_now');
+  if (s < 3600) return t('messageBoard.minutes_ago', { n: Math.floor(s / 60) });
+  if (s < 86400) return t('messageBoard.hours_ago', { n: Math.floor(s / 3600) });
+  return t('messageBoard.days_ago', { n: Math.floor(s / 86400) });
 }
 
 export default function MessageBoard({ nickname, isAdmin = false, onRequireRegister }) {
+  const { t } = useT();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
@@ -62,15 +64,15 @@ export default function MessageBoard({ nickname, isAdmin = false, onRequireRegis
           accessibilityRole="button"
         >
           <MaterialCommunityIcons name="lock-outline" size={16} color={COLORS.cream} style={{ opacity: 0.7 }} />
-          <Text style={styles.lockedComposerText}>Hozzászóláshoz jelentkezz be</Text>
+          <Text style={styles.lockedComposerText}>{t('messageBoard.login_to_post')}</Text>
         </Pressable>
       ) : (
         <View style={styles.composer}>
           <TextInput
             style={styles.input}
             value={text}
-            onChangeText={(t) => setText(t.slice(0, MESSAGE_MAX_LEN))}
-            placeholder={`Üzenet írása${nickname ? ` – ${nickname}` : ''}…`}
+            onChangeText={(v) => setText(v.slice(0, MESSAGE_MAX_LEN))}
+            placeholder={nickname ? t('messageBoard.placeholder_named', { nickname }) : t('messageBoard.placeholder')}
             placeholderTextColor="rgba(254,250,224,0.4)"
             multiline
             maxLength={MESSAGE_MAX_LEN}
@@ -83,14 +85,14 @@ export default function MessageBoard({ nickname, isAdmin = false, onRequireRegis
               disabled={!text.trim() || sending}
               accessibilityRole="button"
             >
-              <Text style={styles.sendBtnText}>{sending ? 'Küldés…' : 'Küldés'}</Text>
+              <Text style={styles.sendBtnText}>{sending ? t('messageBoard.sending') : t('messageBoard.send')}</Text>
             </Pressable>
           </View>
         </View>
       )}
 
       {messages.length === 0 ? (
-        <Text style={styles.empty}>Még nincs hozzászólás — legyél te az első!</Text>
+        <Text style={styles.empty}>{t('messageBoard.empty')}</Text>
       ) : (
         <View style={styles.list}>
           {messages.map((m) => (
@@ -99,13 +101,13 @@ export default function MessageBoard({ nickname, isAdmin = false, onRequireRegis
                 <View style={styles.avatar}>
                   <MaterialCommunityIcons name="account-circle" size={22} color={COLORS.accent} />
                 </View>
-                <Text style={styles.msgName} numberOfLines={1}>{m.nickname || 'Névtelen'}</Text>
-                <Text style={styles.msgTime}>{timeAgo(m.created_at)}</Text>
+                <Text style={styles.msgName} numberOfLines={1}>{m.nickname || t('messageBoard.anonymous')}</Text>
+                <Text style={styles.msgTime}>{timeAgo(m.created_at, t)}</Text>
               </View>
               <Text style={styles.msgBody}>{m.body}</Text>
               {isAdmin && (
                 <Pressable style={styles.modBtn} onPress={() => toggleHidden(m)} accessibilityRole="button">
-                  <Text style={styles.modBtnText}>{m.is_hidden ? '↩ Visszaállítás' : '✕ Elrejtés'}</Text>
+                  <Text style={styles.modBtnText}>{m.is_hidden ? t('messageBoard.restore') : t('messageBoard.hide')}</Text>
                 </Pressable>
               )}
             </View>

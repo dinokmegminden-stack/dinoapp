@@ -241,6 +241,7 @@ export default function HeaderBar({
               {!guest && <NavLink label={t('nav.album')} active={currentView === 'album'} onPress={() => handleNav('album')} />}
               <NavLink label={t('nav.news')} active={currentView === 'news'} onPress={() => handleNav('news')} />
               <NavLink label={t('nav.researchers')} active={currentView === 'kutatok'} onPress={() => handleNav('kutatok')} />
+              <NavLink label={t('nav.movies')} active={currentView === 'movies'} onPress={() => handleNav('movies')} />
             </View>
           )}
         </View>

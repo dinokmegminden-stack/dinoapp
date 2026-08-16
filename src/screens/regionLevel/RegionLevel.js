@@ -6,8 +6,10 @@ import PackagesScreen from './PackagesScreen';
 import BrowseScreen from './BrowseScreen';
 import PackageQuizScreen from './PackageQuizScreen';
 import { s } from './RegionLevel.styles';
+import { useT } from '../../i18n';
 
 export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBrowsingChange, playerId, nickname, onNavigate }) {
+  const { t } = useT();
   const { packages, creatures, loading, error } = useRegionData(eduLevel);
 
   const [currentScreen, setCurrentScreen] = useState('packages'); // 'packages' | 'browse' | 'quiz'
@@ -30,7 +32,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
   if (loading) {
     return (
       <LevelShell>
-        <Text style={s.loadingText}>Dínók betöltése a(z) {eduLevel} régióból...</Text>
+        <Text style={s.loadingText}>{t('regionLevel.loading', { region: eduLevel })}</Text>
       </LevelShell>
     );
   }
@@ -38,7 +40,7 @@ export default function RegionLevel({ eduLevel, progress, onPassed, onBack, onBr
   if (error) {
     return (
       <LevelShell>
-        <Text style={s.errorText}>Hiba történt az adatok betöltésekor.</Text>
+        <Text style={s.errorText}>{t('regionLevel.error')}</Text>
       </LevelShell>
     );
   }

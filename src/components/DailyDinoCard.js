@@ -11,6 +11,7 @@ import {
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { pickDailyDino } from '../utils/dailyDino';
 import { IMAGE_MAP, MISSING_IMAGE } from '../constants/imageMap';
+import { useT } from '../i18n';
 
 const USE_NATIVE_DRIVER = Platform.OS !== 'web';
 
@@ -21,6 +22,7 @@ function firstSentence(text) {
 }
 
 export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
+  const { t } = useT();
   const [flipped, setFlipped] = useState(false);
   const [hovered, setHovered] = useState(false);
   const rot = useRef(new Animated.Value(0)).current;
@@ -47,7 +49,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
     return (
       <View style={[styles.wrapBase, isWide && styles.wrapWide]}>
         <View style={styles.loading}>
-          <Text style={[styles.loadingText, { fontFamily: bodyFont }]}>Napi dínó betöltése…</Text>
+          <Text style={[styles.loadingText, { fontFamily: bodyFont }]}>{t('dailyDino.loading')}</Text>
         </View>
       </View>
     );
@@ -59,7 +61,7 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
     !String(dino.name_latin || '').toLowerCase().endsWith(String(dino.latin_name_ending).toLowerCase())
       ? [dino.name_latin, dino.latin_name_ending].filter(Boolean).join(' ')
       : dino.name_latin;
-  const fact = firstSentence(dino.description_hu) || 'Kattints a felfedezéshez!';
+  const fact = firstSentence(dino.description_hu) || t('dailyDino.default_fact');
 
   return (
     <View style={[styles.wrapBase, isWide && styles.wrapWide]}>
@@ -84,19 +86,19 @@ export default function DailyDinoCard({ allDinos, onPress, isWide = false }) {
             <Text style={[styles.name, { fontFamily: titleFont }]} numberOfLines={1}>{dino.name_hu}</Text>
             {!!latinFull && <Text style={[styles.latin, { fontFamily: latinFont }]} numberOfLines={1}>{latinFull}</Text>}
           </View>
-          <Text style={[styles.tapHint, { fontFamily: bodyFont }]}>Koppints a tényért ↻</Text>
+          <Text style={[styles.tapHint, { fontFamily: bodyFont }]}>{t('dailyDino.tap_hint_front')}</Text>
         </Animated.View>
 
         {/* HÁTLAP */}
         <Animated.View style={[styles.card, styles.back, { transform: [{ perspective: 1000 }, { rotateY: backRotate }] }]}>
-          <Text style={[styles.factLabel, { fontFamily: boldFont }]}>TUDTAD?</Text>
+          <Text style={[styles.factLabel, { fontFamily: boldFont }]}>{t('dailyDino.fact_label')}</Text>
           <Text style={[styles.fact, { fontFamily: bodyFont }]}>{fact}</Text>
           {onPress && (
             <Pressable onPress={() => onPress(dino)} style={styles.moreBtn}>
-              <Text style={[styles.moreBtnText, { fontFamily: boldFont }]}>Tudj meg többet →</Text>
+              <Text style={[styles.moreBtnText, { fontFamily: boldFont }]}>{t('dailyDino.more')}</Text>
             </Pressable>
           )}
-          <Text style={[styles.tapHint, { fontFamily: bodyFont }]}>Koppints vissza ↻</Text>
+          <Text style={[styles.tapHint, { fontFamily: bodyFont }]}>{t('dailyDino.tap_hint_back')}</Text>
         </Animated.View>
       </Pressable>
     </View>

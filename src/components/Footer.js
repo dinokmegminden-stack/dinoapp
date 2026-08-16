@@ -7,6 +7,7 @@ import { View, Text, Pressable, StyleSheet, Linking, Platform } from 'react-nati
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, TEXT_OPACITY } from '../constants/theme';
 import { playSound } from '../audio/audioSystem';
+import { useT } from '../i18n';
 
 const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
 
@@ -42,6 +43,7 @@ function SocialIcon({ icon, onPress }) {
 }
 
 export default function Footer({ onOpenInfo }) {
+  const { t } = useT();
   const openYoutube = () => {
     playSound('click');
     Linking.openURL(YOUTUBE_URL);
@@ -52,13 +54,13 @@ export default function Footer({ onOpenInfo }) {
       <View style={styles.inner}>
         <View style={styles.brandCol}>
           <Text style={styles.brandText}>DMM Lexikon</Text>
-          <Text style={styles.tagline}>Fedezd fel a mélyidő őslényeit.</Text>
+          <Text style={styles.tagline}>{t('footer.tagline')}</Text>
         </View>
 
         <View style={styles.linksCol}>
-          <FooterLink icon="youtube" label="YouTube csatorna" onPress={openYoutube} />
-          <FooterLink label="Impresszum" onPress={onOpenInfo} />
-          <FooterLink label="Adatvédelmi nyilatkozat" onPress={onOpenInfo} />
+          <FooterLink icon="youtube" label={t('footer.youtube_channel')} onPress={openYoutube} />
+          <FooterLink label={t('footer.imprint')} onPress={onOpenInfo} />
+          <FooterLink label={t('footer.privacy')} onPress={onOpenInfo} />
         </View>
 
         <View style={styles.socialCol}>
@@ -69,7 +71,7 @@ export default function Footer({ onOpenInfo }) {
       </View>
 
       <View style={styles.bottomRow}>
-        <Text style={styles.copy}>© {new Date().getFullYear()} Dínók Meg Minden</Text>
+        <Text style={styles.copy}>{t('footer.copyright', { year: new Date().getFullYear() })}</Text>
       </View>
     </View>
   );
