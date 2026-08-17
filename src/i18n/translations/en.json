@@ -8,7 +8,8 @@
     "researchers": "Researchers",
     "movies": "Movies",
     "evolution": "Evolution",
-    "comparison": "Compare"
+    "comparison": "Compare",
+    "menu": "Menu"
   },
   "auth": {
     "login": "Log in",
@@ -30,6 +31,7 @@
     "loading": "Loading…",
     "retry": "Retry",
     "back": "Back",
+    "close": "Close",
     "view_source": "View source"
   },
   "landing": {

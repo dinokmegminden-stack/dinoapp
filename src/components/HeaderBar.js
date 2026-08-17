@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   Platform,
   Linking,
+  Modal,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -175,6 +176,7 @@ export default function HeaderBar({
   const [xp, setXp] = useState(0);
   const [streak, setStreak] = useState(null);
   const [muted, setMuted] = useState(getSoundMuted());
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Némítás-állapot betöltése induláskor (perzisztens, eszközön belül).
   useEffect(() => {
@@ -200,6 +202,18 @@ export default function HeaderBar({
   useEffect(() => {
     recordAndGetStreak().then(setStreak);
   }, []);
+
+  // Egy helyen a navigációs pontok — ezt használja a széles fejlécsáv ÉS a
+  // szűk kijelzős (mobil) hamburger-menü is, hogy ne csúszhassanak szét.
+  const navItems = [
+    { view: 'gaming', label: t('nav.games') },
+    { view: 'collection', label: t('nav.catalog') },
+    ...(guest ? [] : [{ view: 'album', label: t('nav.album') }]),
+    { view: 'evolution', label: t('nav.evolution') },
+    { view: 'comparison', label: t('nav.comparison') },
+    { view: 'movies', label: t('nav.movies') },
+    { view: 'news', label: t('nav.news') },
+  ];
 
   const handleNav = (targetView) => {
     playSound('click');
@@ -228,6 +242,16 @@ export default function HeaderBar({
       <View style={styles.headerTexture}>
       <View style={[styles.headerBar, isWide && styles.headerBarWide]}>
         <View style={styles.headerLeft}>
+          {/* Szűk kijelzőn (mobil/tablet) a menüsáv nem fér ki — helyette
+              hamburger-gomb nyit egy listát ugyanazokkal a pontokkal.
+              Enélkül mobilon egyáltalán nem volt navigáció. */}
+          {!isWide && (
+            <RoundIconButton
+              icon="menu"
+              onPress={() => { playSound('click'); setMenuOpen(true); }}
+              tooltip={t('nav.menu')}
+            />
+          )}
           <Pressable style={styles.brand} onPress={() => handleNav('landing')}>
             <Image source={dinoLogo} style={styles.brandLogo} resizeMode="contain" />
             {!isNarrow && <Text style={styles.brandText}>DMM Lexikon</Text>}
@@ -235,13 +259,14 @@ export default function HeaderBar({
 
           {isWide && (
             <View style={styles.navLinks}>
-              <NavLink label={t('nav.games')} active={currentView === 'gaming'} onPress={() => handleNav('gaming')} />
-              <NavLink label={t('nav.catalog')} active={currentView === 'collection'} onPress={() => handleNav('collection')} />
-              {!guest && <NavLink label={t('nav.album')} active={currentView === 'album'} onPress={() => handleNav('album')} />}
-              <NavLink label={t('nav.evolution')} active={currentView === 'evolution'} onPress={() => handleNav('evolution')} />
-              <NavLink label={t('nav.comparison')} active={currentView === 'comparison'} onPress={() => handleNav('comparison')} />
-              <NavLink label={t('nav.movies')} active={currentView === 'movies'} onPress={() => handleNav('movies')} />
-              <NavLink label={t('nav.news')} active={currentView === 'news'} onPress={() => handleNav('news')} />
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.view}
+                  label={item.label}
+                  active={currentView === item.view}
+                  onPress={() => handleNav(item.view)}
+                />
+              ))}
             </View>
           )}
         </View>
@@ -305,6 +330,43 @@ export default function HeaderBar({
       </View>
       </View>
 
+      <Modal visible={menuOpen} transparent animationType="fade" onRequestClose={() => setMenuOpen(false)}>
+        <Pressable style={styles.menuBackdrop} onPress={() => setMenuOpen(false)}>
+          <Pressable style={styles.menuSheet} onPress={(e) => e.stopPropagation?.()}>
+            <View style={styles.menuHeader}>
+              <Text style={styles.menuTitle}>{t('nav.menu')}</Text>
+              <Pressable
+                onPress={() => setMenuOpen(false)}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.close')}
+                style={styles.menuClose}
+              >
+                <MaterialCommunityIcons name="close" size={22} color={COLORS.cream} />
+              </Pressable>
+            </View>
+            {navItems.map((item) => (
+              <Pressable
+                key={item.view}
+                style={[styles.menuItem, currentView === item.view && styles.menuItemActive]}
+                onPress={() => { setMenuOpen(false); handleNav(item.view); }}
+                accessibilityRole="button"
+              >
+                <Text style={[styles.menuItemText, currentView === item.view && styles.menuItemTextActive]}>
+                  {item.label}
+                </Text>
+              </Pressable>
+            ))}
+            <View style={styles.menuDivider} />
+            <Pressable style={styles.menuItem} onPress={() => { setMenuOpen(false); handleOpenYoutube(); }} accessibilityRole="button">
+              <Text style={styles.menuItemText}>YouTube</Text>
+            </Pressable>
+            <Pressable style={styles.menuItem} onPress={() => { setMenuOpen(false); handleOpenInfo(); }} accessibilityRole="button">
+              <Text style={styles.menuItemText}>{t('header.info')}</Text>
+            </Pressable>
+          </Pressable>
+        </Pressable>
+      </Modal>
+
       <AppInfoModal visible={infoOpen} onClose={() => setInfoOpen(false)} />
       <RankModal visible={rankOpen} onClose={() => setRankOpen(false)} xp={xp} />
     </>
@@ -312,6 +374,60 @@ export default function HeaderBar({
 }
 
 const styles = StyleSheet.create({
+  // Mobil menü (hamburger) — balról becsúszó lap, a fejléc alatt.
+  menuBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  menuSheet: {
+    width: '78%',
+    maxWidth: 320,
+    height: '100%',
+    backgroundColor: '#0B0F10',
+    borderRightWidth: 1,
+    borderRightColor: 'rgba(238,155,0,0.25)',
+    paddingTop: 18,
+    paddingHorizontal: 14,
+  },
+  menuHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingHorizontal: 6,
+  },
+  menuTitle: {
+    color: COLORS.accent,
+    fontFamily: FONTS.heading,
+    fontSize: 16,
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
+  },
+  menuClose: {
+    padding: 6,
+  },
+  menuItem: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: RADIUS.card,
+  },
+  menuItemActive: {
+    backgroundColor: 'rgba(238,155,0,0.14)',
+  },
+  menuItemText: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 16,
+  },
+  menuItemTextActive: {
+    color: COLORS.accent,
+    fontFamily: FONTS.bold,
+  },
+  menuDivider: {
+    height: 1,
+    backgroundColor: 'rgba(254,250,224,0.12)',
+    marginVertical: 10,
+  },
   // Finom, sötét, texturált fejléc-sáv — kőerezet-hatás rétegzett, halvány
   // átlós csíkokkal (repeating-linear-gradient), hogy elváljon a landing
   // alatta lévő T-rex hátterétől.
