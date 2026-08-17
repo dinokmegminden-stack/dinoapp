@@ -92,11 +92,13 @@ function XAxisNumbers({ gridCols }) {
   );
 }
 
-function YAxisNumbers({ gridRows }) {
-  const h = gridRows * GRID_PX_PER_METER;
+// Folytonos Y-tengely: NEM sávonként újrakezdődő 1..gridRows, hanem egy
+// darab számsor a teljes (3 alak magas) rács aljától a tetejéig.
+function YAxisNumbers({ totalRows }) {
+  const h = totalRows * GRID_PX_PER_METER;
   return (
     <View style={[styles.yAxisCol, { width: Y_AXIS_WIDTH, height: h }]}>
-      {Array.from({ length: gridRows }).map((_, i) => (
+      {Array.from({ length: totalRows }).map((_, i) => (
         <Text key={i} style={[styles.axisLabel, styles.axisLabelY, { position: 'absolute', top: h - (i + 1) * GRID_PX_PER_METER - 6 }]}>
           {i + 1}
         </Text>
@@ -105,38 +107,30 @@ function YAxisNumbers({ gridRows }) {
   );
 }
 
-// Egy sáv: bal oldalt a magasság-számok, utána a rács, azon az orr / a kép
-// bal széle mindig a rács x=0 pontján, a lábak mindig a rács y=0 (alsó)
-// vonalán — ugyanaz a GRID_PX_PER_METER lépték mindhárom sávnál, torzítás
-// nélkül (a szélesség a kép saját natív arányából jön, onLoad-ból olvasva,
-// mert Image.resolveAssetSource nem elérhető react-native-web-en).
-function FigureRow({ source, heightM, locked, gridCols, gridRows }) {
+// Egy alak a KÖZÖS rácson belül: az orr / a kép bal széle mindig a rács
+// x=0 pontján, a lábak a saját sávjának aljánál (bottomOffset), amit a
+// hívó ad meg — nem önálló mini-rács, hanem egy pozíció a nagy, egyben
+// megjelenő rácson. A szélesség a kép saját natív arányából jön, onLoad-ból
+// olvasva (Image.resolveAssetSource nem elérhető react-native-web-en).
+function Figure({ source, heightM, locked, bottomOffset }) {
   const [aspect, setAspect] = useState(2);
   const renderHeight = Math.max(20, heightM * GRID_PX_PER_METER);
   const renderWidth = renderHeight * aspect;
 
   return (
-    <View style={styles.figureRow}>
-      <YAxisNumbers gridRows={gridRows} />
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={{ width: gridCols * GRID_PX_PER_METER, height: gridRows * GRID_PX_PER_METER }}>
-          <GridBackground gridCols={gridCols} gridRows={gridRows} />
-          <View style={styles.figureAnchor}>
-            <Image
-              source={source}
-              style={[{ width: renderWidth, height: renderHeight }, locked && styles.dinoImageLocked]}
-              resizeMode="contain"
-              onLoad={(e) => {
-                const { width, height } = e.nativeEvent?.source || {};
-                if (width && height) setAspect(width / height);
-              }}
-            />
-            {locked && (
-              <MaterialCommunityIcons name="lock" size={20} color={COLORS.cream} style={styles.lockIcon} />
-            )}
-          </View>
-        </View>
-      </ScrollView>
+    <View style={[styles.figureAnchor, { bottom: bottomOffset }]}>
+      <Image
+        source={source}
+        style={[{ width: renderWidth, height: renderHeight }, locked && styles.dinoImageLocked]}
+        resizeMode="contain"
+        onLoad={(e) => {
+          const { width, height } = e.nativeEvent?.source || {};
+          if (width && height) setAspect(width / height);
+        }}
+      />
+      {locked && (
+        <MaterialCommunityIcons name="lock" size={20} color={COLORS.cream} style={styles.lockIcon} />
+      )}
     </View>
   );
 }
@@ -255,33 +249,38 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
         <View style={styles.stage}>
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
           <XAxisNumbers gridCols={gridCols} />
-          {leftDino && (
-            <FigureRow
-              key={leftName}
-              source={COMPARISON_IMAGE_MAP[leftDino.name_hu]}
-              heightM={leftHeightM}
-              locked={!isCollected(leftDino, progress)}
-              gridCols={gridCols}
-              gridRows={gridRows}
-            />
-          )}
-          <FigureRow
-            source={COMPARISON_HUMAN_IMAGE}
-            heightM={HUMAN_HEIGHT_M}
-            locked={false}
-            gridCols={gridCols}
-            gridRows={gridRows}
-          />
-          {rightDino && (
-            <FigureRow
-              key={rightName}
-              source={COMPARISON_IMAGE_MAP[rightDino.name_hu]}
-              heightM={rightHeightM}
-              locked={!isCollected(rightDino, progress)}
-              gridCols={gridCols}
-              gridRows={gridRows}
-            />
-          )}
+          <View style={styles.figureRow}>
+            <YAxisNumbers totalRows={gridRows * 3} />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: gridCols * GRID_PX_PER_METER, height: gridRows * 3 * GRID_PX_PER_METER }}>
+                <GridBackground gridCols={gridCols} gridRows={gridRows * 3} />
+                {rightDino && (
+                  <Figure
+                    key={rightName}
+                    source={COMPARISON_IMAGE_MAP[rightDino.name_hu]}
+                    heightM={rightHeightM}
+                    locked={!isCollected(rightDino, progress)}
+                    bottomOffset={0}
+                  />
+                )}
+                <Figure
+                  source={COMPARISON_HUMAN_IMAGE}
+                  heightM={HUMAN_HEIGHT_M}
+                  locked={false}
+                  bottomOffset={gridRows * GRID_PX_PER_METER}
+                />
+                {leftDino && (
+                  <Figure
+                    key={leftName}
+                    source={COMPARISON_IMAGE_MAP[leftDino.name_hu]}
+                    heightM={leftHeightM}
+                    locked={!isCollected(leftDino, progress)}
+                    bottomOffset={gridRows * 2 * GRID_PX_PER_METER}
+                  />
+                )}
+              </View>
+            </ScrollView>
+          </View>
         </View>
 
         <View style={styles.compareRow}>
