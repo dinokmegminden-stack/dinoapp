@@ -125,7 +125,7 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onOpenMovies, onOpenEvolution, onOpenComparison, onRequireRegister, onOpenJoin, onOpenLogin }) {
+export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onOpenMovies, onOpenEvolution, onOpenComparison, onOpenCalendar, onRequireRegister, onOpenJoin, onOpenLogin }) {
   const { t } = useT();
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
@@ -270,6 +270,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     else if (targetView === 'movies') onOpenMovies?.();
     else if (targetView === 'evolution') onOpenEvolution?.();
     else if (targetView === 'comparison') onOpenComparison?.();
+    else if (targetView === 'calendar') onOpenCalendar?.();
     else if (targetView === 'dashboard') onOpenDashboard?.();
     else if (targetView === 'nicknamePicker') onRequireRegister?.();
     else if (targetView === 'join') onOpenJoin?.();

@@ -211,6 +211,7 @@ export default function HeaderBar({
     ...(guest ? [] : [{ view: 'album', label: t('nav.album') }]),
     { view: 'evolution', label: t('nav.evolution') },
     { view: 'comparison', label: t('nav.comparison') },
+    { view: 'calendar', label: t('nav.calendar') },
     { view: 'movies', label: t('nav.movies') },
     { view: 'news', label: t('nav.news') },
   ];

@@ -25,6 +25,7 @@ import KutatokScreen from './src/screens/KutatokScreen';
 import MoviesScreen from './src/screens/MoviesScreen';
 import EvolutionScreen from './src/screens/EvolutionScreen';
 import ComparisonScreen from './src/screens/ComparisonScreen';
+import CosmicCalendarScreen from './src/screens/CosmicCalendarScreen';
 import { loadProgress, recordPackQuizResult, saveProgress, createEmptyProgress, applyPackQuizResult, mergeProgress } from './src/utils/regionProgress';
 import { setGuestMode } from './src/utils/guestMode';
 import { fetchCreaturesByEdu } from './src/services/creaturesService';
@@ -311,6 +312,10 @@ function AppInner() {
     setView('comparison');
   };
 
+  const handleOpenCalendar = () => {
+    setView('calendar');
+  };
+
   const handleStartMillionaire = () => {
     startGame('millionaire', 'millionaire');
   };
@@ -391,6 +396,7 @@ function AppInner() {
           onOpenMovies={handleOpenMovies}
           onOpenEvolution={handleOpenEvolution}
           onOpenComparison={handleOpenComparison}
+          onOpenCalendar={handleOpenCalendar}
           onRequireRegister={() => setView('nicknamePicker')}
           onOpenJoin={() => setView('join')}
           onOpenLogin={() => setView('login')}
@@ -561,6 +567,15 @@ function AppInner() {
           nickname={nickname}
           progress={progress}
           allDinos={allDinos}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
+      )}
+
+      {view === 'calendar' && (
+        <CosmicCalendarScreen
+          nickname={nickname}
+          progress={progress}
           onNavigate={(target) => setView(target)}
           onBack={() => setView('landing')}
         />
