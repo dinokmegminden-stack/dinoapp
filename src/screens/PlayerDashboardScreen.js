@@ -4,7 +4,8 @@
 // amin kiemelve látszik, mely napokon indított játékot (game_events.started_at
 // alapján, lásd gameEventsService.getVisitDates()).
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, ActivityIndicator, Image, Platform, Linking } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import EraTimeline, { MESOZOIC_ERAS, MESOZOIC_EPOCH_STAGES, CENOZOIC_ERAS, CENOZOIC_EPOCH_STAGES } from '../components/EraTimeline';
@@ -21,6 +22,14 @@ import { useT } from '../i18n';
 // régió) is kontextusba kerüljenek, nem csak a Mezozoikum.
 const FULL_TIMELINE_ERAS = [...MESOZOIC_ERAS, ...CENOZOIC_ERAS];
 const FULL_TIMELINE_EPOCHS = [...MESOZOIC_EPOCH_STAGES, ...CENOZOIC_EPOCH_STAGES];
+
+// Letölthető pólóminta. A fájl a `public/` mappából megy ki a webes build
+// gyökerébe, ezért abszolút útvonalon hivatkozunk rá — így a letöltött fájl
+// neve is beszédes, nem a bundler hash-elt asset-neve lesz.
+// (Az irányítópultra csak bejelentkezett játékos jut el: a fejléc fiók-ikonja,
+// ami guest módban nem is renderelődik — lásd HeaderBar.js.)
+const SHIRT_FILENAME = 'imadom-a-dinokat-tshirt.png';
+const SHIRT_URL = `/${SHIRT_FILENAME}`;
 
 // Hétfővel kezdődő hét — a JS getDay() vasárnappal (0) kezd, ezt toljuk el.
 function mondayIndex(jsDay) {
@@ -72,6 +81,21 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
     [allDinos, progress]
   );
   const collectionPct = total > 0 ? Math.round((collected / total) * 100) : 0;
+
+  // Weben igazi letöltés (<a download>), natívon a böngészőben nyitjuk meg —
+  // ott a rendszer galéria/megosztás kezeli tovább.
+  const handleDownloadShirt = () => {
+    if (Platform.OS === 'web') {
+      const a = document.createElement('a');
+      a.href = SHIRT_URL;
+      a.download = SHIRT_FILENAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } else {
+      Linking.openURL(`https://dmmlexikon.hu${SHIRT_URL}`);
+    }
+  };
 
   const today = new Date();
   const shownDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
@@ -182,6 +206,16 @@ export default function PlayerDashboardScreen({ nickname, playerId, allDinos, pr
               <Text style={styles.calendarHint}>
                 {t('dashboard.calendar_hint')}
               </Text>
+            </View>
+
+            <View style={styles.shirtCard}>
+              <Text style={styles.shirtTitle}>{t('dashboard.shirt_title')}</Text>
+              <Text style={styles.shirtHint}>{t('dashboard.shirt_hint')}</Text>
+              <Image source={{ uri: SHIRT_URL }} style={styles.shirtPreview} resizeMode="contain" />
+              <TouchableOpacity style={styles.shirtBtn} onPress={handleDownloadShirt} accessibilityRole="button">
+                <MaterialCommunityIcons name="download" size={18} color={COLORS.bgDark} />
+                <Text style={styles.shirtBtnText}>{t('dashboard.shirt_download')}</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         )}
@@ -395,5 +429,52 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginTop: 10,
     textAlign: 'center',
+  },
+  shirtCard: {
+    marginTop: 20,
+    marginBottom: 30,
+    padding: 18,
+    backgroundColor: 'rgba(16,14,12,0.6)',
+    borderRadius: RADIUS.cardLarge,
+    borderWidth: 1,
+    borderColor: 'rgba(254,250,224,0.10)',
+    alignItems: 'center',
+  },
+  shirtTitle: {
+    color: COLORS.accent,
+    fontFamily: FONTS.heading,
+    fontSize: 16,
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  shirtHint: {
+    color: COLORS.cream,
+    fontFamily: FONTS.body,
+    fontSize: 12,
+    opacity: 0.7,
+    marginTop: 6,
+    marginBottom: 14,
+    textAlign: 'center',
+  },
+  shirtPreview: {
+    width: '100%',
+    maxWidth: 320,
+    aspectRatio: 1376 / 1143,
+    marginBottom: 16,
+  },
+  shirtBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: COLORS.accent,
+    paddingHorizontal: 22,
+    paddingVertical: 12,
+    borderRadius: RADIUS.pill,
+  },
+  shirtBtnText: {
+    color: COLORS.bgDark,
+    fontFamily: FONTS.bold,
+    fontSize: 14,
   },
 });

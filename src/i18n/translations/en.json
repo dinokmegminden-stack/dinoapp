@@ -135,6 +135,9 @@
     "streak_label": "day streak",
     "collection_count": "%{collected} / %{total} dinos",
     "calendar_hint": "The highlighted days are when you played a game mode.",
+    "shirt_title": "T-shirt design — it's yours!",
+    "shirt_hint": "Download the design and any print shop can put it on a shirt. Transparent PNG, works on dark and light shirts alike.",
+    "shirt_download": "Download design",
     "timeline_now": "Now",
     "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
     "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]

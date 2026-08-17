@@ -135,6 +135,9 @@
     "streak_label": "napos széria",
     "collection_count": "%{collected} / %{total} dínó",
     "calendar_hint": "Kiemelve azok a napok, amikor játszottál valamelyik játékmóddal.",
+    "shirt_title": "Pólóminta — a tiéd!",
+    "shirt_hint": "Töltsd le a mintát, és bármelyik pólónyomdában rákérheted egy pólóra. Átlátszó hátterű PNG, sötét és világos pólóra is jó.",
+    "shirt_download": "Minta letöltése",
     "timeline_now": "Ma",
     "weekdays": ["H", "K", "Sze", "Cs", "P", "Szo", "V"],
     "months": ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"]
