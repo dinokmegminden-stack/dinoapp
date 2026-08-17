@@ -13,8 +13,8 @@ import { COMPARISON_NAMES, COMPARISON_IMAGE_MAP, COMPARISON_HUMAN_IMAGE } from '
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
-const STAGE_HEIGHT = 260;
-const MAX_FIGURE_FRACTION = 0.7; // a legmagasabb alak se lépje túl a színpad 70%-át
+const GRID_PX_PER_METER = 40; // fix méter-rács: minden sávnak UGYANAZ a léptéke
+const Y_AXIS_WIDTH = 26; // hely a bal oldali magasság-számoknak
 const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
 const DEFAULT_RIGHT = 'Velociraptor';
@@ -60,57 +60,83 @@ function DinoPicker({ names, byName, activeName, onPick, otherName }) {
   );
 }
 
-// Egy dínó a közös színpadon: a kép szélessége/magassága EGYSÉGESEN
-// (torzítás nélkül) van felskálázva a kép saját natív arányából és a
-// valós magasságból számolt közös pxPerMeter-ből — ezért ugyanazon a
-// talajvonalon állva a hossz ÉS a magasság is valós arányban látszik.
-// A natív arányt onLoad-ból olvassuk (Image.resolveAssetSource nem elérhető
-// react-native-web-en) — betöltésig egy hosszúkás alapértelmezés van.
-function StageFigure({ dino, progress, pxPerMeter }) {
-  const [aspect, setAspect] = useState(2);
-  if (!dino) return <View style={styles.stageColumn} />;
-  const collected = isCollected(dino, progress);
-  const heightM = getScaleHeightM(dino);
-  const source = COMPARISON_IMAGE_MAP[dino.name_hu];
-  const renderHeight = Math.max(20, heightM * pxPerMeter);
-  const renderWidth = renderHeight * aspect;
-
+// Méter-rács: minden sáv (két dínó + ember) ugyanazt a rácsot kapja —
+// azonos GRID_PX_PER_METER lépték, azonos oszlop-/sorszám, azonos stílus —
+// hogy a hossz és a magasság közvetlenül, vonalzóként leolvasható legyen
+// egymáshoz képest is. gridCols/gridRows a teljes összehasonlításra közösen
+// számolt, hogy mindhárom sáv rácsa egyformán széles/magas legyen.
+function GridBackground({ gridCols, gridRows }) {
+  const w = gridCols * GRID_PX_PER_METER;
+  const h = gridRows * GRID_PX_PER_METER;
   return (
-    <View style={styles.stageColumn}>
-      <Image
-        source={source}
-        style={[{ width: renderWidth, height: renderHeight }, !collected && styles.dinoImageLocked]}
-        resizeMode="contain"
-        onLoad={(e) => {
-          const { width, height } = e.nativeEvent?.source || {};
-          if (width && height) setAspect(width / height);
-        }}
-      />
-      {!collected && (
-        <MaterialCommunityIcons name="lock" size={20} color={COLORS.cream} style={styles.lockIcon} />
-      )}
+    <View style={[styles.gridBg, { width: w, height: h }]} pointerEvents="none">
+      {Array.from({ length: gridCols + 1 }).map((_, i) => (
+        <View key={`v${i}`} style={[styles.gridLineV, { left: i * GRID_PX_PER_METER }]} />
+      ))}
+      {Array.from({ length: gridRows + 1 }).map((_, i) => (
+        <View key={`h${i}`} style={[styles.gridLineH, { top: h - i * GRID_PX_PER_METER }]} />
+      ))}
     </View>
   );
 }
 
-// A referencia emberalak — ugyanaz az onLoad-alapú arány-kiszámítás, mint
-// a StageFigure-nél, csak fix 1.8 m magassággal és zárolás nélkül.
-function HumanFigure({ pxPerMeter }) {
-  const [aspect, setAspect] = useState(0.5);
-  const renderHeight = Math.max(20, HUMAN_HEIGHT_M * pxPerMeter);
+function XAxisNumbers({ gridCols }) {
+  return (
+    <View style={[styles.xAxisRow, { width: gridCols * GRID_PX_PER_METER, marginLeft: Y_AXIS_WIDTH }]}>
+      {Array.from({ length: gridCols }).map((_, i) => (
+        <Text key={i} style={[styles.axisLabel, { position: 'absolute', left: i * GRID_PX_PER_METER + 2, width: GRID_PX_PER_METER }]}>
+          {i + 1}
+        </Text>
+      ))}
+    </View>
+  );
+}
+
+function YAxisNumbers({ gridRows }) {
+  const h = gridRows * GRID_PX_PER_METER;
+  return (
+    <View style={[styles.yAxisCol, { width: Y_AXIS_WIDTH, height: h }]}>
+      {Array.from({ length: gridRows }).map((_, i) => (
+        <Text key={i} style={[styles.axisLabel, styles.axisLabelY, { position: 'absolute', top: h - (i + 1) * GRID_PX_PER_METER - 6 }]}>
+          {i + 1}
+        </Text>
+      ))}
+    </View>
+  );
+}
+
+// Egy sáv: bal oldalt a magasság-számok, utána a rács, azon az orr / a kép
+// bal széle mindig a rács x=0 pontján, a lábak mindig a rács y=0 (alsó)
+// vonalán — ugyanaz a GRID_PX_PER_METER lépték mindhárom sávnál, torzítás
+// nélkül (a szélesség a kép saját natív arányából jön, onLoad-ból olvasva,
+// mert Image.resolveAssetSource nem elérhető react-native-web-en).
+function FigureRow({ source, heightM, locked, gridCols, gridRows }) {
+  const [aspect, setAspect] = useState(2);
+  const renderHeight = Math.max(20, heightM * GRID_PX_PER_METER);
   const renderWidth = renderHeight * aspect;
 
   return (
-    <View style={styles.stageColumn}>
-      <Image
-        source={COMPARISON_HUMAN_IMAGE}
-        style={{ width: renderWidth, height: renderHeight, opacity: 0.7 }}
-        resizeMode="contain"
-        onLoad={(e) => {
-          const { width, height } = e.nativeEvent?.source || {};
-          if (width && height) setAspect(width / height);
-        }}
-      />
+    <View style={styles.figureRow}>
+      <YAxisNumbers gridRows={gridRows} />
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <View style={{ width: gridCols * GRID_PX_PER_METER, height: gridRows * GRID_PX_PER_METER }}>
+          <GridBackground gridCols={gridCols} gridRows={gridRows} />
+          <View style={styles.figureAnchor}>
+            <Image
+              source={source}
+              style={[{ width: renderWidth, height: renderHeight }, locked && styles.dinoImageLocked]}
+              resizeMode="contain"
+              onLoad={(e) => {
+                const { width, height } = e.nativeEvent?.source || {};
+                if (width && height) setAspect(width / height);
+              }}
+            />
+            {locked && (
+              <MaterialCommunityIcons name="lock" size={20} color={COLORS.cream} style={styles.lockIcon} />
+            )}
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -191,14 +217,14 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
 
   const leftHeightM = leftDino ? getScaleHeightM(leftDino) : 0;
   const rightHeightM = rightDino ? getScaleHeightM(rightDino) : 0;
+  const leftLengthM = leftDino ? (leftDino.length_m_max ?? leftDino.length_m_min ?? leftHeightM) : 0;
+  const rightLengthM = rightDino ? (rightDino.length_m_max ?? rightDino.length_m_min ?? rightHeightM) : 0;
 
-  // Közös léptékszorzó: kizárólag a DB valós height_m adataiból, úgy hogy a
-  // legmagasabb alak (a három közül: két dínó + 1.8 m ember) se lépje túl a
-  // színpad magasságának MAX_FIGURE_FRACTION (70%) hányadát.
-  const pxPerMeter = useMemo(() => {
-    const maxH = Math.max(leftHeightM, rightHeightM, HUMAN_HEIGHT_M);
-    return (STAGE_HEIGHT * MAX_FIGURE_FRACTION) / maxH;
-  }, [leftHeightM, rightHeightM]);
+  // Mindhárom sáv (2 dínó + ember) UGYANAZT a rácsméretet kapja — a
+  // leghosszabb/legmagasabb alak adja a rács kiterjedését, +1 m ráhagyással,
+  // hogy a vonalzó ne vágja le pont a tetején.
+  const gridCols = Math.max(2, Math.ceil(Math.max(leftLengthM, rightLengthM, 1)) + 1);
+  const gridRows = Math.max(2, Math.ceil(Math.max(leftHeightM, rightHeightM, HUMAN_HEIGHT_M)) + 1);
 
   const handleRandom = () => {
     if (availableNames.length < 2) return;
@@ -228,12 +254,34 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
 
         <View style={styles.stage}>
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
-          <View style={styles.stageRow}>
-            <StageFigure key={leftName || 'left'} dino={leftDino} progress={progress} pxPerMeter={pxPerMeter} />
-            <HumanFigure pxPerMeter={pxPerMeter} />
-            <StageFigure key={rightName || 'right'} dino={rightDino} progress={progress} pxPerMeter={pxPerMeter} />
-          </View>
-          <View style={styles.groundLine} />
+          <XAxisNumbers gridCols={gridCols} />
+          {leftDino && (
+            <FigureRow
+              key={leftName}
+              source={COMPARISON_IMAGE_MAP[leftDino.name_hu]}
+              heightM={leftHeightM}
+              locked={!isCollected(leftDino, progress)}
+              gridCols={gridCols}
+              gridRows={gridRows}
+            />
+          )}
+          <FigureRow
+            source={COMPARISON_HUMAN_IMAGE}
+            heightM={HUMAN_HEIGHT_M}
+            locked={false}
+            gridCols={gridCols}
+            gridRows={gridRows}
+          />
+          {rightDino && (
+            <FigureRow
+              key={rightName}
+              source={COMPARISON_IMAGE_MAP[rightDino.name_hu]}
+              heightM={rightHeightM}
+              locked={!isCollected(rightDino, progress)}
+              gridCols={gridCols}
+              gridRows={gridRows}
+            />
+          )}
         </View>
 
         <View style={styles.compareRow}>
@@ -297,12 +345,12 @@ const styles = StyleSheet.create({
   stage: {
     marginHorizontal: 20,
     marginTop: 8,
-    paddingTop: 28,
+    padding: 12,
+    paddingTop: 34,
     backgroundColor: 'rgba(16,14,12,0.6)',
     borderRadius: RADIUS.cardLarge,
     borderWidth: 1,
     borderColor: 'rgba(254,250,224,0.10)',
-    overflow: 'hidden',
   },
   humanCaption: {
     position: 'absolute',
@@ -313,23 +361,57 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontSize: 11,
   },
-  stageRow: {
+  // Mindhárom sáv (2 dínó + ember) ugyanazt a rácsot használja: a magasság
+  // (Y) számok balra, a rács + a figura pedig egy vízszintesen görgethető
+  // sávban — a hossz-tengely (X) számai a legfelső sávnál egyszer jelennek
+  // meg, a rácsvonalak közösek, azonos GRID_PX_PER_METER léptékkel.
+  xAxisRow: {
+    height: 16,
+    marginBottom: 2,
+  },
+  figureRow: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    height: STAGE_HEIGHT,
+    marginBottom: 4,
   },
-  // Ember + két dínó egyenlő szélességű oszlopban — egyik dínó se dominálja
-  // vizuálisan a színpadot, mindegyik ugyanannyi vízszintes helyet kap.
-  stageColumn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    height: '100%',
+  yAxisCol: {
+    position: 'relative',
   },
-  groundLine: {
-    height: 2,
-    backgroundColor: COLORS.accent,
-    opacity: 0.6,
+  axisLabel: {
+    color: 'rgba(254,250,224,0.55)',
+    fontFamily: FONTS.body,
+    fontSize: 10,
+    textAlign: 'center',
+  },
+  axisLabelY: {
+    right: 6,
+    width: Y_AXIS_WIDTH - 6,
+    textAlign: 'right',
+  },
+  gridBg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  gridLineV: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 1,
+    backgroundColor: 'rgba(254,250,224,0.10)',
+  },
+  gridLineH: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: 'rgba(254,250,224,0.10)',
+  },
+  // Az orr / a kép bal széle mindig a rács x=0-jánál, a lábak mindig a rács
+  // y=0 (alsó) vonalánál — nem középre igazítva, mint korábban.
+  figureAnchor: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
   },
   compareRow: {
     flexDirection: 'row',
