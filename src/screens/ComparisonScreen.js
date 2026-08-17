@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
 import { COMPARISON_NAMES, COMPARISON_IMAGE_MAP, COMPARISON_HUMAN_IMAGE } from '../constants/comparisonDinos';
+import { COMPARISON_IMAGE_DIMS } from '../constants/comparisonImageDims';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
@@ -116,18 +117,23 @@ function YAxisNumbers({ totalRows }) {
 // hívó ad meg — nem önálló mini-rács, hanem egy pozíció a nagy, egyben
 // megjelenő rácson.
 //
-// A LÉPTÉKET MEGHATÁROZÓ tengely rögzített, a másik ebből SZÁRMAZIK (a kép
-// saját natív arányából, onLoad-ból olvasva — Image.resolveAssetSource nem
-// elérhető react-native-web-en), hogy ne torzuljon a kép:
+// A LÉPTÉKET MEGHATÁROZÓ tengely rögzített, a másik ebből SZÁRMAZIK — a kép
+// natív képarányából, ami build-időben, sharp-pal előre kiszámolt STATIKUS
+// táblázatból jön (comparisonImageDims.js), NEM az Image onLoad eseményéből.
+// Az onLoad-alapú `nativeEvent.source.width/height` a helyi Expo dev
+// szerveren megbízhatóan feltöltődött, de a statikus production web
+// exportban nem — ott az arány sosem frissült a fallback-ról, a
+// resizeMode="contain" pedig a képet a rossz arányú dobozba levelezőboríték-
+// ozta, így a dínó a doboz belsejében "lebegett" a talajvonal fölött,
+// ahelyett hogy a doboz aljához simult volna. A build-időben rögzített
+// méret ettől a platformfüggéstől független.
 //   axis="width"  -> a dínó valós HOSSZA a mérvadó (fekvő, orrtól farokig):
 //                    renderWidth = lengthM * SCALE PONTOSAN, a magasság ebből jön.
 //   axis="height" -> az ember (álló alak) valós MAGASSÁGA a mérvadó:
 //                    renderHeight = heightM * SCALE PONTOSAN, a szélesség ebből jön.
-// A PNG-k már körbevágottak (nincs átlátszó margó a tartalom körül, lásd
-// scripts/strip-bg.js + resize-comparison-by-length.js), így a natív
-// képarány valóban a látható tartalom arányát adja, nem a vászonét.
-function Figure({ source, axis, meters, locked, bottomOffset }) {
-  const [aspect, setAspect] = useState(2); // natív width / height
+function Figure({ source, dimsKey, axis, meters, locked, bottomOffset }) {
+  const dims = COMPARISON_IMAGE_DIMS[dimsKey];
+  const aspect = dims ? dims.width / dims.height : 2;
   let renderWidth, renderHeight;
   if (axis === 'width') {
     renderWidth = Math.max(4, meters * SCALE);
@@ -143,10 +149,6 @@ function Figure({ source, axis, meters, locked, bottomOffset }) {
         source={source}
         style={[{ width: renderWidth, height: renderHeight }, locked && styles.dinoImageLocked]}
         resizeMode="contain"
-        onLoad={(e) => {
-          const { width, height } = e.nativeEvent?.source || {};
-          if (width && height) setAspect(width / height);
-        }}
       />
       {locked && (
         <MaterialCommunityIcons name="lock" size={20} color={COLORS.cream} style={styles.lockIcon} />
@@ -278,6 +280,7 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
                   <Figure
                     key={rightName}
                     source={COMPARISON_IMAGE_MAP[rightDino.name_hu]}
+                    dimsKey={rightDino.name_hu}
                     axis="width"
                     meters={rightLengthM}
                     locked={!isCollected(rightDino, progress)}
@@ -286,6 +289,7 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
                 )}
                 <Figure
                   source={COMPARISON_HUMAN_IMAGE}
+                  dimsKey="human"
                   axis="height"
                   meters={HUMAN_HEIGHT_M}
                   locked={false}
@@ -295,6 +299,7 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
                   <Figure
                     key={leftName}
                     source={COMPARISON_IMAGE_MAP[leftDino.name_hu]}
+                    dimsKey={leftDino.name_hu}
                     axis="width"
                     meters={leftLengthM}
                     locked={!isCollected(leftDino, progress)}
