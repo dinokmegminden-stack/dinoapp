@@ -5,7 +5,7 @@
 // Gyűjtemény felé), ugyanaz a quizPassed-alapú unlock-logika, mint a
 // Collection/Album képernyőn (regionProgress.js).
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Pressable, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
@@ -14,11 +14,21 @@ import { COMPARISON_IMAGE_DIMS } from '../constants/comparisonImageDims';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
-// EGYETLEN globális lépték minden alaknak — nincs sávonkénti/soronkénti
-// újraszámolás. A dínók hossza (vízszintes) és mindenki magassága
-// (függőleges) ugyanezzel a SCALE-lel váltódik pixelre.
-const SCALE = 50; // px / méter
-const GRID_PX_PER_METER = SCALE;
+// EGYETLEN globális lépték minden alaknak — nincs alakonkénti újraszámolás.
+// A dínók hossza (vízszintes) és mindenki magassága (függőleges) ugyanezzel
+// a léptékkel váltódik pixelre. Alap 50 px/m, de ha a leghosszabb dínó így
+// nem férne ki (pl. 27 m-es Diplodocus, vagy bármi mobilon), akkor a TELJES
+// összehasonlítás egyetlen közös, kisebb léptéket kap — sosem zsugorítunk
+// alakonként külön-külön, mert az elrontaná az arányokat.
+const MAX_SCALE = 50; // px / méter
+const MIN_SCALE = 12; // ez alatt inkább vízszintes görgetés
+// A férőhely-számításhoz: ezeknek egyezniük kell a Shell / styles.stage
+// tényleges értékeivel (Shell.js inner/innerWide maxWidth + paddingHorizontal).
+const STAGE_PADDING = 12; // = styles.stage padding
+const STAGE_H_MARGIN = 20; // = styles.stage marginHorizontal
+const SHELL_NARROW_MAX = 480;
+const SHELL_WIDE_MAX = 1100;
+const SHELL_H_PADDING = 80; // innerWide paddingHorizontal: 40 * 2
 const Y_AXIS_WIDTH = 26; // hely a bal oldali magasság-számoknak
 const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
@@ -66,30 +76,33 @@ function DinoPicker({ names, byName, activeName, onPick, otherName }) {
 }
 
 // Méter-rács: minden sáv (két dínó + ember) ugyanazt a rácsot kapja —
-// azonos GRID_PX_PER_METER lépték, azonos oszlop-/sorszám, azonos stílus —
+// azonos `scale` lépték, azonos oszlop-/sorszám, azonos stílus —
 // hogy a hossz és a magasság közvetlenül, vonalzóként leolvasható legyen
 // egymáshoz képest is. gridCols/gridRows a teljes összehasonlításra közösen
 // számolt, hogy mindhárom sáv rácsa egyformán széles/magas legyen.
-function GridBackground({ gridCols, gridRows }) {
-  const w = gridCols * GRID_PX_PER_METER;
-  const h = gridRows * GRID_PX_PER_METER;
+function GridBackground({ gridCols, gridRows, scale }) {
+  const w = gridCols * scale;
+  const h = gridRows * scale;
   return (
     <View style={[styles.gridBg, { width: w, height: h }]} pointerEvents="none">
       {Array.from({ length: gridCols + 1 }).map((_, i) => (
-        <View key={`v${i}`} style={[styles.gridLineV, { left: i * GRID_PX_PER_METER }]} />
+        <View key={`v${i}`} style={[styles.gridLineV, { left: i * scale }]} />
       ))}
       {Array.from({ length: gridRows + 1 }).map((_, i) => (
-        <View key={`h${i}`} style={[styles.gridLineH, { top: h - i * GRID_PX_PER_METER }]} />
+        <View key={`h${i}`} style={[styles.gridLineH, { top: h - i * scale }]} />
       ))}
     </View>
   );
 }
 
-function XAxisNumbers({ gridCols }) {
+// A hossz-tengely számai a RÁCCSAL EGYÜTT görgethetők (ugyanabban a
+// ScrollView-ban élnek), különben hosszú dínónál a számsor kilógna a panelből
+// és elcsúszna a rácsvonalaktól.
+function XAxisNumbers({ gridCols, scale }) {
   return (
-    <View style={[styles.xAxisRow, { width: gridCols * GRID_PX_PER_METER, marginLeft: Y_AXIS_WIDTH }]}>
+    <View style={[styles.xAxisRow, { width: gridCols * scale }]}>
       {Array.from({ length: gridCols }).map((_, i) => (
-        <Text key={i} style={[styles.axisLabel, { position: 'absolute', left: i * GRID_PX_PER_METER + 2, width: GRID_PX_PER_METER }]}>
+        <Text key={i} style={[styles.axisLabel, { position: 'absolute', left: i * scale + 2, width: scale }]}>
           {i + 1}
         </Text>
       ))}
@@ -97,14 +110,13 @@ function XAxisNumbers({ gridCols }) {
   );
 }
 
-// Folytonos Y-tengely: NEM sávonként újrakezdődő 1..gridRows, hanem egy
-// darab számsor a teljes (3 alak magas) rács aljától a tetejéig.
-function YAxisNumbers({ totalRows }) {
-  const h = totalRows * GRID_PX_PER_METER;
+// Folytonos Y-tengely: egy darab számsor a rács aljától a tetejéig.
+function YAxisNumbers({ totalRows, scale }) {
+  const h = totalRows * scale;
   return (
     <View style={[styles.yAxisCol, { width: Y_AXIS_WIDTH, height: h }]}>
       {Array.from({ length: totalRows }).map((_, i) => (
-        <Text key={i} style={[styles.axisLabel, styles.axisLabelY, { position: 'absolute', top: h - (i + 1) * GRID_PX_PER_METER - 6 }]}>
+        <Text key={i} style={[styles.axisLabel, styles.axisLabelY, { position: 'absolute', top: h - (i + 1) * scale - 6 }]}>
           {i + 1}
         </Text>
       ))}
@@ -131,15 +143,15 @@ function YAxisNumbers({ totalRows }) {
 //                    renderWidth = lengthM * SCALE PONTOSAN, a magasság ebből jön.
 //   axis="height" -> az ember (álló alak) valós MAGASSÁGA a mérvadó:
 //                    renderHeight = heightM * SCALE PONTOSAN, a szélesség ebből jön.
-function Figure({ source, dimsKey, axis, meters, locked, bottomOffset }) {
+function Figure({ source, dimsKey, axis, meters, locked, bottomOffset, scale }) {
   const dims = COMPARISON_IMAGE_DIMS[dimsKey];
   const aspect = dims ? dims.width / dims.height : 2;
   let renderWidth, renderHeight;
   if (axis === 'width') {
-    renderWidth = Math.max(4, meters * SCALE);
+    renderWidth = Math.max(4, meters * scale);
     renderHeight = renderWidth / aspect;
   } else {
-    renderHeight = Math.max(4, meters * SCALE);
+    renderHeight = Math.max(4, meters * scale);
     renderWidth = renderHeight * aspect;
   }
 
@@ -216,6 +228,7 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
     [byName]
   );
 
+  const { width: windowWidth } = useWindowDimensions();
   const [leftName, setLeftName] = useState(null);
   const [rightName, setRightName] = useState(null);
 
@@ -257,6 +270,23 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
       HUMAN_HEIGHT_M,
     )) + 1
   );
+
+  // EGY közös lépték az egész összehasonlításra: alapból 50 px/m, de ha a
+  // rács így szélesebb lenne a rendelkezésre álló helynél (hosszú sauropoda,
+  // vagy keskeny kijelző), akkor MINDENKIRE egyformán kisebb léptéket
+  // választunk, hogy kiférjen. MIN_SCALE alatt marad a vízszintes görgetés.
+  //
+  // A férőhelyet az ABLAK szélességéből számoljuk, nem a panel onLayout-jából:
+  // a panel szélessége a tartalomtól is függ, így az mérésből visszacsatolna a
+  // léptékbe (lépték -> tartalomszélesség -> mért szélesség -> lépték), és
+  // sosem állna be a kicsinyítés.
+  const scale = useMemo(() => {
+    const shellMax = windowWidth >= 700 ? SHELL_WIDE_MAX : SHELL_NARROW_MAX;
+    const contentWidth = Math.min(windowWidth, shellMax) - SHELL_H_PADDING;
+    const available = contentWidth - STAGE_H_MARGIN * 2 - STAGE_PADDING * 2 - Y_AXIS_WIDTH;
+    if (available <= 0) return MAX_SCALE;
+    return Math.max(MIN_SCALE, Math.min(MAX_SCALE, available / gridCols));
+  }, [windowWidth, gridCols]);
 
   // Mindhárom alak egy listában, KIRAJZOLT magasság szerint csökkenően — a
   // legmagasabb renderelődik előbb, így az kerül leghátra, a legkisebb legelöl.
@@ -320,28 +350,33 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
 
         <View style={styles.stage}>
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
-          <XAxisNumbers gridCols={gridCols} />
           <View style={styles.figureRow}>
-            <YAxisNumbers totalRows={gridRows} />
+            <YAxisNumbers totalRows={gridRows} scale={scale} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: gridCols * GRID_PX_PER_METER, height: gridRows * GRID_PX_PER_METER }}>
-                <GridBackground gridCols={gridCols} gridRows={gridRows} />
-                {/* MINDEN alak ugyanarra a talajvonalra (a rács y=0-jára) áll,
-                    ezért a függőleges tengely valódi magasságot mutat mindenkinél
-                    — nincsenek egymás fölé rakott 5 m-es sávok. A magasabb alak
-                    kerül hátra (előbb renderelve), hogy a kisebb ne tűnjön el
-                    mögötte. */}
-                {figures.map((f) => (
-                  <Figure
-                    key={f.key}
-                    source={f.source}
-                    dimsKey={f.dimsKey}
-                    axis={f.axis}
-                    meters={f.meters}
-                    locked={f.locked}
-                    bottomOffset={0}
-                  />
-                ))}
+              <View>
+                {/* A hossz-tengely a rács FÖLÖTT, de ugyanabban a görgethető
+                    tartalomban — így nem lóghat ki a panelből, és görgetéskor
+                    is a rácsvonalak fölött marad. */}
+                <XAxisNumbers gridCols={gridCols} scale={scale} />
+                <View style={{ width: gridCols * scale, height: gridRows * scale }}>
+                  <GridBackground gridCols={gridCols} gridRows={gridRows} scale={scale} />
+                  {/* MINDEN alak ugyanarra a talajvonalra (a rács y=0-jára) áll,
+                      ezért a függőleges tengely valódi magasságot mutat mindenkinél.
+                      A magasabb alak kerül hátra (előbb renderelve), hogy a kisebb
+                      ne tűnjön el mögötte. */}
+                  {figures.map((f) => (
+                    <Figure
+                      key={f.key}
+                      source={f.source}
+                      dimsKey={f.dimsKey}
+                      axis={f.axis}
+                      meters={f.meters}
+                      locked={f.locked}
+                      bottomOffset={0}
+                      scale={scale}
+                    />
+                  ))}
+                </View>
               </View>
             </ScrollView>
           </View>
@@ -408,12 +443,17 @@ const styles = StyleSheet.create({
   stage: {
     marginHorizontal: 20,
     marginTop: 8,
-    padding: 12,
+    padding: STAGE_PADDING,
     paddingTop: 34,
     backgroundColor: 'rgba(16,14,12,0.6)',
     borderRadius: RADIUS.cardLarge,
     borderWidth: 1,
     borderColor: 'rgba(254,250,224,0.10)',
+    // A panel NEM nőhet a rács tartalmi szélességével — különben az onLayout
+    // a tartalom szélességét mérné, sosem derülne ki, hogy nem fér ki, és a
+    // hosszú dínó kilógna a panelből.
+    alignSelf: 'stretch',
+    overflow: 'hidden',
   },
   humanCaption: {
     position: 'absolute',
@@ -427,7 +467,7 @@ const styles = StyleSheet.create({
   // Mindhárom sáv (2 dínó + ember) ugyanazt a rácsot használja: a magasság
   // (Y) számok balra, a rács + a figura pedig egy vízszintesen görgethető
   // sávban — a hossz-tengely (X) számai a legfelső sávnál egyszer jelennek
-  // meg, a rácsvonalak közösek, azonos GRID_PX_PER_METER léptékkel.
+  // meg, a rácsvonalak közösek, azonos `scale` léptékkel.
   xAxisRow: {
     height: 16,
     marginBottom: 2,
