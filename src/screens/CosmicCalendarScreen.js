@@ -102,6 +102,19 @@ function formatAge(mya) {
   return `kb. ${mya} millió éve`;
 }
 
+// December 31. maga ~12,44 millió évet fed le — ezen belül a "hány millió
+// éve" formátum használhatatlan (minden újkori esemény "0 millió éve" lenne).
+// Ehelyett 24 órás napként jelenítjük meg: 0:00 = a nap eleje (~12,44 millió
+// éve), 24:00 = a jelen pillanat.
+function formatTimeOfDay(mya) {
+  const hours = (1 - mya / DAY_MYA) * 24;
+  const totalSeconds = Math.max(0, Math.round(hours * 3600));
+  const h = Math.floor(totalSeconds / 3600) % 24;
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  return [h, m, s].map((n) => String(n).padStart(2, '0')).join(':');
+}
+
 function buildCalendar() {
   const eventsByDay = new Map();
   for (const ev of EVENTS) {
@@ -171,7 +184,9 @@ function DayCell({ day }) {
         <View style={styles.tooltip} pointerEvents="none">
           {day.events.map((ev) => (
             <View key={ev.title} style={styles.tooltipRow}>
-              <Text style={styles.tooltipTitle}>{ev.icon ? `${ev.icon} ` : ''}{ev.title} · {formatAge(ev.mya)}</Text>
+              <Text style={styles.tooltipTitle}>
+                {ev.icon ? `${ev.icon} ` : ''}{ev.title} · {day.dayIndex === 365 ? formatTimeOfDay(ev.mya) : formatAge(ev.mya)}
+              </Text>
               <Text style={styles.tooltipDesc}>{ev.desc}</Text>
             </View>
           ))}
