@@ -13,7 +13,11 @@ import { COMPARISON_NAMES, COMPARISON_IMAGE_MAP, COMPARISON_HUMAN_IMAGE } from '
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
-const GRID_PX_PER_METER = 50; // fix méter-rács: minden sávnak UGYANAZ a léptéke
+// EGYETLEN globális lépték minden alaknak — nincs sávonkénti/soronkénti
+// újraszámolás. A dínók hossza (vízszintes) és mindenki magassága
+// (függőleges) ugyanezzel a SCALE-lel váltódik pixelre.
+const SCALE = 50; // px / méter
+const GRID_PX_PER_METER = SCALE;
 const Y_AXIS_WIDTH = 26; // hely a bal oldali magasság-számoknak
 const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
@@ -110,12 +114,28 @@ function YAxisNumbers({ totalRows }) {
 // Egy alak a KÖZÖS rácson belül: az orr / a kép bal széle mindig a rács
 // x=0 pontján, a lábak a saját sávjának aljánál (bottomOffset), amit a
 // hívó ad meg — nem önálló mini-rács, hanem egy pozíció a nagy, egyben
-// megjelenő rácson. A szélesség a kép saját natív arányából jön, onLoad-ból
-// olvasva (Image.resolveAssetSource nem elérhető react-native-web-en).
-function Figure({ source, heightM, locked, bottomOffset }) {
-  const [aspect, setAspect] = useState(2);
-  const renderHeight = Math.max(20, heightM * GRID_PX_PER_METER);
-  const renderWidth = renderHeight * aspect;
+// megjelenő rácson.
+//
+// A LÉPTÉKET MEGHATÁROZÓ tengely rögzített, a másik ebből SZÁRMAZIK (a kép
+// saját natív arányából, onLoad-ból olvasva — Image.resolveAssetSource nem
+// elérhető react-native-web-en), hogy ne torzuljon a kép:
+//   axis="width"  -> a dínó valós HOSSZA a mérvadó (fekvő, orrtól farokig):
+//                    renderWidth = lengthM * SCALE PONTOSAN, a magasság ebből jön.
+//   axis="height" -> az ember (álló alak) valós MAGASSÁGA a mérvadó:
+//                    renderHeight = heightM * SCALE PONTOSAN, a szélesség ebből jön.
+// A PNG-k már körbevágottak (nincs átlátszó margó a tartalom körül, lásd
+// scripts/strip-bg.js + resize-comparison-by-length.js), így a natív
+// képarány valóban a látható tartalom arányát adja, nem a vászonét.
+function Figure({ source, axis, meters, locked, bottomOffset }) {
+  const [aspect, setAspect] = useState(2); // natív width / height
+  let renderWidth, renderHeight;
+  if (axis === 'width') {
+    renderWidth = Math.max(4, meters * SCALE);
+    renderHeight = renderWidth / aspect;
+  } else {
+    renderHeight = Math.max(4, meters * SCALE);
+    renderWidth = renderHeight * aspect;
+  }
 
   return (
     <View style={[styles.figureAnchor, { bottom: bottomOffset }]}>
@@ -258,14 +278,16 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
                   <Figure
                     key={rightName}
                     source={COMPARISON_IMAGE_MAP[rightDino.name_hu]}
-                    heightM={rightHeightM}
+                    axis="width"
+                    meters={rightLengthM}
                     locked={!isCollected(rightDino, progress)}
                     bottomOffset={0}
                   />
                 )}
                 <Figure
                   source={COMPARISON_HUMAN_IMAGE}
-                  heightM={HUMAN_HEIGHT_M}
+                  axis="height"
+                  meters={HUMAN_HEIGHT_M}
                   locked={false}
                   bottomOffset={gridRows * GRID_PX_PER_METER}
                 />
@@ -273,7 +295,8 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
                   <Figure
                     key={leftName}
                     source={COMPARISON_IMAGE_MAP[leftDino.name_hu]}
-                    heightM={leftHeightM}
+                    axis="width"
+                    meters={leftLengthM}
                     locked={!isCollected(leftDino, progress)}
                     bottomOffset={gridRows * 2 * GRID_PX_PER_METER}
                   />
