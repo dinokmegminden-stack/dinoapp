@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -44,6 +44,11 @@ const REGION_LABEL_ORDER = REGION_ORDER.map((edu) => EDU_LABELS[edu]);
 const ALREND_ORDER = Object.values(ALREND_HU);
 
 const NON_FILTERABLE_VALUES = new Set(['ismeretlen', '']);
+
+// Az Album megnyitásakor nem az összes feloldott lényt rendereljük ki (100%-os
+// gyűjteménynél ez 111 kártya + 111 kép egyszerre, ami érezhetően lassú), csak
+// az első adagot — a többi görgetéskor töltődik hozzá.
+const PAGE_SIZE = 20;
 
 function sortByOrder(values, order) {
   const seen = new Set(values);
@@ -195,6 +200,33 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
     }));
   }, [filteredDinos]);
 
+  // Fokozatos betöltés: induláskor csak PAGE_SIZE kártya, görgetésre bővül.
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Szűrő/betű/hossz váltásnál újra az elejéről — különben egy szűkítés után
+  // is a korábban felgörgetett (nagy) mennyiség renderelődne ki egyszerre.
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filters, lengthRange, selectedLetter]);
+
+  const totalCount = filteredDinos.length;
+
+  // A régiós szekciókat a látható darabszám erejéig vágjuk vissza, a régiók
+  // sorrendjét megtartva (a kártyák így nem ugrálnak betöltés közben).
+  const visibleSections = useMemo(() => {
+    let budget = visibleCount;
+    const out = [];
+    for (const section of regionSections) {
+      if (budget <= 0) break;
+      const data = section.data.slice(0, budget);
+      budget -= data.length;
+      out.push({ ...section, data });
+    }
+    return out;
+  }, [regionSections, visibleCount]);
+
+  const hasMore = visibleCount < totalCount;
+
   return (
     <Shell
       header={<HeaderBar currentView="album" nickname={nickname} progress={progress} onNavigate={onNavigate} />}
@@ -265,20 +297,32 @@ export default function AlbumScreen({ nickname, allDinos, progress, onNavigate, 
             onLengthRangeChange={handleLengthRangeChange}
             style={isNarrow && styles.sidebarNarrow}
           />
-          <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
-            {regionSections.length === 0 ? (
+          <ScrollView
+            style={styles.list}
+            contentContainerStyle={styles.listContent}
+          >
+            {visibleSections.length === 0 ? (
               <Text style={styles.empty}>{t('collection.empty')}</Text>
             ) : (
-              regionSections.map((section) => (
-                <View key={section.key} style={styles.regionBlock}>
-                  <Text style={styles.regionBlockTitle}>{section.title.toUpperCase()}</Text>
-                  <View style={styles.grid}>
-                    {section.data.map((dino) => (
-                      <AlbumCard key={dino.id} dino={dino} />
-                    ))}
+              <>
+                {visibleSections.map((section) => (
+                  <View key={section.key} style={styles.regionBlock}>
+                    <Text style={styles.regionBlockTitle}>{section.title.toUpperCase()}</Text>
+                    <View style={styles.grid}>
+                      {section.data.map((dino) => (
+                        <AlbumCard key={dino.id} dino={dino} />
+                      ))}
+                    </View>
                   </View>
-                </View>
-              ))
+                ))}
+                {hasMore && (
+                  <TouchableOpacity style={styles.loadMoreBtn} onPress={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+                    <Text style={styles.loadMoreBtnText}>
+                      {t('collection.load_more', { count: totalCount - visibleCount })}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
             )}
           </ScrollView>
         </View>
@@ -404,6 +448,25 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     opacity: 0.7,
     marginTop: 20,
+  },
+  // Ugyanaz a stílus, mint a Katalógusban (CollectionScreen) — a két lista
+  // lapozója így egyformán néz ki.
+  loadMoreBtn: {
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(221,161,94,0.16)',
+    borderWidth: 1,
+    borderColor: COLORS.accent,
+  },
+  loadMoreBtnText: {
+    color: COLORS.accent,
+    fontFamily: FONTS.bold,
+    fontSize: 15,
+    fontWeight: '700',
   },
   regionBlock: {
     marginBottom: 24,
