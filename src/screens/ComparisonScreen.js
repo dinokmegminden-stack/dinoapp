@@ -13,7 +13,7 @@ import { COMPARISON_NAMES, COMPARISON_IMAGE_MAP, COMPARISON_HUMAN_IMAGE } from '
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
 import { useT } from '../i18n';
 
-const GRID_PX_PER_METER = 40; // fix méter-rács: minden sávnak UGYANAZ a léptéke
+const GRID_PX_PER_METER = 50; // fix méter-rács: minden sávnak UGYANAZ a léptéke
 const Y_AXIS_WIDTH = 26; // hely a bal oldali magasság-számoknak
 const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
