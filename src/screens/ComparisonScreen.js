@@ -240,7 +240,57 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
   // leghosszabb/legmagasabb alak adja a rács kiterjedését, +1 m ráhagyással,
   // hogy a vonalzó ne vágja le pont a tetején.
   const gridCols = Math.max(2, Math.ceil(Math.max(leftLengthM, rightLengthM, 1)) + 1);
-  const gridRows = Math.max(2, Math.ceil(Math.max(leftHeightM, rightHeightM, HUMAN_HEIGHT_M)) + 1);
+
+  // A dínók a HOSSZUKRA vannak méretezve, így a KIRAJZOLT magasságuk a kép
+  // képarányából jön (lengthM / aspect) — a rács magasságát ebből kell
+  // számolni, különben a legmagasabb alak kilóg a rácsból.
+  const renderedHeightM = (dino, lengthM) => {
+    const dims = dino ? COMPARISON_IMAGE_DIMS[dino.name_hu] : null;
+    if (!dims) return 0;
+    return lengthM / (dims.width / dims.height);
+  };
+  const gridRows = Math.max(
+    2,
+    Math.ceil(Math.max(
+      renderedHeightM(leftDino, leftLengthM),
+      renderedHeightM(rightDino, rightLengthM),
+      HUMAN_HEIGHT_M,
+    )) + 1
+  );
+
+  // Mindhárom alak egy listában, KIRAJZOLT magasság szerint csökkenően — a
+  // legmagasabb renderelődik előbb, így az kerül leghátra, a legkisebb legelöl.
+  const figures = [
+    leftDino && {
+      key: leftName,
+      source: COMPARISON_IMAGE_MAP[leftDino.name_hu],
+      dimsKey: leftDino.name_hu,
+      axis: 'width',
+      meters: leftLengthM,
+      locked: !isCollected(leftDino, progress),
+      h: renderedHeightM(leftDino, leftLengthM),
+    },
+    rightDino && {
+      key: rightName,
+      source: COMPARISON_IMAGE_MAP[rightDino.name_hu],
+      dimsKey: rightDino.name_hu,
+      axis: 'width',
+      meters: rightLengthM,
+      locked: !isCollected(rightDino, progress),
+      h: renderedHeightM(rightDino, rightLengthM),
+    },
+    {
+      key: 'human',
+      source: COMPARISON_HUMAN_IMAGE,
+      dimsKey: 'human',
+      axis: 'height',
+      meters: HUMAN_HEIGHT_M,
+      locked: false,
+      h: HUMAN_HEIGHT_M,
+    },
+  ]
+    .filter(Boolean)
+    .sort((a, b) => b.h - a.h);
 
   const handleRandom = () => {
     if (availableNames.length < 2) return;
@@ -272,40 +322,26 @@ export default function ComparisonScreen({ nickname, progress, allDinos, onNavig
           <Text style={styles.humanCaption}>{t('comparison.human_reference', { m: HUMAN_HEIGHT_M })}</Text>
           <XAxisNumbers gridCols={gridCols} />
           <View style={styles.figureRow}>
-            <YAxisNumbers totalRows={gridRows * 3} />
+            <YAxisNumbers totalRows={gridRows} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: gridCols * GRID_PX_PER_METER, height: gridRows * 3 * GRID_PX_PER_METER }}>
-                <GridBackground gridCols={gridCols} gridRows={gridRows * 3} />
-                {rightDino && (
+              <View style={{ width: gridCols * GRID_PX_PER_METER, height: gridRows * GRID_PX_PER_METER }}>
+                <GridBackground gridCols={gridCols} gridRows={gridRows} />
+                {/* MINDEN alak ugyanarra a talajvonalra (a rács y=0-jára) áll,
+                    ezért a függőleges tengely valódi magasságot mutat mindenkinél
+                    — nincsenek egymás fölé rakott 5 m-es sávok. A magasabb alak
+                    kerül hátra (előbb renderelve), hogy a kisebb ne tűnjön el
+                    mögötte. */}
+                {figures.map((f) => (
                   <Figure
-                    key={rightName}
-                    source={COMPARISON_IMAGE_MAP[rightDino.name_hu]}
-                    dimsKey={rightDino.name_hu}
-                    axis="width"
-                    meters={rightLengthM}
-                    locked={!isCollected(rightDino, progress)}
+                    key={f.key}
+                    source={f.source}
+                    dimsKey={f.dimsKey}
+                    axis={f.axis}
+                    meters={f.meters}
+                    locked={f.locked}
                     bottomOffset={0}
                   />
-                )}
-                <Figure
-                  source={COMPARISON_HUMAN_IMAGE}
-                  dimsKey="human"
-                  axis="height"
-                  meters={HUMAN_HEIGHT_M}
-                  locked={false}
-                  bottomOffset={gridRows * GRID_PX_PER_METER}
-                />
-                {leftDino && (
-                  <Figure
-                    key={leftName}
-                    source={COMPARISON_IMAGE_MAP[leftDino.name_hu]}
-                    dimsKey={leftDino.name_hu}
-                    axis="width"
-                    meters={leftLengthM}
-                    locked={!isCollected(leftDino, progress)}
-                    bottomOffset={gridRows * 2 * GRID_PX_PER_METER}
-                  />
-                )}
+                ))}
               </View>
             </ScrollView>
           </View>
