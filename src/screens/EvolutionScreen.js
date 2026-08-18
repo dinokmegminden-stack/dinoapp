@@ -21,6 +21,8 @@ const TICKS = [];
 for (let m = MYA_DOMAIN_MAX; m >= MYA_DOMAIN_MIN; m -= 5) TICKS.push(m);
 
 const LABEL_COL_WIDTH = 132;
+const MAPS_ROW_HEIGHT = 200;
+const MAP_WIDTH = MAPS_ROW_HEIGHT * 2; // az oval térképek ~2:1 arányúak
 const EPOCH_ROW_HEIGHT = 26;
 const RULER_HEIGHT = 34;
 const SUBROW_HEIGHT = 22;
@@ -41,6 +43,15 @@ const EPOCHS = [
   { key: 'early_cretaceous', labelKey: 'collection.epoch.early_cretaceous', start: 145, end: 100.5 },
   { key: 'late_cretaceous', labelKey: 'collection.epoch.late_cretaceous', start: 100.5, end: 66 },
   { key: 'paleogene', labelKey: 'evolution.epoch_paleogene', start: 66, end: 50 },
+];
+
+// Ősföldrajzi térképek az idővonal fejlécében — a fájlnév adja a MÉE pozíciót,
+// a térkép közepe a tengelyen az adott mya-értékhez igazodik. A 250 MÉE a
+// domain fölé esik (245), így a bal szélre kerül.
+const PALEO_MAPS = [
+  { mya: 250, source: require('../../assets/images/evolution/250ma.png') },
+  { mya: 190, source: require('../../assets/images/evolution/190ma.png') },
+  { mya: 120, source: require('../../assets/images/evolution/120ma.png') },
 ];
 
 // A fix EDU-sorrend (1..7) — ugyanaz, mint a régióválasztóban (regionProgress.js
@@ -158,7 +169,7 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
         <ScrollView horizontal style={styles.hScroll} contentContainerStyle={styles.hScrollContent}>
           <View style={styles.table}>
             <View style={[styles.labelCol, stickyLeftStyle]}>
-              <View style={[styles.labelCell, { height: EPOCH_ROW_HEIGHT + RULER_HEIGHT }]} />
+              <View style={[styles.labelCell, { height: MAPS_ROW_HEIGHT + EPOCH_ROW_HEIGHT + RULER_HEIGHT }]} />
               {rows.map((row) => (
                 <View key={row.edu} style={[styles.labelCell, { height: row.height }]}>
                   <Text style={styles.regionLabel} numberOfLines={2}>{t(`evolution.region_${row.key}`)}</Text>
@@ -167,6 +178,18 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
             </View>
 
             <View style={{ width: gridWidth }}>
+              <View style={[styles.mapsRow, { height: MAPS_ROW_HEIGHT, width: gridWidth }]}>
+                {PALEO_MAPS.map((m) => {
+                  const cx = xForMya(m.mya);
+                  const left = Math.max(0, Math.min(gridWidth - MAP_WIDTH, cx - MAP_WIDTH / 2));
+                  return (
+                    <View key={m.mya} style={[styles.mapItem, { left, width: MAP_WIDTH }]}>
+                      <Image source={m.source} style={styles.mapImage} resizeMode="contain" />
+                      <Text style={styles.mapLabel}>{m.mya} {t('evolution.mya')}</Text>
+                    </View>
+                  );
+                })}
+              </View>
               <View style={[styles.epochRow, { height: EPOCH_ROW_HEIGHT, width: gridWidth }]}>
                 {EPOCHS.map((epoch) => {
                   const start = Math.min(epoch.start, MYA_DOMAIN_MAX);
@@ -267,6 +290,33 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
     fontSize: 12,
     letterSpacing: 0.3,
+  },
+  mapsRow: {
+    position: 'relative',
+    backgroundColor: 'rgba(16,14,12,0.4)',
+  },
+  mapItem: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mapImage: {
+    width: '100%',
+    height: MAPS_ROW_HEIGHT - 20,
+  },
+  mapLabel: {
+    position: 'absolute',
+    bottom: 2,
+    color: COLORS.accent,
+    fontFamily: FONTS.bold,
+    fontSize: 11,
+    letterSpacing: 1,
+    backgroundColor: 'rgba(20,18,16,0.75)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: RADIUS.pill,
   },
   epochRow: {
     position: 'relative',

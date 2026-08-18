@@ -115,7 +115,8 @@
     "region_south_america": "Dél-Amerika",
     "region_north_america": "Észak-Amerika",
     "region_australia": "Ausztrália",
-    "epoch_paleogene": "Paleogén"
+    "epoch_paleogene": "Paleogén",
+    "mya": "MÉE"
   },
   "comparison": {
     "title": "MÉRETÖSSZEHASONLÍTÓ",

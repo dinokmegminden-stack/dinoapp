@@ -115,7 +115,8 @@
     "region_south_america": "South America",
     "region_north_america": "North America",
     "region_australia": "Australia",
-    "epoch_paleogene": "Paleogene"
+    "epoch_paleogene": "Paleogene",
+    "mya": "Mya"
   },
   "comparison": {
     "title": "SIZE COMPARISON",
