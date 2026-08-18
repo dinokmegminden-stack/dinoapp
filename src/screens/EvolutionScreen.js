@@ -52,7 +52,9 @@ const PALEO_MAPS = [
   { mya: 250, source: require('../../assets/images/evolution/250ma.png') },
   { mya: 190, source: require('../../assets/images/evolution/190ma.png') },
   { mya: 120, source: require('../../assets/images/evolution/120ma.png') },
-  { mya: 66, source: require('../../assets/images/evolution/66ma.png') },
+  // A 66 Ma térkép "kerekebb" oválja (~1.58:1 a többi ~2:1 helyett) contain
+  // mellett keskenyebb/alacsonyabb lenne — cover-rel kitölti a sáv magasságát.
+  { mya: 66, source: require('../../assets/images/evolution/66ma.png'), fit: 'cover' },
 ];
 
 // A fix EDU-sorrend (1..7) — ugyanaz, mint a régióválasztóban (regionProgress.js
@@ -197,7 +199,8 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
         >
           <View style={styles.table}>
             <View style={[styles.labelCol, stickyLeftStyle]}>
-              <View style={[styles.labelCell, stickyCornerStyle, { height: MAPS_ROW_HEIGHT + EPOCH_ROW_HEIGHT + RULER_HEIGHT }]} />
+              <View style={[styles.labelCell, { height: MAPS_ROW_HEIGHT, borderRightWidth: 0, borderBottomWidth: 0 }]} />
+              <View style={[styles.labelCell, stickyCornerStyle, { height: EPOCH_ROW_HEIGHT + RULER_HEIGHT }]} />
               {rows.map((row) => (
                 <View key={row.edu} style={[styles.labelCell, { height: row.height }]}>
                   <Text style={styles.regionLabel} numberOfLines={2}>{t(`evolution.region_${row.key}`)}</Text>
@@ -206,19 +209,19 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
             </View>
 
             <View style={{ width: gridWidth }}>
-              <View style={[stickyTopStyle, { width: gridWidth }]}>
               <View style={[styles.mapsRow, { height: MAPS_ROW_HEIGHT, width: gridWidth }]}>
                 {PALEO_MAPS.map((m) => {
                   const cx = xForMya(m.mya);
                   const left = Math.max(0, Math.min(gridWidth - MAP_WIDTH, cx - MAP_WIDTH / 2));
                   return (
                     <View key={m.mya} style={[styles.mapItem, { left, width: MAP_WIDTH }]}>
-                      <Image source={m.source} style={styles.mapImage} resizeMode="contain" />
+                      <Image source={m.source} style={styles.mapImage} resizeMode={m.fit || 'contain'} />
                       <Text style={styles.mapLabel}>{m.mya} {t('evolution.mya')}</Text>
                     </View>
                   );
                 })}
               </View>
+              <View style={[stickyTopStyle, { width: gridWidth }]}>
               <View style={[styles.epochRow, { height: EPOCH_ROW_HEIGHT, width: gridWidth }]}>
                 {EPOCHS.map((epoch) => {
                   const start = Math.min(epoch.start, MYA_DOMAIN_MAX);
