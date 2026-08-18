@@ -6,7 +6,7 @@
 // görgethető — a régiónevek balra rögzítve (position:sticky, web-only,
 // lásd CollectionTimeline.js hasonló mintáját a függőleges tengelyen).
 import React, { useMemo, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Pressable, Platform } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Pressable, Platform, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
@@ -72,6 +72,18 @@ const stickyLeftStyle = Platform.select({
   default: {},
 });
 
+const stickyTopStyle = Platform.select({
+  web: { position: 'sticky', top: 0, zIndex: 6, backgroundColor: COLORS.bgDark },
+  default: {},
+});
+
+// A bal-felső sarokcella egyszerre rögzül balra és fölülre — a legmagasabb
+// zIndex, hogy a görgő fejléc- és címkeoszlop-rétege fölött maradjon.
+const stickyCornerStyle = Platform.select({
+  web: { position: 'sticky', left: 0, top: 0, zIndex: 7 },
+  default: {},
+});
+
 function xForMya(mya) {
   const clamped = Math.min(MYA_DOMAIN_MAX, Math.max(MYA_DOMAIN_MIN, mya));
   return ((MYA_DOMAIN_MAX - clamped) / 5) * COL_WIDTH;
@@ -134,6 +146,16 @@ function EvoMarker({ dino, xPx, subRow, topOffset }) {
 export default function EvolutionScreen({ nickname, progress, allDinos, onNavigate, onBack }) {
   const { t } = useT();
 
+  // A vízszintes görgőt a viewporthoz kötjük (web), hogy a függőleges görgetés
+  // is ezen BELÜL történjen — csak akkor tud a sticky fejléc/címkeoszlop a görgő
+  // saját scrollportjához rögzülni (a Shell egyébként az egész oldalt görgeti,
+  // amihez a sticky nem tud igazodni). A görgő teteje ~a fejlécsáv + a képernyő-
+  // cím alatt van; a maradék viewport-magasság lesz a doboz magassága.
+  // ponytail: fix 200px offset a görgő teteje fölötti sávra; ha a fejléc valaha
+  // más magasságú lesz, itt kell hangolni.
+  const { height: winH } = useWindowDimensions();
+  const scrollH = Math.max(240, winH - 200);
+
   const { rows, gridWidth } = useMemo(() => {
     const byEdu = new Map();
     REGIONS.forEach((r) => byEdu.set(r.edu, []));
@@ -166,10 +188,15 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
           </View>
         </View>
 
-        <ScrollView horizontal style={styles.hScroll} contentContainerStyle={styles.hScrollContent}>
+        <View style={[styles.scrollWrap, Platform.OS === 'web' ? { height: scrollH } : null]}>
+        <ScrollView
+          horizontal
+          style={[styles.hScroll, Platform.OS === 'web' ? { height: '100%', overflowY: 'auto' } : null]}
+          contentContainerStyle={styles.hScrollContent}
+        >
           <View style={styles.table}>
             <View style={[styles.labelCol, stickyLeftStyle]}>
-              <View style={[styles.labelCell, { height: MAPS_ROW_HEIGHT + EPOCH_ROW_HEIGHT + RULER_HEIGHT }]} />
+              <View style={[styles.labelCell, stickyCornerStyle, { height: MAPS_ROW_HEIGHT + EPOCH_ROW_HEIGHT + RULER_HEIGHT }]} />
               {rows.map((row) => (
                 <View key={row.edu} style={[styles.labelCell, { height: row.height }]}>
                   <Text style={styles.regionLabel} numberOfLines={2}>{t(`evolution.region_${row.key}`)}</Text>
@@ -178,6 +205,7 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
             </View>
 
             <View style={{ width: gridWidth }}>
+              <View style={[stickyTopStyle, { width: gridWidth }]}>
               <View style={[styles.mapsRow, { height: MAPS_ROW_HEIGHT, width: gridWidth }]}>
                 {PALEO_MAPS.map((m) => {
                   const cx = xForMya(m.mya);
@@ -214,6 +242,7 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
                   </View>
                 ))}
               </View>
+              </View>
 
               {rows.map((row) => (
                 <View key={row.edu} style={[styles.dataRow, { height: row.height, width: gridWidth }]}>
@@ -228,6 +257,7 @@ export default function EvolutionScreen({ nickname, progress, allDinos, onNaviga
             </View>
           </View>
         </ScrollView>
+        </View>
       </View>
     </Shell>
   );
@@ -262,15 +292,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 4,
   },
+  scrollWrap: { flex: 1, width: '100%', ...Platform.select({ web: { flexGrow: 0, flexShrink: 0, flexBasis: 'auto', minHeight: 0 }, default: {} }) },
   hScroll: { flex: 1, width: '100%' },
   hScrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 40,
+    // A táblát fölülre igazítjuk (nem nyújtjuk a görgő magasságára), különben a
+    // sorok a bounded dobozba préselődnének scroll helyett.
+    alignItems: 'flex-start',
   },
   table: {
     flexDirection: 'row',
     borderRadius: 14,
-    overflow: 'hidden',
+    // Nincs overflow:hidden — az beágyazott scroll-konténert csinálna a táblából,
+    // amihez a sticky fejléc/címkeoszlop rögzülne a valódi görgő helyett.
     borderWidth: 1,
     borderColor: 'rgba(254,250,224,0.10)',
   },
