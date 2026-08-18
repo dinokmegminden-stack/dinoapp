@@ -295,7 +295,8 @@ const styles = StyleSheet.create({
   scrollWrap: { flex: 1, width: '100%', ...Platform.select({ web: { flexGrow: 0, flexShrink: 0, flexBasis: 'auto', minHeight: 0 }, default: {} }) },
   hScroll: { flex: 1, width: '100%' },
   hScrollContent: {
-    paddingHorizontal: 20,
+    // Nincs vízszintes padding: a sticky A1/címkeoszlop különben a padding
+    // szélességével elcsúszna, mielőtt a görgő bal széléhez rögzülne.
     paddingBottom: 40,
     // A táblát fölülre igazítjuk (nem nyújtjuk a görgő magasságára), különben a
     // sorok a bounded dobozba préselődnének scroll helyett.
