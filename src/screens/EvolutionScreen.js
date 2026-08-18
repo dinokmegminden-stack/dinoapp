@@ -52,6 +52,7 @@ const PALEO_MAPS = [
   { mya: 250, source: require('../../assets/images/evolution/250ma.png') },
   { mya: 190, source: require('../../assets/images/evolution/190ma.png') },
   { mya: 120, source: require('../../assets/images/evolution/120ma.png') },
+  { mya: 66, source: require('../../assets/images/evolution/66ma.png') },
 ];
 
 // A fix EDU-sorrend (1..7) — ugyanaz, mint a régióválasztóban (regionProgress.js
