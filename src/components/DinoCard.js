@@ -64,7 +64,7 @@ function dietValue(dino) {
 
 function dietIconName(dino) {
   const v = String(dietValue(dino)).trim().toLowerCase();
-  if (v.includes('húsevő') || v.includes('hus') || v.includes('carn')) return 'tooth';       // carnivore
+  if (v.includes('húsevő') || v.includes('hus') || v.includes('carn')) return 'food-drumstick'; // carnivore
   if (v.includes('növényevő') || v.includes('noveny') || v.includes('növény') || v.includes('herb')) return 'leaf'; // herbivore
   return 'dna'; // omnivore / ismeretlen
 }
