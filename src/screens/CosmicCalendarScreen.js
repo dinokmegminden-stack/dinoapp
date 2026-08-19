@@ -38,7 +38,7 @@ const EVENTS = [
   { title: 'Hold kialakulása', mya: 4510.0, desc: 'Egy Mars méretű égitest (Theia) belecsapódott a fiatal Földbe; a kidobódott törmelékből állt össze a Hold.' },
   { title: 'Első óceánok', mya: 4400.0, desc: 'A felszín lehűlésével tartós folyékony víz jelent meg.' },
   { title: 'Késői nagy bombázás', mya: 3900.0, desc: 'A belső Naprendszert sűrű aszteroida- és üstökösbecsapódások érték (pontos időzítése vitatott).' },
-  { title: 'Első élet', mya: 3800.0, desc: 'A legkorábbi ismert életre utaló nyomok.' },
+  { title: 'Első élet', mya: 3800.0, desc: 'A legkorábbi ismert életre utaló nyomok.', icon: '🦠' },
   { title: 'Első fotoszintézis', mya: 3500.0, desc: 'Megjelenik a fotoszintetizáló mikrobiális élet.' },
   { title: 'Cianobaktériumok', mya: 3500.0, desc: 'Oxigéntermelő fotoszintézis terjedése.' },
   { title: 'Nagy oxidáció', mya: 2400.0, desc: 'A légkör oxigéntartalma tartósan megemelkedik.' },
