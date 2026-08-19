@@ -69,6 +69,13 @@ function dietIconName(dino) {
   return 'dna'; // omnivore / ismeretlen
 }
 
+// Étrend-ikon színe: húsevő piros, növényevő zöld, egyéb semleges.
+function dietColor(iconName) {
+  if (iconName === 'food-drumstick') return '#e5484d';
+  if (iconName === 'leaf') return '#3fb950';
+  return C.onDark;
+}
+
 // ── Ritkaság (1–5) → szín (a címke i18n-ből: card.rarity_N) ──────────────────
 const RARITY_COLOR = {
   1: C.sage,
@@ -155,7 +162,7 @@ export default function DinoCard({ dino, onPress, showDescription = false }) {
     <View style={styles.imageZone}>
       <Image source={imageSource(dino)} style={styles.image} resizeMode="cover" />
       <View style={styles.dietBadge} pointerEvents="none">
-        <MaterialCommunityIcons name={diet} size={18} color={C.onDark} />
+        <MaterialCommunityIcons name={diet} size={18} color={dietColor(diet)} style={{ opacity: 0.5 }} />
       </View>
       {!!length && (
         <View style={styles.lengthBadge} pointerEvents="none">
