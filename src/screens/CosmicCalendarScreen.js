@@ -106,6 +106,10 @@ const PERIODS = [
   { name: 'Triász kezdete', mya: 251.9, color: '#f72585' },
   { name: 'Jura kezdete', mya: 201.3, color: '#7bd389' },
   { name: 'Kréta kezdete', mya: 145.0, color: '#a78bfa' },
+  { name: 'Paleogén kezdete', mya: 66.0, color: '#fb8500' },
+  { name: 'Neogén kezdete', mya: 23.03, color: '#3a86ff' },
+  { name: 'Kvarter kezdete', mya: 2.58, color: '#06d6a0' },
+  { name: 'Jelen', mya: 0.0, color: '#118ab2' },
 ];
 
 function formatAge(mya) {
