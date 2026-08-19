@@ -7801,5 +7801,1292 @@
     ],
     "correctIndex": 0,
     "hint": "A neve szó szerint azt jelenti, hogy 'bálnagyík'."
+  },
+  {
+    "id": 628,
+    "difficulty": "easy",
+    "question": "Mit jelent a Tyrannosaurus név?",
+    "options": [
+      "Páncélos gyík",
+      "Gyors tolvaj",
+      "Zsarnok gyík",
+      "Tüskés gyík"
+    ],
+    "correctIndex": 2,
+    "hint": "A 'tyranno' előtag a zsarnokságra utal."
+  },
+  {
+    "id": 629,
+    "difficulty": "easy",
+    "question": "Mit jelent a Triceratops név?",
+    "options": [
+      "Három szarvú arc",
+      "Nagy fej",
+      "Csőrös gyík",
+      "Tüskés farok"
+    ],
+    "correctIndex": 0,
+    "hint": "A 'tri' hármat, a 'ceratops' szarvas arcot jelent."
+  },
+  {
+    "id": 630,
+    "difficulty": "easy",
+    "question": "Mit jelent a Velociraptor név?",
+    "options": [
+      "Tollas vadász",
+      "Gyors tolvaj",
+      "Éjjeli ragadozó",
+      "Kis gyík"
+    ],
+    "correctIndex": 1,
+    "hint": "A 'veloci' a gyorsaságra utal."
+  },
+  {
+    "id": 631,
+    "difficulty": "easy",
+    "question": "Mit jelent a Stegosaurus név?",
+    "options": [
+      "Hosszú nyakú gyík",
+      "Szarvas gyík",
+      "Tetős/lemezes gyík",
+      "Páncélos gyík"
+    ],
+    "correctIndex": 2,
+    "hint": "A hátán sorakozó csontlemezekről kapta a nevét."
+  },
+  {
+    "id": 632,
+    "difficulty": "easy",
+    "question": "Mit jelent az Oviraptor név?",
+    "options": [
+      "Fürge gyík",
+      "Tojástolvaj",
+      "Csőrös vadász",
+      "Tollas futó"
+    ],
+    "correctIndex": 1,
+    "hint": "Az 'ovi' tojást jelent."
+  },
+  {
+    "id": 633,
+    "difficulty": "easy",
+    "question": "Mit jelent a Pachycephalosaurus név?",
+    "options": [
+      "Tüskés hátú gyík",
+      "Vastag fejű gyík",
+      "Nagy szarvú gyík",
+      "Páncélos gyík"
+    ],
+    "correctIndex": 1,
+    "hint": "Vastag koponyatetejéről híres."
+  },
+  {
+    "id": 634,
+    "difficulty": "easy",
+    "question": "Mit jelent a Corythosaurus név?",
+    "options": [
+      "Sisakos gyík",
+      "Csőrös gyík",
+      "Vitorlás gyík",
+      "Tarajos futó"
+    ],
+    "correctIndex": 0,
+    "hint": "Fején sisakszerű taréj ült."
+  },
+  {
+    "id": 635,
+    "difficulty": "easy",
+    "question": "Mit jelent a Deinonychus név?",
+    "options": [
+      "Rettenetes karom",
+      "Nagy gyík",
+      "Éles fog",
+      "Gyors láb"
+    ],
+    "correctIndex": 0,
+    "hint": "Lábán nagy, sarló alakú karom volt."
+  },
+  {
+    "id": 636,
+    "difficulty": "easy",
+    "question": "Mit jelent a Baryonyx név?",
+    "options": [
+      "Halevő gyík",
+      "Nehéz karom",
+      "Vitorlás hát",
+      "Hosszú orr"
+    ],
+    "correctIndex": 1,
+    "hint": "Nagy hüvelykkarmáról nevezték el."
+  },
+  {
+    "id": 637,
+    "difficulty": "easy",
+    "question": "Mit jelent az Iguanodon név?",
+    "options": [
+      "Nagy hüvelyk",
+      "Csőrös arc",
+      "Leguán fog",
+      "Növényevő gyík"
+    ],
+    "correctIndex": 2,
+    "hint": "Fogai a leguánéira emlékeztettek."
+  },
+  {
+    "id": 638,
+    "difficulty": "easy",
+    "question": "Mit jelent a Brachiosaurus név?",
+    "options": [
+      "Hosszú nyakú gyík",
+      "Magas gyík",
+      "Nehéz gyík",
+      "Kar-gyík"
+    ],
+    "correctIndex": 3,
+    "hint": "Első lábai hosszabbak voltak a hátsóknál."
+  },
+  {
+    "id": 639,
+    "difficulty": "easy",
+    "question": "Mit jelent az Ankylosaurus név?",
+    "options": [
+      "Bunkós farok",
+      "Összenőtt/merev gyík",
+      "Páncélos hát",
+      "Tüskés gyík"
+    ],
+    "correctIndex": 1,
+    "hint": "Csontlemezei szorosan összeforrtak a testén."
+  },
+  {
+    "id": 640,
+    "difficulty": "easy",
+    "question": "Mit jelent a Spinosaurus név?",
+    "options": [
+      "Folyami gyík",
+      "Vitorlás vadász",
+      "Tüske-gyík",
+      "Halevő gyík"
+    ],
+    "correctIndex": 2,
+    "hint": "Hátán hosszú tövisek alkotta vitorla nőtt."
+  },
+  {
+    "id": 641,
+    "difficulty": "easy",
+    "question": "Mit jelent a Psittacosaurus név?",
+    "options": [
+      "Növényevő gyík",
+      "Csőrös futó",
+      "Kis szarvú arc",
+      "Papagáj-gyík"
+    ],
+    "correctIndex": 3,
+    "hint": "Csőre a papagájéra hasonlított."
+  },
+  {
+    "id": 642,
+    "difficulty": "easy",
+    "question": "Mit jelent a Maiasaura név?",
+    "options": [
+      "Fészkelő gyík",
+      "Csordás gyík",
+      "Jó anya gyík",
+      "Gondos gyík"
+    ],
+    "correctIndex": 2,
+    "hint": "Fészkeit és fiókáit is megtalálták."
+  },
+  {
+    "id": 643,
+    "difficulty": "easy",
+    "question": "Milyen táplálkozású volt a Tyrannosaurus rex?",
+    "options": [
+      "Növényevő",
+      "Rovarevő",
+      "Húsevő",
+      "Mindenevő"
+    ],
+    "correctIndex": 2,
+    "hint": "Nagy, fűrészes fogakkal."
+  },
+  {
+    "id": 644,
+    "difficulty": "easy",
+    "question": "Milyen táplálkozásúak voltak a hosszú nyakú sauropodák (pl. Brachiosaurus)?",
+    "options": [
+      "Mindenevők",
+      "Húsevők",
+      "Halevők",
+      "Növényevők"
+    ],
+    "correctIndex": 3,
+    "hint": "Hosszú nyakukkal magas lombot értek el."
+  },
+  {
+    "id": 645,
+    "difficulty": "easy",
+    "question": "Milyen táplálkozású volt a Triceratops?",
+    "options": [
+      "Mindenevő",
+      "Húsevő",
+      "Növényevő",
+      "Dögevő"
+    ],
+    "correctIndex": 2,
+    "hint": "Csőrével növényeket tépett."
+  },
+  {
+    "id": 646,
+    "difficulty": "easy",
+    "question": "Hány szarva volt a Triceratopsnak?",
+    "options": [
+      "Három",
+      "Egy",
+      "Öt",
+      "Kettő"
+    ],
+    "correctIndex": 0,
+    "hint": "A neve is erre utal."
+  },
+  {
+    "id": 647,
+    "difficulty": "easy",
+    "question": "Melyik testrészén viselte a Stegosaurus a nagy csontlemezeket?",
+    "options": [
+      "A fején",
+      "A lábán",
+      "A farkán",
+      "A hátán"
+    ],
+    "correctIndex": 3,
+    "hint": "Két sorban álltak."
+  },
+  {
+    "id": 648,
+    "difficulty": "easy",
+    "question": "Mi volt a Stegosaurus farkának végén, fegyverként?",
+    "options": [
+      "Karmok",
+      "Hegyes csonttüskék",
+      "Bunkó",
+      "Uszony"
+    ],
+    "correctIndex": 1,
+    "hint": "Angolul 'thagomizer' a beceneve."
+  },
+  {
+    "id": 649,
+    "difficulty": "easy",
+    "question": "Mi volt az Ankylosaurus farkának végén?",
+    "options": [
+      "Csontbunkó",
+      "Karom",
+      "Tüskesor",
+      "Uszony"
+    ],
+    "correctIndex": 0,
+    "hint": "Ütőfegyverként használhatta."
+  },
+  {
+    "id": 650,
+    "difficulty": "easy",
+    "question": "Melyik időszakban halt ki a legtöbb (nem madár) dinoszaurusz?",
+    "options": [
+      "A triász végén",
+      "A perm végén",
+      "A jura végén",
+      "A kréta végén"
+    ],
+    "correctIndex": 3,
+    "hint": "Kb. 66 millió éve."
+  },
+  {
+    "id": 651,
+    "difficulty": "easy",
+    "question": "Mi okozta a legelfogadottabb elmélet szerint a dinoszauruszok kihalását?",
+    "options": [
+      "Járvány",
+      "Óriási aszteroida becsapódása",
+      "Túl sok ragadozó",
+      "Emlősök versengése"
+    ],
+    "correctIndex": 1,
+    "hint": "A becsapódás nyomát iridiumréteg jelzi."
+  },
+  {
+    "id": 652,
+    "difficulty": "easy",
+    "question": "Melyik ma élő állatcsoport származik közvetlenül a dinoszauruszoktól?",
+    "options": [
+      "Az emlősök",
+      "A madarak",
+      "A krokodilok",
+      "A gyíkok"
+    ],
+    "correctIndex": 1,
+    "hint": "Tollas theropodákból fejlődtek ki."
+  },
+  {
+    "id": 653,
+    "difficulty": "easy",
+    "question": "Melyik korszak a 'dinoszauruszok kora'?",
+    "options": [
+      "Prekambrium",
+      "Paleozoikum",
+      "Kainozoikum",
+      "Mezozoikum"
+    ],
+    "correctIndex": 3,
+    "hint": "Triász, jura, kréta időszakok."
+  },
+  {
+    "id": 654,
+    "difficulty": "easy",
+    "question": "Melyik a mezozoikum három időszakának helyes sorrendje (régitől a fiatalabbig)?",
+    "options": [
+      "Jura, triász, kréta",
+      "Triász, jura, kréta",
+      "Kréta, jura, triász",
+      "Triász, kréta, jura"
+    ],
+    "correctIndex": 1,
+    "hint": "A jura a triász után jön."
+  },
+  {
+    "id": 655,
+    "difficulty": "easy",
+    "question": "Az Archaeopteryxet gyakran minek tekintik?",
+    "options": [
+      "Az egyik legkorábbi madárnak",
+      "Az első emlősnek",
+      "Az első ceratopsziának",
+      "Az első sauropodának"
+    ],
+    "correctIndex": 0,
+    "hint": "Tollai és hüllőbélyegei egyszerre voltak."
+  },
+  {
+    "id": 656,
+    "difficulty": "easy",
+    "question": "Repülő őshüllők voltak-e a pteroszauruszok?",
+    "options": [
+      "Nem, emlősök",
+      "Igen, és dinoszauruszok",
+      "Nem, úszó hüllők",
+      "Igen, de nem dinoszauruszok"
+    ],
+    "correctIndex": 3,
+    "hint": "A dinoszauruszok rokonai, de külön csoport."
+  },
+  {
+    "id": 657,
+    "difficulty": "easy",
+    "question": "A Mosasaurus milyen élőlény volt?",
+    "options": [
+      "Szárazföldi dinoszaurusz",
+      "Repülő hüllő",
+      "Tengeri hüllő",
+      "Ősi cápa"
+    ],
+    "correctIndex": 2,
+    "hint": "A kréta tengereinek ragadozója."
+  },
+  {
+    "id": 658,
+    "difficulty": "easy",
+    "question": "Milyen táplálkozású volt a Velociraptor?",
+    "options": [
+      "Húsevő",
+      "Halevő",
+      "Mindenevő",
+      "Növényevő"
+    ],
+    "correctIndex": 0,
+    "hint": "Fürge, karmos ragadozó."
+  },
+  {
+    "id": 659,
+    "difficulty": "easy",
+    "question": "Nagyjából mekkora volt a Velociraptor a valóságban?",
+    "options": [
+      "Elefánt méretű",
+      "Egér méretű",
+      "Ló méretű",
+      "Kb. pulyka méretű"
+    ],
+    "correctIndex": 3,
+    "hint": "A filmek jóval nagyobbnak mutatják."
+  },
+  {
+    "id": 660,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz neve utal a papagájszerű csőrre?",
+    "options": [
+      "Psittacosaurus",
+      "Tyrannosaurus",
+      "Diplodocus",
+      "Stegosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "A 'psittaco' papagájt jelent."
+  },
+  {
+    "id": 661,
+    "difficulty": "easy",
+    "question": "Milyen mozgásúak voltak a theropodák (pl. Allosaurus)?",
+    "options": [
+      "Repültek",
+      "Két lábon jártak",
+      "Úsztak",
+      "Négy lábon jártak"
+    ],
+    "correctIndex": 1,
+    "hint": "Hátsó lábaikon egyensúlyoztak, farokkal."
+  },
+  {
+    "id": 662,
+    "difficulty": "easy",
+    "question": "A 'Saurischia' (gyíkmedencéjű) és 'Ornithischia' (madármedencéjű) mi alapján osztja két nagy csoportra a dinoszauruszokat?",
+    "options": [
+      "A bőr színe",
+      "A lábujjak száma",
+      "A fogazat",
+      "A csípőcsontok felépítése"
+    ],
+    "correctIndex": 3,
+    "hint": "Az 'ischia' a medencecsontra utal."
+  },
+  {
+    "id": 663,
+    "difficulty": "easy",
+    "question": "Mit jelent az 'Ornithischia' elnevezés?",
+    "options": [
+      "Gyíkmedencéjű",
+      "Tollas gyík",
+      "Madármedencéjű",
+      "Csőrös gyík"
+    ],
+    "correctIndex": 2,
+    "hint": "Csípőjük a madarakéra emlékeztetett."
+  },
+  {
+    "id": 664,
+    "difficulty": "easy",
+    "question": "Melyik csoportba tartoztak a hosszú nyakú, növényevő óriások, mint a Diplodocus?",
+    "options": [
+      "Ceratopsziák",
+      "Ankylosauruszok",
+      "Sauropodák",
+      "Theropodák"
+    ],
+    "correctIndex": 2,
+    "hint": "Négy oszlopszerű lábon jártak."
+  },
+  {
+    "id": 665,
+    "difficulty": "easy",
+    "question": "Miből tudják a tudósok, hogy sok dinoszaurusznak tolla volt?",
+    "options": [
+      "Csak feltételezésből",
+      "Barlangrajzokból",
+      "Írott forrásokból",
+      "Tollnyomatos kövületekből"
+    ],
+    "correctIndex": 3,
+    "hint": "Kínai lelőhelyek különösen gazdagok ilyenekben."
+  },
+  {
+    "id": 666,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz híres a hátán lévő nagy 'vitorláról'?",
+    "options": [
+      "Triceratops",
+      "Gallimimus",
+      "Spinosaurus",
+      "Ankylosaurus"
+    ],
+    "correctIndex": 2,
+    "hint": "Hosszú hátcsigolya-tövisek tartották."
+  },
+  {
+    "id": 667,
+    "difficulty": "easy",
+    "question": "Mivel védekezhetett a Triceratops a ragadozók ellen?",
+    "options": [
+      "Méreggel",
+      "Szarvaival és nyakfodrával",
+      "Bunkós farkával",
+      "Vitorlájával"
+    ],
+    "correctIndex": 1,
+    "hint": "Arcán három szarv, nyakán csontfodor."
+  },
+  {
+    "id": 668,
+    "difficulty": "easy",
+    "question": "Milyen alakú volt a legtöbb sauropoda foga?",
+    "options": [
+      "Lapos őrlő, mint a lóé",
+      "Fűrészes, húsvágó",
+      "Nem volt foguk",
+      "Ceruza- vagy kanálszerű, növénytépő"
+    ],
+    "correctIndex": 3,
+    "hint": "Leveleket téptek, nem rágtak sokat."
+  },
+  {
+    "id": 669,
+    "difficulty": "easy",
+    "question": "A Compsognathus nagyjából mekkora dinoszaurusz volt?",
+    "options": [
+      "Kb. tyúk/pulyka méretű",
+      "Bálna méretű",
+      "Elefánt méretű",
+      "Zsiráf méretű"
+    ],
+    "correctIndex": 0,
+    "hint": "Az egyik legkisebb ismert dinoszaurusz."
+  },
+  {
+    "id": 670,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz neve jelenti azt, hogy 'strucc-utánzó'?",
+    "options": [
+      "Kentrosaurus",
+      "Struthiomimus",
+      "Amargasaurus",
+      "Tyrannosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "Hosszú lábú, gyors futó volt, mint egy strucc."
+  },
+  {
+    "id": 671,
+    "difficulty": "easy",
+    "question": "Milyen bőrképződmény borította sok páncélos dinoszaurusz (pl. Ankylosaurus) testét?",
+    "options": [
+      "Nyálkás bőr",
+      "Tollak",
+      "Pikkelyek helyett szőr",
+      "Csontlemezek (oszteodermák)"
+    ],
+    "correctIndex": 3,
+    "hint": "A bőrbe ágyazott csontok védték."
+  },
+  {
+    "id": 672,
+    "difficulty": "easy",
+    "question": "Hol éltek a dinoszauruszok?",
+    "options": [
+      "Csak Afrikában",
+      "A szárazföldön, minden kontinensen",
+      "Csak az óceánokban",
+      "Csak a levegőben"
+    ],
+    "correctIndex": 1,
+    "hint": "Az Antarktiszon is találtak maradványaikat."
+  },
+  {
+    "id": 673,
+    "difficulty": "easy",
+    "question": "Mi a kövület (fosszília)?",
+    "options": [
+      "Vulkáni kőzet",
+      "Kőzetté vált egykori élőlény maradványa vagy nyoma",
+      "Mesterséges másolat",
+      "Élő állat csontja"
+    ],
+    "correctIndex": 1,
+    "hint": "Csont, tojás, lábnyom is lehet."
+  },
+  {
+    "id": 674,
+    "difficulty": "easy",
+    "question": "Mit tanulmányoz egy paleontológus?",
+    "options": [
+      "Kőzeteket kizárólag",
+      "Élő állatokat",
+      "Csillagokat",
+      "Ősi élőlényeket kövületek alapján"
+    ],
+    "correctIndex": 3,
+    "hint": "A dinoszauruszok kutatói is ilyenek."
+  },
+  {
+    "id": 675,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz volt a leghíresebb nagy ragadozó Észak-Amerika késő-krétájában?",
+    "options": [
+      "Tyrannosaurus rex",
+      "Iguanodon",
+      "Diplodocus",
+      "Stegosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "A 'gyíkkirály'."
+  },
+  {
+    "id": 676,
+    "difficulty": "easy",
+    "question": "A dinoszauruszok tojással szaporodtak?",
+    "options": [
+      "Igen",
+      "Nem, osztódással",
+      "Nem tudni semmit róla",
+      "Nem, elevenszülők voltak"
+    ],
+    "correctIndex": 0,
+    "hint": "Fészkeket és tojásokat is találtak."
+  },
+  {
+    "id": 677,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz híres a fején lévő csöves, hátranyúló taréjról?",
+    "options": [
+      "Velociraptor",
+      "Triceratops",
+      "Ankylosaurus",
+      "Parasaurolophus"
+    ],
+    "correctIndex": 3,
+    "hint": "Taréjával hangot is adhatott."
+  },
+  {
+    "id": 678,
+    "difficulty": "easy",
+    "question": "Milyen lábon futottak a gyors, könnyű theropodák?",
+    "options": [
+      "Két hátsó lábon",
+      "Ugrálva, mint a kenguru mindig",
+      "Négy lábon",
+      "A farkukat is használva mászva"
+    ],
+    "correctIndex": 0,
+    "hint": "A farok egyensúlyozott."
+  },
+  {
+    "id": 679,
+    "difficulty": "easy",
+    "question": "A pteroszauruszok szárnyát mi feszítette ki?",
+    "options": [
+      "Egy megnyúlt ujj és bőrhártya",
+      "Uszonyhártya a lábon",
+      "Merev csontlemezek",
+      "Tollak, mint a madaraké"
+    ],
+    "correctIndex": 0,
+    "hint": "A negyedik ujjuk óriásira nyúlt."
+  },
+  {
+    "id": 680,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz nevében szerepel a 'három szarvú arc' jelentés?",
+    "options": [
+      "Brachiosaurus",
+      "Tyrannosaurus",
+      "Triceratops",
+      "Velociraptor"
+    ],
+    "correctIndex": 2,
+    "hint": "A ceratopsziák közé tartozik."
+  },
+  {
+    "id": 681,
+    "difficulty": "easy",
+    "question": "Mit ettek a ceratopsziák (pl. Triceratops, Styracosaurus)?",
+    "options": [
+      "Húst",
+      "Növényeket",
+      "Rovarokat főként",
+      "Halat"
+    ],
+    "correctIndex": 1,
+    "hint": "Csőrrel és sok foggal aprították a növényt."
+  },
+  {
+    "id": 682,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz híres a hosszú, ostorszerű farkáról és óriási hosszáról?",
+    "options": [
+      "Diplodocus",
+      "Compsognathus",
+      "Pachycephalosaurus",
+      "Ankylosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "Neve 'kettős gerendát' jelent."
+  },
+  {
+    "id": 683,
+    "difficulty": "easy",
+    "question": "Melyik állítás igaz a T. rex karjaira?",
+    "options": [
+      "Szárnnyá alakultak",
+      "Rövidek voltak, két ujjal",
+      "Hosszúak és háromujjúak",
+      "Nem voltak karjai"
+    ],
+    "correctIndex": 1,
+    "hint": "Kicsik, de izmosak."
+  },
+  {
+    "id": 684,
+    "difficulty": "easy",
+    "question": "Milyen bőrük lehetett a nagy dinoszauruszoknak (pl. Edmontosaurus), amit bőrlenyomatok igazolnak?",
+    "options": [
+      "Csupasz és nyálkás",
+      "Pikkelyes",
+      "Tollas mindenütt",
+      "Szőrös"
+    ],
+    "correctIndex": 1,
+    "hint": "Múmiásodott bőrlenyomatok maradtak fenn."
+  },
+  {
+    "id": 685,
+    "difficulty": "easy",
+    "question": "Melyik kontinensen találták a legtöbb Tyrannosaurus és Triceratops maradványt?",
+    "options": [
+      "Afrika",
+      "Európa",
+      "Észak-Amerika",
+      "Ausztrália"
+    ],
+    "correctIndex": 2,
+    "hint": "A Hell Creek-formáció híres lelőhely."
+  },
+  {
+    "id": 686,
+    "difficulty": "easy",
+    "question": "Mi a hadrosauruszok népszerű beceneve a fejük alakja miatt?",
+    "options": [
+      "Szarvas dinoszauruszok",
+      "Páncélos dinoszauruszok",
+      "Kacsacsőrű dinoszauruszok",
+      "Tollas dinoszauruszok"
+    ],
+    "correctIndex": 2,
+    "hint": "Lapos, széles csőrük volt."
+  },
+  {
+    "id": 687,
+    "difficulty": "medium",
+    "question": "Melyik nagy csoportba tartozik a Tyrannosaurus és a Velociraptor is?",
+    "options": [
+      "Ankylosauria",
+      "Sauropoda",
+      "Theropoda",
+      "Ceratopsia"
+    ],
+    "correctIndex": 2,
+    "hint": "Kétlábú, jórészt húsevő dinoszauruszok."
+  },
+  {
+    "id": 688,
+    "difficulty": "medium",
+    "question": "A madarak melyik dinoszaurusz-csoportból fejlődtek ki?",
+    "options": [
+      "Stegosauruszokból",
+      "Ceratopsziákból",
+      "Theropodákból",
+      "Sauropodákból"
+    ],
+    "correctIndex": 2,
+    "hint": "Kis, tollas ragadozók voltak az őseik."
+  },
+  {
+    "id": 689,
+    "difficulty": "medium",
+    "question": "Meglepő módon melyik nagy csoportba sorolják a madarakat a medencéjük alapján?",
+    "options": [
+      "Pterosauria",
+      "Saurischia (gyíkmedencéjűek)",
+      "Ornithischia (madármedencéjűek)",
+      "Egyikbe sem"
+    ],
+    "correctIndex": 1,
+    "hint": "A név megtévesztő: a madarak a gyíkmedencéjűekből erednek."
+  },
+  {
+    "id": 690,
+    "difficulty": "medium",
+    "question": "Melyik időszakban jelentek meg az első madarak (pl. Archaeopteryx)?",
+    "options": [
+      "A triász elején",
+      "A permben",
+      "A jura időszakban",
+      "A kréta végén"
+    ],
+    "correctIndex": 2,
+    "hint": "Kb. 150 millió éve, a solnhofeni mészkőben."
+  },
+  {
+    "id": 691,
+    "difficulty": "medium",
+    "question": "Miről ismert leginkább a Therizinosaurus?",
+    "options": [
+      "A hármas szarváról",
+      "Óriási, sarló alakú kézkarmairól",
+      "A bunkós farkáról",
+      "A hátvitorlájáról"
+    ],
+    "correctIndex": 1,
+    "hint": "Neve 'kaszáló gyíkot' jelent."
+  },
+  {
+    "id": 692,
+    "difficulty": "medium",
+    "question": "Milyen étrendű volt a különös Therizinosaurus a hosszú karmai ellenére?",
+    "options": [
+      "Kizárólag halevő",
+      "Nagy ragadozó",
+      "Valószínűleg főként növényevő",
+      "Dögevő"
+    ],
+    "correctIndex": 2,
+    "hint": "Theropoda volt, de növényevésre tért át."
+  },
+  {
+    "id": 693,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz nevét fordítják 'tojástolvajnak', bár valójában a saját fészkén ült?",
+    "options": [
+      "Coelophysis",
+      "Gallimimus",
+      "Oviraptor",
+      "Deinonychus"
+    ],
+    "correctIndex": 2,
+    "hint": "Először tévesen egy másik faj tojásainál találták."
+  },
+  {
+    "id": 694,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz volt az elsők egyike, amelyet tudományosan leírtak (1824, Anglia)?",
+    "options": [
+      "Tyrannosaurus",
+      "Spinosaurus",
+      "Velociraptor",
+      "Megalosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "William Buckland nevezte el."
+  },
+  {
+    "id": 695,
+    "difficulty": "medium",
+    "question": "Ki alkotta meg a 'dinoszaurusz' (Dinosauria) elnevezést 1842-ben?",
+    "options": [
+      "Barnum Brown",
+      "Richard Owen",
+      "Charles Darwin",
+      "Gideon Mantell"
+    ],
+    "correctIndex": 1,
+    "hint": "A szó 'rettenetes gyíkot' jelent."
+  },
+  {
+    "id": 696,
+    "difficulty": "medium",
+    "question": "Melyik korai theropodát tartják az egyik legrégebbi ismert dinoszaurusznak (kb. 231 millió év, Argentína)?",
+    "options": [
+      "Tyrannosaurus",
+      "Eoraptor",
+      "Stegosaurus",
+      "Iguanodon"
+    ],
+    "correctIndex": 1,
+    "hint": "Neve 'hajnali tolvaj'."
+  },
+  {
+    "id": 697,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusznak volt kettős, egymással párhuzamos hátvitorlája a nyakán és hátán?",
+    "options": [
+      "Triceratops",
+      "Ankylosaurus",
+      "Brachiosaurus",
+      "Amargasaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "Dél-amerikai sauropoda, hosszú nyaktövisekkel."
+  },
+  {
+    "id": 698,
+    "difficulty": "medium",
+    "question": "Mire szolgálhattak a Stegosaurus hátlemezei a kutatók szerint?",
+    "options": [
+      "Testhőszabályozásra és mutogatásra",
+      "Ásásra",
+      "Repülésre",
+      "Úszásra"
+    ],
+    "correctIndex": 0,
+    "hint": "Erek hálózták be őket."
+  },
+  {
+    "id": 699,
+    "difficulty": "medium",
+    "question": "Melyik lelőhely (formáció) híres a T. rex, Triceratops és Edmontosaurus leleteiről?",
+    "options": [
+      "Morrison (kizárólag)",
+      "Tendaguru",
+      "Hell Creek",
+      "Solnhofen"
+    ],
+    "correctIndex": 2,
+    "hint": "Késő-kréta, Észak-Amerika nyugati része."
+  },
+  {
+    "id": 700,
+    "difficulty": "medium",
+    "question": "A Baryonyx fogazata és orra alapján mire specializálódhatott?",
+    "options": [
+      "Rovarok szűrésére",
+      "Csontok roppantására",
+      "Levélcsipegetésre",
+      "Halevésre"
+    ],
+    "correctIndex": 3,
+    "hint": "Krokodilszerű állkapocs, gyomrában halpikkelyek."
+  },
+  {
+    "id": 701,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz koponyáján volt akár 25 cm vastag csonttető, amit fejelésre használhatott?",
+    "options": [
+      "Diplodocus",
+      "Parasaurolophus",
+      "Pachycephalosaurus",
+      "Compsognathus"
+    ],
+    "correctIndex": 2,
+    "hint": "Neve 'vastag fejű gyík'."
+  },
+  {
+    "id": 702,
+    "difficulty": "medium",
+    "question": "Melyik állítás igaz a Quetzalcoatlusra?",
+    "options": [
+      "Korai madár volt",
+      "Az egyik legnagyobb repülő állat volt, pteroszaurusz",
+      "Óriási sauropoda volt",
+      "Tengeri hüllő volt"
+    ],
+    "correctIndex": 1,
+    "hint": "Szárnyfesztávja egy kisrepülőgépével vetekedett."
+  },
+  {
+    "id": 703,
+    "difficulty": "medium",
+    "question": "A Microraptor melyik különös vonásáról nevezetes?",
+    "options": [
+      "Négy szarva volt",
+      "Bunkós farka volt",
+      "Vitorlája volt",
+      "Négy 'szárnya' (tollas végtagjai) volt"
+    ],
+    "correctIndex": 3,
+    "hint": "Elülső és hátsó végtagjain is repítőtollak."
+  },
+  {
+    "id": 704,
+    "difficulty": "medium",
+    "question": "A dinoszaurusz-tojásokat és fészkeket melyik nem-dinoszaurusznál is jól ismerjük — de melyik dinoszaurusz neve utal a gondos anyai viselkedésre?",
+    "options": [
+      "Maiasaura",
+      "Allosaurus",
+      "Kentrosaurus",
+      "Nothosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "'Jó anya gyík'."
+  },
+  {
+    "id": 705,
+    "difficulty": "medium",
+    "question": "Melyik időszak végén tűnt el a nem madár dinoszauruszok mellett a pteroszauruszok és a nagy tengeri hüllők nagy része is?",
+    "options": [
+      "A kréta végén (K-Pg)",
+      "A jura végén",
+      "A perm végén",
+      "A triász végén"
+    ],
+    "correctIndex": 0,
+    "hint": "A tömeges kihalás kb. 66 millió éve történt."
+  },
+  {
+    "id": 706,
+    "difficulty": "medium",
+    "question": "Milyen vékony, világszerte megtalálható kőzetréteg jelzi a kréta–paleogén határt, magas iridiumtartalommal?",
+    "options": [
+      "A Burgess-pala",
+      "A Karoo-formáció",
+      "A Solnhofeni mészkő",
+      "A K-Pg (K-T) határréteg"
+    ],
+    "correctIndex": 3,
+    "hint": "Az iridium becsapódásra utal."
+  },
+  {
+    "id": 707,
+    "difficulty": "medium",
+    "question": "Milyen célt szolgálhatott a hadrosauruszok (pl. Parasaurolophus) csöves fejtaréja?",
+    "options": [
+      "Repülést",
+      "Hangképzést és fajtársak közti jelzést",
+      "Ásást",
+      "Zsákmány elejtését"
+    ],
+    "correctIndex": 1,
+    "hint": "A taréj belsejében járatok futottak."
+  },
+  {
+    "id": 708,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz-csoportba tartozik a Triceratops és a Styracosaurus?",
+    "options": [
+      "Stegosauria",
+      "Ceratopsia",
+      "Sauropoda",
+      "Theropoda"
+    ],
+    "correctIndex": 1,
+    "hint": "Szarvas, nyakfodros növényevők."
+  },
+  {
+    "id": 709,
+    "difficulty": "medium",
+    "question": "Melyik korai sauropodomorpha a triász–jura egyik leggyakoribb növényevője Európában?",
+    "options": [
+      "Kentrosaurus",
+      "Tyrannosaurus",
+      "Velociraptor",
+      "Plateosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "Németországi lelőhelyeiről ismert."
+  },
+  {
+    "id": 710,
+    "difficulty": "medium",
+    "question": "Mi jellemezte a Heterodontosaurus fogazatát, ami szokatlan a dinoszauruszoknál?",
+    "options": [
+      "Többféle, eltérő alakú fog (agyar is)",
+      "Egyáltalán nem volt foga",
+      "Csak őrlőfogak",
+      "Folyamatosan növő egyetlen fog"
+    ],
+    "correctIndex": 0,
+    "hint": "A neve is 'különböző fogú gyíkot' jelent."
+  },
+  {
+    "id": 711,
+    "difficulty": "medium",
+    "question": "Melyik állítás igaz a Coelophysisre?",
+    "options": [
+      "Karcsú, korai triász–jura theropoda, csordákban",
+      "Repülő hüllő",
+      "Páncélos növényevő",
+      "Óriási sauropoda"
+    ],
+    "correctIndex": 0,
+    "hint": "Sok egyedét együtt találták meg."
+  },
+  {
+    "id": 712,
+    "difficulty": "medium",
+    "question": "Melyik antarktiszi theropoda híres a fején lévő taréjról ('fagyott taréjú gyík')?",
+    "options": [
+      "Baryonyx",
+      "Allosaurus",
+      "Spinosaurus",
+      "Cryolophosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "Neve a hidegre és a taréjra utal."
+  },
+  {
+    "id": 713,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz-csoport tagja a bunkós farkú, erősen páncélozott Ankylosaurus?",
+    "options": [
+      "Ceratopsia",
+      "Theropoda",
+      "Ankylosauria (thyreophora)",
+      "Sauropoda"
+    ],
+    "correctIndex": 2,
+    "hint": "A Stegosaurus távoli rokona a páncélosok között."
+  },
+  {
+    "id": 714,
+    "difficulty": "medium",
+    "question": "Milyen módszerrel becslik a tudósok egy dinoszaurusz korát az elhullásakor?",
+    "options": [
+      "A tojások számából",
+      "A koponya súlyából",
+      "A csontok növekedési gyűrűinek vizsgálatával",
+      "A fogak színéből"
+    ],
+    "correctIndex": 2,
+    "hint": "Hasonlóan a fák évgyűrűihez."
+  },
+  {
+    "id": 715,
+    "difficulty": "medium",
+    "question": "A Nigersaurus szokatlan koponyája miről nevezetes?",
+    "options": [
+      "Egyetlen óriási fogról",
+      "Fog nélküli szűrőről",
+      "Csőr helyett ormányról",
+      "Széles, egyenes 'porszívó'-száj több száz apró foggal"
+    ],
+    "correctIndex": 3,
+    "hint": "Afrikai sauropoda, talajközeli legelő."
+  },
+  {
+    "id": 716,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz maradványait találták tollnyomatokkal együtt Kínában, bizonyítva a tollas ragadozókat?",
+    "options": [
+      "Triceratops",
+      "Brachiosaurus",
+      "Sinornithosaurus",
+      "Iguanodon"
+    ],
+    "correctIndex": 2,
+    "hint": "Neve 'kínai madárgyíkot' jelent."
+  },
+  {
+    "id": 717,
+    "difficulty": "hard",
+    "question": "Melyik anatómiai bélyeg köti össze legerősebben a theropodákat a mai madarakkal?",
+    "options": [
+      "A villacsont (furcula) és a levegővel telt (pneumatikus) csontok",
+      "A hátvitorla",
+      "A bunkós farok",
+      "A négy szarv"
+    ],
+    "correctIndex": 0,
+    "hint": "A furcula a 'mellcsont villája'."
+  },
+  {
+    "id": 718,
+    "difficulty": "hard",
+    "question": "Milyen szövet a tojásrakó nőstény madarakban és egyes dinoszauruszokban (pl. T. rex) a kalcium átmeneti raktára?",
+    "options": [
+      "A zsírszövet",
+      "A zománc",
+      "A porc",
+      "A medulláris csont"
+    ],
+    "correctIndex": 3,
+    "hint": "A csöves csontok üregében képződik."
+  },
+  {
+    "id": 719,
+    "difficulty": "hard",
+    "question": "Miért tartják valószínűtlennek, hogy a legnagyobb sauropodák állandóan mély vízben, elmerülve éltek?",
+    "options": [
+      "Túl könnyűek voltak",
+      "A víznyomás megnehezítette volna a légzésüket a hosszú nyaknál",
+      "Nem tudtak úszni egyáltalán",
+      "Kopoltyújuk volt"
+    ],
+    "correctIndex": 1,
+    "hint": "A tüdőre nehezedő nyomás a kulcs."
+  },
+  {
+    "id": 720,
+    "difficulty": "hard",
+    "question": "Hogyan segítette a theropodák és sauropodák csontjaiban lévő légzsákos üregesedés (pneumatizáció) az állatot?",
+    "options": [
+      "Csökkentette a testtömeget és hatékonyabb, madárszerű légzést tett lehetővé",
+      "Erősebbé tette a csontot ütközésre",
+      "Hőt termelt",
+      "Több zsírt tárolt"
+    ],
+    "correctIndex": 0,
+    "hint": "A madarak légzsákrendszerének elődje."
+  },
+  {
+    "id": 721,
+    "difficulty": "hard",
+    "question": "Melyik jura sauropodát nevezték el arról, hogy Richard Owen eredetileg egy óriási tengeri állat (bálnaszerű hüllő) maradványának hitte?",
+    "options": [
+      "Brachiosaurus",
+      "Amargasaurus",
+      "Diplodocus",
+      "Cetiosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "Neve 'bálna-gyíkot' jelent."
+  },
+  {
+    "id": 722,
+    "difficulty": "hard",
+    "question": "Mi a gastrolit szerepe egyes dinoszauruszoknál?",
+    "options": [
+      "Fészeképítő anyag",
+      "Lenyelt kövek, amelyek a gyomorban aprították a növényi táplálékot",
+      "Ellensúly a farokban",
+      "Szaporodási dísz"
+    ],
+    "correctIndex": 1,
+    "hint": "Sok mai madár is nyel hasonló 'zúzóköveket'."
+  },
+  {
+    "id": 723,
+    "difficulty": "hard",
+    "question": "Milyen alapon állítják egyes kutatók, hogy bizonyos dinoszauruszok (pl. hadrosauruszok) csordákban, ivadékgondozással éltek?",
+    "options": [
+      "Írott feljegyzések alapján",
+      "Fészektelepek, különböző korú egyedek és nyomjárat-együttesek alapján",
+      "Barlangrajzok alapján",
+      "Kizárólag a fogak alakjából"
+    ],
+    "correctIndex": 1,
+    "hint": "Pl. a Maiasaura fészektelepei."
+  },
+  {
+    "id": 724,
+    "difficulty": "hard",
+    "question": "Melyik különös theropodát írták le hosszú ideig hiányos maradványokból 'rejtély-gyíkként', kézkarmai miatt óriásira becsülve?",
+    "options": [
+      "Eoraptor",
+      "Coelophysis",
+      "Compsognathus",
+      "Therizinosaurus"
+    ],
+    "correctIndex": 3,
+    "hint": "Kezdetben csak hatalmas karmai kerültek elő."
+  },
+  {
+    "id": 725,
+    "difficulty": "hard",
+    "question": "Melyik állítás igaz a nem madár dinoszauruszok és a madarak viszonyáról a modern rendszertanban?",
+    "options": [
+      "A madaraknak semmi közük a dinoszauruszokhoz",
+      "A madarak a theropoda dinoszauruszok élő leszármazottai, azaz maguk is dinoszauruszok",
+      "A madarak a pteroszauruszoktól erednek",
+      "A madarak a krokodilok testvércsoportja, dinoszauruszoktól függetlenül"
+    ],
+    "correctIndex": 1,
+    "hint": "Kladisztikailag a madár is dinoszaurusz."
+  },
+  {
+    "id": 726,
+    "difficulty": "hard",
+    "question": "Milyen bizonyíték utal arra, hogy egyes kis theropodák (pl. Sinosauropteryx) színe rekonstruálható?",
+    "options": [
+      "A kőzet színe a lelet körül",
+      "A tollakban megőrződött melanoszómák (pigmentszemcsék) alakja",
+      "A fogak kopása",
+      "A csontok színe"
+    ],
+    "correctIndex": 1,
+    "hint": "A melanoszóma-forma összefügg a színnel."
   }
 ]
