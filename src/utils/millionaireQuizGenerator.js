@@ -21,10 +21,13 @@ function shuffle(arr) {
 //      lény szerepel a betöltött listában; egyébként az A formára esünk vissza.
 const YEAR_ONLY_RE = /^Melyik évben fedezték fel a (.+)-t\?$/;
 const DISCOVERER_RE = /^A felfedez[őo]\s+(.+?)\s+volt\.?$/i;
+// Régi, csak-felfedező kérdés ("Melyik dínót fedezte fel X?") — ezt is a teljes
+// (év + ország) formára egészítjük ki, hogy ne maradjon önmagában felfedező.
+const DISCOVERER_ONLY_RE = /^Melyik dínót fedezte fel (.+)\?$/;
 
 // Egy corpus-kérdésből kinyert (név, év, felfedező), vagy null.
 function discoveryPair(q) {
-  const name = YEAR_ONLY_RE.exec(q.question)?.[1];
+  const name = YEAR_ONLY_RE.exec(q.question)?.[1]?.trim();
   const who = DISCOVERER_RE.exec(String(q.hint || '').trim())?.[1];
   const year = q.options?.[q.correctIndex];
   if (!name || !who || !year) return null;
@@ -36,9 +39,15 @@ const DISCOVERY_ANSWER_POOL = [
   ...new Set(QUESTIONS.map((q) => discoveryPair(q)?.answer).filter(Boolean)),
 ];
 
-// A zárójeles kiegészítést ("(elemezte …)") levágjuk, hogy a kérdés rövid maradjon.
+// Felfedező-név tisztítása a kérdéshez: levágjuk a zárójeles kiegészítést
+// ("(elemezte …)") ÉS az esetleges év/dátum-farkat (", 1966", ", 1997–1998;
+// újraleírás: …"), különben az évszám duplán jelenne meg a kérdésben.
 function primaryName(s) {
-  return String(s || '').replace(/\s*\(.*\)\s*/g, '').trim();
+  return String(s || '')
+    .replace(/\s*\(.*\)\s*/g, '')
+    .replace(/,\s*\d{4}.*$/s, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function buildFormA(q, pair) {
@@ -75,6 +84,14 @@ function upgradeDiscoveryQuestions(selected, allDinos = []) {
   const namePool = [...byName.keys()];
 
   return selected.map((q) => {
+    // Régi csak-felfedező kérdés kiegészítése év + ország adattal (a helyes
+    // dínó szerveradataiból); a válaszopciók változatlanok.
+    if (DISCOVERER_ONLY_RE.test(q.question)) {
+      const dino = byName.get(q.options?.[q.correctIndex]);
+      if (!dino) return q;
+      return buildFormB(q, dino, namePool) || q;
+    }
+
     const pair = discoveryPair(q);
     if (!pair) return q;
     const dino = byName.get(pair.name);
