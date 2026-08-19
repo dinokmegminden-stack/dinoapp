@@ -7528,5 +7528,278 @@
     ],
     "correctIndex": 1,
     "hint": "A felfedező Ernst Stromer von Reichenbach volt."
+  },
+  {
+    "id": 607,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz neve utal közvetlenül Magyarországra?",
+    "options": [
+      "Magyarosaurus dacus",
+      "Rhabdodon priscus",
+      "Zalmoxes robustus",
+      "Liliensternus"
+    ],
+    "correctIndex": 0,
+    "hint": "Erdélyben, a Hátszeg-medencében fedezte fel báró Nopcsa Ferenc húga."
+  },
+  {
+    "id": 608,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz nemzetségneve tiszteleg Gideon Mantell, az Iguanodon első felfedezője előtt?",
+    "options": [
+      "Mantellisaurus",
+      "Camptosaurus",
+      "Valdosaurus",
+      "Cetiosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "Ezt a dínót korábban az Iguanodon egyik karcsúbb fajának tartották."
+  },
+  {
+    "id": 609,
+    "difficulty": "medium",
+    "question": "Melyik múzeumban őrzik a híres, tökéletesen megmaradt belga Iguanodon csontvázakat?",
+    "options": [
+      "Natural History Museum, London",
+      "Oxford University Museum",
+      "Belga Királyi Természettudományi Intézet, Brüsszel",
+      "Muséum National d'Histoire Naturelle, Párizs"
+    ],
+    "correctIndex": 2,
+    "hint": "Brüsszelben található ez a múzeum, ahol 38 egyedet állítottak ki."
+  },
+  {
+    "id": 610,
+    "difficulty": "medium",
+    "question": "Melyik földtörténeti időszakban élt az Argentinosaurus huinculensis a kréta időszakon belül?",
+    "options": [
+      "Kora kréta",
+      "Késő kréta",
+      "Középső jura",
+      "Késő triász"
+    ],
+    "correctIndex": 1,
+    "hint": "Közvetlenül a dinoszauruszok végső kihalása előtti utolsó nagy geológiai korszakban."
+  },
+  {
+    "id": 611,
+    "difficulty": "medium",
+    "question": "Melyik kontinensen fedezték fel az Argentinosaurus maradványait, amelyről a nemzetség a nevét is kapta?",
+    "options": [
+      "Észak-Amerika",
+      "Dél-Amerika",
+      "Afrika",
+      "Ausztrália"
+    ],
+    "correctIndex": 1,
+    "hint": "A dél-amerikai ország, Argentína területén találták meg a hatalmas csontokat."
+  },
+  {
+    "id": 612,
+    "difficulty": "easy",
+    "question": "A mezozoikum melyik időszakában érték el a dinoszauruszok a legnagyobb diverzitásukat és méretbeli változatosságukat közvetlenül a kihalásuk előtt?",
+    "options": [
+      "Triász",
+      "Jura",
+      "Kréta",
+      "Karbon"
+    ],
+    "correctIndex": 2,
+    "hint": "Ebben az időszakban élt a T. rex, a Triceratops és az Argentinosaurus is."
+  },
+  {
+    "id": 613,
+    "difficulty": "medium",
+    "question": "Mi a legelfogadottabb tudományos magyarázat a dinoszauruszok körülbelül 66 millió évvel ezelőtti kihalására?",
+    "options": [
+      "Egy globális járvány",
+      "Egy hatalmas aszteroida becsapódása és az azt követő éghajlatváltozás",
+      "A növényzet teljes kiszáradása",
+      "Az emlősök túlszaporodása és a tojások elfogyasztása"
+    ],
+    "correctIndex": 1,
+    "hint": "A mexikói Chicxulub-kráter keletkezése köthető ehhez az eseményhez."
+  },
+  {
+    "id": 614,
+    "difficulty": "hard",
+    "question": "Melyik anatómiai bélyeg bizonyítja leginkább a theropoda dinoszauruszok és a modern madarak közötti közvetlen evolúciós kapcsolatot?",
+    "options": [
+      "A villa alakú kulcscsont (furcula) és az üreges csontok jelenléte",
+      "A pikkelyes láb és a lapos farok",
+      "A fogas állkapocs jelenléte a mai madaraknál",
+      "A négy lábon való járás képessége"
+    ],
+    "correctIndex": 0,
+    "hint": "A madarak kívánságcsontjának is nevezett összenőtt csontmódosulás már a ragadozó dinóknál is megjelent."
+  },
+  {
+    "id": 615,
+    "difficulty": "hard",
+    "question": "A korai paleontológusok közül ki nevezte el az elsőként leírt dinoszauruszt, a Megalosaurust az 1820-as években Angliában?",
+    "options": [
+      "William Buckland",
+      "Gideon Mantell",
+      "Richard Owen",
+      "Charles Darwin"
+    ],
+    "correctIndex": 0,
+    "hint": "Az oxfordi professzor, aki egy állkapocstöredék alapján írta le az első óriásgyíkot."
+  },
+  {
+    "id": 616,
+    "difficulty": "easy",
+    "question": "Hány szarváról kapta a nevét a híres növényevő Triceratops?",
+    "options": [
+      "Egy",
+      "Kettő",
+      "Három",
+      "Öt"
+    ],
+    "correctIndex": 2,
+    "hint": "A görög név jelentése: „háromszarvú arc”."
+  },
+  {
+    "id": 617,
+    "difficulty": "medium",
+    "question": "A leletek alapján mire szolgáltak a Stegosaurus hátán lévő függőleges csontlemezek?",
+    "options": [
+      "Vizuális mutogatásra (párválasztás), hőszabályozásra és részben védelemre",
+      "Szárnyakként a magasba emelkedésre",
+      "A táplálék összezúzására",
+      "A hangok felerősítésére"
+    ],
+    "correctIndex": 0,
+    "hint": "A lemezek tele voltak erekkel, ami segített a felesleges hő leadásában vagy felvételében."
+  },
+  {
+    "id": 618,
+    "difficulty": "hard",
+    "question": "Milyen fizikai ok miatt tartják valószínűtlennek a kutatók, hogy a legnagyobb sauropodák (pl. Argentinosaurus) állandóan mély vízben éltek?",
+    "options": [
+      "A víznyomás jelentősen megnehezítette volna a légzésüket a hosszú nyak miatt",
+      "Mert a bőrük feloldódott volna a vízben",
+      "Mert nem tudtak úszni a nehéz csontok miatt",
+      "Mert a vízben nem találtak volna növényeket"
+    ],
+    "correctIndex": 0,
+    "hint": "A hidrosztatikai nyomás miatt a több méter mélyen lévő mellkasba nem tudott volna levegőt szívni a felszíni hosszú nyak segítségével."
+  },
+  {
+    "id": 619,
+    "difficulty": "medium",
+    "question": "Melyik földtörténeti időszakban alakultak ki az első madarak a theropoda dinoszauruszokból?",
+    "options": [
+      "Jura",
+      "Triász",
+      "Kréta",
+      "Perm"
+    ],
+    "correctIndex": 0,
+    "hint": "Az Archaeopteryx is ebből az időszakból, a mezozoikum középső korszakából származik."
+  },
+  {
+    "id": 620,
+    "difficulty": "hard",
+    "question": "Melyik csonttípus jelenléte a nőstény dinoszauruszok csontjaiban (pl. T. rexnél) bizonyítja a tojásrakás előtti kalcium-raktározást, a modern madarakhoz hasonlóan?",
+    "options": [
+      "Medulláris csont (medullary bone)",
+      "Porcos csontszövet",
+      "Légzsák-fal",
+      "Csontos taréj"
+    ],
+    "correctIndex": 0,
+    "hint": "A hosszú csontok velőüregében található speciális szövet, amely a tojáshéj képződéséhez biztosított gyorsan mozgósítható kalciumot."
+  },
+  {
+    "id": 621,
+    "difficulty": "easy",
+    "question": "A Triceratopsnak milyen típusú szájrésze volt a növények leharapásához?",
+    "options": [
+      "Papagájszerű szarucsőr",
+      "Hosszú, ragadozó fogsor",
+      "Fogatlan, lapos kacsacsőr",
+      "Nem volt szájnyílása"
+    ],
+    "correctIndex": 0,
+    "hint": "A fejen lévő csőrös rész segített lehasítani a kemény rostú növényeket a fogsor előtt."
+  },
+  {
+    "id": 622,
+    "difficulty": "easy",
+    "question": "Milyen elsődleges táplálkozási formát folytattak a hatalmas, hosszú nyakú Sauropoda dinoszauruszok?",
+    "options": [
+      "Húsevők voltak",
+      "Növényevők voltak",
+      "Mindenevők voltak",
+      "Kizárólag halakat ettek"
+    ],
+    "correctIndex": 1,
+    "hint": "Hatalmas testük fenntartásához óriási mennyiségű lombot és tűlevelet fogyasztottak."
+  },
+  {
+    "id": 623,
+    "difficulty": "easy",
+    "question": "Melyik kontinensen találták meg a legtöbb Triceratops és Tyrannosaurus maradványt?",
+    "options": [
+      "Európa",
+      "Ázsia",
+      "Észak-Amerika",
+      "Ausztrália"
+    ],
+    "correctIndex": 2,
+    "hint": "A Hell Creek formáció ebből a szempontból a világ egyik leggazdagabb lelőhelye."
+  },
+  {
+    "id": 624,
+    "difficulty": "hard",
+    "question": "Mi a neve annak a vékony kőzetrétegnek és földtörténeti határvonalnak, amely világszerte jelzi a dinoszauruszok kihalását, és magas irídiumkoncentrációt mutat?",
+    "options": [
+      "Perm-triász határ",
+      "K-T (Kréta-Paleogén) határvonal",
+      "Kambriumi réteg",
+      "Pleisztocén törésvonal"
+    ],
+    "correctIndex": 1,
+    "hint": "Az irídium egy meteoritbecsapódás porából származik, ami globális katasztrófát okozott."
+  },
+  {
+    "id": 625,
+    "difficulty": "hard",
+    "question": "Hogyan segítették a theropoda és sauropoda dinoszauruszok csontjaiban lévő üregek és légzsákok (pneumatizáció) az állat életét?",
+    "options": [
+      "Vizet tároltak bennük a szárazság idejére",
+      "Csökkentették a nehéz vázrendszer súlyát és hatékonyabbá tették a madárszerű légzést",
+      "A hangadást mélyítették el vele",
+      "Kizárólag mérgező gázokat tároltak bennük"
+    ],
+    "correctIndex": 1,
+    "hint": "A modern madarakhoz hasonlóan ez a rendszer tette lehetővé az óriási méreteket a csontváz összeroppanása nélkül."
+  },
+  {
+    "id": 626,
+    "difficulty": "easy",
+    "question": "Milyen testrész borította be a híres Stegosaurus farkának legvégét?",
+    "options": [
+      "Csontos tollak",
+      "Négy darab hegyes, kemény csonttüske",
+      "Egy puha hártya",
+      "Egy kerek csontbunkó"
+    ],
+    "correctIndex": 1,
+    "hint": "Ezt a fegyvert a szakirodalom thagomizernek is nevezi."
+  },
+  {
+    "id": 627,
+    "difficulty": "hard",
+    "question": "Melyik jura kori sauropoda dinoszaurusz kapta a nevét arról, hogy Richard Owen eredetileg egy hatalmas tengeri bálna hüllőrokonának hitte?",
+    "options": [
+      "Cetiosaurus",
+      "Camarasaurus",
+      "Diplodocus",
+      "Brachiosaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "A neve szó szerint azt jelenti, hogy 'bálnagyík'."
   }
 ]
