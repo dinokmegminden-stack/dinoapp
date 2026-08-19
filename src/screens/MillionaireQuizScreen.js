@@ -45,7 +45,7 @@ const DIFFICULTY_COLORS = {
   hard: '#BC6C25',
 };
 
-export default function MillionaireQuizScreen({ playerId, nickname, progress, onNavigate, onBack }) {
+export default function MillionaireQuizScreen({ playerId, nickname, progress, allDinos, onNavigate, onBack }) {
   const { t } = useT();
   const [gameStatus, setGameStatus] = useState('idle'); // 'idle' | 'playing' | 'won' | 'lost'
   const [questions, setQuestions] = useState([]);
@@ -70,7 +70,7 @@ export default function MillionaireQuizScreen({ playerId, nickname, progress, on
   }, [currentQuestionIndex]);
 
   const startGame = () => {
-    const quiz = buildMillionaireQuiz();
+    const quiz = buildMillionaireQuiz(allDinos);
     if (quiz.length === 0) return; // betöltési hiba — a gomb eleve le van tiltva
     playQuizSfx('letsPlay');
     startTimeRef.current = Date.now();

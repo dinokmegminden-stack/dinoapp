@@ -450,6 +450,7 @@ function AppInner() {
           playerId={playerId}
           nickname={nickname}
           progress={progress}
+          allDinos={allDinos}
           onNavigate={handleNavigateFromGame}
           onBack={handleBackFromGame}
         />
