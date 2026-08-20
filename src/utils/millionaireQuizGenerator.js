@@ -83,6 +83,16 @@ function upgradeDiscoveryQuestions(selected, allDinos = []) {
   );
   const namePool = [...byName.keys()];
 
+  // Kvízenként legfeljebb 1 "Melyik évben és ki fedezte fel …" (Form A) kérdés.
+  // A további felfedezés-kérdések Form B-re mennek (más kérdés, válasz = dínónév),
+  // ha van szerveradat; egyébként marad az eredeti corpus-kérdés.
+  let formACount = 0;
+  const emitFormA = (q, pair) => {
+    if (formACount >= 1) return q;
+    formACount += 1;
+    return buildFormA(q, pair);
+  };
+
   return selected.map((q) => {
     // Régi csak-felfedező kérdés kiegészítése év + ország adattal (a helyes
     // dínó szerveradataiból); a válaszopciók változatlanok.
@@ -96,10 +106,10 @@ function upgradeDiscoveryQuestions(selected, allDinos = []) {
     if (!pair) return q;
     const dino = byName.get(pair.name);
     // Ahol van szerveradat, dobással váltunk A és B között; egyébként mindig A.
-    if (dino && Math.random() < 0.5) {
-      return buildFormB(q, dino, namePool) || buildFormA(q, pair);
+    if (dino && (Math.random() < 0.5 || formACount >= 1)) {
+      return buildFormB(q, dino, namePool) || emitFormA(q, pair);
     }
-    return buildFormA(q, pair);
+    return emitFormA(q, pair);
   });
 }
 
