@@ -210,6 +210,7 @@ export default function HeaderBar({
     { view: 'collection', label: t('nav.catalog') },
     ...(guest ? [] : [{ view: 'album', label: t('nav.album') }]),
     { view: 'evolution', label: t('nav.evolution') },
+    { view: 'geology', label: t('nav.geology') },
     { view: 'comparison', label: t('nav.comparison') },
     { view: 'calendar', label: t('nav.calendar') },
     { view: 'movies', label: t('nav.movies') },

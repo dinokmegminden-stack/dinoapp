@@ -125,7 +125,7 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
   );
 }
 
-export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onOpenMovies, onOpenEvolution, onOpenComparison, onOpenCalendar, onRequireRegister, onOpenJoin, onOpenLogin }) {
+export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onOpenGeology, onOpenMovies, onOpenEvolution, onOpenComparison, onOpenCalendar, onRequireRegister, onOpenJoin, onOpenLogin }) {
   const { t } = useT();
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
@@ -267,6 +267,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     else if (targetView === 'leaderboard') onOpenLeaderboard?.();
     else if (targetView === 'news') onOpenNews?.();
     else if (targetView === 'kutatok') onOpenKutatok?.();
+    else if (targetView === 'geology') onOpenGeology?.();
     else if (targetView === 'movies') onOpenMovies?.();
     else if (targetView === 'evolution') onOpenEvolution?.();
     else if (targetView === 'comparison') onOpenComparison?.();

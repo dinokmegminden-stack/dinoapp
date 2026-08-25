@@ -22,6 +22,7 @@ import XPBar, { setActivePlayerId, syncXPFromServer } from './src/components/XPB
 import LeaderboardScreen from './src/screens/LeaderboardScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import KutatokScreen from './src/screens/KutatokScreen';
+import GeologyScreen from './src/screens/GeologyScreen';
 import MoviesScreen from './src/screens/MoviesScreen';
 import EvolutionScreen from './src/screens/EvolutionScreen';
 import ComparisonScreen from './src/screens/ComparisonScreen';
@@ -300,6 +301,10 @@ function AppInner() {
     setView('kutatok');
   };
 
+  const handleOpenGeology = () => {
+    setView('geology');
+  };
+
   const handleOpenMovies = () => {
     setView('movies');
   };
@@ -393,6 +398,7 @@ function AppInner() {
           onOpenGaming={handleOpenGaming}
           onOpenNews={handleOpenNews}
           onOpenKutatok={handleOpenKutatok}
+          onOpenGeology={handleOpenGeology}
           onOpenMovies={handleOpenMovies}
           onOpenEvolution={handleOpenEvolution}
           onOpenComparison={handleOpenComparison}
@@ -537,6 +543,15 @@ function AppInner() {
 
       {view === 'kutatok' && (
         <KutatokScreen
+          nickname={nickname}
+          progress={progress}
+          onNavigate={(target) => setView(target)}
+          onBack={() => setView('landing')}
+        />
+      )}
+
+      {view === 'geology' && (
+        <GeologyScreen
           nickname={nickname}
           progress={progress}
           onNavigate={(target) => setView(target)}

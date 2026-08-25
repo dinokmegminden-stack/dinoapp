@@ -8,6 +8,7 @@
     "researchers": "Researchers",
     "movies": "Movies",
     "evolution": "Evolution",
+    "geology": "Geology",
     "comparison": "Compare",
     "calendar": "Earth Year",
     "menu": "Menu"
@@ -118,6 +119,11 @@
     "epoch_paleogene": "Paleogene",
     "mya": "Mya"
   },
+  "geology": {
+    "title": "The Fathers of Geology",
+    "intro": "Twenty scientists who built the science of the Earth from scratch — from reading rocks to plate tectonics. The timeline snakes downward in order of birth year; hover (or tap) a dot for their discovery.",
+    "today": "Now"
+  },
   "comparison": {
     "title": "SIZE COMPARISON",
     "hint": "Pick two dinosaurs and compare their size at true relative scale.",
@@ -141,8 +147,29 @@
     "shirt_hint": "Download the design and any print shop can put it on a shirt. Transparent PNG, works on dark and light shirts alike.",
     "shirt_download": "Download design",
     "timeline_now": "Now",
-    "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-    "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    "weekdays": [
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa",
+      "Su"
+    ],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ]
   },
   "games": {
     "hub_title": "GAME MODES",
