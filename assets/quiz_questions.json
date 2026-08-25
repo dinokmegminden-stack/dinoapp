@@ -28,7 +28,7 @@
   {
     "id": 3,
     "difficulty": "hard",
-    "question": "A könyv rendszertani áttekintése alapján melyik csoportba sorolható be szűkebb értelemben maga az Argentinosaurus nemzetség?",
+    "question": "Melyik csoportba sorolható be szűkebb értelemben maga az Argentinosaurus nemzetség?",
     "options": [
       "Sauropoda",
       "Theropoda",
@@ -54,7 +54,7 @@
   {
     "id": 5,
     "difficulty": "medium",
-    "question": "A forrás bevezetője szerint a dinoszauruszok virágkora idején a szárazföldi formák mellett milyen egyéb hüllőrokonok uralták a bolygót?",
+    "question": "A dinoszauruszok virágkora idején a szárazföldi formák mellett milyen egyéb hüllőrokonok uralták a bolygót?",
     "options": [
       "Kizárólag primitív kétéltűek",
       "Vízi és repülő hüllőcsoportok",
@@ -80,7 +80,7 @@
   {
     "id": 7,
     "difficulty": "medium",
-    "question": "A könyvben bemutatott legfontosabb dinoszauruszcsoportok közül melyikre jellemző a ragadozó életmód és a két lábon való járás?",
+    "question": "A legfontosabb dinoszauruszcsoportok közül melyikre jellemző a ragadozó életmód és a két lábon való járás?",
     "options": [
       "Sauropoda",
       "Theropoda",
@@ -184,7 +184,7 @@
   {
     "id": 17,
     "difficulty": "medium",
-    "question": "A könyv rendszertani felosztása szerint a Sauropodomorpha csoport tagjai milyen jellegzetes testfelépítéssel rendelkeztek?",
+    "question": "A Sauropodomorpha csoport tagjai milyen jellegzetes testfelépítéssel rendelkeztek?",
     "options": [
       "Rövid nyak és hatalmas páncélzat",
       "Megnyúlt nyak, kisméretű fej és hatalmas test",
@@ -9082,7 +9082,7 @@
     "question": "Milyen bizonyíték utal arra, hogy egyes kis theropodák (pl. Sinosauropteryx) színe rekonstruálható?",
     "options": [
       "A kőzet színe a lelet körül",
-      "A tollakban megőrződött melanoszómák (pigmentszemcsék) alakja",
+      "A tollakban megőrződött melanoszómák alakja",
       "A fogak kopása",
       "A csontok színe"
     ],
