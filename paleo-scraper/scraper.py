@@ -13,11 +13,13 @@ Deps: requests, beautifulsoup4
 import json
 import os
 import re
+import smtplib
 import sys
 import time
 import urllib.parse
 import urllib.robotparser
 from datetime import datetime, timedelta, timezone
+from email.message import EmailMessage
 
 import requests
 from bs4 import BeautifulSoup
@@ -282,6 +284,44 @@ def scrape_site(session, site, seen, cutoff):
     return entries
 
 
+def send_email(entries):
+    """Email a digest of new articles. No-op if SMTP env vars are unset.
+
+    Env: SMTP_USER, SMTP_PASS (Gmail app password), MAIL_TO,
+         SMTP_HOST (default smtp.gmail.com), SMTP_PORT (default 465).
+    """
+    user = os.environ.get("SMTP_USER")
+    pw = os.environ.get("SMTP_PASS")
+    to = os.environ.get("MAIL_TO", user)
+    if not (user and pw and entries):
+        return
+    host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    port = int(os.environ.get("SMTP_PORT", "465"))
+
+    by_site = {}
+    for e in entries:
+        by_site.setdefault(e["site"], []).append(e)
+    lines = [f"{len(entries)} new paleontology/dino articles this week:\n"]
+    for site, items in by_site.items():
+        lines.append(f"\n== {site} ({len(items)}) ==")
+        for e in items:
+            date = (e["publish_date"] or "")[:10]
+            lines.append(f"  {date}  {e['title']}\n     {e['url']}")
+
+    msg = EmailMessage()
+    msg["Subject"] = f"Paleo news: {len(entries)} new articles"
+    msg["From"] = user
+    msg["To"] = to
+    msg.set_content("\n".join(lines))
+    try:
+        with smtplib.SMTP_SSL(host, port, timeout=REQUEST_TIMEOUT) as s:
+            s.login(user, pw)
+            s.send_message(msg)
+        print(f"emailed digest to {to}")
+    except Exception as e:
+        print(f"email failed: {e}", file=sys.stderr)
+
+
 def main():
     seen = set(load_json(SEEN_FILE, []))
     existing = load_json(OUTPUT_FILE, [])
@@ -302,6 +342,7 @@ def main():
         save_json(OUTPUT_FILE, existing + new_entries)
         save_json(SEEN_FILE, sorted(seen))
         print(f"\n{len(new_entries)} new articles saved to {OUTPUT_FILE}")
+        send_email(new_entries)
     else:
         print("\nNo new articles.")
 
