@@ -1,9 +1,8 @@
 // ComparisonScreen — "Méretösszehasonlító": két dínó egymás mellett, valós
 // hosszarányban méretezett képpel (lásd COMPARISON_NAMES / comparisonDinos.js).
-// Zárolt (még nem gyűjtött) dínó is választható — a sziluett és a hosszarány
-// látszik, de a számadatok "???"-ként jelennek meg (felfedezős csali a
-// Gyűjtemény felé), ugyanaz a quizPassed-alapú unlock-logika, mint a
-// Collection/Album képernyőn (regionProgress.js).
+// Minden dínó nyitva áll — bejelentkezés/gyűjtés nélkül is látszik a kép, a
+// név és minden számadat. (Korábban quizPassed-alapú zárolás volt, de a
+// méret-összehasonlító ingyenes, mindenkinek elérhető felfedező eszköz.)
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Pressable, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -34,8 +33,9 @@ const HUMAN_HEIGHT_M = 1.8;
 const DEFAULT_LEFT = 'Tyrannosaurus';
 const DEFAULT_RIGHT = 'Velociraptor';
 
-function isCollected(dino, progress) {
-  return progress?.[dino?.edu]?.[dino?.csomag]?.quizPassed === true;
+// Mindig nyitott — a méret-összehasonlító nem zár semmit gyűjtés/login mögé.
+function isCollected() {
+  return true;
 }
 
 function formatWeight(kg) {
