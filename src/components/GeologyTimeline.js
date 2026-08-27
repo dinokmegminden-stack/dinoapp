@@ -7,7 +7,7 @@
 // A tudósadat itt, a komponensben él (statikus tartalom, nem DB): kétnyelvű
 // leírással, a nemzetiség-nevek is kétnyelvűek — a UI-szövegek (cím/bevezető)
 // viszont az i18n-katalógusból jönnek.
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Platform, useWindowDimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS, RADIUS, FONTS } from '../constants/theme';
@@ -202,6 +202,7 @@ export default function GeologyTimeline() {
 
               {active && (
                 <Tooltip
+                  key={activeId}
                   person={active}
                   lang={lang}
                   pt={layout.pts[activeId]}
@@ -226,8 +227,30 @@ function Tooltip({ person, lang, pt, width, isLastRow }) {
   const style = isLastRow
     ? { left, bottom: undefined, top: pt.y - 8 - 150 }
     : { left, top: pt.y + 40 };
+
+  // Belépő animáció (csak web): halványulva, a kiváltó pont felől skálázva.
+  // Mobilon a transition-t az RN-web nem alkalmazza, ezért ott nincs kezdő
+  // rejtett állapot — különben láthatatlan maradna.
+  const isWeb = Platform.OS === 'web';
+  const [shown, setShown] = useState(!isWeb);
+  useEffect(() => {
+    if (!isWeb) return;
+    const r = requestAnimationFrame(() => setShown(true));
+    return () => cancelAnimationFrame(r);
+  }, [isWeb]);
+  const enter = isWeb
+    ? {
+        opacity: shown ? 1 : 0,
+        transform: [{ scale: shown ? 1 : 0.95 }],
+        transformOrigin: isLastRow ? 'bottom center' : 'top center',
+        transitionProperty: 'transform, opacity',
+        transitionDuration: '150ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      }
+    : null;
+
   return (
-    <View style={[styles.tip, { width: tipW, borderTopColor: col }, style]} pointerEvents="none">
+    <View style={[styles.tip, { width: tipW, borderTopColor: col }, style, enter]} pointerEvents="none">
       <View style={styles.tipHead}>
         <Text style={styles.tipName}>{person.n}</Text>
         <Text style={styles.tipYears}>{person.b}–{person.d}</Text>
@@ -267,9 +290,15 @@ const styles = StyleSheet.create({
     height: DOT,
     borderRadius: DOT / 2,
     borderWidth: 3,
-    ...Platform.select({ web: { transitionProperty: 'transform', transitionDuration: '150ms' } }),
+    ...Platform.select({
+      web: {
+        transitionProperty: 'transform',
+        transitionDuration: '150ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      },
+    }),
   },
-  dotActive: { transform: [{ scale: 1.3 }] },
+  dotActive: { transform: [{ scale: 1.25 }] },
   dotToday: { width: 16, height: 16, borderRadius: 8 },
   name: {
     color: COLORS.cream,
