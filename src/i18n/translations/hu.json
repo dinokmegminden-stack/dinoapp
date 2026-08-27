@@ -40,6 +40,7 @@
     "cta_continue": "Folytasd: %{region} →",
     "cta_start": "Kezdd el a felfedezést!",
     "hero_title": "Légy Te a Dínó Professzor!",
+    "hero_stats": "%{count} dínó és őslény · 6 régió",
     "hero_subtitle": "Fedezd fel a mélyidő őslényeit, gyűjts kártyákat, és válj a legnagyobb szakértővé!",
     "hero_cta_hint": "…vagy válassz régiót a térképen ↓",
     "news_heading": "DÍNÓS HÍREK",

@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StatusBar,
   StyleSheet,
   Pressable,
@@ -37,6 +38,9 @@ import { useT } from '../i18n';
 // Teljes oldalas háttérkép — csak asztali (web, >=700px) nézetben, a Shell rendereli
 // (lásd Shell.js backgroundImage prop), sötét overlay-jel a gombok olvashatóságáért.
 const landingBg = require('../../assets/images/trexhead_bg.jpg');
+// Mobil hero-vízjel: bőgő raptor (áttetsző PNG). Csak keskeny nézetben, halvány
+// háttérként a cím mögött — asztali nézetnek már van T-rex háttere (landingBg).
+const heroRaptor = require('../../assets/images/12-2-dinosaur-png.png');
 
 const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
 
@@ -399,7 +403,18 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
       <RandomDinoStrip allDinos={allDinos} onPress={handleDailyDinoPress} availWidth={stripAvailWidth} />
 
       <View style={styles.heroCopy}>
+        {!isWide && (
+          <Image
+            source={heroRaptor}
+            style={styles.heroRaptor}
+            resizeMode="contain"
+            pointerEvents="none"
+          />
+        )}
         <Text style={styles.heroTitle}>{t('landing.hero_title')}</Text>
+        <Text style={styles.heroStats}>
+          {t('landing.hero_stats', { count: allDinos?.length || 111 })}
+        </Text>
         <Text style={styles.heroSubtitle}>
           {t('landing.hero_subtitle')}
         </Text>
@@ -693,6 +708,31 @@ const styles = StyleSheet.create({
   heroCopy: {
     marginTop: 8,
     marginBottom: 18,
+    position: 'relative',
+  },
+  // Mobil hero-vízjel: bőgő raptor a cím mögött, jobbra kilógva, halványan. Első
+  // gyerekként abszolút pozícióban ül, így a rá következő szöveg fölé rajzolódik
+  // (nem kell zIndex) — a cím olvasható marad, a "dínó" mégis 50ms alatt leolvad.
+  heroRaptor: {
+    position: 'absolute',
+    top: -18,
+    right: -34,
+    width: 210,
+    height: 168,
+    opacity: 0.22,
+    transform: [{ scaleX: -1 }],
+  },
+  // "111 őslény · 6 régió" — mindig látható, hangos bizonyíték (a korábbi
+  // hover-mögé-rejtett value prop helyett; telefonon nincs hover).
+  heroStats: {
+    color: COLORS.heroYellow,
+    fontSize: 15,
+    fontFamily: FONTS.bodyBold,
+    letterSpacing: 0.5,
+    marginBottom: 10,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   heroTitle: {
     color: COLORS.cream,

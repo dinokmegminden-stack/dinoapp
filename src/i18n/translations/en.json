@@ -40,6 +40,7 @@
     "cta_continue": "Continue: %{region} →",
     "cta_start": "Start exploring!",
     "hero_title": "Become the Dino Professor!",
+    "hero_stats": "%{count} dinos & prehistoric creatures · 6 regions",
     "hero_subtitle": "Discover the creatures of deep time, collect cards, and become the greatest expert!",
     "hero_cta_hint": "…or pick a region on the map ↓",
     "news_heading": "DINO NEWS",
