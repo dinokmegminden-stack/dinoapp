@@ -1,6 +1,6 @@
 ﻿// LandingPage — redesign spec 3. pont: header sáv (XP pill + ikon gombok),
 // döntött logó blokk, majd a LandingMenu szekciói egyetlen oszlopban.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   View,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-  Image,
+  Animated,
   Platform,
   Linking,
   useWindowDimensions,
@@ -64,6 +64,26 @@ const MAX_THUMBS = 8;  // felső korlát (nagyon széles kijelzőn se legyen tú
 // tartalmat, esztétikus whitespace-szel mindkét oldalon.
 const HERO_MAX_WIDTH = 1180;
 
+// Kép halványulva jelenik meg, amint betöltött — a skeleton→kép csere ne
+// legyen kemény vágás. Web: opacity transition a natív driver helyett.
+function FadeInImage({ source, style }) {
+  const op = useRef(new Animated.Value(0)).current;
+  return (
+    <Animated.Image
+      source={source}
+      style={[style, { opacity: op }]}
+      resizeMode="cover"
+      onLoad={() =>
+        Animated.timing(op, {
+          toValue: 1,
+          duration: 220,
+          useNativeDriver: Platform.OS !== 'web',
+        }).start()
+      }
+    />
+  );
+}
+
 function RandomDinoStrip({ allDinos, onPress, availWidth }) {
   // Hány thumbnail fér el a rendelkezésre álló sávszélességbe (min. 1). A
   // szélességet a szülő számolja ki a viewportból (availWidth) — megbízhatóbb,
@@ -117,7 +137,7 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
               accessibilityRole="button"
               accessibilityLabel={dino.name_hu}
             >
-              <Image source={IMAGE_MAP[dino.name_hu]} style={[styles.randomThumbImg, singleImg]} resizeMode="cover" />
+              <FadeInImage source={IMAGE_MAP[dino.name_hu]} style={[styles.randomThumbImg, singleImg]} />
               <Text style={[styles.randomThumbName, single && styles.randomThumbNameSingle]} numberOfLines={1}>{dino.name_hu}</Text>
             </Pressable>
           ))}
@@ -517,7 +537,14 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.pill,
     paddingVertical: 9,
     paddingHorizontal: 18,
-    ...Platform.select({ web: { cursor: 'pointer' } }),
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'transform, background-color',
+        transitionDuration: '140ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      },
+    }),
   },
   guestBtnPressed: {
     backgroundColor: COLORS.accentDark,
@@ -613,7 +640,14 @@ const styles = StyleSheet.create({
   },
   randomThumb: {
     width: 178,
-    ...Platform.select({ web: { cursor: 'pointer' } }),
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'transform',
+        transitionDuration: '140ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      },
+    }),
   },
   randomThumbPressed: {
     transform: [{ scale: 0.96 }],
