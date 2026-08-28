@@ -101,7 +101,10 @@ function familyValue(dino) {
 }
 
 function countryValue(dino) {
-  return dino.discovered_country || dino.country || '';
+  const country = dino.discovered_country || dino.country || '';
+  if (!country) return '';
+  const year = dino.discovery_year;
+  return year ? `${country} (${year})` : country;
 }
 
 // Kinyitott kártya mérete: a legnagyobb ~0.7 (szélesség/magasság) arányú doboz,
