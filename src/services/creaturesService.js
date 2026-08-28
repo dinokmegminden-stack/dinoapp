@@ -32,6 +32,12 @@ export function adaptCreature(row) {
     csomag: Number(row.pack_number || 1),
     edu: Number(row.edu || row.education_level || 1),
     image_url: row.image_url || null,
+    // Filmvászon-megjelenés — a film_creatures híd-tábla sorai (egy sor = egy
+    // film). Vesszővel összefűzve, mert a szűrő (CollectionScreen FILTER_FIELDS
+    // + splitMultiValue) filmenként külön opciót képez.
+    movies: Array.isArray(row.film_creatures)
+      ? row.film_creatures.map((r) => safe(r.film)).filter(Boolean).join(', ')
+      : '',
     description_hu: safe(row.description_hu),
     description_en: safe(row.description_en),
     period: safe(row.period_hu),
@@ -61,7 +67,7 @@ export function adaptCreature(row) {
 export async function fetchCreaturesByEdu(eduLevel) {
   const { data, error } = await supabase
     .from('creatures')
-    .select('*')
+    .select('*, film_creatures(film)')
     .eq('edu', eduLevel)
     .neq('pack_number', 100);
 

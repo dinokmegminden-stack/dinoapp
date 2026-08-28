@@ -105,6 +105,17 @@ function buildFilterCategory(dinos, field, order, title, transform = (v) => v) {
 }
 
 
+// Jurassic-filmek kronológiai sorrendben (a Filmvászon szűrő opció-sorrendje).
+const FILM_ORDER = [
+  'Jurassic Park',
+  'Az elveszett világ',
+  'Jurassic Park III',
+  'Jurassic World',
+  'Bukott birodalom',
+  'Világuralom',
+  'Újjászületés',
+];
+
 const FILTER_FIELDS = [
   { key: 'epoch', field: 'epoch', titleKey: 'collection.filter_epoch', order: EPOCH_ORDER, transform: normalizeEpoch },
   { key: 'region', field: 'region', titleKey: 'collection.filter_region', order: REGION_LABEL_ORDER },
@@ -112,6 +123,7 @@ const FILTER_FIELDS = [
   { key: 'diet', field: 'diet_hu', titleKey: 'collection.filter_diet', order: [], transform: normalizeDiet },
   { key: 'alrend', field: 'alrend', titleKey: 'collection.filter_group', order: ALREND_ORDER, transform: (v) => ALREND_HU[v] || v },
   { key: 'csalad', field: 'csalad_hu', titleKey: 'collection.filter_family', order: [] },
+  { key: 'movies', field: 'movies', titleKey: 'collection.filter_movies', order: FILM_ORDER },
 ];
 
 export default function CollectionScreen({ nickname, allDinos, progress, onNavigate, onBack }) {
