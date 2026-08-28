@@ -61,7 +61,7 @@ function normalizeDiet(diet) {
 // szűrő-listák sorrendje ne alfabetikus-véletlenszerű legyen, hanem
 // következetes az app többi részével.
 const REGION_LABEL_ORDER = REGION_ORDER.map((edu) => EDU_LABELS[edu]);
-const ALREND_ORDER = Object.values(ALREND_HU);
+const ALREND_ORDER = [...new Set(Object.values(ALREND_HU))];
 
 // Ezek nem valódi, szűrhető tények, hanem "nincs adat" placeholderek —
 // sem kategória-opcióként, sem dínó-tulajdonságként nem szabad megjelenniük.

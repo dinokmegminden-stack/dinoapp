@@ -41,7 +41,7 @@ function normalizeDiet(diet) {
 
 
 const REGION_LABEL_ORDER = REGION_ORDER.map((edu) => EDU_LABELS[edu]);
-const ALREND_ORDER = Object.values(ALREND_HU);
+const ALREND_ORDER = [...new Set(Object.values(ALREND_HU))];
 
 const NON_FILTERABLE_VALUES = new Set(['ismeretlen', '']);
 

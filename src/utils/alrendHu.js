@@ -10,6 +10,9 @@ export const ALREND_HU = {
   Ornithopoda: 'madárlábúak',
   Marginocephalia: 'szarvas- és vastagfejűek',
   Pterodactyloidea: 'repülő hüllők',
+  // Alias: néhány lény `alrend`-je a szűkebb `Sauropoda`, nem a `Sauropodomorpha`
+  // — ugyanaz a magyar csoport, ne jelenjen meg külön szűrő-opcióként.
+  Sauropoda: 'hosszúnyakúak',
 };
 
 export function getFamilyHu(alrend) {
