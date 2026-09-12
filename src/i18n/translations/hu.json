@@ -39,8 +39,9 @@
   "landing": {
     "cta_continue": "Folytasd: %{region} →",
     "cta_start": "Kezdd el a felfedezést!",
-    "greet_player": "Szervusz, %{name}!",
-    "greet_guest": "Szervusz, Idegen!",
+    "greet_words": "Szia,Hello",
+    "greet_player": "%{greet}, %{name}!",
+    "greet_guest": "%{greet}, Idegen!",
     "greet_guest_nudge": "Regisztrálj, hogy megőrizd a haladásod →",
     "hero_title": "Légy Te a Dínó Professzor!",
     "hero_stats": "%{count} dínó és őslény · 6 régió",

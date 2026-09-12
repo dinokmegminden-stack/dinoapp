@@ -151,6 +151,12 @@ function RandomDinoStrip({ allDinos, onPress, availWidth }) {
 
 export default function LandingPage({ nickname, progress, allDinos, dinosError = false, dinosLoading = false, onRetryLoadDinos, onEnterRegion, onOpenGallery, onOpenAlbum, onOpenLeaderboard, onOpenDashboard, onOpenGaming, onOpenNews, onOpenKutatok, onOpenGeology, onOpenMovies, onOpenEvolution, onOpenComparison, onOpenCalendar, onRequireRegister, onOpenJoin, onOpenLogin }) {
   const { t } = useT();
+  // Köszöntő-szó váltakozva (Szia/Hello, EN: Hi/Hello) — mount-onként egyet
+  // sorsolunk a locale listájából, így minden betöltéskor másik köszönhet.
+  const greetWord = useMemo(() => {
+    const words = t('landing.greet_words').split(',');
+    return words[Math.floor(Math.random() * words.length)].trim();
+  }, [t]);
   const { width } = useWindowDimensions();
   const isWide = width >= 1024;
   // A hero-képsáv rendelkezésre álló szélessége a viewportból (a heroBand
@@ -412,13 +418,13 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
           />
         )}
         {nickname ? (
-          <Text style={styles.heroGreeting}>{t('landing.greet_player', { name: nickname })}</Text>
+          <Text style={styles.heroGreeting}>{t('landing.greet_player', { greet: greetWord, name: nickname })}</Text>
         ) : (
           <Pressable
             onPress={() => { playSound('click'); onOpenJoin?.(); }}
             accessibilityRole="button"
           >
-            <Text style={styles.heroGreeting}>{t('landing.greet_guest')}</Text>
+            <Text style={styles.heroGreeting}>{t('landing.greet_guest', { greet: greetWord })}</Text>
             <Text style={styles.heroGreetingNudge}>{t('landing.greet_guest_nudge')}</Text>
           </Pressable>
         )}
