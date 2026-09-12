@@ -23,6 +23,9 @@ import { useT } from '../i18n';
 const PIN_LENGTH = 4;
 
 export const NICKNAME_STORAGE_KEY = 'dino_player_nickname';
+// Az auto-generált szinkron-PIN lokális másolata — a Player fül recovery-kódként
+// mutatja meg (a players.pin szerveren nem olvasható vissza, csak verify_player_pin-nel).
+export const PIN_STORAGE_KEY = 'dino_player_pin';
 
 export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGuestContinue, initialMode = 'new' }) {
   const { t } = useT();
@@ -33,8 +36,6 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
   const [adjective, setAdjective] = useState(() => randomFrom(NICKNAME_ADJECTIVES));
   const [commonName, setCommonName] = useState('');
   const [number, setNumber] = useState(() => randomFrom(NICKNAME_NUMBER_OPTIONS));
-  const [pin, setPin] = useState('');
-  const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -55,11 +56,6 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
   const nickname = isReady ? buildNickname(adjective, commonName, number) : '';
 
   const handleConfirm = async () => {
-    if (pin.length !== PIN_LENGTH) {
-      setErrorMessage(t('onboarding.err_pin_length', { n: PIN_LENGTH }));
-      return;
-    }
-
     setSubmitting(true);
     setErrorMessage('');
 
@@ -71,7 +67,16 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
       return;
     }
 
-    const result = await registerPlayer(nickname, pin, email);
+    // A PIN-t a gyerek már nem gépeli be belépőként — a szinkron-PIN-t a Player
+    // fülön állíthatja be utólag, ha másik gépre akar átjelentkezni. Regisztrációkor
+    // egy rejtett, auto-generált 4 jegyűt küldünk (a register-player edge function
+    // és a players.pin NOT NULL miatt kell egy érték), és lokálba is mentjük, hogy a
+    // Player fül később recovery-kódként meg tudja mutatni backend-olvasás nélkül.
+    // ponytail: nickname-alapú modell, PIN a szinkronhoz elég — nincs jelszó-erősség.
+    const pin = String(Math.floor(1000 + Math.random() * 9000));
+    await AsyncStorage.setItem(PIN_STORAGE_KEY, pin);
+
+    const result = await registerPlayer(nickname, pin, '');
     if (result.taken) {
       setErrorMessage(t('onboarding.err_taken'));
       setNumber(randomFrom(NICKNAME_NUMBER_OPTIONS));
@@ -154,47 +159,18 @@ export default function NicknamePickerScreen({ allDinos, onNicknameChosen, onGue
               )}
 
               <OptionPicker label={t('onboarding.pick_number')} value={number} options={NICKNAME_NUMBER_OPTIONS} onSelect={setNumber} />
-
-              <View style={styles.inputField}>
-                <Text style={styles.fieldLabel}>{t('onboarding.pin_label')}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={pin}
-                  onChangeText={(text) => setPin(text.replace(/[^0-9]/g, '').slice(0, PIN_LENGTH))}
-                  placeholder={t('onboarding.pin_ph')}
-                  placeholderTextColor="rgba(254,250,224,0.35)"
-                  keyboardType="number-pad"
-                  maxLength={PIN_LENGTH}
-                />
-              </View>
-              <Text style={styles.pinHint}>
-                {t('onboarding.pin_hint')}
-              </Text>
-
-              <View style={styles.inputField}>
-                <Text style={styles.fieldLabel}>{t('onboarding.email_label')}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder={t('onboarding.email_ph')}
-                  placeholderTextColor="rgba(254,250,224,0.35)"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              </View>
-              <Text style={styles.pinHint}>
-                {t('onboarding.email_hint')}
-              </Text>
             </View>
+
+            <Text style={styles.pinHint}>
+              {t('onboarding.sync_later_hint')}
+            </Text>
 
             {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
             <TouchableOpacity
-              style={[styles.confirmBtn, (submitting || !isReady || pin.length !== PIN_LENGTH) && styles.confirmBtnDisabled]}
+              style={[styles.confirmBtn, (submitting || !isReady) && styles.confirmBtnDisabled]}
               onPress={handleConfirm}
-              disabled={submitting || !isReady || pin.length !== PIN_LENGTH}
+              disabled={submitting || !isReady}
             >
               <Text style={styles.confirmBtnText}>
                 {submitting ? t('onboarding.submitting') : t('onboarding.confirm')}

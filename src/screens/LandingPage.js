@@ -411,9 +411,20 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
             pointerEvents="none"
           />
         )}
+        {nickname ? (
+          <Text style={styles.heroGreeting}>{t('landing.greet_player', { name: nickname })}</Text>
+        ) : (
+          <Pressable
+            onPress={() => { playSound('click'); onOpenJoin?.(); }}
+            accessibilityRole="button"
+          >
+            <Text style={styles.heroGreeting}>{t('landing.greet_guest')}</Text>
+            <Text style={styles.heroGreetingNudge}>{t('landing.greet_guest_nudge')}</Text>
+          </Pressable>
+        )}
         <Text style={styles.heroTitle}>{t('landing.hero_title')}</Text>
         <Text style={styles.heroStats}>
-          {t('landing.hero_stats', { count: allDinos?.length || 111 })}
+          {t('landing.hero_stats', { count: allDinos?.length || 138 })}
         </Text>
         <Text style={styles.heroSubtitle}>
           {t('landing.hero_subtitle')}
@@ -733,6 +744,26 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0,0,0,0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
+  },
+  // Megszólítás a cím fölött: belépve a nickname, vendégként "Szervusz, Idegen!"
+  // + egy tappable nudge, ami a regisztrációt (onOpenJoin) nyitja.
+  heroGreeting: {
+    color: COLORS.heroYellow,
+    fontSize: 16,
+    fontFamily: FONTS.bodyBold,
+    letterSpacing: 0.3,
+    marginBottom: 4,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
+  heroGreetingNudge: {
+    color: COLORS.cream,
+    fontSize: 12.5,
+    fontFamily: FONTS.bodyBold,
+    opacity: TEXT_OPACITY.secondary,
+    marginBottom: 8,
+    ...Platform.select({ web: { cursor: 'pointer' } }),
   },
   heroTitle: {
     color: COLORS.cream,
