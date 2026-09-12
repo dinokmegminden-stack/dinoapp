@@ -393,6 +393,25 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     </>
   );
 
+  // A kiemelt gyűjthető AlbumCard + a régiótérkép — wide-ban egymás mellé (lásd
+  // lentebb collectMapRow), keskeny nézetben egymás alá kerülnek.
+  const collectCard = featuredDino ? (
+    <View style={styles.heroCollect}>
+      <Text style={styles.heroCollectLabel}>{t('landing.hero_collect_label')}</Text>
+      <AlbumCard dino={featuredDino} />
+    </View>
+  ) : null;
+
+  const mapMenu = (
+    <LandingMenu
+      onSelectRegion={handleSelectRegion}
+      regionCounts={regionCounts}
+      regionRatios={regionRatios}
+      highlightEdu={hoveredRegion}
+      onHoverRegion={setHoveredRegion}
+    />
+  );
+
   // Hero-blokk (a T-rex háttér fölött): figyelem-csali képsáv, headline + CTA,
   // RÉGIÓK térkép. Ez a landing egyetlen dolga — full-width felső sávban él.
   const rightBlock = (
@@ -450,12 +469,9 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         <Text style={styles.heroSubtitle}>
           {t('landing.hero_subtitle')}
         </Text>
-        {featuredDino && (
-          <View style={styles.heroCollect}>
-            <Text style={styles.heroCollectLabel}>{t('landing.hero_collect_label')}</Text>
-            <AlbumCard dino={featuredDino} />
-          </View>
-        )}
+        {/* Wide nézetben a kártya a térkép mellé kerül (lásd lentebb); csak
+            keskeny nézetben marad itt, a subtitle alatt. */}
+        {!isWide && collectCard}
         <View style={styles.heroCtaWrap}>
           <PrimaryCTA onPress={handleStartAdventure} label={ctaLabel} />
           {/* A CTA az elsődleges út; a térkép az "or" alternatíva — így a kettő
@@ -464,13 +480,17 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         </View>
       </View>
 
-      <LandingMenu
-        onSelectRegion={handleSelectRegion}
-        regionCounts={regionCounts}
-        regionRatios={regionRatios}
-        highlightEdu={hoveredRegion}
-        onHoverRegion={setHoveredRegion}
-      />
+      {isWide ? (
+        // Full HD / wide: a gyűjthető kártya és a (kisebb) térkép közvetlen
+        // egymás mellett — a kártya fix szélességű, a térkép a maradékot tölti
+        // (maxWidth-tel fogva, hogy tényleg kisebb legyen).
+        <View style={styles.collectMapRow}>
+          {collectCard}
+          <View style={styles.mapCol}>{mapMenu}</View>
+        </View>
+      ) : (
+        mapMenu
+      )}
     </>
   );
 
@@ -847,6 +867,18 @@ const styles = StyleSheet.create({
     marginTop: 18,
     alignSelf: 'flex-start',
     alignItems: 'flex-start',
+  },
+  // Wide: kártya + térkép egy sorban, közvetlen egymás mellett.
+  collectMapRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 28,
+    marginTop: 8,
+  },
+  // A térkép oszlopa: a maradékot tölti, de maxWidth fogja, hogy kisebb legyen.
+  mapCol: {
+    flex: 1,
+    maxWidth: 620,
   },
   heroCollectLabel: {
     color: COLORS.heroYellow,
