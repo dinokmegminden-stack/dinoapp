@@ -25,6 +25,7 @@ import RankModal from '../components/RankModal';
 import MessageBoard from '../components/MessageBoard';
 import Footer from '../components/Footer';
 import LandingMenu from './LandingMenu';
+import AlbumCard from '../components/AlbumCard';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
@@ -253,6 +254,15 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
     onEnterRegion(dino?.edu || 1);
   };
 
+  // Kiemelt gyűjthető lény a hero-ban: egy random, képpel rendelkező lény
+  // AlbumCard-ja — hogy a player azonnal lássa, mit kéne gyűjtenie. Mount-onként
+  // egyet sorsolunk (stabil a re-renderek közt).
+  const featuredDino = useMemo(() => {
+    const withImg = (allDinos || []).filter((d) => d.image_url || IMAGE_MAP[d.name_hu]);
+    if (withImg.length === 0) return null;
+    return withImg[Math.floor(Math.random() * withImg.length)];
+  }, [allDinos]);
+
   const collectionRatio = overallCompletionRatio(progress || {});
 
   // A hero CTA mondja meg, hova visz (H7): visszatérő játékosnál a soron
@@ -440,6 +450,12 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         <Text style={styles.heroSubtitle}>
           {t('landing.hero_subtitle')}
         </Text>
+        {featuredDino && (
+          <View style={styles.heroCollect}>
+            <Text style={styles.heroCollectLabel}>{t('landing.hero_collect_label')}</Text>
+            <AlbumCard dino={featuredDino} />
+          </View>
+        )}
         <View style={styles.heroCtaWrap}>
           <PrimaryCTA onPress={handleStartAdventure} label={ctaLabel} />
           {/* A CTA az elsődleges út; a térkép az "or" alternatíva — így a kettő
@@ -826,6 +842,20 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     opacity: TEXT_OPACITY.secondary,
     maxWidth: 560,
+  },
+  heroCollect: {
+    marginTop: 18,
+    alignSelf: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  heroCollectLabel: {
+    color: COLORS.heroYellow,
+    fontSize: 12.5,
+    fontFamily: FONTS.bodyBold,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    marginBottom: 8,
+    opacity: 0.9,
   },
   heroCtaWrap: {
     // Balra igazítva, egy tengelyen a bal-igazított címmel/alcímmel — a

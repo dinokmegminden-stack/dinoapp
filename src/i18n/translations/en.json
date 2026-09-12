@@ -47,6 +47,7 @@
     "hero_title": "Become the Dino Professor!",
     "hero_stats": "%{count} dinos & prehistoric creatures · 6 regions",
     "hero_subtitle": "Discover the creatures of deep time, collect cards, and become the greatest expert!",
+    "hero_collect_label": "Collect creatures like this:",
     "hero_cta_hint": "…or pick a region on the map ↓",
     "news_heading": "DINO NEWS",
     "news_placeholder": "Coming soon: fresh dino news, discoveries and app updates.",
