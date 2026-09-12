@@ -43,6 +43,7 @@
     "greet_player": "%{greet}, %{name}!",
     "greet_guest": "%{greet}, Stranger!",
     "greet_guest_nudge": "Register to keep your progress →",
+    "greet_join_btn": "JOIN",
     "hero_title": "Become the Dino Professor!",
     "hero_stats": "%{count} dinos & prehistoric creatures · 6 regions",
     "hero_subtitle": "Discover the creatures of deep time, collect cards, and become the greatest expert!",

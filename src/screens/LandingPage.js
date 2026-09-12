@@ -420,13 +420,18 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         {nickname ? (
           <Text style={styles.heroGreeting}>{t('landing.greet_player', { greet: greetWord, name: nickname })}</Text>
         ) : (
-          <Pressable
-            onPress={() => { playSound('click'); onOpenJoin?.(); }}
-            accessibilityRole="button"
-          >
+          <View>
             <Text style={styles.heroGreeting}>{t('landing.greet_guest', { greet: greetWord })}</Text>
             <Text style={styles.heroGreetingNudge}>{t('landing.greet_guest_nudge')}</Text>
-          </Pressable>
+            <Pressable
+              style={({ pressed }) => [styles.heroJoinBtn, pressed && styles.heroJoinBtnPressed]}
+              onPress={() => { playSound('click'); onOpenJoin?.(); }}
+              accessibilityRole="button"
+            >
+              <MaterialCommunityIcons name="rocket-launch" size={18} color={COLORS.bgDark} />
+              <Text style={styles.heroJoinBtnText}>{t('landing.greet_join_btn')}</Text>
+            </Pressable>
+          </View>
         )}
         <Text style={styles.heroTitle}>{t('landing.hero_title')}</Text>
         <Text style={styles.heroStats}>
@@ -768,8 +773,38 @@ const styles = StyleSheet.create({
     fontSize: 12.5,
     fontFamily: FONTS.bodyBold,
     opacity: TEXT_OPACITY.secondary,
-    marginBottom: 8,
-    ...Platform.select({ web: { cursor: 'pointer' } }),
+    marginBottom: 12,
+  },
+  // Nagy CSATLAKOZZ gomb a köszöntés alatt (a fejléc jobb-felső gombja mellett) —
+  // vendégnek a fő belépő CTA.
+  heroJoinBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 9,
+    marginBottom: 14,
+    backgroundColor: COLORS.accent,
+    borderRadius: RADIUS.pill,
+    paddingVertical: 13,
+    paddingHorizontal: 26,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+        transitionProperty: 'transform, background-color',
+        transitionDuration: '140ms',
+        transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      },
+    }),
+  },
+  heroJoinBtnPressed: {
+    backgroundColor: COLORS.accentDark,
+    transform: [{ scale: 0.97 }],
+  },
+  heroJoinBtnText: {
+    color: COLORS.bgDark,
+    fontSize: 17,
+    fontFamily: FONTS.bodyBold,
+    letterSpacing: 0.8,
   },
   heroTitle: {
     color: COLORS.cream,
