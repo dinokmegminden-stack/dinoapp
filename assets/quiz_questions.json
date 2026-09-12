@@ -9088,5 +9088,304 @@
     ],
     "correctIndex": 1,
     "hint": "A melanoszóma-forma összefügg a színnel."
+  },
+  {
+    "id": 727,
+    "difficulty": "easy",
+    "question": "Melyik volt a legnagyobb húsevő dinoszaurusz?",
+    "options": [
+      "Tyrannosaurus rex",
+      "Spinosaurus",
+      "Allosaurus",
+      "Giganotosaurus"
+    ],
+    "correctIndex": 1,
+    "hint": "A hátán vitorla volt, és krokodil módjára a vízben is vadászott."
+  },
+  {
+    "id": 728,
+    "difficulty": "easy",
+    "question": "Mit jelent szó szerint a „dinoszaurusz” szó?",
+    "options": [
+      "„rettenetes gyík”",
+      "„ősi hüllő”",
+      "„nagy szörny”",
+      "„sárkánygyík”"
+    ],
+    "correctIndex": 0,
+    "hint": "Richard Owen alkotta a Dinosauria nevet 1842-ben."
+  },
+  {
+    "id": 729,
+    "difficulty": "easy",
+    "question": "Melyik ma élő állatcsoport a dinoszauruszok közvetlen leszármazottja?",
+    "options": [
+      "A gyíkok",
+      "A krokodilok",
+      "A madarak",
+      "A teknősök"
+    ],
+    "correctIndex": 2,
+    "hint": "A theropoda dinoszauruszokból fejlődtek ki."
+  },
+  {
+    "id": 730,
+    "difficulty": "easy",
+    "question": "Melyik becsapódási kráterhez kötik a dinoszauruszok kihalását?",
+    "options": [
+      "Chicxulub-kráter",
+      "Barringer-kráter",
+      "Nadir-kráter",
+      "Deccan-kráter"
+    ],
+    "correctIndex": 0,
+    "hint": "A mexikói Yucatán-félsziget mellett fekszik."
+  },
+  {
+    "id": 731,
+    "difficulty": "easy",
+    "question": "Melyik időszakban élt valójában a Tyrannosaurus rex?",
+    "options": [
+      "Triász",
+      "Jura",
+      "Késő kréta",
+      "Perm"
+    ],
+    "correctIndex": 2,
+    "hint": "A Jurassic Park ellenére nem a jura időszakban élt."
+  },
+  {
+    "id": 732,
+    "difficulty": "easy",
+    "question": "Melyik dinoszaurusz volt az egyik legkisebb, nagyjából egy tyúk méretű?",
+    "options": [
+      "Compsognathus",
+      "Velociraptor",
+      "Archaeopteryx",
+      "Microraptor"
+    ],
+    "correctIndex": 0,
+    "hint": "Mindössze kb. 70 cm hosszú volt."
+  },
+  {
+    "id": 733,
+    "difficulty": "easy",
+    "question": "Melyik ritka fém világűrbeli gyakorisága árulta el az aszteroida-becsapódást?",
+    "options": [
+      "Arany",
+      "Irídium",
+      "Nikkel",
+      "Vas"
+    ],
+    "correctIndex": 1,
+    "hint": "A Földön ritkább az aranynál, de az űrkőzetekben gyakori."
+  },
+  {
+    "id": 734,
+    "difficulty": "medium",
+    "question": "Miért gondolják ma, hogy a dinoszauruszok inkább melegvérűek voltak?",
+    "options": [
+      "Mert nagyok voltak",
+      "A magas nyakhoz szükséges magas vérnyomás és a tollak miatt",
+      "Mert sivatagban éltek",
+      "Mert pikkelyesek voltak"
+    ],
+    "correctIndex": 1,
+    "hint": "A magas vérnyomáshoz négyüregű szív kell, ami a melegvérűek sajátja."
+  },
+  {
+    "id": 735,
+    "difficulty": "medium",
+    "question": "A legújabb kutatások szerint hogyan szólhattak valójában a dinoszauruszok?",
+    "options": [
+      "Hangos üvöltéssel",
+      "Sziszegéssel és mély dübörgéssel",
+      "Éles sikoltással",
+      "Egyáltalán nem adtak hangot"
+    ],
+    "correctIndex": 1,
+    "hint": "A madarak hangképző szerve (syrinx) külön alakult ki, így az üvöltés valószínűtlen."
+  },
+  {
+    "id": 736,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz üreges fejtaréja rezonáló kürtként szolgálhatott a kommunikációhoz?",
+    "options": [
+      "Parasaurolophus",
+      "Stegosaurus",
+      "Ankylosaurus",
+      "Triceratops"
+    ],
+    "correctIndex": 0,
+    "hint": "Kacsacsőrű hadrosaurus volt; a taréja trombitaszerű hangot adhatott."
+  },
+  {
+    "id": 737,
+    "difficulty": "medium",
+    "question": "A legújabb elmélet szerint mire használta a Velociraptor a sarló alakú karmát?",
+    "options": [
+      "Zsákmány felhasítására",
+      "A zsákmány megfogására és leszorítására",
+      "Ásásra",
+      "Fára mászásra"
+    ],
+    "correctIndex": 1,
+    "hint": "A mai sólymokhoz hasonlóan markoló szerszámként használhatta."
+  },
+  {
+    "id": 738,
+    "difficulty": "medium",
+    "question": "Melyik volt a Föld történetének legpusztítóbb tömeges kihalása?",
+    "options": [
+      "A kréta végi (dinoszauruszok)",
+      "A perm végi „Nagy Haldoklás”",
+      "A késő devon",
+      "A triász végi"
+    ],
+    "correctIndex": 1,
+    "hint": "A fajok mintegy 96%-át kiirtotta – nem a dinoszauruszokat kiirtó esemény."
+  },
+  {
+    "id": 739,
+    "difficulty": "medium",
+    "question": "Milyen módszerrel bizonyították, hogy egyes sauropodák nagy távolságokat vándoroltak?",
+    "options": [
+      "Lábnyomok követésével",
+      "A fogzománc oxigén-18 izotópjainak elemzésével",
+      "Szénizotópos kormeghatározással",
+      "A csontok méretéből"
+    ],
+    "correctIndex": 1,
+    "hint": "A fog megőrzi annak a víznek a nyomát, ahol az állat táplálkozott."
+  },
+  {
+    "id": 740,
+    "difficulty": "medium",
+    "question": "Melyik dinoszaurusz nevének jelentése „megtévesztő gyík”?",
+    "options": [
+      "Apatosaurus",
+      "Diplodocus",
+      "Brachiosaurus",
+      "Camarasaurus"
+    ],
+    "correctIndex": 0,
+    "hint": "Sokáig tévesen Brontosaurusnak nevezték."
+  },
+  {
+    "id": 741,
+    "difficulty": "medium",
+    "question": "A mai értelmezés szerint mire szolgáltak a Stegosaurus hátlemezei?",
+    "options": [
+      "Páncélzatként a ragadozók ellen",
+      "Bemutatásra és hőszabályozásra",
+      "Úszásra",
+      "Táplálékszerzésre"
+    ],
+    "correctIndex": 1,
+    "hint": "A tényleges fegyver a farok végén lévő tüskesor volt."
+  },
+  {
+    "id": 742,
+    "difficulty": "hard",
+    "question": "Melyik két archosaurus-ág maradt fenn a mai napig?",
+    "options": [
+      "Krokodilok és madarak",
+      "Gyíkok és kígyók",
+      "Teknősök és krokodilok",
+      "Madarak és emlősök"
+    ],
+    "correctIndex": 0,
+    "hint": "A dinoszauruszok is az archosaurusok közé tartoztak."
+  },
+  {
+    "id": 743,
+    "difficulty": "hard",
+    "question": "Milyen betegséget diagnosztizáltak 2020-ban egy Centrosaurus lábszárcsontján?",
+    "options": [
+      "Csontrákot (osteosarcoma)",
+      "Ízületi gyulladást",
+      "Tuberkulózist",
+      "Vérszegénységet"
+    ],
+    "correctIndex": 0,
+    "hint": "Ugyanaz az agresszív csontrák, amely az emberben is előfordul."
+  },
+  {
+    "id": 744,
+    "difficulty": "hard",
+    "question": "Melyik híres Tyrannosaurus rex-példány állkapcsában találtak trichomonózisra utaló lyukakat?",
+    "options": [
+      "Sue",
+      "Stan",
+      "Scotty",
+      "Trix"
+    ],
+    "correctIndex": 0,
+    "hint": "A chicagói Field Museumban kiállított, kiválóan megőrzött csontváz."
+  },
+  {
+    "id": 745,
+    "difficulty": "hard",
+    "question": "Kik voltak a 19. századi „csontháborúk” rivális őslénykutatói?",
+    "options": [
+      "Cope és Marsh",
+      "Owen és Mantell",
+      "Darwin és Huxley",
+      "Buckland és Leidy"
+    ],
+    "correctIndex": 0,
+    "hint": "Edward Drinker Cope és Othniel Charles Marsh amerikai vetélkedése."
+  },
+  {
+    "id": 746,
+    "difficulty": "hard",
+    "question": "Körülbelül mennyi a DNS felezési ideje, ami miatt valódi dinoszauruszt nem lehet klónozni?",
+    "options": [
+      "kb. 521 év",
+      "kb. 5 000 év",
+      "kb. 1 millió év",
+      "kb. 66 millió év"
+    ],
+    "correctIndex": 0,
+    "hint": "Túl rövid ahhoz, hogy évmilliók után épen maradjon."
+  },
+  {
+    "id": 747,
+    "difficulty": "hard",
+    "question": "Melyik állat egyszerre az első ismert madár ÉS dinoszaurusz?",
+    "options": [
+      "Archaeopteryx",
+      "Confuciusornis",
+      "Microraptor",
+      "Sinosauropteryx"
+    ],
+    "correctIndex": 0,
+    "hint": "Fogai és theropoda lába dínóvá, tollai madárrá teszik."
+  },
+  {
+    "id": 748,
+    "difficulty": "hard",
+    "question": "Milyen projekt próbál ősi („atavisztikus”) gének visszakapcsolásával „dínó-csirkét” létrehozni?",
+    "options": [
+      "Jack Horner dínó-csirke projektje",
+      "A Chicxulub-program",
+      "Az OSIRIS-REx küldetés",
+      "A Deccan-kísérlet"
+    ],
+    "correctIndex": 0,
+    "hint": "Nem klónozás: a madarakban kikapcsolt ősi géneket próbálják újraaktiválni."
+  },
+  {
+    "id": 749,
+    "difficulty": "hard",
+    "question": "Mi tette különlegessé a Spinosaurus felfedezését a ragadozó dinoszauruszokról alkotott képünkben?",
+    "options": [
+      "Bebizonyította, hogy egy ragadozó a vízben, krokodilszerűen is vadászhatott",
+      "Bebizonyította, hogy minden ragadozó tollas volt",
+      "Ez volt a legkisebb ragadozó",
+      "Bizonyította a csordában vadászást"
+    ],
+    "correctIndex": 0,
+    "hint": "Korábban azt hitték, minden ragadozó dinoszaurusz kizárólag szárazföldi volt."
   }
 ]
