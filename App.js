@@ -74,11 +74,14 @@ function AppInner() {
       return;
     }
     const state = { view, eduLevel };
+    // A path-t is beállítjuk (nem csak state-et), különben minden nézet "/" marad
+    // az URL-ben, és a Vercel Analytics egyetlen pageview-nak lát mindent.
+    const path = view === 'region' && eduLevel != null ? `/region/${eduLevel}` : `/${view}`;
     if (!historyInitRef.current) {
-      window.history.replaceState(state, '');
+      window.history.replaceState(state, '', path);
       historyInitRef.current = true;
     } else {
-      window.history.pushState(state, '');
+      window.history.pushState(state, '', path);
     }
   }, [view, eduLevel]);
 
