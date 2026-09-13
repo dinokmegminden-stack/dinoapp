@@ -279,7 +279,8 @@
       "rule_lanes": "A 3 középső sávon futsz, válts fel/le, kerüld ki a sziklákat és a skorpiókat",
       "rule_meat": "Kapd be a húsdarabokat — mindegyik +5 XP",
       "rule_speed": "A pálya egyre gyorsul, minél tovább bírod, annál több XP",
-      "rule_crash": "Egy ütközés — vége a futamnak, az addigi XP megmarad",
+      "rule_lives": "3 életed van — egy ütközés csak egyet visz el, nem a futamot",
+      "rule_combo": "Kapd be a húsdarabokat zsinórban ütközés nélkül XP-szorzóért",
       "start": "▶ KEZDÉS",
       "back_menu": "← Vissza a menübe",
       "crashed": "Ütköztél!",
@@ -287,6 +288,8 @@
       "again": "🔄 ÚJRA",
       "exit": "← KILÉPÉS",
       "level": "%{level}. szint",
+      "hud_xp": "%{xp} XP",
+      "hud_dist": "%{m} m",
       "quit": "✕ Kilépés"
     },
     "hangman": {

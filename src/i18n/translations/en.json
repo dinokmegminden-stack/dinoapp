@@ -279,7 +279,8 @@
       "rule_lanes": "Run in the 3 middle lanes, switch up/down, dodge rocks and scorpions",
       "rule_meat": "Grab the meat — each one is +5 XP",
       "rule_speed": "The track keeps speeding up — the longer you last, the more XP",
-      "rule_crash": "One crash — the run ends, but you keep the XP so far",
+      "rule_lives": "You have 3 lives — a crash costs one, not the whole run",
+      "rule_combo": "Grab meat in a row without crashing for an XP multiplier",
       "start": "▶ START",
       "back_menu": "← Back to menu",
       "crashed": "You crashed!",
@@ -287,6 +288,8 @@
       "again": "🔄 AGAIN",
       "exit": "← EXIT",
       "level": "Level %{level}",
+      "hud_xp": "%{xp} XP",
+      "hud_dist": "%{m} m",
       "quit": "✕ Exit"
     },
     "hangman": {
