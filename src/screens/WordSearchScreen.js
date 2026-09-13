@@ -3,7 +3,7 @@
 // megtalálni. Kijelölés: koppints a szó ELSŐ, majd UTOLSÓ betűjére (előre és
 // hátra is jó). Minden szó +XP; ha mind a 3 megvan, a kör lezárul.
 // A rácslogika a tiszta ../utils/wordSearch.js-ben él (node-nal ellenőrzött).
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, useWindowDimensions } from 'react-native';
 import Shell from '../components/Shell';
 import HeaderBar from '../components/HeaderBar';
@@ -14,13 +14,20 @@ import { addXP } from '../components/XPBar';
 import { claimDailyChallengeBonus } from '../utils/dailyChallenge';
 import GameTitleTag from '../components/GameTitleTag';
 import { useT } from '../i18n';
-import { generateWordSearch, lineCells, matchSelection, normalizeWord } from '../utils/wordSearch';
+import { generateWordSearch, matchSelection, normalizeWord } from '../utils/wordSearch';
 
 const landingBg = require('../../assets/images/new_bg.jpg');
 
 const GRID_SIZE = 20;
 const WORDS_PER_ROUND = 3;
 const XP_PER_WORD = 5;
+const ROUND_SECONDS = 120; // 2 perc visszaszámláló
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2, '0')}`;
+}
 
 // Kiválaszt WORDS_PER_ROUND lényt, akiknek a köznapi neve normalizálva 3..GRID_SIZE
 // betű — a normalizált szó a rácsba kerül, a megjelenítés az eredeti nevet mutatja.
@@ -53,9 +60,23 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
   const cell = Math.max(14, Math.min(30, Math.floor((Math.min(width, 640) - 40) / GRID_SIZE)));
 
   const [round, setRound] = useState(null);
-  const [status, setStatus] = useState('idle'); // 'idle' | 'playing' | 'won'
+  const [status, setStatus] = useState('idle'); // 'idle' | 'playing' | 'won' | 'lost'
   const [foundIdx, setFoundIdx] = useState([]); // placement indexek
-  const [anchor, setAnchor] = useState(null); // [r,c] az első koppintás
+  const [path, setPath] = useState([]); // sorban megkoppintott cellák [[r,c]...]
+  const [timeLeft, setTimeLeft] = useState(ROUND_SECONDS);
+
+  // Visszaszámláló: másodpercenként csökken; 0-nál a kör elveszett (a addig
+  // megtalált szavakért járó XP megmarad, mert menet közben íródott jóvá).
+  useEffect(() => {
+    if (status !== 'playing') return undefined;
+    if (timeLeft <= 0) {
+      setStatus('lost');
+      playQuizSfx('wrong');
+      return undefined;
+    }
+    const id = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
+    return () => clearTimeout(id);
+  }, [status, timeLeft]);
 
   const foundCellKeys = useMemo(() => {
     if (!round) return new Set();
@@ -69,33 +90,56 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
     if (!r) return;
     setRound(r);
     setFoundIdx([]);
-    setAnchor(null);
+    setPath([]);
+    setTimeLeft(ROUND_SECONDS);
     setStatus('playing');
     playQuizSfx('letsPlay');
   };
 
+  // A [r,c] koppintás folytatja-e szabályosan az eddigi utat? Az út mindig egy
+  // összefüggő, egyenes vonal: az első két cella adja az irányt, minden további
+  // koppintásnak pontosan a következő lépésnek kell lennie ebben az irányban.
+  function continues(cur, [r, c]) {
+    if (cur.length === 0) return true;
+    const last = cur[cur.length - 1];
+    if (cur.some(([pr, pc]) => pr === r && pc === c)) return false; // már benne van
+    if (cur.length === 1) {
+      const dr = Math.abs(r - last[0]);
+      const dc = Math.abs(c - last[1]);
+      return Math.max(dr, dc) === 1; // 8-szomszéd
+    }
+    const dr = Math.sign(cur[1][0] - cur[0][0]);
+    const dc = Math.sign(cur[1][1] - cur[0][1]);
+    return r === last[0] + dr && c === last[1] + dc; // pont a következő lépés
+  }
+
   const handleCellPress = useCallback(
     (r, c) => {
       if (status !== 'playing') return;
-      if (!anchor) { setAnchor([r, c]); playSound('click'); return; }
 
-      const sel = lineCells(anchor, [r, c]);
-      setAnchor(null);
-      const idx = matchSelection(sel, round.placements);
-      if (idx < 0 || foundIdx.includes(idx)) { playQuizSfx('wrong'); return; }
+      // Szabálytalan koppintás → új út innen indul.
+      const nextPath = continues(path, [r, c]) ? [...path, [r, c]] : [[r, c]];
+      const idx = matchSelection(nextPath, round.placements);
 
-      const nextFound = [...foundIdx, idx];
-      setFoundIdx(nextFound);
-      addXP(XP_PER_WORD);
-      playQuizSfx('correct');
-      if (nextFound.length === round.placements.length) {
-        setStatus('won');
-        const total = round.placements.length * XP_PER_WORD;
-        claimDailyChallengeBonus('wordsearch', total);
-        playQuizSfx('winningTheme');
+      if (idx >= 0 && !foundIdx.includes(idx)) {
+        setPath([]);
+        const nextFound = [...foundIdx, idx];
+        setFoundIdx(nextFound);
+        addXP(XP_PER_WORD);
+        playQuizSfx('correct');
+        if (nextFound.length === round.placements.length) {
+          setStatus('won');
+          const total = round.placements.length * XP_PER_WORD;
+          claimDailyChallengeBonus('wordsearch', total);
+          playQuizSfx('winningTheme');
+        }
+        return;
       }
+
+      setPath(nextPath);
+      playSound('click');
     },
-    [status, anchor, round, foundIdx]
+    [status, path, round, foundIdx]
   );
 
   // --- Kezdő képernyő -------------------------------------------------------
@@ -111,6 +155,7 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
               <RuleRow text={t('games.wordsearch.rule_grid', { size: GRID_SIZE, count: WORDS_PER_ROUND })} />
               <RuleRow text={t('games.wordsearch.rule_select')} />
               <RuleRow text={t('games.wordsearch.rule_dirs')} />
+              <RuleRow text={t('games.wordsearch.rule_timer')} />
               <RuleRow text={t('games.wordsearch.rule_xp', { xp: XP_PER_WORD })} />
             </View>
             <TouchableOpacity
@@ -132,17 +177,18 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
   }
 
   // --- Eredmény -------------------------------------------------------------
-  if (status === 'won') {
+  if (status === 'won' || status === 'lost') {
+    const won = status === 'won';
     return (
       <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" backgroundColor={COLORS.bgDark} />
           <ScrollView contentContainerStyle={styles.centerContent}>
-            <Text style={styles.badgeEmoji}>🏆</Text>
-            <Text style={styles.title}>{t('games.wordsearch.won')}</Text>
+            <Text style={styles.badgeEmoji}>{won ? '🏆' : '⏱️'}</Text>
+            <Text style={styles.title}>{won ? t('games.wordsearch.won') : t('games.wordsearch.lost')}</Text>
             <View style={styles.statsBox}>
               <Text style={styles.statLabel}>{t('games.wordsearch.earned_xp')}</Text>
-              <Text style={styles.statValue}>{round.placements.length * XP_PER_WORD} XP</Text>
+              <Text style={styles.statValue}>{foundIdx.length * XP_PER_WORD} XP</Text>
             </View>
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
@@ -167,6 +213,7 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
 
         <View style={styles.header}>
           <Text style={styles.headerCount}>{t('games.wordsearch.found', { count: foundIdx.length, total: round.placements.length })}</Text>
+          <Text style={[styles.headerTimer, timeLeft <= 15 && styles.headerTimerLow]}>⏱️ {fmtTime(timeLeft)}</Text>
           <TouchableOpacity onPress={() => { playSound('click'); onBack(); }}>
             <Text style={styles.backLinkText}>{t('games.wordsearch.quit')}</Text>
           </TouchableOpacity>
@@ -192,7 +239,7 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
                 <View key={r} style={styles.gridRow}>
                   {row.map((ch, c) => {
                     const isFound = foundCellKeys.has(`${r},${c}`);
-                    const isAnchor = anchor && anchor[0] === r && anchor[1] === c;
+                    const isInPath = path.some(([pr, pc]) => pr === r && pc === c);
                     return (
                       <TouchableOpacity
                         key={c}
@@ -202,7 +249,7 @@ export default function WordSearchScreen({ allDinos, nickname, progress, onNavig
                           styles.cellBox,
                           { width: cell, height: cell },
                           isFound && styles.cellFound,
-                          isAnchor && styles.cellAnchor,
+                          isInPath && styles.cellAnchor,
                         ]}
                       >
                         <Text style={[styles.cellText, { fontSize: Math.floor(cell * 0.55) }, isFound && styles.cellTextFound]}>
@@ -243,6 +290,8 @@ const styles = StyleSheet.create({
   ruleText: { color: '#FEFAE0', fontFamily: FONTS.body, fontSize: 15, lineHeight: 21, flex: 1 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 20 },
   headerCount: { color: COLORS.gold, fontFamily: FONTS.bold, fontSize: 15, fontWeight: '700' },
+  headerTimer: { color: '#FEFAE0', fontFamily: FONTS.bold, fontSize: 15, fontWeight: '700' },
+  headerTimerLow: { color: '#F44336' },
   playContent: { alignItems: 'center', paddingHorizontal: 12, paddingBottom: 30, gap: 16 },
   wordList: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10, maxWidth: 520 },
   wordChip: {
