@@ -197,6 +197,7 @@
     "mode_millionaire": "XP MILLIOMOS",
     "mode_runner": "DÍNÓFUTAM",
     "mode_hangman": "AKASZTÓFA",
+    "mode_wordsearch": "SZÓKERESŐ",
     "memory": {
       "title": "🧩 KÉPKIRAKÓ MEMÓRIA",
       "choose_difficulty": "Válassz nehézséget!",
@@ -304,6 +305,22 @@
       "again": "🔄 ÚJRA",
       "exit": "← KILÉPÉS",
       "mistakes": "Hibák: %{count} / %{max}",
+      "quit": "✕ Feladom"
+    },
+    "wordsearch": {
+      "title": "🔎 Dínó Szókereső",
+      "rule_grid": "Keress meg %{count} dínónevet egy %{size}×%{size}-as betűrácsban",
+      "rule_select": "Koppints a szó első, majd az utolsó betűjére",
+      "rule_dirs": "A szavak bármelyik irányban lehetnek — előre és hátra is",
+      "rule_xp": "Minden megtalált szóért +%{xp} XP jár",
+      "start": "▶ KEZDÉS",
+      "load_fail": "Dínók betöltése sikertelen",
+      "back_menu": "← Vissza a menübe",
+      "won": "Mind megvan!",
+      "earned_xp": "Megszerzett XP:",
+      "again": "🔄 ÚJRA",
+      "exit": "← KILÉPÉS",
+      "found": "Megtalálva: %{count} / %{total}",
       "quit": "✕ Feladom"
     }
   },

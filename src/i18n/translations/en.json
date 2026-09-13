@@ -197,6 +197,7 @@
     "mode_millionaire": "XP MILLIONAIRE",
     "mode_runner": "DINO DASH",
     "mode_hangman": "HANGMAN",
+    "mode_wordsearch": "WORD FIND",
     "memory": {
       "title": "🧩 PICTURE MEMORY",
       "choose_difficulty": "Pick a difficulty!",
@@ -304,6 +305,22 @@
       "again": "🔄 AGAIN",
       "exit": "← EXIT",
       "mistakes": "Mistakes: %{count} / %{max}",
+      "quit": "✕ Give up"
+    },
+    "wordsearch": {
+      "title": "🔎 Dino Word Find",
+      "rule_grid": "Find %{count} dino names hidden in a %{size}×%{size} grid",
+      "rule_select": "Tap the word's first letter, then its last letter",
+      "rule_dirs": "Words run in any direction — forwards or backwards",
+      "rule_xp": "+%{xp} XP for each word you find",
+      "start": "▶ START",
+      "load_fail": "Failed to load dinos",
+      "back_menu": "← Back to menu",
+      "won": "All found!",
+      "earned_xp": "XP earned:",
+      "again": "🔄 AGAIN",
+      "exit": "← EXIT",
+      "found": "Found: %{count} / %{total}",
       "quit": "✕ Give up"
     }
   },

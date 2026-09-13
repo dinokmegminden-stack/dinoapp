@@ -11,7 +11,7 @@ const BONUS_RATIO = 0.5;
 
 // A GamingScreen GAMES tömbjének key-sorrendjével egyezik — itt csak a
 // determinisztikus választáshoz kell egy stabil, ismert sorrendű lista.
-export const DAILY_CHALLENGE_GAME_KEYS = ['memory', 'whoami', 'lightning', 'millionaire', 'runner', 'hangman'];
+export const DAILY_CHALLENGE_GAME_KEYS = ['memory', 'whoami', 'lightning', 'millionaire', 'runner', 'hangman', 'wordsearch'];
 
 function dayOfYearSeed() {
   const now = new Date();
