@@ -61,10 +61,31 @@
         margin: 0;
         background-color: #001219;
       }
+
+      .seo-static {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 16px;
+        color: #fefae0;
+        font-family: system-ui, sans-serif;
+        line-height: 1.6;
+      }
+      .seo-static a { color: #ee9b00; }
     </style>
   </head>
   <body>
-    <!-- Az Expo ide fogja injektálni az alkalmazást -->
-    <div id="root"></div>
+    <!-- Az Expo ide fogja injektálni az alkalmazást. A benne lévő statikus szöveg
+         a keresőknek (SEO) és a JS betöltéséig látszik; a React mountkor lecseréli. -->
+    <div id="root">
+      <main class="seo-static">
+        <h1>DMM Lexikon – dinoszauruszok és őslények gyerekeknek</h1>
+        <p>Tudtad, hogy a Kárpát-medencében is éltek dinoszauruszok? A DMM Lexikon a Dínók Meg Minden csapat ingyenes, magyar nyelvű játéka: gyűjtsd össze több mint 130 őslény kártyáját, és tanuld meg játszva, ki mikor és hol élt. Regisztráció nem kell, elég egy becenév.</p>
+        <h2>Hét régió, csomagról csomagra</h2>
+        <p>Fedezd fel a <a href="/dino/#karpat-medence">Kárpát-medence</a>, <a href="/dino/#europa">Európa</a>, <a href="/dino/#afrika">Afrika</a>, <a href="/dino/#azsia">Ázsia</a>, <a href="/dino/#del-amerika">Dél-Amerika</a>, <a href="/dino/#eszak-amerika">Észak-Amerika</a> és <a href="/dino/#ausztralia">Ausztrália</a> őslényeit. Minden csomag végén kvíz vár, és 80% felett nyílik a következő. A gyűjteményt a valódi, millió években mért idővonalon is böngészheted.</p>
+        <h2>Játékok</h2>
+        <p>Párok memóriajáték, Ki vagyok én? kvíz, 5 másodperces villámkvíz, XP Milliomos és Dínófutam. Minden helyes válasz XP-t ér, a hibátlan futások pedig felkerülnek a heti és az örök ranglistára.</p>
+        <p><a href="/dino/">Nézd meg az összes őslény adatlapját</a></p>
+      </main>
+    </div>
   </body>
 </html>

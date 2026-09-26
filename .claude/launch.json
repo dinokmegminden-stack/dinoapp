@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "web"],
       "port": 8081
+    },
+    {
+      "name": "dist-static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "dist", "-l", "4173"],
+      "port": 4173
     }
   ]
 }
