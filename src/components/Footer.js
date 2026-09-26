@@ -10,8 +10,10 @@ import { playSound } from '../audio/audioSystem';
 import { useT } from '../i18n';
 
 const YOUTUBE_URL = 'https://www.youtube.com/@dinokmegminden';
+// A scripts/prerender-creatures.js által generált statikus őslény-adatlapok indexe.
+const CREATURE_INDEX_URL = 'https://dmmlexikon.hu/dino/';
 
-function FooterLink({ icon, label, onPress }) {
+function FooterLink({ icon, label, onPress, href }) {
   const [hovered, setHovered] = React.useState(false);
   return (
     <Pressable
@@ -19,7 +21,8 @@ function FooterLink({ icon, label, onPress }) {
       onPress={onPress}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
-      accessibilityRole="button"
+      // Weben valódi <a href>, hogy a Google is kövesse (SEO); natívon gomb marad.
+      {...(href && Platform.OS === 'web' ? { href, role: 'link' } : { accessibilityRole: 'button' })}
     >
       {!!icon && <MaterialCommunityIcons name={icon} size={15} color={COLORS.cream} style={{ opacity: hovered ? 1 : 0.75 }} />}
       <Text style={[styles.linkText, hovered && styles.linkTextHovered]}>{label}</Text>
@@ -59,6 +62,12 @@ export default function Footer({ onOpenInfo }) {
 
         <View style={styles.linksCol}>
           <FooterLink icon="youtube" label={t('footer.youtube_channel')} onPress={openYoutube} />
+          <FooterLink
+            icon="book-open-variant"
+            label={t('footer.creature_index')}
+            href="/dino/"
+            onPress={Platform.OS === 'web' ? undefined : () => Linking.openURL(CREATURE_INDEX_URL)}
+          />
           <FooterLink label={t('footer.imprint')} onPress={onOpenInfo} />
           <FooterLink label={t('footer.privacy')} onPress={onOpenInfo} />
         </View>

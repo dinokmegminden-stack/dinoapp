@@ -7,6 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build": "expo export --platform web && node scripts/prerender-creatures.js",
     "build:check": "expo export --platform web",
     "sync-images": "node scripts/sync-image-map.js"
   },
