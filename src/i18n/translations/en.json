@@ -197,6 +197,7 @@
     "mode_millionaire": "XP MILLIONAIRE",
     "mode_runner": "DINO DASH",
     "mode_hangman": "HANGMAN",
+    "mode_wordsearch": "WORD FIND",
     "memory": {
       "title": "🧩 PICTURE MEMORY",
       "choose_difficulty": "Pick a difficulty!",
@@ -278,7 +279,8 @@
       "rule_lanes": "Run in the 3 middle lanes, switch up/down, dodge rocks and scorpions",
       "rule_meat": "Grab the meat — each one is +5 XP",
       "rule_speed": "The track keeps speeding up — the longer you last, the more XP",
-      "rule_crash": "One crash — the run ends, but you keep the XP so far",
+      "rule_lives": "You have 3 lives — a crash costs one, not the whole run",
+      "rule_combo": "Grab meat in a row without crashing for an XP multiplier",
       "start": "▶ START",
       "back_menu": "← Back to menu",
       "crashed": "You crashed!",
@@ -286,6 +288,8 @@
       "again": "🔄 AGAIN",
       "exit": "← EXIT",
       "level": "Level %{level}",
+      "hud_xp": "%{xp} XP",
+      "hud_dist": "%{m} m",
       "quit": "✕ Exit"
     },
     "hangman": {
@@ -304,6 +308,24 @@
       "again": "🔄 AGAIN",
       "exit": "← EXIT",
       "mistakes": "Mistakes: %{count} / %{max}",
+      "quit": "✕ Give up"
+    },
+    "wordsearch": {
+      "title": "🔎 Dino Word Find",
+      "rule_grid": "Find %{count} dino names hidden in a %{size}×%{size} grid",
+      "rule_select": "Tap the letters one by one, in the right order",
+      "rule_dirs": "Words run in any direction — forwards or backwards",
+      "rule_xp": "+%{xp} XP for each word you find",
+      "rule_timer": "You have 2 minutes — beat the clock!",
+      "start": "▶ START",
+      "load_fail": "Failed to load dinos",
+      "back_menu": "← Back to menu",
+      "won": "All found!",
+      "lost": "Time's up!",
+      "earned_xp": "XP earned:",
+      "again": "🔄 AGAIN",
+      "exit": "← EXIT",
+      "found": "Found: %{count} / %{total}",
       "quit": "✕ Give up"
     }
   },
