@@ -197,6 +197,7 @@
     "mode_millionaire": "XP MILLIOMOS",
     "mode_runner": "DÍNÓFUTAM",
     "mode_hangman": "AKASZTÓFA",
+    "mode_wordsearch": "SZÓKERESŐ",
     "memory": {
       "title": "🧩 KÉPKIRAKÓ MEMÓRIA",
       "choose_difficulty": "Válassz nehézséget!",
@@ -278,7 +279,8 @@
       "rule_lanes": "A 3 középső sávon futsz, válts fel/le, kerüld ki a sziklákat és a skorpiókat",
       "rule_meat": "Kapd be a húsdarabokat — mindegyik +5 XP",
       "rule_speed": "A pálya egyre gyorsul, minél tovább bírod, annál több XP",
-      "rule_crash": "Egy ütközés — vége a futamnak, az addigi XP megmarad",
+      "rule_lives": "3 életed van — egy ütközés csak egyet visz el, nem a futamot",
+      "rule_combo": "Kapd be a húsdarabokat zsinórban ütközés nélkül XP-szorzóért",
       "start": "▶ KEZDÉS",
       "back_menu": "← Vissza a menübe",
       "crashed": "Ütköztél!",
@@ -286,6 +288,8 @@
       "again": "🔄 ÚJRA",
       "exit": "← KILÉPÉS",
       "level": "%{level}. szint",
+      "hud_xp": "%{xp} XP",
+      "hud_dist": "%{m} m",
       "quit": "✕ Kilépés"
     },
     "hangman": {
@@ -304,6 +308,24 @@
       "again": "🔄 ÚJRA",
       "exit": "← KILÉPÉS",
       "mistakes": "Hibák: %{count} / %{max}",
+      "quit": "✕ Feladom"
+    },
+    "wordsearch": {
+      "title": "🔎 Dínó Szókereső",
+      "rule_grid": "Keress meg %{count} dínónevet egy %{size}×%{size}-as betűrácsban",
+      "rule_select": "Koppints a betűkre sorban, egyesével",
+      "rule_dirs": "A szavak bármelyik irányban lehetnek — előre és hátra is",
+      "rule_xp": "Minden megtalált szóért +%{xp} XP jár",
+      "rule_timer": "2 perced van — versenyezz az idővel!",
+      "start": "▶ KEZDÉS",
+      "load_fail": "Dínók betöltése sikertelen",
+      "back_menu": "← Vissza a menübe",
+      "won": "Mind megvan!",
+      "lost": "Lejárt az idő!",
+      "earned_xp": "Megszerzett XP:",
+      "again": "🔄 ÚJRA",
+      "exit": "← KILÉPÉS",
+      "found": "Megtalálva: %{count} / %{total}",
       "quit": "✕ Feladom"
     }
   },

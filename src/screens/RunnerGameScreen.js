@@ -54,6 +54,11 @@ const MIN_SPAWN_MS = 480;
 const SPAWN_SHRINK_PER_SEC = 18;
 
 const XP_PER_MEAT = 5;
+const START_LIVES = 3;
+const INVINCIBLE_SEC = 1.2; // ütközés utáni sérthetetlenség (villog a dínó)
+const COMBO_STEP = 3; // ennyi zsinórban bekapott húsdarab emel egy szorzó-lépcsőt
+const MAX_MULT = 5;
+const POPUP_TTL = 0.7; // a felugró "+XP" felirat élettartama másodpercben
 
 const ITEM_TYPES = [
   { type: 'meat', weight: 0.42, img: require('../../assets/images/runner/meat.png'), bg: 'rgba(221,161,94,0.55)', border: COLORS.gold },
@@ -88,15 +93,21 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
   const [score, setScore] = useState(0);
   const [runFrame, setRunFrame] = useState(0);
   const [level, setLevel] = useState(1);
+  const [lives, setLives] = useState(START_LIVES);
   const [celebration, setCelebration] = useState({ visible: false, message: '' });
 
   const laneRef = useRef(1);
   const itemsRef = useRef([]);
   const terrainRef = useRef([]);
+  const popupsRef = useRef([]);
   const elapsedRef = useRef(0);
+  const distanceRef = useRef(0);
   const timeSinceSpawnRef = useRef(0);
   const timeSinceTerrainRef = useRef(0);
   const levelRef = useRef(1);
+  const livesRef = useRef(START_LIVES);
+  const comboRef = useRef(0);
+  const invincibleUntilRef = useRef(0);
   const gameOverRef = useRef(false);
   const intervalRef = useRef(null);
 
@@ -141,7 +152,9 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
   const startGame = () => {
     itemsRef.current = [];
     terrainRef.current = [];
+    popupsRef.current = [];
     elapsedRef.current = 0;
+    distanceRef.current = 0;
     timeSinceSpawnRef.current = 0;
     timeSinceTerrainRef.current = 0;
     gameOverRef.current = false;
@@ -150,6 +163,10 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
     setScore(0);
     levelRef.current = 1;
     setLevel(1);
+    livesRef.current = START_LIVES;
+    setLives(START_LIVES);
+    comboRef.current = 0;
+    invincibleUntilRef.current = 0;
     setCelebration({ visible: false, message: '' });
     setRenderTick((t) => t + 1);
     setGameStatus('playing');
@@ -175,6 +192,7 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
         playQuizSfx('next');
       }
       const speed = LEVEL_SPEEDS_PCT[levelRef.current - 1];
+      distanceRef.current += speed * dt; // megtett táv (tetszőleges "m" egység)
       const spawnInterval = Math.max(MIN_SPAWN_MS, START_SPAWN_MS - elapsedRef.current * SPAWN_SHRINK_PER_SEC);
 
       if (timeSinceSpawnRef.current >= spawnInterval) {
@@ -203,6 +221,7 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
         .map((t) => ({ ...t, pct: t.pct - speed * TERRAIN_SPEED_FACTOR * dt }))
         .filter((t) => t.pct >= -15);
 
+      let invincible = elapsedRef.current < invincibleUntilRef.current;
       const survivors = [];
       let scoreGain = 0;
 
@@ -213,20 +232,42 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
         const inHitBand = Math.abs(item.pct - PLAYER_X_PCT) <= HIT_TOLERANCE_PCT;
         if (inHitBand && item.lane === laneRef.current) {
           if (item.def.type === 'meat') {
-            scoreGain += XP_PER_MEAT;
+            comboRef.current += 1;
+            const mult = Math.min(MAX_MULT, 1 + Math.floor(comboRef.current / COMBO_STEP));
+            const gain = XP_PER_MEAT * mult;
+            scoreGain += gain;
+            popupsRef.current.push({
+              id: nextItemId++,
+              lane: item.lane,
+              text: mult > 1 ? `+${gain} ×${mult}` : `+${gain}`,
+              born: elapsedRef.current,
+            });
             playQuizSfx('correct');
             continue; // bekapva, eltűnik
           }
-          // szikla vagy skorpió — vége a játéknak
-          survivors.push(item);
-          itemsRef.current = survivors;
-          endRun(score + scoreGain);
-          return;
+          // szikla vagy skorpió — sérthetetlenség alatt átmegyünk rajta
+          if (invincible) {
+            survivors.push(item);
+            continue;
+          }
+          comboRef.current = 0;
+          livesRef.current -= 1;
+          setLives(livesRef.current);
+          playQuizSfx('wrong');
+          if (livesRef.current <= 0) {
+            itemsRef.current = survivors;
+            endRun(score + scoreGain);
+            return;
+          }
+          invincibleUntilRef.current = elapsedRef.current + INVINCIBLE_SEC;
+          invincible = true; // a tick hátralévő akadályai már nem sebeznek
+          continue; // az akadály eltűnik, a futam megy tovább
         }
         survivors.push(item);
       }
 
       itemsRef.current = survivors;
+      popupsRef.current = popupsRef.current.filter((p) => elapsedRef.current - p.born < POPUP_TTL);
       if (scoreGain > 0) setScore((s) => s + scoreGain);
       setRenderTick((t) => t + 1);
     }, TICK_MS);
@@ -283,8 +324,9 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
             <View style={styles.rulesBox}>
               <RuleRow text={t('games.runner.rule_lanes')} />
               <RuleRow text={t('games.runner.rule_meat')} />
+              <RuleRow text={t('games.runner.rule_combo')} />
+              <RuleRow text={t('games.runner.rule_lives')} />
               <RuleRow text={t('games.runner.rule_speed')} />
-              <RuleRow text={t('games.runner.rule_crash')} />
             </View>
             <TouchableOpacity style={styles.primaryBtn} onPress={startGame}>
               <Text style={styles.primaryBtnText}>{t('games.runner.start')}</Text>
@@ -331,6 +373,11 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
   }
 
   // --- Játéktér (vízszintes) ---------------------------------------------------
+  // renderTick minden tick-nél frissül, így a ref-alapú értékek is naprakészek.
+  const comboMult = Math.min(MAX_MULT, 1 + Math.floor(comboRef.current / COMBO_STEP));
+  const invincibleNow = elapsedRef.current < invincibleUntilRef.current;
+  const playerFlicker = invincibleNow && renderTick % 2 === 0 ? 0.35 : 1;
+
   return (
     <Shell backgroundImage={landingBg} header={<HeaderBar currentView="gaming" nickname={nickname} progress={progress} onNavigate={onNavigate} />}>
       <View style={styles.container}>
@@ -338,7 +385,13 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
         <GameTitleTag title={t('games.mode_runner')} />
 
         <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerXP}>{t('games.runner.hud_xp', { xp: score })}</Text>
+            <Text style={styles.headerDist}>{t('games.runner.hud_dist', { m: Math.floor(distanceRef.current) })}</Text>
+            {comboMult > 1 && <Text style={styles.headerCombo}>×{comboMult}</Text>}
+          </View>
           <View style={styles.headerRight}>
+            <Text style={styles.livesText}>{'❤️'.repeat(lives)}</Text>
             <Text style={styles.levelText}>{t('games.runner.level', { level })}</Text>
             <TouchableOpacity onPress={handleQuit}>
               <Text style={styles.backLinkText}>{t('games.runner.quit')}</Text>
@@ -379,8 +432,25 @@ export default function RunnerGameScreen({ playerId, nickname, progress, onNavig
                       </View>
                     ))}
 
+                  {popupsRef.current
+                    .filter((p) => p.lane === laneIdx)
+                    .map((p) => (
+                      <Text
+                        key={p.id}
+                        style={[
+                          styles.popup,
+                          {
+                            left: `${PLAYER_X_PCT}%`,
+                            opacity: Math.max(0, 1 - (elapsedRef.current - p.born) / POPUP_TTL),
+                          },
+                        ]}
+                      >
+                        {p.text}
+                      </Text>
+                    ))}
+
                   {lane === laneIdx && (
-                    <View style={[styles.player, { left: `${PLAYER_X_PCT}%` }]}>
+                    <View style={[styles.player, { left: `${PLAYER_X_PCT}%`, opacity: playerFlicker }]}>
                       <Image source={RUN_FRAMES[runFrame]} style={styles.playerImage} resizeMode="contain" />
                     </View>
                   )}
@@ -461,9 +531,27 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
+  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   headerXP: { color: COLORS.gold, fontFamily: FONTS.bold, fontSize: 16, fontWeight: '700' },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  headerDist: { color: 'rgba(254,250,224,0.75)', fontFamily: FONTS.body, fontSize: 14 },
+  headerCombo: { color: '#ffd166', fontFamily: FONTS.bold, fontSize: 16, fontWeight: '800' },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  livesText: { fontSize: 14 },
   levelText: { color: '#90e0ef', fontFamily: FONTS.bold, fontSize: 15, fontWeight: '700' },
+  popup: {
+    position: 'absolute',
+    top: '22%',
+    marginLeft: -PLAYER_SIZE / 2,
+    width: PLAYER_SIZE * 2,
+    textAlign: 'center',
+    color: '#ffd166',
+    fontFamily: FONTS.bold,
+    fontSize: 16,
+    fontWeight: '800',
+    textShadowColor: 'rgba(0,0,0,0.7)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
   playArea: {
     flex: 1,
     flexDirection: 'row',
