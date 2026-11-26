@@ -26,6 +26,7 @@ import MessageBoard from '../components/MessageBoard';
 import Footer from '../components/Footer';
 import LandingMenu from './LandingMenu';
 import AlbumCard from '../components/AlbumCard';
+import DiscoveryGlobe from '../components/DiscoveryGlobe';
 import { IMAGE_MAP } from '../constants/imageMap';
 import { playSound } from '../audio/audioSystem';
 import { getTotalXP } from '../components/XPBar';
@@ -511,6 +512,8 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         // Asztali/Full HD: a hero full-width felső sávban dominál, alatta a
         // hajtás alá kerül a másodlagos tartalom (Napi Dínó + Hírek | Közösség).
         <ScrollView style={styles.pageScroll} contentContainerStyle={styles.pageContent}>
+          {/* Weben a forgó lelőhely-földgömb a landing első képernyője; natívon null. */}
+          <DiscoveryGlobe dinos={allDinos} />
           <View style={styles.heroBand}>{rightBlock}</View>
           <View style={styles.belowFoldRow}>
             <View style={styles.belowCol}>{sidebarInner}</View>
@@ -521,6 +524,7 @@ export default function LandingPage({ nickname, progress, allDinos, dinosError =
         // Mobil/tablet: egy oszlopban, a HERO legfelül (ő a figyelem-horog),
         // utána Napi Dínó + Hírek, végül a közösség/csatlakozás.
         <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+          <DiscoveryGlobe dinos={allDinos} />
           <View style={styles.columnNarrow}>
             {rightBlock}
             <View style={styles.narrowBelowBlock}>{sidebarInner}</View>
