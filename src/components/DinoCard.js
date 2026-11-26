@@ -62,7 +62,7 @@ function dietValue(dino) {
   return dino.étrend ?? dino.diet_hu ?? dino.diet_eng ?? '';
 }
 
-function dietIconName(dino) {
+export function dietIconName(dino) {
   const v = String(dietValue(dino)).trim().toLowerCase();
   if (v.includes('húsevő') || v.includes('hus') || v.includes('carn')) return 'food-drumstick'; // carnivore
   if (v.includes('növényevő') || v.includes('noveny') || v.includes('növény') || v.includes('herb')) return 'leaf'; // herbivore
@@ -70,7 +70,7 @@ function dietIconName(dino) {
 }
 
 // Étrend-ikon színe: húsevő piros, növényevő zöld, egyéb semleges.
-function dietColor(iconName) {
+export function dietColor(iconName) {
   if (iconName === 'food-drumstick') return '#e5484d';
   if (iconName === 'leaf') return '#3fb950';
   return C.onDark;

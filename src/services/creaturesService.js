@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { DISCOVERY_SITES } from '../constants/discoverySites';
 
 // Biztonságos szövegkezelés (React error #130 ellen)
 function safe(value) {
@@ -52,6 +53,9 @@ export function adaptCreature(row) {
     diet_hu: safe(row.diet_hu),
     diet_eng: safe(row.diet_eng),
     discovered_country: safe(row.discovered_country),
+    // Lelőhely-koordináták a landing földgömbjéhez (DiscoveryGlobe.web.js).
+    discovery_lat: row.discovery_lat != null ? Number(row.discovery_lat) : DISCOVERY_SITES[row.scientific_name]?.[0] ?? null,
+    discovery_lng: row.discovery_lng != null ? Number(row.discovery_lng) : DISCOVERY_SITES[row.scientific_name]?.[1] ?? null,
     discovery_year: row.discovery_year != null ? Number(row.discovery_year) : null,
     weight_kg_min: row.weight_kg_min != null ? Number(row.weight_kg_min) : null,
     weight_kg_max: row.weight_kg_max != null ? Number(row.weight_kg_max) : null,
