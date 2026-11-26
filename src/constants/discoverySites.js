@@ -2,6 +2,9 @@
 // Forrás: a creatures-tábla korábbi exportjai (data/111 db.csv, data/mydb_222dino_0729.csv)
 // discovery_lat/discovery_lng oszlopai — az élő táblában ezek az oszlopok nincsenek.
 // Ha a tábla újra megkapja őket, a creaturesService a DB-értéket részesíti előnyben.
+// Kézi javítás (az exportban hibás volt): Telmatosaurus és Struthiosaurus
+// transylvanicus → Szentpéterfalva/Sânpetru, Hátszegi-medence; Deinonychus →
+// Cloverly-formáció, Montana; Dilophosaurus → Kayenta-formáció, Arizona.
 export const DISCOVERY_SITES = {
   "Ajkaceratops kozmai": [47.2167, 17.6],
   "Albertosaurus sarcophagus": [51.4699, -112.8423],
@@ -31,9 +34,9 @@ export const DISCOVERY_SITES = {
   "Concavenator corcovatus": [40.0645, -1.8808],
   "Corythosaurus casuarius": [50.8238, -111.6042],
   "Deinocheirus mirificus": [43.5664, 100.4828],
-  "Deinonychus antirrhopus": [-6.7333, -38.3167],
+  "Deinonychus antirrhopus": [45.3, -108.9],
   "Diamantinasaurus matildae": [-22.1997, 142.5286],
-  "Dilophosaurus wetherilli": [19.25, 79.5333],
+  "Dilophosaurus wetherilli": [36.13, -111.24],
   "Diplodocus carnegii": [38.5395, -105.2247],
   "Edmontosaurus regalis": [51.5331, -112.8831],
   "Eoraptor lunensis": [-30.1667, -67.8333],
@@ -98,11 +101,11 @@ export const DISCOVERY_SITES = {
   "Spinosaurus aegyptiacus": [28.4311, 28.9148],
   "Stegosaurus stenops": [39.6756, -105.1926],
   "Struthiomimus altus": [36.1548, -107.9236],
-  "Struthiosaurus transylvanicus": [42.6646, -2.6345],
+  "Struthiosaurus transylvanicus": [45.53, 22.98],
   "Styracosaurus albertensis": [50.7478, -111.3951],
   "Suchomimus tenerensis": [16.4167, 9.1],
   "Tarbosaurus bataar": [43.5722, 100.4778],
-  "Telmatosaurus transsylvanicus": [43.6034, 6.1066],
+  "Telmatosaurus transsylvanicus": [45.53, 22.98],
   "Therizinosaurus cheloniformis": [43.4917, 101.275],
   "Triceratops horridus": [33.1542, -107.1922],
   "Troodon formosus": [47.7187, -109.6366],
