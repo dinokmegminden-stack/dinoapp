@@ -14,6 +14,7 @@ import WhoAmIScreen from './src/screens/WhoAmIScreen';
 import MemoryGameScreen from './src/screens/MemoryGameScreen';
 import RunnerGameScreen from './src/screens/RunnerGameScreen';
 import HangmanScreen from './src/screens/HangmanScreen';
+import WordSearchScreen from './src/screens/WordSearchScreen';
 import CollectionScreen from './src/screens/CollectionScreen';
 import AlbumScreen from './src/screens/AlbumScreen';
 import GamingScreen from './src/screens/GamingScreen';
@@ -344,6 +345,10 @@ function AppInner() {
     startGame('hangman', 'hangman');
   };
 
+  const handleStartWordSearch = () => {
+    startGame('wordsearch', 'wordsearch');
+  };
+
   const handleBackFromGame = () => {
     endActiveGame();
     setView('landing');
@@ -424,6 +429,7 @@ function AppInner() {
           onWhoAmI={handleStartWhoAmI}
           onRunner={handleStartRunner}
           onHangman={handleStartHangman}
+          onWordSearch={handleStartWordSearch}
           onBack={() => setView('landing')}
         />
       )}
@@ -498,6 +504,16 @@ function AppInner() {
 
       {view === 'hangman' && (
         <HangmanScreen
+          allDinos={allDinos}
+          nickname={nickname}
+          progress={progress}
+          onNavigate={handleNavigateFromGame}
+          onBack={handleBackFromGame}
+        />
+      )}
+
+      {view === 'wordsearch' && (
+        <WordSearchScreen
           allDinos={allDinos}
           nickname={nickname}
           progress={progress}

@@ -26,6 +26,7 @@ const GAMES = [
   { key: 'millionaire', icon: 'trophy', dino: 'Tyrannosaurus', tier: TIER.PROFI },
   { key: 'runner', icon: 'run-fast', dino: 'Gallimimus', tier: TIER.HALADO },
   { key: 'hangman', icon: 'bone', dino: 'Triceratops', tier: TIER.KEZDO },
+  { key: 'wordsearch', icon: 'grid', dino: 'Spinosaurus', tier: TIER.KEZDO },
 ];
 
 const GAMES_BY_KEY = Object.fromEntries(GAMES.map((g) => [g.key, g]));
@@ -125,7 +126,7 @@ function DailyChallengeBanner({ game, claimed, onPress }) {
   );
 }
 
-export default function GamingScreen({ nickname, playerId, progress, onNavigate, onMemory, onWhoAmI, onLightningQuiz, onMillionaire, onRunner, onHangman, onBack }) {
+export default function GamingScreen({ nickname, playerId, progress, onNavigate, onMemory, onWhoAmI, onLightningQuiz, onMillionaire, onRunner, onHangman, onWordSearch, onBack }) {
   const { t } = useT();
   const { width } = useWindowDimensions();
   const cols = width >= 1024 ? 3 : width >= 700 ? 2 : 1;
@@ -139,6 +140,7 @@ export default function GamingScreen({ nickname, playerId, progress, onNavigate,
     millionaire: onMillionaire,
     runner: onRunner,
     hangman: onHangman,
+    wordsearch: onWordSearch,
   };
 
   const [playCounts, setPlayCounts] = useState({});
